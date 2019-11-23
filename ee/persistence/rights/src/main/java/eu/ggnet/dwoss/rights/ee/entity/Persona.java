@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,16 +22,11 @@ import java.util.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-import javafx.beans.property.*;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
-import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.core.system.persistence.EagerAble;
+import eu.ggnet.dwoss.rights.api.AtomicRight;
 
 /**
  * This Class represent a Persona
@@ -57,24 +52,34 @@ public class Persona extends BaseEntity implements Serializable, Comparable<Pers
 
     @ElementCollection
     @NotNull
-    private List<AtomicRight> personaRights = new ArrayList<>();
-
-    @Transient
-    private transient ReadOnlyLongProperty idProperty;
-
-    @Transient
-    private transient StringProperty nameProperty;
-
-    @Transient
-    private transient ObjectProperty<ObservableList<AtomicRight>> personaRightsProperty;
+    private List<AtomicRight> personaRights;
 
     public Persona() {
+        personaRights = new ArrayList<>();
+    }
+
+    /**
+     * Copy constructor for usage in ui. See the old ui usage pattern.
+     *
+     * @param id            the id
+     * @param optLock       the old optLock
+     * @param name          the name
+     * @param personaRights collection of the persona rights.
+     */
+    public Persona(long id, int optLock, String name, List<AtomicRight> personaRights) {
+        this();
+        this.id = id;
+        this.optLock = optLock;
+        this.name = Objects.requireNonNull(name, "Name must not be null");
+        Optional.ofNullable(personaRights).ifPresent(prs -> this.personaRights.addAll(prs));
     }
 
     public Persona(String name) {
+        this();
         this.name = name;
     }
 
+    @Override
     public long getId() {
         return id;
     }
@@ -89,30 +94,6 @@ public class Persona extends BaseEntity implements Serializable, Comparable<Pers
 
     public void setName(String name) {
         this.name = name;
-    }
-    
-    public ReadOnlyLongProperty idProperty() {
-        if ( idProperty == null ) {
-            idProperty = new ReadOnlyLongWrapper(id);
-        }
-        return idProperty;
-    }
-
-    public StringProperty nameProperty() {
-        if ( nameProperty == null ) {
-            nameProperty = new SimpleStringProperty(name);
-            nameProperty.addListener((ObservableValue<? extends String> ov, String oldValue, String newValue) -> {
-                name = newValue;
-            });
-        }
-        return nameProperty;
-    }
-
-    public ObjectProperty<ObservableList<AtomicRight>> personaRightsProperty() {
-        if ( personaRightsProperty == null ) {
-            personaRightsProperty = new SimpleObjectProperty<>(FXCollections.observableList(personaRights));
-        }
-        return personaRightsProperty;
     }
 
     /**
@@ -136,14 +117,6 @@ public class Persona extends BaseEntity implements Serializable, Comparable<Pers
         }
     }
 
-    public void remove(AtomicRight atomicRight) {
-        personaRights.remove(atomicRight);
-    }
-
-    public void removeAll(Collection<AtomicRight> rights) {
-        personaRights.removeAll(rights);
-    }
-
     @Override
     public int compareTo(Persona o) {
         if ( o == null ) return -1;
@@ -158,7 +131,7 @@ public class Persona extends BaseEntity implements Serializable, Comparable<Pers
     public void fetchEager() {
         personaRights.size();
     }
-    
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);

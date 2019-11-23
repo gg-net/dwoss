@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.rights.ui;
 
-import eu.ggnet.dwoss.rights.ee.RightsAgent;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.security.MessageDigest;
@@ -32,8 +30,7 @@ import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
 import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.dwoss.rights.ee.entity.Operator;
-import eu.ggnet.dwoss.rights.ee.entity.Persona;
+import eu.ggnet.dwoss.rights.ee.RightsAgent;
 import eu.ggnet.saft.core.Dl;
 
 /**
@@ -97,9 +94,9 @@ public class OperatorManagmentController implements Initializable {
     ListView<AtomicRight> rightsList;
 
     @FXML
-    ListView<Persona> personasList;
+    ListView<UiPersona> personasList;
 
-    Operator operator;
+    UiOperator uiOperator;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -107,20 +104,20 @@ public class OperatorManagmentController implements Initializable {
         personasList.setCellFactory(new PersonaListCell.Factory());
     }
 
-    public void setOperator(Operator op) {
-        this.operator = (op != null) ? op : new Operator();
-        userIdLabel.setText("" + operator.getId());
-        Bindings.bindBidirectional(quickloginField.textProperty(), operator.quickLoginKeyProperty(), new NumberStringConverter(Integer.class));
-        Bindings.bindBidirectional(usernameField.textProperty(), operator.usernameProperty());
-        Bindings.bindBidirectional(passwordLabel.textProperty(), operator.passwordProperty());
-        Bindings.bindBidirectional(saltField.textProperty(), operator.saltProperty());
-        Bindings.bindBidirectional(rightsList.itemsProperty(), operator.rightsProperty());
+    public void setOperator(UiOperator op) {
+        this.uiOperator = (op != null) ? op : new UiOperator();
+        userIdLabel.setText("" + uiOperator.idProperty().get());
+        Bindings.bindBidirectional(quickloginField.textProperty(), uiOperator.quickLoginKeyProperty(), new NumberStringConverter(Integer.class));
+        Bindings.bindBidirectional(usernameField.textProperty(), uiOperator.usernameProperty());
+        Bindings.bindBidirectional(passwordLabel.textProperty(), uiOperator.passwordProperty());
+        Bindings.bindBidirectional(saltField.textProperty(), uiOperator.saltProperty());
+        Bindings.bindBidirectional(rightsList.itemsProperty(), uiOperator.rightsProperty());
     }
 
     @FXML
     public void onConfirm() {
         RightsAgent agent = Dl.remote().lookup(RightsAgent.class);
-        agent.store(operator);
+        agent.store(uiOperator.toOperator());
         onCancel();
     }
 
@@ -133,8 +130,8 @@ public class OperatorManagmentController implements Initializable {
     @FXML
     public void onSetPassword() {
         byte[] hashPassword = hashPassword(newPasswordField.getText(), saltField.getText().getBytes());
-        operator.setPassword(hashPassword);
-        operator.setSalt(saltField.getText().getBytes());
+        uiOperator.passwordProperty().set(new String(hashPassword));
+        uiOperator.saltProperty().set(saltField.getText());
     }
 
     private static byte[] hashPassword(String password, byte[] salt) {

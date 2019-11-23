@@ -29,8 +29,7 @@ import org.junit.runner.RunWith;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent.Root;
 import eu.ggnet.dwoss.customer.ee.assist.Customers;
-import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
-import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
+import eu.ggnet.dwoss.customer.ee.assist.gen.*;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
@@ -147,15 +146,15 @@ public class CustomerAgentCreateIT extends ArquillianProjectArchive {
 
     @Test
     public void testCreateOnCustomer() throws Exception {
-        long cid = cgo.makeCustomer();
+        final long CID = cgo.makeCustomer(new Assure.Builder().consumer(true).build());
 
-        Customer customer = agent.findByIdEager(Customer.class, cid);
+        Customer customer = agent.findByIdEager(Customer.class, CID);
         assertThat(customer).isNotNull();
         int amountBeforAdd = customer.getContacts().size();
 
         Contact contact = CustomerGenerator.makeFullContact();
-        agent.create(new Root(Customer.class, 1l), contact); // creates a contact on the customer
-        customer = agent.findByIdEager(Customer.class, 1l);
+        agent.create(new Root(Customer.class, CID), contact); // creates a contact on the customer, which is only allowed on a conusmer
+        customer = agent.findByIdEager(Customer.class, CID);
         assertThat(customer.getContacts().size()).as("Size of contacts must be " + amountBeforAdd + "+1 after add").isEqualTo(amountBeforAdd + 1);
     }
 

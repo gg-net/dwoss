@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.rights.ui;
 
-import eu.ggnet.dwoss.rights.ee.RightsAgent;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -28,7 +26,6 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.*;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -39,6 +36,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import eu.ggnet.dwoss.rights.api.AtomicRight;
+import eu.ggnet.dwoss.rights.ee.RightsAgent;
 import eu.ggnet.dwoss.rights.ee.entity.Operator;
 import eu.ggnet.dwoss.rights.ee.entity.Persona;
 import eu.ggnet.saft.core.Dl;
@@ -55,42 +53,42 @@ import eu.ggnet.saft.core.ui.Title;
 public class RightsManagmentController implements Initializable, FxController {
 
     @FXML
-    ListView<Operator> userlist;
+    private ListView<UiOperator> userlist;
 
     @FXML
-    ListView<Persona> activePersonas;
+    private ListView<UiPersona> activePersonas;
 
     @FXML
-    ListView<Persona> deactivePersonas;
+    private ListView<UiPersona> deactivePersonas;
 
     @FXML
-    ListView<AtomicRight> activeRights;
+    private ListView<AtomicRight> activeRights;
 
     @FXML
-    ListView<AtomicRight> deactiveRights;
+    private ListView<AtomicRight> deactiveRights;
 
     @FXML
-    ListView<AtomicRight> allRights;
+    private ListView<AtomicRight> allRights;
 
     @FXML
-    Button addRightButton;
+    private Button addRightButton;
 
     @FXML
-    Button removeRightButton;
+    private Button removeRightButton;
 
     @FXML
-    Button addPersonaButton;
+    private Button addPersonaButton;
 
     @FXML
-    Button removePersonaButton;
+    private Button removePersonaButton;
 
-    private final Set<Persona> allPersonas = new HashSet<>();
+    private final Set<UiPersona> allPersonas = new HashSet<>();
 
     private ObservableList<AtomicRight> deactivatedRightsList;
 
-    private ObservableList<Persona> deactivatedPersonasList;
+    private ObservableList<UiPersona> deactivatedPersonasList;
 
-    private Operator selectedOperator;
+    private UiOperator selectedOperator;
 
     /**
      * Initializes the controller class.
@@ -101,7 +99,7 @@ public class RightsManagmentController implements Initializable, FxController {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         userlist.setCellFactory(new OperatorListCell.Factory());
-        ReadOnlyObjectProperty<Operator> opProp = userlist.getSelectionModel().selectedItemProperty();
+        ReadOnlyObjectProperty<UiOperator> opProp = userlist.getSelectionModel().selectedItemProperty();
         addRightButton.visibleProperty().bind(deactiveRights.getSelectionModel().selectedIndexProperty().greaterThanOrEqualTo(0).and(opProp.isNotNull()));
         removeRightButton.visibleProperty().bind(activeRights.getSelectionModel().selectedIndexProperty().greaterThanOrEqualTo(0).and(opProp.isNotNull()));
         addPersonaButton.visibleProperty().bind(deactivePersonas.getSelectionModel().selectedIndexProperty().greaterThanOrEqualTo(0).and(opProp.isNotNull()));
@@ -109,7 +107,7 @@ public class RightsManagmentController implements Initializable, FxController {
 
         userlist.setOnMouseClicked((event) -> {
             if ( event.getButton().equals(MouseButton.PRIMARY) ) {
-                Operator op = userlist.getSelectionModel().getSelectedItem();
+                UiOperator op = userlist.getSelectionModel().getSelectedItem();
                 if ( event.getClickCount() == 1 ) {
                     setSelectedOperator(op);
                 } else if ( op != null ) {
@@ -139,99 +137,87 @@ public class RightsManagmentController implements Initializable, FxController {
 
         deactiveRights.getItems().addAll();
 
-        activePersonas.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent t) {
-                if ( t.getClickCount() > 1 ) {
-                    if ( activePersonas.getSelectionModel().getSelectedItem() != null )
-                        openPersonaManagment(activePersonas.getSelectionModel().getSelectedItem());
-                    return;
-                }
-                deactivePersonas.getSelectionModel().clearSelection();
-                activeRights.getSelectionModel().clearSelection();
-                deactiveRights.getSelectionModel().clearSelection();
+        activePersonas.setOnMouseClicked((MouseEvent t) -> {
+            if ( t.getClickCount() > 1 ) {
+                if ( activePersonas.getSelectionModel().getSelectedItem() != null )
+                    openPersonaManagment(activePersonas.getSelectionModel().getSelectedItem());
+                return;
             }
+            deactivePersonas.getSelectionModel().clearSelection();
+            activeRights.getSelectionModel().clearSelection();
+            deactiveRights.getSelectionModel().clearSelection();
         });
-        deactivePersonas.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent t) {
-                if ( t.getClickCount() > 1 ) {
-                    if ( deactivePersonas.getSelectionModel().getSelectedItem() != null )
-                        openPersonaManagment(deactivePersonas.getSelectionModel().getSelectedItem());
-                    return;
-                }
-                activePersonas.getSelectionModel().clearSelection();
-                activeRights.getSelectionModel().clearSelection();
-                deactiveRights.getSelectionModel().clearSelection();
+        deactivePersonas.setOnMouseClicked((MouseEvent t) -> {
+            if ( t.getClickCount() > 1 ) {
+                if ( deactivePersonas.getSelectionModel().getSelectedItem() != null )
+                    openPersonaManagment(deactivePersonas.getSelectionModel().getSelectedItem());
+                return;
             }
+            activePersonas.getSelectionModel().clearSelection();
+            activeRights.getSelectionModel().clearSelection();
+            deactiveRights.getSelectionModel().clearSelection();
         });
-        activeRights.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent t) {
-                deactivePersonas.getSelectionModel().clearSelection();
-                activePersonas.getSelectionModel().clearSelection();
-                deactiveRights.getSelectionModel().clearSelection();
-            }
+        activeRights.setOnMouseClicked((MouseEvent t) -> {
+            deactivePersonas.getSelectionModel().clearSelection();
+            activePersonas.getSelectionModel().clearSelection();
+            deactiveRights.getSelectionModel().clearSelection();
         });
-        deactiveRights.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent t) {
-                deactivePersonas.getSelectionModel().clearSelection();
-                activePersonas.getSelectionModel().clearSelection();
-                activeRights.getSelectionModel().clearSelection();
-            }
+        deactiveRights.setOnMouseClicked((MouseEvent t) -> {
+            deactivePersonas.getSelectionModel().clearSelection();
+            activePersonas.getSelectionModel().clearSelection();
+            activeRights.getSelectionModel().clearSelection();
         });
         refreshAll();
     }
 
     @FXML
     private void handleAddRightButton() {
-        Operator op = userlist.getSelectionModel().getSelectedItem();
+        UiOperator op = userlist.getSelectionModel().getSelectedItem();
         List<AtomicRight> selectedItems = new ArrayList<>(deactiveRights.getSelectionModel().getSelectedItems());
         System.out.println("SelectedIt: " + selectedItems);
         op.addAllRight(selectedItems);
         resetDeactiveRights();
         resetAllRights();
 //        setSelectedOperator(op);
-        Dl.remote().lookup(RightsAgent.class).store(op);
+        Dl.remote().lookup(RightsAgent.class).store(op.toOperator());
     }
 
     @FXML
     private void handleRemoveRightButton() {
-        Operator op = userlist.getSelectionModel().getSelectedItem();
+        UiOperator op = userlist.getSelectionModel().getSelectedItem();
         List<AtomicRight> selectedItems = new ArrayList<>(activeRights.getSelectionModel().getSelectedItems());
         selectedOperator().removeAllRight(selectedItems);
         resetDeactiveRights();
         resetAllRights();
 //        setSelectedOperator(op);
-         Dl.remote().lookup(RightsAgent.class).store(op);
+        Dl.remote().lookup(RightsAgent.class).store(op.toOperator());
     }
 
     private void resetDeactiveRights() {
-        Operator op = userlist.getSelectionModel().getSelectedItem();
+        UiOperator op = userlist.getSelectionModel().getSelectedItem();
         deactivatedRightsList.clear();
         deactivatedRightsList.addAll(EnumSet.complementOf(op.getAllActiveRights()));
     }
 
     @FXML
     private void handleAddPersonaButton() {
-        Operator op = userlist.getSelectionModel().getSelectedItem();
-        List<Persona> selectedItems = new ArrayList<>(deactivePersonas.getSelectionModel().getSelectedItems());
+        UiOperator op = userlist.getSelectionModel().getSelectedItem();
+        List<UiPersona> selectedItems = new ArrayList<>(deactivePersonas.getSelectionModel().getSelectedItems());
         op.addAllPersona(selectedItems);
         resetDeactivePersonas();
         resetDeactiveRights();
         resetAllRights();
 
 //        setSelectedOperator(op);
-         Dl.remote().lookup(RightsAgent.class).store(op);
+        Dl.remote().lookup(RightsAgent.class).store(op.toOperator());
     }
 
-    private Operator selectedOperator() {
+    private UiOperator selectedOperator() {
         return userlist.getSelectionModel().getSelectedItem();
     }
 
     private void resetDeactivePersonas() {
-        List<Persona> removed = new ArrayList<>(allPersonas);
+        List<UiPersona> removed = new ArrayList<>(allPersonas);
         removed.removeAll(selectedOperator().getPersonas());
         deactivatedPersonasList.clear();
         deactivatedPersonasList.addAll(removed);
@@ -239,17 +225,17 @@ public class RightsManagmentController implements Initializable, FxController {
 
     @FXML
     private void handleRemovePersonaButton() {
-        Operator op = userlist.getSelectionModel().getSelectedItem();
-        List<Persona> selectedItems = new ArrayList<>(activePersonas.getSelectionModel().getSelectedItems());
+        UiOperator op = userlist.getSelectionModel().getSelectedItem();
+        List<UiPersona> selectedItems = new ArrayList<>(activePersonas.getSelectionModel().getSelectedItems());
         op.removeAllPersona(selectedItems);
-        List<Persona> removed = new ArrayList<>(allPersonas);
+        List<UiPersona> removed = new ArrayList<>(allPersonas);
         removed.removeAll(op.getPersonas());
         resetDeactivePersonas();
         resetDeactiveRights();
         resetAllRights();
 
 //        setSelectedOperator(op);
-         Dl.remote().lookup(RightsAgent.class).store(op);
+        Dl.remote().lookup(RightsAgent.class).store(op.toOperator());
     }
 
     private void resetAllRights() {
@@ -272,11 +258,11 @@ public class RightsManagmentController implements Initializable, FxController {
      * <p>
      * @param op is the {@link Operator} wich is setted.
      */
-    private void setSelectedOperator(Operator op) {
+    private void setSelectedOperator(UiOperator op) {
         if ( op == null ) return;
         if ( selectedOperator != null ) {//to correclty refresh the both active Lists
             activePersonas.itemsProperty().unbindBidirectional(selectedOperator.personasProperty());
-            activePersonas.setItems(FXCollections.<Persona>observableArrayList());
+            activePersonas.setItems(FXCollections.<UiPersona>observableArrayList());
             activeRights.itemsProperty().unbindBidirectional(selectedOperator.rightsProperty());
             activeRights.setItems(FXCollections.<AtomicRight>observableArrayList());
         }
@@ -303,23 +289,20 @@ public class RightsManagmentController implements Initializable, FxController {
      * Clears all Lists and get all {@link Operator}'s directly from the Database.
      */
     protected void refreshAll() {
-        userlist.getItems().clear();
-        activePersonas.getItems().clear();
-        deactivePersonas.getItems().clear();
-        activeRights.getItems().clear();
-        deactiveRights.getItems().clear();
-        Platform.runLater(
-                new Runnable() {
-            @Override
-            public void run() {
-                RightsAgent agent = Dl.remote().lookup(RightsAgent.class);
-                userlist.getItems().addAll(agent.findAllEager(Operator.class));
-                List<Persona> findAllEager = agent.findAllEager(Persona.class);
-                allPersonas.addAll(findAllEager);
-                deactivePersonas.getItems().addAll(findAllEager);
-            }
-        }
-        );
+        Platform.runLater(() -> {
+            userlist.getItems().clear();
+            activePersonas.getItems().clear();
+            deactivePersonas.getItems().clear();
+            activeRights.getItems().clear();
+            deactiveRights.getItems().clear();
+            RightsAgent agent = Dl.remote().lookup(RightsAgent.class);
+            agent.findAllEager(Operator.class).forEach(o -> userlist.getItems().add(new UiOperator(o)));
+            agent.findAllEager(Persona.class).forEach(p -> {
+                UiPersona uip = new UiPersona(p);
+                allPersonas.add(uip);
+                deactivePersonas.getItems().add(uip);
+            });
+        });
     }
 
     /**
@@ -327,7 +310,7 @@ public class RightsManagmentController implements Initializable, FxController {
      * <p>
      * @param p is the {@link Persona} which is edited, can be null to create a new.
      */
-    private void openPersonaManagment(Persona p) {
+    private void openPersonaManagment(UiPersona p) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             AnchorPane page = (AnchorPane)fxmlLoader.load(getClass().getResource("PersonaManagmentView.fxml").openStream());
@@ -351,7 +334,7 @@ public class RightsManagmentController implements Initializable, FxController {
      * <p>
      * @param op is the {@link Operator} which is edited, can be null to create a new.
      */
-    private void openOperatorManagment(Operator op) {
+    private void openOperatorManagment(UiOperator op) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             AnchorPane page = (AnchorPane)fxmlLoader.load(getClass().getResource("OperatorManagmentView.fxml").openStream());

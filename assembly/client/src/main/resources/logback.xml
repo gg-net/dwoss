@@ -51,22 +51,22 @@
         </encoder>
     </appender>
 
-    <appender name="multiplex" class="de.huxhorn.lilith.logback.appender.ClassicMultiplexSocketAppender"> 
+    <appender name="multiplex" class="de.huxhorn.lilith.logback.appender.ClassicMultiplexSocketAppender">
         <Compressing>true</Compressing>
-        <ReconnectionDelay>10000</ReconnectionDelay> 
-        <IncludeCallerData>true</IncludeCallerData> 
+        <ReconnectionDelay>10000</ReconnectionDelay>
+        <IncludeCallerData>true</IncludeCallerData>
         <RemoteHost>localhost</RemoteHost>
     </appender>
 
     <!-- Needed to exclude, otherwise oure lookup of progress creates messages every 2 sec -->
-    <logger name="eu.ggnet.saft.core.dl.LocalDl" level="DEBUG"/>
+    <logger name="eu.ggnet.saft.core.dl.LocalDl" level="INFO"/>
     <logger name="eu.ggnet.saft.core.dl.RemoteDl" level="INFO"/>
     <logger name="eu.ggnet.dwoss.assembly.remote.lookup.WildflyLookup" level="INFO"/>
     <logger name="org.jboss.ejb.client.EJBClientContext" level="INFO"/>
     <logger name="org.jboss.ejb.client.ReceiverInterceptor" level="INFO"/>
     <logger name="org.jboss.ejb.client.invocation" level="INFO" />
     <logger name="org.jboss.ejb.client" level="INFO" />
-    
+
     <root level="DEBUG">
         <appender-ref ref="console"/>
         <appender-ref ref="file"/>

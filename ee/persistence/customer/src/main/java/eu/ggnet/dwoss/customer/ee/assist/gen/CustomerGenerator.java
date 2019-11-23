@@ -185,10 +185,10 @@ public class CustomerGenerator {
     public static Customer makeCustomer(Assure assure) {
         Objects.requireNonNull(assure, "assure must not be null");
         Customer c;
-        if ( assure.simple() && assure.business() ) {
-            c = internalMakeSimpleBussinesCustomer(assure);
-        } else if ( assure.simple() && assure.consumer() ) {
-            c = internalMakeSimpleConsumerCustomer(assure);
+        if ( assure.business() ) {
+            c = internalMakeSimpleBussinesCustomer(assure); // No complex bussines customer right now.
+        } else if ( assure.consumer() ) {
+            c = assure.simple() ? internalMakeSimpleConsumerCustomer(assure) : internalMakeConsumerCustomer(assure);
         } else if ( assure.simple() ) {
             c = (R.nextBoolean() ? internalMakeSimpleConsumerCustomer(assure) : internalMakeSimpleBussinesCustomer(assure));
         } else {

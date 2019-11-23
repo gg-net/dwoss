@@ -75,7 +75,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <!--<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>-->
         <slf4j.version>1.7.28</slf4j.version>
         <saft.version>1.1-SNAPSHOT</saft.version>
         <wildfly.version></wildfly.version>

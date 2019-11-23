@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.rights.ui;
 
-import eu.ggnet.dwoss.rights.ee.entity.Operator;
-
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;
@@ -26,27 +24,27 @@ import javafx.util.Callback;
  *
  * @author Bastian Venz
  */
-public class OperatorListCell extends ListCell<Operator> {
+public class OperatorListCell extends ListCell<UiOperator> {
 
-    public static class Factory implements Callback<ListView<Operator>, ListCell<Operator>> {
+    public static class Factory implements Callback<ListView<UiOperator>, ListCell<UiOperator>> {
 
         @Override
-        public ListCell<Operator> call(ListView<Operator> p) {
+        public ListCell<UiOperator> call(ListView<UiOperator> p) {
             return new OperatorListCell(p);
         }
     }
 
-    public OperatorListCell(ListView<Operator> listView) {
+    public OperatorListCell(ListView<UiOperator> listView) {
 
     }
 
     @Override
-    protected void updateItem(Operator item, boolean empty) {
+    protected void updateItem(UiOperator item, boolean empty) {
         super.updateItem(item, empty);
         if ( empty || item == null ) {
             setGraphic(null);
             return;
         }
-        setText(item.getUsername());
+        setText(item.usernameProperty().get());
     }
 }
