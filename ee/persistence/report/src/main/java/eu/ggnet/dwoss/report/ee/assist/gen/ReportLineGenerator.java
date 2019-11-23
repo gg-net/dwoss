@@ -16,17 +16,17 @@
  */
 package eu.ggnet.dwoss.report.ee.assist.gen;
 
-import eu.ggnet.dwoss.core.common.values.DocumentType;
-import eu.ggnet.dwoss.core.common.values.PositionType;
-import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.time.DateUtils;
 
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.system.GlobalConfig;
 import eu.ggnet.dwoss.core.system.generator.*;
+import eu.ggnet.dwoss.core.system.util.TwoDigits;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 
 public class ReportLineGenerator {
@@ -52,7 +52,24 @@ public class ReportLineGenerator {
         return Math.abs(R.nextInt(1000000));
     }
 
-    public ReportLine makeReportLine(List<TradeName> contractors, Date starting, int maxDeltaDays) {
+    /**
+     * Returns a report line with a calculated percentage
+     *
+     * @param contractors     the contractors
+     * @param starting        starting date
+     * @param maxDeltaDays    max delta days
+     * @param marginPercentag percentage for calcuation
+     * @return a generated line
+     */
+    public static ReportLine makeReportLine(List<TradeName> contractors, Date starting, int maxDeltaDays, double marginPercentag) {
+        ReportLine l = makeReportLine(contractors, starting, maxDeltaDays, Arrays.asList(PositionType.values()), Arrays.asList(DocumentType.values()));
+        l.setMarginPercentage(marginPercentag);
+        l.setPurchasePrice(l.getPrice());
+        l.setPrice(TwoDigits.roundedApply(l.getPurchasePrice(), marginPercentag, 0.001));
+        return l;
+    }
+
+    public static ReportLine makeReportLine(List<TradeName> contractors, Date starting, int maxDeltaDays) {
         return makeReportLine(contractors, starting, maxDeltaDays, Arrays.asList(PositionType.values()), Arrays.asList(DocumentType.values()));
     }
 
@@ -66,7 +83,7 @@ public class ReportLineGenerator {
      * @param docTypes     documetTypes
      * @return the ReportingLine
      */
-    public ReportLine makeReportLine(List<TradeName> contractors, Date starting, int maxDeltaDays, List<PositionType> posTypes, List<DocumentType> docTypes) {
+    public static ReportLine makeReportLine(List<TradeName> contractors, Date starting, int maxDeltaDays, List<PositionType> posTypes, List<DocumentType> docTypes) {
         ReportLine line = new ReportLine();
         line.setName("ReportLine-" + getRandomInt());
         line.setDescription("desription-" + getRandomInt());
@@ -112,7 +129,7 @@ public class ReportLineGenerator {
         return line;
     }
 
-    public ReportLine makeReportLine() {
+    public static ReportLine makeReportLine() {
         ReportLine reportLine = new ReportLine();
         Date pastFiveYears = DateUtils.setYears(new Date(), 2009);
         reportLine.setActual(new Date());

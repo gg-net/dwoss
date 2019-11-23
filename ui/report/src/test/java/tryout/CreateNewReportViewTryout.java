@@ -16,22 +16,13 @@
  */
 package tryout;
 
-import eu.ggnet.saft.core.Dl;
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.UiCore;
-
-import java.util.EnumSet;
-
 import javax.swing.JLabel;
 
-import eu.ggnet.dwoss.mandator.api.Mandators;
-import eu.ggnet.dwoss.mandator.api.value.Contractors;
-import eu.ggnet.dwoss.report.ui.cap.support.CreateNewReportView;
-import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.widget.saft.OkCancelWrap;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import eu.ggnet.dwoss.mandator.api.Mandators;
+import eu.ggnet.dwoss.mandator.spi.CachedMandators;
+import eu.ggnet.dwoss.report.ui.cap.support.CreateNewReportView;
+import eu.ggnet.saft.core.*;
 
 /**
  *
@@ -40,10 +31,8 @@ import static org.mockito.Mockito.when;
 public class CreateNewReportViewTryout {
 
     public static void main(String[] args) {
-        Mandators mandators = mock(Mandators.class);
-        when(mandators.loadContractors()).thenReturn(new Contractors(EnumSet.allOf(TradeName.class), EnumSet.allOf(TradeName.class)));
-
-        Dl.remote().add(Mandators.class, mandators);
+        Dl.remote().add(Mandators.class, new ManadatorsStub());
+        Dl.local().add(CachedMandators.class, new ManadatorsStub());
 
         Ui.exec(() -> {
             UiCore.startSwing(() -> new JLabel("Application"));

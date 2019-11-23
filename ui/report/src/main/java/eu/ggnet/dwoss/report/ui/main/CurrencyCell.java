@@ -21,14 +21,12 @@ import java.text.NumberFormat;
 import javafx.scene.control.TableCell;
 import javafx.scene.paint.Color;
 
-import eu.ggnet.dwoss.report.ee.entity.ReportLine;
-
 /**
  * Displaying double as currency with color.
  *
  * @author pascal.perau
  */
-public class CurrencyCell extends TableCell<ReportLine, Number> {
+public class CurrencyCell extends TableCell<SelectableReportLine, Number> {
 
     @Override
     protected void updateItem(Number item, boolean empty) {
