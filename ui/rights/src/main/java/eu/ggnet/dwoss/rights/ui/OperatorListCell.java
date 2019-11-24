@@ -42,7 +42,7 @@ public class OperatorListCell extends ListCell<UiOperator> {
     protected void updateItem(UiOperator item, boolean empty) {
         super.updateItem(item, empty);
         if ( empty || item == null ) {
-            setGraphic(null);
+            setText(null);
             return;
         }
         setText(item.usernameProperty().get());

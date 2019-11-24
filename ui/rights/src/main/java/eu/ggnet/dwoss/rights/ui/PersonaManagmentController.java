@@ -18,6 +18,7 @@ package eu.ggnet.dwoss.rights.ui;
 
 import java.net.URL;
 import java.util.*;
+import java.util.function.Consumer;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
@@ -26,36 +27,38 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
 
 import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.dwoss.rights.ee.RightsAgent;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.FxController;
+import eu.ggnet.saft.core.ui.ResultProducer;
 
 /**
  *
  * @author Bastian Venz
  */
-public class PersonaManagmentController implements Initializable {
+public class PersonaManagmentController implements Initializable, FxController, Consumer<UiPersona>, ResultProducer<UiPersona> {
 
     @FXML
-    TextField nameField;
+    private TextField nameField;
 
     @FXML
-    ListView<AtomicRight> activatedRights;
+    private ListView<AtomicRight> activatedRights;
 
     @FXML
-    ListView<AtomicRight> deactivatedRights;
+    private ListView<AtomicRight> deactivatedRights;
 
     @FXML
-    Button addButton;
+    private Button addButton;
 
     @FXML
-    Button removeButton;
+    private Button removeButton;
 
     private UiPersona uiPersona;
 
     private ObservableList<AtomicRight> deactivatedRightsList;
+
+    private boolean ok = false;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -82,6 +85,17 @@ public class PersonaManagmentController implements Initializable {
         this.uiPersona = p;
     }
 
+    @Override
+    public void accept(UiPersona t) {
+        setPersona(t);
+    }
+
+    @Override
+    public UiPersona getResult() {
+        if ( ok ) return uiPersona;
+        return null;
+    }
+
     @FXML
     private void handleAddButton() {
         ObservableList<AtomicRight> selectedItems = deactivatedRights.getSelectionModel().getSelectedItems();
@@ -106,16 +120,13 @@ public class PersonaManagmentController implements Initializable {
 
     @FXML
     public void onConfirm() {
-        RightsAgent agent = Dl.remote().lookup(RightsAgent.class);
-        agent.store(uiPersona.toPersona());
-        onCancel();
+        ok = true;
+        Ui.closeWindowOf(nameField);
     }
 
-    // Mach wech.
     @FXML
     public void onCancel() {
-        Stage stage = (Stage)nameField.getScene().getWindow();
-        stage.close();
+        Ui.closeWindowOf(nameField);
     }
 
     public static URL loadFxml() {

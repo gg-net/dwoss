@@ -21,23 +21,25 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
+import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.dwoss.rights.ee.RightsAgent;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.FxController;
+import eu.ggnet.saft.core.ui.ResultProducer;
 
 /**
  *
  * @author Bastian Venz
  */
-public class OperatorManagmentController implements Initializable {
+public class OperatorManagmentController implements Initializable, Consumer<UiOperator>, ResultProducer<UiOperator>, FxController {
 
     /**
      * This Class converts {@link Integer},{@link Long},{@link Double} and {@link Float} to String and back.
@@ -73,39 +75,49 @@ public class OperatorManagmentController implements Initializable {
     }
 
     @FXML
-    Label userIdLabel;
+    private Label userIdLabel;
 
     @FXML
-    TextField usernameField;
+    private TextField usernameField;
 
     @FXML
-    TextField quickloginField;
+    private TextField quickloginField;
 
     @FXML
-    Label passwordLabel;
+    private Label passwordLabel;
 
     @FXML
-    TextField newPasswordField;
+    private TextField newPasswordField;
 
     @FXML
-    TextField saltField;
+    private TextField saltField;
 
     @FXML
-    ListView<AtomicRight> rightsList;
+    private ListView<AtomicRight> rightsList;
 
     @FXML
-    ListView<UiPersona> personasList;
+    private ListView<UiPersona> personasList;
 
-    UiOperator uiOperator;
+    private UiOperator uiOperator;
+
+    private boolean ok = false;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         rightsList.setCellFactory(new RightsListCell.Factory());
         personasList.setCellFactory(new PersonaListCell.Factory());
+
+    }
+
+    @Override
+    public void accept(UiOperator old) {
+        System.out.println("accept called");
+        setOperator(old);
     }
 
     public void setOperator(UiOperator op) {
         this.uiOperator = (op != null) ? op : new UiOperator();
+        System.out.println("Im Set" + uiOperator);
         userIdLabel.setText("" + uiOperator.idProperty().get());
         Bindings.bindBidirectional(quickloginField.textProperty(), uiOperator.quickLoginKeyProperty(), new NumberStringConverter(Integer.class));
         Bindings.bindBidirectional(usernameField.textProperty(), uiOperator.usernameProperty());
@@ -114,21 +126,26 @@ public class OperatorManagmentController implements Initializable {
         Bindings.bindBidirectional(rightsList.itemsProperty(), uiOperator.rightsProperty());
     }
 
+    @Override
+    public UiOperator getResult() {
+        if ( ok ) return uiOperator;
+        return null;
+    }
+
     @FXML
     public void onConfirm() {
-        RightsAgent agent = Dl.remote().lookup(RightsAgent.class);
-        agent.store(uiOperator.toOperator());
-        onCancel();
+        ok = true;
+        Ui.closeWindowOf(userIdLabel);
     }
 
     @FXML
     public void onCancel() {
-        Stage stage = (Stage)userIdLabel.getScene().getWindow();
-        stage.close();
+        Ui.closeWindowOf(userIdLabel);
     }
 
     @FXML
     public void onSetPassword() {
+        if ( Utils.isBlank(newPasswordField.getText()) || Utils.isBlank(saltField.getText()) ) return; // Bad solution, cause there is no feedback.
         byte[] hashPassword = hashPassword(newPasswordField.getText(), saltField.getText().getBytes());
         uiOperator.passwordProperty().set(new String(hashPassword));
         uiOperator.saltProperty().set(saltField.getText());

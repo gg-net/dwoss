@@ -74,7 +74,7 @@ public class Operator extends BaseEntity implements Serializable, EagerAble {
     @NotNull
     private List<Persona> personas = new ArrayList<>();
 
-    public Operator(long id, int optLock, int quickLoginKey, String username, byte[] salt, byte[] password, List<Persona> personas) {
+    public Operator(long id, int optLock, int quickLoginKey, String username, byte[] salt, byte[] password, List<Persona> personas, List<AtomicRight> rights) {
         this.id = id;
         this.optLock = optLock;
         this.quickLoginKey = quickLoginKey;
@@ -82,6 +82,7 @@ public class Operator extends BaseEntity implements Serializable, EagerAble {
         this.salt = salt;
         this.password = password;
         Optional.ofNullable(personas).ifPresent(ps -> this.personas.addAll(ps));
+        Optional.ofNullable(rights).ifPresent(r -> this.rights.addAll(r));
     }
 
     /**

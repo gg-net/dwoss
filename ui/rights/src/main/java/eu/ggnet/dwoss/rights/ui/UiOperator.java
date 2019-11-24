@@ -58,7 +58,7 @@ public class UiOperator implements Serializable {
     private ListProperty<AtomicRight> rightsProperty;
 
     public Operator toOperator() {
-        return new Operator(idProperty.get(), optLock, quickLoginKeyProperty.get(), usernameProperty.get(), saltProperty.get().getBytes(), passwordProperty.get().getBytes(), personas.stream().map(UiPersona::toPersona).collect(Collectors.toList()));
+        return new Operator(idProperty.get(), optLock, quickLoginKeyProperty.get(), usernameProperty.get(), saltProperty.get().getBytes(), passwordProperty.get().getBytes(), personas.stream().map(UiPersona::toPersona).collect(Collectors.toList()), rightsProperty.get());
     }
 
     public UiOperator(Operator operator) {

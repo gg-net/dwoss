@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.rights.ui;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
@@ -26,21 +25,18 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.*;
-import javafx.scene.Scene;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
+import javafx.stage.Modality;
 
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.ee.RightsAgent;
 import eu.ggnet.dwoss.rights.ee.entity.Operator;
 import eu.ggnet.dwoss.rights.ee.entity.Persona;
-import eu.ggnet.saft.core.Dl;
-import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.ui.FxController;
 import eu.ggnet.saft.core.ui.Title;
 
@@ -245,12 +241,12 @@ public class RightsManagmentController implements Initializable, FxController {
 
     @FXML
     private void handleAddNewPersonaButton() {
-        openPersonaManagment(null);
+        openPersonaManagment(new UiPersona());
     }
 
     @FXML
     private void handleAddNewOperatorButton() {
-        openOperatorManagment(null);
+        openOperatorManagment(new UiOperator());
     }
 
     /**
@@ -292,6 +288,7 @@ public class RightsManagmentController implements Initializable, FxController {
         Platform.runLater(() -> {
             userlist.getItems().clear();
             activePersonas.getItems().clear();
+            allPersonas.clear();
             deactivePersonas.getItems().clear();
             activeRights.getItems().clear();
             deactiveRights.getItems().clear();
@@ -311,22 +308,10 @@ public class RightsManagmentController implements Initializable, FxController {
      * @param p is the {@link Persona} which is edited, can be null to create a new.
      */
     private void openPersonaManagment(UiPersona p) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            AnchorPane page = (AnchorPane)fxmlLoader.load(getClass().getResource("PersonaManagmentView.fxml").openStream());
-            PersonaManagmentController controller = (PersonaManagmentController)fxmlLoader.getController();
-            controller.setPersona(p);
-            Stage stage = new Stage();
-            stage.setTitle("Rollen Managment");
-            Scene scene = new Scene(page, Color.ALICEBLUE);
-            stage.setScene(scene);
-            stage.showAndWait();
-            resetDeactivePersonas();
-            resetDeactiveRights();
-            resetAllRights();
-        } catch (IOException ex) {
-            Ui.handle(ex);
-        }
+        Ui.build(removePersonaButton).title("Rollen Management").modality(Modality.WINDOW_MODAL).fxml().eval(() -> p, PersonaManagmentController.class).cf()
+                .thenAcceptAsync(uc -> Dl.remote().lookup(RightsAgent.class).store(uc.toPersona()), UiCore.getExecutor())
+                .thenRunAsync(() -> refreshAll(), Platform::runLater)
+                .handle(Ui.handler());
     }
 
     /**
@@ -335,36 +320,18 @@ public class RightsManagmentController implements Initializable, FxController {
      * @param op is the {@link Operator} which is edited, can be null to create a new.
      */
     private void openOperatorManagment(UiOperator op) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            AnchorPane page = (AnchorPane)fxmlLoader.load(getClass().getResource("OperatorManagmentView.fxml").openStream());
-            OperatorManagmentController controller = (OperatorManagmentController)fxmlLoader.getController();
-            controller.setOperator(op);
-            Stage stage = new Stage();
-            stage.setTitle("Nutzer Managment");
-            Scene scene = new Scene(page, Color.ALICEBLUE);
-            stage.setScene(scene);
-            stage.showAndWait();
-        } catch (IOException ex) {
-            Ui.handle(ex);
-
-        }
+        System.out.println("Muh");
+        Ui.build(removePersonaButton).title("Nutzer Management").modality(Modality.WINDOW_MODAL).fxml().eval(() -> op, OperatorManagmentController.class).cf()
+                .thenAcceptAsync(uc -> Dl.remote().lookup(RightsAgent.class).store(uc.toOperator()), UiCore.getExecutor())
+                .thenRunAsync(() -> refreshAll(), Platform::runLater)
+                .handle(Ui.handler());
     }
 
-    /**
-     * Merge all {@link Operator}'s in the database and close the Stage.
-     */
-    @FXML
-    private void handleSaveButton() {
-        Ui.closeWindowOf(userlist);
-    }
-
-    // mach wech.
     /**
      * This method close the Stage.
      */
     @FXML
-    private void handleCancleButton() {
+    private void handleCloseButton() {
         Ui.closeWindowOf(userlist);
     }
 
