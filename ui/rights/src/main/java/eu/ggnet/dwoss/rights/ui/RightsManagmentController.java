@@ -170,23 +170,18 @@ public class RightsManagmentController implements Initializable, FxController {
     private void handleAddRightButton() {
         UiOperator op = userlist.getSelectionModel().getSelectedItem();
         List<AtomicRight> selectedItems = new ArrayList<>(deactiveRights.getSelectionModel().getSelectedItems());
-        System.out.println("SelectedIt: " + selectedItems);
         op.addAllRight(selectedItems);
-        resetDeactiveRights();
-        resetAllRights();
-//        setSelectedOperator(op);
         Dl.remote().lookup(RightsAgent.class).store(op.toOperator());
+        refreshAll();
     }
 
     @FXML
     private void handleRemoveRightButton() {
         UiOperator op = userlist.getSelectionModel().getSelectedItem();
         List<AtomicRight> selectedItems = new ArrayList<>(activeRights.getSelectionModel().getSelectedItems());
-        selectedOperator().removeAllRight(selectedItems);
-        resetDeactiveRights();
-        resetAllRights();
-//        setSelectedOperator(op);
+        op.removeAllRight(selectedItems);
         Dl.remote().lookup(RightsAgent.class).store(op.toOperator());
+        refreshAll();
     }
 
     private void resetDeactiveRights() {
@@ -200,12 +195,8 @@ public class RightsManagmentController implements Initializable, FxController {
         UiOperator op = userlist.getSelectionModel().getSelectedItem();
         List<UiPersona> selectedItems = new ArrayList<>(deactivePersonas.getSelectionModel().getSelectedItems());
         op.addAllPersona(selectedItems);
-        resetDeactivePersonas();
-        resetDeactiveRights();
-        resetAllRights();
-
-//        setSelectedOperator(op);
         Dl.remote().lookup(RightsAgent.class).store(op.toOperator());
+        refreshAll();
     }
 
     private UiOperator selectedOperator() {
@@ -224,14 +215,8 @@ public class RightsManagmentController implements Initializable, FxController {
         UiOperator op = userlist.getSelectionModel().getSelectedItem();
         List<UiPersona> selectedItems = new ArrayList<>(activePersonas.getSelectionModel().getSelectedItems());
         op.removeAllPersona(selectedItems);
-        List<UiPersona> removed = new ArrayList<>(allPersonas);
-        removed.removeAll(op.getPersonas());
-        resetDeactivePersonas();
-        resetDeactiveRights();
-        resetAllRights();
-
-//        setSelectedOperator(op);
         Dl.remote().lookup(RightsAgent.class).store(op.toOperator());
+        refreshAll();
     }
 
     private void resetAllRights() {
@@ -263,18 +248,8 @@ public class RightsManagmentController implements Initializable, FxController {
             activeRights.setItems(FXCollections.<AtomicRight>observableArrayList());
         }
         selectedOperator = op;
-
         activePersonas.itemsProperty().bindBidirectional(selectedOperator.personasProperty());
-//        Set<AtomicRight> allOf = EnumSet.allOf(AtomicRight.class);
-//        allOf.removeAll(op.getRights());
-//        deactivatedRightsList.clear();
-//        deactivatedRightsList.addAll(allOf);
-
         activeRights.itemsProperty().bindBidirectional(selectedOperator.rightsProperty());
-//        ArrayList<Persona> deactivePersonas = new ArrayList<>(allPersonas);
-//        deactivePersonas.removeAll(selectedOperator.getPersonas());
-//        deactivatedPersonasList.clear();
-//        deactivatedPersonasList.addAll(deactivePersonas);
 
         resetDeactivePersonas();
         resetDeactiveRights();
