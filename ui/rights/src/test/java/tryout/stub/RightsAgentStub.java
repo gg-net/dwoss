@@ -6,9 +6,8 @@ import javax.persistence.LockModeType;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
-import eu.ggnet.dwoss.rights.ee.RightsAgent;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
-
+import eu.ggnet.dwoss.rights.ee.RightsAgent;
 import eu.ggnet.dwoss.rights.ee.entity.Operator;
 import eu.ggnet.dwoss.rights.ee.entity.Persona;
 
@@ -18,16 +17,16 @@ import eu.ggnet.dwoss.rights.ee.entity.Persona;
  */
 public class RightsAgentStub implements RightsAgent {
 
-    List<Persona> personas = new ArrayList<>();
+    Map<String, Persona> personas = new HashMap<>();
 
-    List<Operator> operators = new ArrayList<>();
+    Map<String, Operator> operators = new HashMap<>();
 
     {
         for (int i = 0; i < 3; i++) {
             Persona persona = new Persona();
             persona.setName("Persona " + i);
             persona.addAll(getRandomRights());
-            personas.add(persona);
+            personas.put(persona.getName(), persona);
         }
         for (int j = 0; j < 3; j++) {
             Operator operator = new Operator();
@@ -36,13 +35,13 @@ public class RightsAgentStub implements RightsAgent {
             }
             operator.setUsername("User " + j);
             int till = (int)(Math.random() * 3 - 1);
-            for (Persona persona : personas.subList(0, till)) {
+            for (Persona persona : new ArrayList<>(personas.values()).subList(0, till)) {
                 operator.add(persona);
             }
             operator.setSalt(RandomStringUtils.randomAlphanumeric(6).getBytes());
             operator.setPassword(RandomStringUtils.randomAlphanumeric(5).getBytes());
             operator.setQuickLoginKey((int)(Math.random() * 999));
-            operators.add(operator);
+            operators.put(operator.getUsername(), operator);
         }
     }
 
@@ -64,17 +63,26 @@ public class RightsAgentStub implements RightsAgent {
     }
 
     @Override
-    public Persona store(Persona object) {
-        System.out.println("Persona Stored=" + object);
-        if ( !personas.contains(object) ) personas.add(object);
-        return object;
+    public Persona store(Persona persona) {
+        if ( personas.containsKey(persona.getName()) ) {
+            System.out.println("Persona Removed=" + persona);
+            personas.remove(persona.getName());
+        }
+        System.out.println("Persona Stored=" + persona);
+        personas.put(persona.getName(), persona);
+
+        return persona;
     }
 
     @Override
-    public Operator store(Operator object) {
-        System.out.println("Operator Stored=" + object);
-        if ( !operators.contains(object) ) operators.add(object);
-        return object;
+    public Operator store(Operator operator) {
+        if ( operators.containsKey(operator.getUsername()) ) {
+            operators.remove(operator.getUsername());
+            System.out.println("Operator Removed=" + operator);
+        }
+        System.out.println("Operator Stored=" + operator);
+        operators.put(operator.getUsername(), operator);
+        return operator;
     }
 
     @Override
@@ -94,9 +102,9 @@ public class RightsAgentStub implements RightsAgent {
     @Override
     public <T> List<T> findAll(Class<T> entityClass) {
         if ( entityClass == Operator.class ) {
-            return (List<T>)operators;
+            return (List<T>)new ArrayList<>(operators.values());
         } else {
-            return (List<T>)personas;
+            return (List<T>)new ArrayList<>(personas.values());
         }
     }
 
@@ -118,12 +126,12 @@ public class RightsAgentStub implements RightsAgent {
     @Override
     public <T> T findById(Class<T> entityClass, Object id) {
         if ( entityClass == Operator.class ) {
-            for (Operator operator : operators) {
+            for (Operator operator : operators.values()) {
                 if ( operator.getId() == ((Long)id) )
                     return (T)operator;
             }
         } else {
-            for (Persona persona : personas) {
+            for (Persona persona : personas.values()) {
                 if ( persona.getId() == ((Long)id) )
                     return (T)persona;
             }

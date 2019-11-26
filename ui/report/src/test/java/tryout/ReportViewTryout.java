@@ -5,8 +5,7 @@ import java.util.*;
 import javax.swing.JLabel;
 
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
-import eu.ggnet.dwoss.report.ee.ViewReportResult;
-import eu.ggnet.dwoss.report.ee.ReportParameter;
+import eu.ggnet.dwoss.report.ee.*;
 import eu.ggnet.dwoss.report.ee.assist.gen.ReportLineGenerator;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ui.main.ReportController;
@@ -35,17 +34,17 @@ public class ReportViewTryout {
             }
         });
 
+        Dl.remote().add(ReportAgent.class, new ReportAgentStub());
+
         TradeName tradeName = TradeName.FUJITSU;
         UiCore.startSwing(() -> new JLabel("Main Applikation"));
 
         EnumMap<ViewReportResult.Type, NavigableSet<ReportLine>> lines = new EnumMap<>(ViewReportResult.Type.class);
-        ReportLineGenerator op = new ReportLineGenerator();
         NavigableSet<ReportLine> invoicedLines = new TreeSet<>();
         NavigableSet<ReportLine> repayedLinesLines = new TreeSet<>();
         for (int i = 0; i < 30; i++) {
-            invoicedLines.add(op.makeReportLine(Arrays.asList(tradeName), new Date(), i));
-            repayedLinesLines.add(op.makeReportLine(Arrays.asList(tradeName), new Date(), i));
-
+            invoicedLines.add(ReportLineGenerator.makeReportLine(Arrays.asList(tradeName), new Date(), i, 0.1));
+            repayedLinesLines.add(ReportLineGenerator.makeReportLine(Arrays.asList(tradeName), new Date(), i, 0.1));
         }
         lines.put(INVOICED, invoicedLines);
         lines.put(REPAYMENTS, repayedLinesLines);

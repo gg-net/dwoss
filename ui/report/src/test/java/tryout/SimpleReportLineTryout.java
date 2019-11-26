@@ -1,14 +1,13 @@
 package tryout;
 
-import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
-import eu.ggnet.dwoss.core.common.values.PositionType;
-import eu.ggnet.dwoss.core.common.values.DocumentType;
-
 import java.util.*;
 
 import javax.persistence.LockModeType;
 import javax.swing.JLabel;
 
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.report.ee.ReportAgent.SearchParameter;
 import eu.ggnet.dwoss.report.ee.*;
 import eu.ggnet.dwoss.report.ee.entity.Report;
@@ -24,41 +23,29 @@ import eu.ggnet.saft.core.*;
  * @author oliver.guenther
  */
 public class SimpleReportLineTryout {
-    
-    public static SimpleReportLine makeSimpleReportLine(double amount, TradeName contractor,double contractorReferencePrice, DocumentType documentType, PositionType positionType, double price, String productName,
-    double purchasePrice, String refurbishId, String partNo, long uniqueUnitId, Date reportingDate) {
-        SimpleReportLine l = new SimpleReportLine();
-        l.setAmount(amount);
-        l.setContractor(contractor);
-        l.setContractorReferencePrice(contractorReferencePrice);
-        l.setDocumentType(documentType);
-        l.setPositionType(positionType);
-        l.setPrice(price);
-        l.setProductName(productName);
-        l.setPurchasePrice(purchasePrice);
-        l.setRefurbishId(refurbishId);
-        l.setPartNo(partNo);
-        l.setUniqueUnitId(uniqueUnitId);
-        l.setReportingDate(reportingDate);
+
+    public static SimpleReportLine makeSimpleReportLine(double amount, TradeName contractor, double contractorReferencePrice, DocumentType documentType, PositionType positionType, double price, String productName,
+                                                        double purchasePrice, String refurbishId, String partNo, long uniqueUnitId, Date reportingDate) {
+        SimpleReportLine l = new SimpleReportLine(amount, contractor, contractorReferencePrice, documentType, positionType, price, productName, purchasePrice, refurbishId, partNo, uniqueUnitId, reportingDate);
         return l;
     }
 
     public static void main(String[] args) {
         ReportAgent rastub = new ReportAgent() {
             List<eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine> all
-                    = Arrays.asList(makeSimpleReportLine(1,TradeName.ACER,100,DocumentType.INVOICE,PositionType.UNIT,50,"ABCDEFG",40,"1234567","AA.BBBBB.CC",1000,new Date()),
-                            makeSimpleReportLine(1,TradeName.DELL,100,DocumentType.INVOICE,PositionType.UNIT,10,"ABCDEFG",40,"1234567","AA.BBBBB.CC",1000,new Date()),
-                            makeSimpleReportLine(1,TradeName.HP,100,DocumentType.INVOICE,PositionType.UNIT,23,"ABCDEFG",40,"1234567","AA.BBBBB.CC",1000,new Date()),
-                            makeSimpleReportLine(1,TradeName.AMAZON,100,DocumentType.INVOICE,PositionType.UNIT,50,"ABCDEFG",40,"1234567","AA.BBBBB.CC",1000,new Date()),
-                            makeSimpleReportLine(1,TradeName.EMACHINES,100,DocumentType.INVOICE,PositionType.UNIT,50,"ABCDEFG",40,"1234567","AA.BBBBB.CC",1000,new Date()),
-                            makeSimpleReportLine(1,TradeName.FUJITSU,100,DocumentType.INVOICE,PositionType.UNIT,50,"ABCDEFG",40,"1234567","AA.BBBBB.CC",1000,new Date()),
-                            makeSimpleReportLine(1,TradeName.ONESELF,100,DocumentType.INVOICE,PositionType.UNIT,50,"ABCDEFG",40,"1234567","AA.BBBBB.CC",1000,new Date()),
-                            makeSimpleReportLine(1,TradeName.LENOVO,100,DocumentType.INVOICE,PositionType.UNIT,50,"ABCDEFG",40,"1234567","AA.BBBBB.CC",1000,new Date()),
-                            makeSimpleReportLine(1,TradeName.ACER,100,DocumentType.INVOICE,PositionType.UNIT,50,"ABCDEFG",40,"1234567","AA.BBBBB.CC",1000,new Date()),
-                            makeSimpleReportLine(1,TradeName.FUJITSU,100,DocumentType.INVOICE,PositionType.UNIT,50,"ABCDEFG",40,"1234567","AA.BBBBB.CC",1000,new Date()),
-                            makeSimpleReportLine(1,TradeName.SAMSUNG,100,DocumentType.INVOICE,PositionType.UNIT,50,"ABCDEFG",40,"1234567","AA.BBBBB.CC",1000,new Date()),
-                            makeSimpleReportLine(1,TradeName.SAMSUNG,100,DocumentType.INVOICE,PositionType.UNIT,50,"ABCDEFG",40,"1234567","AA.BBBBB.CC",1000,new Date()),
-                            makeSimpleReportLine(1,TradeName.ALSO,100,DocumentType.INVOICE,PositionType.UNIT,50,"ABCDEFG",40,"1234567","AA.BBBBB.CC",1000,new Date())
+                    = Arrays.asList(makeSimpleReportLine(1, TradeName.ACER, 100, DocumentType.INVOICE, PositionType.UNIT, 50, "ABCDEFG", 40, "1234567", "AA.BBBBB.CC", 1000, new Date()),
+                            makeSimpleReportLine(1, TradeName.DELL, 100, DocumentType.INVOICE, PositionType.UNIT, 10, "ABCDEFG", 40, "1234567", "AA.BBBBB.CC", 1000, new Date()),
+                            makeSimpleReportLine(1, TradeName.HP, 100, DocumentType.INVOICE, PositionType.UNIT, 23, "ABCDEFG", 40, "1234567", "AA.BBBBB.CC", 1000, new Date()),
+                            makeSimpleReportLine(1, TradeName.AMAZON, 100, DocumentType.INVOICE, PositionType.UNIT, 50, "ABCDEFG", 40, "1234567", "AA.BBBBB.CC", 1000, new Date()),
+                            makeSimpleReportLine(1, TradeName.EMACHINES, 100, DocumentType.INVOICE, PositionType.UNIT, 50, "ABCDEFG", 40, "1234567", "AA.BBBBB.CC", 1000, new Date()),
+                            makeSimpleReportLine(1, TradeName.FUJITSU, 100, DocumentType.INVOICE, PositionType.UNIT, 50, "ABCDEFG", 40, "1234567", "AA.BBBBB.CC", 1000, new Date()),
+                            makeSimpleReportLine(1, TradeName.ONESELF, 100, DocumentType.INVOICE, PositionType.UNIT, 50, "ABCDEFG", 40, "1234567", "AA.BBBBB.CC", 1000, new Date()),
+                            makeSimpleReportLine(1, TradeName.LENOVO, 100, DocumentType.INVOICE, PositionType.UNIT, 50, "ABCDEFG", 40, "1234567", "AA.BBBBB.CC", 1000, new Date()),
+                            makeSimpleReportLine(1, TradeName.ACER, 100, DocumentType.INVOICE, PositionType.UNIT, 50, "ABCDEFG", 40, "1234567", "AA.BBBBB.CC", 1000, new Date()),
+                            makeSimpleReportLine(1, TradeName.FUJITSU, 100, DocumentType.INVOICE, PositionType.UNIT, 50, "ABCDEFG", 40, "1234567", "AA.BBBBB.CC", 1000, new Date()),
+                            makeSimpleReportLine(1, TradeName.SAMSUNG, 100, DocumentType.INVOICE, PositionType.UNIT, 50, "ABCDEFG", 40, "1234567", "AA.BBBBB.CC", 1000, new Date()),
+                            makeSimpleReportLine(1, TradeName.SAMSUNG, 100, DocumentType.INVOICE, PositionType.UNIT, 50, "ABCDEFG", 40, "1234567", "AA.BBBBB.CC", 1000, new Date()),
+                            makeSimpleReportLine(1, TradeName.ALSO, 100, DocumentType.INVOICE, PositionType.UNIT, 50, "ABCDEFG", 40, "1234567", "AA.BBBBB.CC", 1000, new Date())
                     );
 
             @Override

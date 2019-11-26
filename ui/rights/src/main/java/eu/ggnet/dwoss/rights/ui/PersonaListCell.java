@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.rights.ui;
 
-import eu.ggnet.dwoss.rights.ee.entity.Persona;
-
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;
@@ -26,18 +24,18 @@ import javafx.util.Callback;
  *
  * @author Bastian Venz
  */
-public class PersonaListCell extends ListCell<Persona> {
+public class PersonaListCell extends ListCell<UiPersona> {
 
-    public static class Factory implements Callback<ListView<Persona>, ListCell<Persona>> {
+    public static class Factory implements Callback<ListView<UiPersona>, ListCell<UiPersona>> {
 
         @Override
-        public ListCell<Persona> call(ListView<Persona> p) {
+        public ListCell<UiPersona> call(ListView<UiPersona> p) {
             return new PersonaListCell();
         }
     }
 
     @Override
-    protected void updateItem(Persona item, boolean empty) {
+    protected void updateItem(UiPersona item, boolean empty) {
         super.updateItem(item, empty);
         textProperty().unbind();
         setText("");

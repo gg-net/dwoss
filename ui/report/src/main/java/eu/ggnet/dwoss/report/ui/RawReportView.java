@@ -16,18 +16,10 @@
  */
 package eu.ggnet.dwoss.report.ui;
 
-import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
-import eu.ggnet.dwoss.core.common.values.PositionType;
-import eu.ggnet.dwoss.core.common.values.DocumentType;
-import eu.ggnet.saft.core.ui.Once;
-import eu.ggnet.saft.core.ui.Frame;
-import eu.ggnet.saft.core.ui.Title;
-
 import java.util.*;
 
 import javafx.application.Platform;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
@@ -36,7 +28,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
@@ -45,6 +36,9 @@ import javafx.scene.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.widget.HtmlPane;
 import eu.ggnet.dwoss.report.ee.ReportAgent;
 import eu.ggnet.dwoss.report.ee.ReportAgent.SearchParameter;
@@ -52,6 +46,7 @@ import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.*;
 
 import static javafx.geometry.Pos.CENTER_LEFT;
 import static javafx.scene.control.SelectionMode.MULTIPLE;
@@ -108,48 +103,57 @@ public class RawReportView extends BorderPane {
 
         //building context Menu for right mouse button for this table
         MenuItem editComment = new MenuItem("Edit Comment");
-        editComment.setOnAction((ActionEvent event) -> {
-            openCommentEdit();
-        });
+        editComment.setOnAction(e -> openCommentEdit());
+
         MenuItem deleldComment = new MenuItem("Delet Comment");
-        deleldComment.setOnAction((ActionEvent event) -> {
-            openCommentDelete();
-        });
+        deleldComment.setOnAction(e -> openCommentDelete());
 
         //TODO add more Item like delete/copy/cut/paste SimpleReportLine to the contextmenu
         ContextMenu contextMenu = new ContextMenu();
         contextMenu.getItems().addAll(editComment, deleldComment);
 
         //build all the Colums
-        TableColumn<SimpleReportLine, Long> id = new TableColumn<>("Id");
-        id.setCellValueFactory(new PropertyValueFactory("id"));
+        TableColumn<SimpleReportLine, Number> id = new TableColumn<>("Id");
+        id.setCellValueFactory(v -> new ReadOnlyLongWrapper(v.getValue().getId()).getReadOnlyProperty());
+
         TableColumn<SimpleReportLine, String> refurbishId = new TableColumn<>("RefurbishId");
-        refurbishId.setCellValueFactory(new PropertyValueFactory("refurbishId"));
+        refurbishId.setCellValueFactory(v -> new ReadOnlyStringWrapper(v.getValue().getRefurbishId()).getReadOnlyProperty());
         refurbishId.setMinWidth(110);
+
         TableColumn<SimpleReportLine, Date> reportingDate = new TableColumn<>("Reported");
-        reportingDate.setCellValueFactory(new PropertyValueFactory("reportingDate"));
+        reportingDate.setCellValueFactory(v -> new ReadOnlyObjectWrapper<>(v.getValue().getReportingDate()).getReadOnlyProperty());
         reportingDate.setMinWidth(110);
-        TableColumn<SimpleReportLine, Long> unqiueUnitId = new TableColumn<>("UniqueUnit Id");
-        unqiueUnitId.setCellValueFactory(new PropertyValueFactory("uniqueUnitId"));
+
+        TableColumn<SimpleReportLine, Number> unqiueUnitId = new TableColumn<>("UniqueUnit Id");
+        unqiueUnitId.setCellValueFactory(v -> new ReadOnlyLongWrapper(v.getValue().getUniqueUnitId()).getReadOnlyProperty());
+
         TableColumn<SimpleReportLine, TradeName> contractor = new TableColumn<>("contractor");
-        contractor.setCellValueFactory(new PropertyValueFactory("contractor"));
+        contractor.setCellValueFactory(v -> new ReadOnlyObjectWrapper<>(v.getValue().getContractor()).getReadOnlyProperty());
+
         TableColumn<SimpleReportLine, String> partNo = new TableColumn<>("PartNo");
-        partNo.setCellValueFactory(new PropertyValueFactory("partNo"));
+        partNo.setCellValueFactory(v -> new ReadOnlyStringWrapper(v.getValue().getPartNo()).getReadOnlyProperty());
         partNo.setMinWidth(110);
+
         TableColumn<SimpleReportLine, String> productName = new TableColumn<>("productName");
-        productName.setCellValueFactory(new PropertyValueFactory("productName"));
-        TableColumn<SimpleReportLine, Double> amount = new TableColumn<>("amount");
-        amount.setCellValueFactory(new PropertyValueFactory("amount"));
-        TableColumn<SimpleReportLine, Double> price = new TableColumn<>("price");
-        price.setCellValueFactory(new PropertyValueFactory("price"));
-        TableColumn<SimpleReportLine, Double> purchasePrice = new TableColumn<>("purchasePrice");
-        purchasePrice.setCellValueFactory(new PropertyValueFactory("purchasePrice"));
-        TableColumn<SimpleReportLine, Double> contractorReferencePrice = new TableColumn<>("Ref.Price");
-        contractorReferencePrice.setCellValueFactory(new PropertyValueFactory("contractorReferencePrice"));
+        productName.setCellValueFactory(v -> new ReadOnlyStringWrapper(v.getValue().getProductName()).getReadOnlyProperty());
+
+        TableColumn<SimpleReportLine, Number> amount = new TableColumn<>("amount");
+        amount.setCellValueFactory(v -> new ReadOnlyDoubleWrapper(v.getValue().getAmount()).getReadOnlyProperty());
+
+        TableColumn<SimpleReportLine, Number> price = new TableColumn<>("price");
+        price.setCellValueFactory(v -> new ReadOnlyDoubleWrapper(v.getValue().getPrice()).getReadOnlyProperty());
+
+        TableColumn<SimpleReportLine, Number> purchasePrice = new TableColumn<>("purchasePrice");
+        purchasePrice.setCellValueFactory(v -> new ReadOnlyDoubleWrapper(v.getValue().getPurchasePrice()).getReadOnlyProperty());
+
+        TableColumn<SimpleReportLine, Number> contractorReferencePrice = new TableColumn<>("Ref.Price");
+        contractorReferencePrice.setCellValueFactory(v -> new ReadOnlyDoubleWrapper(v.getValue().getContractorReferencePrice()).getReadOnlyProperty());
+
         TableColumn<SimpleReportLine, DocumentType> documentType = new TableColumn<>("documentType");
-        documentType.setCellValueFactory(new PropertyValueFactory("documentType"));
+        documentType.setCellValueFactory(v -> new ReadOnlyObjectWrapper<>(v.getValue().getDocumentType()).getReadOnlyProperty());
+
         TableColumn<SimpleReportLine, PositionType> positionType = new TableColumn<>("positionType");
-        positionType.setCellValueFactory(new PropertyValueFactory("positionType"));
+        positionType.setCellValueFactory(v -> new ReadOnlyObjectWrapper<>(v.getValue().getPositionType()).getReadOnlyProperty());
 
         table = new TableView<>();
         table.getColumns().addAll(

@@ -16,50 +16,49 @@
  */
 package eu.ggnet.dwoss.rights.ui;
 
-import eu.ggnet.dwoss.rights.ee.RightsAgent;
-
 import java.net.URL;
 import java.util.*;
+import java.util.function.Consumer;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
 
 import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.dwoss.rights.ee.entity.Persona;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.FxController;
+import eu.ggnet.saft.core.ui.ResultProducer;
 
 /**
  *
  * @author Bastian Venz
  */
-public class PersonaManagmentController implements Initializable {
+public class PersonaManagmentController implements Initializable, FxController, Consumer<UiPersona>, ResultProducer<UiPersona> {
 
     @FXML
-    TextField nameField;
+    private TextField nameField;
 
     @FXML
-    ListView<AtomicRight> activatedRights;
+    private ListView<AtomicRight> activatedRights;
 
     @FXML
-    ListView<AtomicRight> deactivatedRights;
+    private ListView<AtomicRight> deactivatedRights;
 
     @FXML
-    Button addButton;
+    private Button addButton;
 
     @FXML
-    Button removeButton;
+    private Button removeButton;
 
-    private Persona p;
+    private UiPersona uiPersona;
 
     private ObservableList<AtomicRight> deactivatedRightsList;
+
+    private boolean ok = false;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -68,68 +67,66 @@ public class PersonaManagmentController implements Initializable {
 
         deactivatedRights.setCellFactory(new RightsListCell.Factory());
         deactivatedRights.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        activatedRights.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent t) {
-                deactivatedRights.getSelectionModel().clearSelection();
-            }
-        });
-        deactivatedRights.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent t) {
-                activatedRights.getSelectionModel().clearSelection();
-            }
-        });
+        activatedRights.setOnMouseClicked(t -> deactivatedRights.getSelectionModel().clearSelection());
+        deactivatedRights.setOnMouseClicked(t -> activatedRights.getSelectionModel().clearSelection());
         addButton.visibleProperty().bind(deactivatedRights.getSelectionModel().selectedIndexProperty().greaterThanOrEqualTo(0));
         removeButton.visibleProperty().bind(activatedRights.getSelectionModel().selectedIndexProperty().greaterThanOrEqualTo(0));
 
     }
 
-    public void setPersona(Persona p) {
-        if ( p == null ) p = new Persona();
+    public void setPersona(UiPersona p) {
+        if ( p == null ) p = new UiPersona();
         Bindings.bindBidirectional(nameField.textProperty(), p.nameProperty());
         Bindings.bindBidirectional(activatedRights.itemsProperty(), p.personaRightsProperty());
         Set<AtomicRight> allOf = EnumSet.allOf(AtomicRight.class);
-        allOf.removeAll(p.getPersonaRights());
+        allOf.removeAll(p.personaRightsProperty().get());
         deactivatedRightsList = FXCollections.observableList(new ArrayList<>(allOf));
         Bindings.bindBidirectional(deactivatedRights.itemsProperty(), new SimpleObjectProperty<>(deactivatedRightsList));
-        this.p = p;
+        this.uiPersona = p;
+    }
+
+    @Override
+    public void accept(UiPersona t) {
+        setPersona(t);
+    }
+
+    @Override
+    public UiPersona getResult() {
+        if ( ok ) return uiPersona;
+        return null;
     }
 
     @FXML
     private void handleAddButton() {
         ObservableList<AtomicRight> selectedItems = deactivatedRights.getSelectionModel().getSelectedItems();
-        activatedRights.itemsProperty().unbindBidirectional(p.personaRightsProperty());
+        activatedRights.itemsProperty().unbindBidirectional(uiPersona.personaRightsProperty());
         activatedRights.setItems(FXCollections.<AtomicRight>observableArrayList());
         activatedRights.getItems().clear();
-        p.addAll(selectedItems);
+        uiPersona.addAll(selectedItems);
         deactivatedRightsList.removeAll(selectedItems);
-        setPersona(p);
+        setPersona(uiPersona);
     }
 
     @FXML
     private void handleRemoveButton() {
         ObservableList<AtomicRight> selectedItems = activatedRights.getSelectionModel().getSelectedItems();
-        p.removeAll(selectedItems);
-        activatedRights.itemsProperty().unbindBidirectional(p.personaRightsProperty());
+        uiPersona.personaRightsProperty().get().removeAll(selectedItems);
+        activatedRights.itemsProperty().unbindBidirectional(uiPersona.personaRightsProperty());
         activatedRights.setItems(FXCollections.<AtomicRight>observableArrayList());
         activatedRights.getItems().clear();
         deactivatedRightsList.addAll(selectedItems);
-        setPersona(p);
+        setPersona(uiPersona);
     }
 
     @FXML
     public void onConfirm() {
-        RightsAgent agent = Dl.remote().lookup(RightsAgent.class);
-        agent.store(p);
-        onCancel();
+        ok = true;
+        Ui.closeWindowOf(nameField);
     }
 
-    // Mach wech.
     @FXML
     public void onCancel() {
-        Stage stage = (Stage)nameField.getScene().getWindow();
-        stage.close();
+        Ui.closeWindowOf(nameField);
     }
 
     public static URL loadFxml() {

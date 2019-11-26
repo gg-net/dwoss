@@ -22,14 +22,9 @@ import java.util.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-import javafx.beans.property.*;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener.Change;
-
 import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
-import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.core.system.persistence.EagerAble;
+import eu.ggnet.dwoss.rights.api.AtomicRight;
 
 import static javax.persistence.FetchType.EAGER;
 
@@ -79,26 +74,16 @@ public class Operator extends BaseEntity implements Serializable, EagerAble {
     @NotNull
     private List<Persona> personas = new ArrayList<>();
 
-    @Transient
-    private transient ReadOnlyLongProperty idProperty;
-
-    @Transient
-    private transient StringProperty usernameProperty;
-
-    @Transient
-    private transient IntegerProperty quickLoginKeyProperty;
-
-    @Transient
-    private transient ListProperty<AtomicRight> rightsProperty;
-
-    @Transient
-    private transient StringProperty saltProperty;
-
-    @Transient
-    private transient StringProperty passwordProperty;
-
-    @Transient
-    private transient ListProperty<Persona> personasProperty;
+    public Operator(long id, int optLock, int quickLoginKey, String username, byte[] salt, byte[] password, List<Persona> personas, List<AtomicRight> rights) {
+        this.id = id;
+        this.optLock = optLock;
+        this.quickLoginKey = quickLoginKey;
+        this.username = username;
+        this.salt = salt;
+        this.password = password;
+        Optional.ofNullable(personas).ifPresent(ps -> this.personas.addAll(ps));
+        Optional.ofNullable(rights).ifPresent(r -> this.rights.addAll(r));
+    }
 
     /**
      * This is a CopyConstructor which copys the Data from the DTO {@link eu.ggnet.dwoss.rights.api.Operator} to this class, EXCEPT for the Persona List!
@@ -118,148 +103,48 @@ public class Operator extends BaseEntity implements Serializable, EagerAble {
     public Operator() {
     }
 
-    //<editor-fold defaultstate="collapsed" desc="getter/setter">    
+    //<editor-fold defaultstate="collapsed" desc="getter/setter">
     public byte[] getSalt() {
         return salt;
     }
-    
+
     public void setSalt(byte[] salt) {
         this.salt = salt;
     }
-    
+
     public int getOptLock() {
         return optLock;
     }
-    
+
     @Override
     public long getId() {
         return id;
     }
-    
+
     public byte[] getPassword() {
         return password;
     }
-    
+
     public int getQuickLoginKey() {
         return quickLoginKey;
     }
-    
+
     public void setQuickLoginKey(int quickLoginKey) {
         this.quickLoginKey = quickLoginKey;
     }
-    
+
     public String getUsername() {
         return username;
     }
-    
+
     public void setUsername(String username) {
         this.username = username;
     }
-    //</editor-fold>
-    
-    public ReadOnlyLongProperty idProperty() {
-        if ( idProperty == null ) {
-            idProperty = new ReadOnlyLongWrapper(id);
-        }
-        return idProperty;
-    }
-
-    public StringProperty usernameProperty() {
-        if ( usernameProperty == null ) {
-            usernameProperty = new SimpleStringProperty(username);
-            usernameProperty.addListener((ov, o, newValue) -> username = newValue);
-        }
-        return usernameProperty;
-    }
-
-    public IntegerProperty quickLoginKeyProperty() {
-        if ( quickLoginKeyProperty == null ) {
-            quickLoginKeyProperty = new SimpleIntegerProperty(quickLoginKey);
-            quickLoginKeyProperty.addListener((ObservableValue<? extends Number> ov, Number oldValue, Number newValue) -> {
-                quickLoginKey = newValue.intValue();
-            });
-        }
-        return quickLoginKeyProperty;
-    }
-
-    public ListProperty<AtomicRight> rightsProperty() {
-        if ( rightsProperty == null ) {
-            rightsProperty = new SimpleListProperty<>(FXCollections.observableList(rights));
-            rightsProperty.get().addListener((Change<? extends AtomicRight> change) -> {
-                while (change.next()) {
-                    if ( !change.wasAdded() ) continue;
-                    for (AtomicRight addedRight : change.getAddedSubList()) {
-                        for (Persona persona : personas) {
-                            if ( persona.getPersonaRights().contains(addedRight) ) {
-                                change.getList().remove(addedRight);
-                            }
-                        }
-                        if ( containsMoreThanOnce(rights, addedRight) ) {
-                            change.getList().remove(addedRight);
-                        }
-                    }
-                }
-            });
-        }
-        return rightsProperty;
-    }
-
-    private static <T> boolean containsMoreThanOnce(Collection<T> collection, T elem) {
-        int count = 0;
-        for (T t : collection) {
-            if ( Objects.equals(t, elem) ) count++;
-        }
-        return count > 1;
-    }
-
-    public ListProperty<Persona> personasProperty() {
-        if ( personasProperty == null ) {
-            personasProperty = new SimpleListProperty<>(FXCollections.observableList(personas));
-            personasProperty.get().addListener((Change<? extends Persona> change) -> {
-                while (change.next()) {
-                    if ( change.wasAdded() ) {
-                        for (Persona persona : change.getAddedSubList()) {
-                            // Remove local duplicates
-                            for (AtomicRight personaRight : persona.getPersonaRights()) {
-                                if ( getRights().contains(personaRight) ) {
-                                    remove(personaRight);
-                                }
-                            }
-                        }
-                        
-                    }
-                }
-            });
-        }
-        return personasProperty;
-    }
-
-    public StringProperty saltProperty() {
-        if ( saltProperty == null ) {
-            String saltString = (salt != null) ? new String(salt) : "";
-            saltProperty = new SimpleStringProperty(saltString);
-            saltProperty.addListener((ObservableValue<? extends String> ov, String oldValue, String newValue) -> {
-                salt = newValue.getBytes();
-            });
-        }
-        return saltProperty;
-    }
-
-    public StringProperty passwordProperty() {
-        if ( passwordProperty == null ) {
-            String pw = (password != null) ? new String(password) : "";
-            passwordProperty = new SimpleStringProperty(pw);
-            passwordProperty.addListener((ObservableValue<? extends String> ov, String oldValue, String newValue) -> {
-                password = newValue.getBytes();
-            });
-        }
-        return passwordProperty;
-    }
 
     public void setPassword(byte[] password) {
-        if ( passwordProperty != null ) passwordProperty.set((password != null) ? new String(password) : "");
-        else this.password = password;
+        this.password = password;
     }
+    //</editor-fold>
 
     /**
      * Defensive copy return of rights.
@@ -300,27 +185,8 @@ public class Operator extends BaseEntity implements Serializable, EagerAble {
      */
     public void add(AtomicRight atomicRight) {
         if ( atomicRight != null && !rights.contains(atomicRight) ) {
-            rights().add(atomicRight);
+            rights.add(atomicRight);
         }
-    }
-
-    public void remove(AtomicRight atomicRight) {
-        rights().remove(atomicRight);
-    }
-
-    /**
-     * This method add all {@link AtomicRight}'s IF it not null or already in the List.
-     * <p>
-     * @param right
-     */
-    public void addAllRight(Collection<AtomicRight> right) {
-        for (AtomicRight atomicRight : right) {
-            add(atomicRight);
-        }
-    }
-
-    public void removeAllRight(Collection<AtomicRight> right) {
-        rights().removeAll(right);
     }
 
     /**
@@ -330,26 +196,7 @@ public class Operator extends BaseEntity implements Serializable, EagerAble {
      */
     public void add(Persona persona) {
         if ( persona != null && !personas.contains(persona) )
-            personas().add(persona);
-    }
-
-    public void remove(Persona persona) {
-        personas().remove(persona);
-    }
-
-    public void removeAllPersona(Collection<Persona> persona) {
-        personas().removeAll(persona);
-    }
-
-    /**
-     * This method add all {@link Persona}'s IF it not null or already in the List.
-     * <p>
-     * @param persona
-     */
-    public void addAllPersona(Collection<Persona> persona) {
-        for (Persona persona1 : persona) {
-            add(persona1);
-        }
+            personas.add(persona);
     }
 
     /**
@@ -381,19 +228,9 @@ public class Operator extends BaseEntity implements Serializable, EagerAble {
         }
     }
 
-    private List<AtomicRight> rights() {
-        if ( rightsProperty != null ) return rightsProperty.get();
-        else return rights;
-    }
-
-    private List<Persona> personas() {
-        if ( personasProperty != null ) return personasProperty.get();
-        else return personas;
-    }
-
     @Override
     public String toString() {
         return "Operator{" + "id=" + id + ", optLock=" + optLock + ", quickLoginKey=" + quickLoginKey + ", rights=" + rights + ", username=" + username + ", salt=" + salt + ", password=" + password + '}';
     }
-    
+
 }

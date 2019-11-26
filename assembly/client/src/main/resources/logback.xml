@@ -51,10 +51,10 @@
         </encoder>
     </appender>
 
-    <appender name="multiplex" class="de.huxhorn.lilith.logback.appender.ClassicMultiplexSocketAppender"> 
+    <appender name="multiplex" class="de.huxhorn.lilith.logback.appender.ClassicMultiplexSocketAppender">
         <Compressing>true</Compressing>
-        <ReconnectionDelay>10000</ReconnectionDelay> 
-        <IncludeCallerData>true</IncludeCallerData> 
+        <ReconnectionDelay>10000</ReconnectionDelay>
+        <IncludeCallerData>true</IncludeCallerData>
         <RemoteHost>localhost</RemoteHost>
     </appender>
 
@@ -66,7 +66,7 @@
     <logger name="org.jboss.ejb.client.ReceiverInterceptor" level="INFO"/>
     <logger name="org.jboss.ejb.client.invocation" level="INFO" />
     <logger name="org.jboss.ejb.client" level="INFO" />
-    
+
     <root level="DEBUG">
         <appender-ref ref="console"/>
         <appender-ref ref="file"/>
