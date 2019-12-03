@@ -20,6 +20,7 @@ import javax.ejb.Remote;
 
 import net.sf.jasperreports.engine.JasperPrint;
 
+import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
@@ -47,5 +48,21 @@ public interface MovementListingProducer {
                 
     }
 
+    /**
+     * Generates either the shipping or pickup list of the supplied stock
+     * 
+     * @param listType the list type
+     * @param stockId the stock id
+     * @return a JasperPrint
+     */
     JasperPrint generateList(ListType listType, Stock stockId);
+    
+    /**
+     * Generates either the shipping or pickup list of the supplied stock
+     * 
+     * @param listType the list type
+     * @param stockId the stock id
+     * @return a filejacket with an xls
+     */
+    FileJacket generateXls(ListType listType, Stock stockId);
 }

@@ -34,14 +34,14 @@ import eu.ggnet.saft.core.Ui;
  *
  * @author oliver.guenther
  */
-public class MovementAction extends AbstractAction {
+public class MovementPdfAction extends AbstractAction {
 
     private final Stock stock;
 
     private final MovementListingProducer.ListType listType;
 
-    public MovementAction(MovementListingProducer.ListType listType, Stock stock) {
-        super(listType.description + " - " + stock.getName());
+    public MovementPdfAction(MovementListingProducer.ListType listType, Stock stock) {
+        super(listType.description + " - " + stock.getName() + " - PDF");
         this.stock = stock;
         this.listType = listType;
     }

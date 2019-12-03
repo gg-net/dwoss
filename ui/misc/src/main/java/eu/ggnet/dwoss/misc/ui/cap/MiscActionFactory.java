@@ -70,7 +70,10 @@ public class MiscActionFactory implements ActionFactory {
         List<Stock> allStocks = Dl.remote().lookup(StockAgent.class).findAll(Stock.class);
         for (Stock stock : allStocks) {
             for (ListType listType : MovementListingProducer.ListType.values()) {
-                actions.add(new MetaAction("Lager/Logistik", "Versand & Abholung", new MovementAction(listType, stock)));
+                actions.add(new MetaAction("Lager/Logistik", "Versand & Abholung", new MovementPdfAction(listType, stock)));
+            }
+            for (ListType listType : MovementListingProducer.ListType.values()) {
+                actions.add(new MetaAction("Lager/Logistik", "Versand & Abholung", new MovementXlsAction(listType, stock)));
             }
             actions.add(new MetaAction("Lager/Logistik", "Inventur", new StockTakingAction(stock)));
         }

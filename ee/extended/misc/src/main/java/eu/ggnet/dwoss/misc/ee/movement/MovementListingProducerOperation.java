@@ -16,10 +16,13 @@
  */
 package eu.ggnet.dwoss.misc.ee.movement;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -31,9 +34,9 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.system.autolog.AutoLogger;
 import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
-import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
 import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
 import eu.ggnet.dwoss.core.system.progress.SubMonitor;
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
@@ -47,6 +50,11 @@ import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.format.ProductFormater;
+import eu.ggnet.lucidcalc.*;
+
+import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.CENTER;
+import static eu.ggnet.lucidcalc.CFormat.VerticalAlignment.MIDDLE;
+import static eu.ggnet.lucidcalc.CFormat.VerticalAlignment.TOP;
 
 /**
  *
@@ -76,11 +84,86 @@ public class MovementListingProducerOperation implements MovementListingProducer
     @Inject
     private MonitorFactory monitorFactory;
 
-    @Inject
-    private ReceiptCustomers receiptCustomers;
-
     @Override
     public JasperPrint generateList(ListType listType, Stock stock) {
+        List<MovementLine> lines = generateLines(listType, stock);
+        SubMonitor m = monitorFactory.newSubMonitor("Versand und Abholung - PDF", 10);
+        m.start();
+        String title = listType.description + " - " + stock.getName();
+        m.message("erzeuge Report");
+        Map<String, Object> reportParameter = new HashMap<>();
+        reportParameter.put("TITLE", title);
+        JRBeanCollectionDataSource datasource = new JRBeanCollectionDataSource(lines);
+        String name = "MovementList.jrxml";
+        URL url = Objects.requireNonNull(getClass().getResource(name), "The Resource " + getClass().getPackage() + "/" + name + " not found.");
+        try (InputStream is = url.openStream()) {
+            JasperReport jasperReport = JasperCompileManager.compileReport(is);
+            JasperPrint result = JasperFillManager.fillReport(jasperReport, reportParameter, datasource);
+            return result;
+        } catch (IOException | JRException e) {
+            L.error("Exception during movementList", e);
+            throw new RuntimeException(e);
+        } finally {
+            m.finish();
+        }
+    }
+
+    @Override
+    public FileJacket generateXls(ListType listType, Stock stock) {
+        List<MovementLine> lines = generateLines(listType, stock);
+        SubMonitor m = monitorFactory.newSubMonitor("Versand und Abholung - XLS", 10);
+        m.start();
+        String title = listType.description + " - " + stock.getName();
+        m.message("erzeuge Report");
+
+        List<Object[]> rows = new ArrayList<>();
+
+        for (MovementLine ml : lines) {
+            for (MovementSubline sl : ml.getMovementSublines()) {
+                rows.add(new Object[]{
+                   sl.getRefurbishId(),
+                    sl.getDescription(),
+                    ml.getDeliveryAddress().replaceAll("\n", ","),
+                    ml.getInvoiceAddress().replaceAll("\n", ",")
+                });
+            }
+        }
+
+        STable unitTable = new STable();
+
+        unitTable.setTableFormat(new CFormat(CENTER, TOP, new CBorder(Color.GRAY, CBorder.LineStyle.THIN), true));
+        unitTable.setHeadlineFormat(new CFormat(CFormat.FontStyle.BOLD, Color.BLACK, Color.LIGHT_GRAY, CENTER, MIDDLE));
+        unitTable.setRowHeight(1000);
+
+        unitTable.add(new STableColumn("SopoNr", 12));
+        unitTable.add(new STableColumn("Bezeichnung", 30));
+        unitTable.add(new STableColumn("Lieferaddresse", 60));
+        unitTable.add(new STableColumn("Rechnungsaddresse", 60));
+
+        unitTable.setModel(new STableModelList(rows));
+
+        CCalcDocument cdoc = new TempCalcDocument();
+        cdoc.add(new CSheet("Versand und Abholung", unitTable));
+        m.finish();
+        return new FileJacket(title + " Liste", ".xls", LucidCalc.createWriter(LucidCalc.Backend.XLS).write(cdoc));
+    }
+
+    private boolean hasUnitOnStock(LogicTransaction lt, Stock stock) {
+        if ( lt == null || lt.getUnits() == null ) return false;
+        for (StockUnit stockUnit : lt.getUnits()) {
+            if ( Objects.equals(stockUnit.getStock(), stock) ) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Generates all MovementLines of the supplied list type and stock for future presentation.
+     *
+     * @param listType the list type
+     * @param stock    the stock
+     * @return all movement lines.
+     */
+    private List<MovementLine> generateLines(ListType listType, Stock stock) {
         SubMonitor m = monitorFactory.newSubMonitor("Versand und Abholung", 100);
         m.message("lade Vorgänge");
         m.start();
@@ -118,31 +201,9 @@ public class MovementListingProducerOperation implements MovementListingProducer
             }
             lines.add(line);
         }
-        String title = listType.description + " - " + stock.getName();
-        L.info("generateList {} containing {}", title, dossierids);
-        m.message("erzeuge Report");
-        Map<String, Object> reportParameter = new HashMap<>();
-        reportParameter.put("TITLE", title);
-        JRBeanCollectionDataSource datasource = new JRBeanCollectionDataSource(lines);
-        String name = "MovementList.jrxml";
-        URL url = Objects.requireNonNull(getClass().getResource(name), "The Resource " + getClass().getPackage() + "/" + name + " not found.");
-        try (InputStream is = url.openStream()) {
-            JasperReport jasperReport = JasperCompileManager.compileReport(is);
-            JasperPrint result = JasperFillManager.fillReport(jasperReport, reportParameter, datasource);
-            return result;
-        } catch (IOException | JRException e) {
-            L.error("Exception during movementList", e);
-            throw new RuntimeException(e);
-        } finally {
-            m.finish();
-        }
+        L.info("generateLines({},{}) containing {}", listType, stock, dossierids);
+        m.finish();
+        return lines;
     }
 
-    private boolean hasUnitOnStock(LogicTransaction lt, Stock stock) {
-        if ( lt == null || lt.getUnits() == null ) return false;
-        for (StockUnit stockUnit : lt.getUnits()) {
-            if ( Objects.equals(stockUnit.getStock(), stock) ) return true;
-        }
-        return false;
-    }
 }
