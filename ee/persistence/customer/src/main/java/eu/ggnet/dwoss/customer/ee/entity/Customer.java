@@ -68,7 +68,8 @@ public class Customer extends BaseEntity implements Serializable, EagerAble, Con
         FIRSTNAME,
         LASTNAME,
         COMPANY,
-        ADDRESS
+        ADDRESS,
+        COMMUNICATION
     }
 
     public enum Source {

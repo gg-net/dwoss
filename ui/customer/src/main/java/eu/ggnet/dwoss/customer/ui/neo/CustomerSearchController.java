@@ -79,6 +79,9 @@ public class CustomerSearchController implements Initializable, FxController, Cl
 
     @FXML
     private CheckBox address;
+    
+    @FXML
+    private CheckBox communication;
 
     @FXML
     private ListView<PicoCustomer> resultListView;
@@ -203,6 +206,13 @@ public class CustomerSearchController implements Initializable, FxController, Cl
                 SEARCH_FIELDS.add(SearchField.ADDRESS);
             } else {
                 SEARCH_FIELDS.remove(SearchField.ADDRESS);
+            }
+        });
+        communication.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if ( newValue ) {
+                SEARCH_FIELDS.add(SearchField.COMMUNICATION);
+            } else {
+                SEARCH_FIELDS.remove(SearchField.COMMUNICATION);
             }
         });
     }

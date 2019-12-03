@@ -83,6 +83,8 @@ public class CustomerEao extends AbstractEao<Customer> {
 
     private static final Set<String> SEARCH_ADDRESS = new HashSet<>();
 
+    private static final Set<String> SEARCH_COMMUNICATIONS = new HashSet<>();
+
     static {
 
         SEARCH_FIRSTNAME.add("companies.contacts.firstName");
@@ -100,6 +102,10 @@ public class CustomerEao extends AbstractEao<Customer> {
         SEARCH_ADDRESS.add("contacts.addresses.street");
         SEARCH_ADDRESS.add("contacts.addresses.city");
         SEARCH_ADDRESS.add("contacts.addresses.zipCode");
+
+        SEARCH_COMMUNICATIONS.add("companies.communications.identifier");
+        SEARCH_COMMUNICATIONS.add("companies.contacts.communications.identifier");
+        SEARCH_COMMUNICATIONS.add("contacts.communications.identifier");
     }
 
     @Inject
@@ -323,6 +329,8 @@ public class CustomerEao extends AbstractEao<Customer> {
                 case ADDRESS:
                     searchFieldStringSet.addAll(SEARCH_ADDRESS);
                     break;
+                case COMMUNICATION:
+                    searchFieldStringSet.addAll(SEARCH_COMMUNICATIONS);
                 default:
                     break;
             }
