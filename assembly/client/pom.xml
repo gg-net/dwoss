@@ -43,6 +43,7 @@
                             <overWriteReleases>false</overWriteReleases>
                             <overWriteSnapshots>false</overWriteSnapshots>
                             <overWriteIfNewer>true</overWriteIfNewer>
+                            <useBaseVersion>false</useBaseVersion>
                         </configuration>
                     </execution>
                 </executions>
