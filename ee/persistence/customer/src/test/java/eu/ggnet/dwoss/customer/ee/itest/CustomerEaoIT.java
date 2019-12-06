@@ -20,6 +20,7 @@ import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
 import eu.ggnet.dwoss.customer.ee.entity.Communication;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
+import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.customer.ee.itest.support.Utils;
 
@@ -111,5 +112,35 @@ public class CustomerEaoIT extends ArquillianProjectArchive {
         long countedViaEao = eao.findAllWithResellerListEmailCommunication().size();
 
         assertThat(countedResellerListCustomers).isEqualTo(countedViaEao);
+    }
+
+    @Test
+    public void findByCommunication() {
+        final String EMAIL = "lisa@xxx.com";
+
+        cgo.makeCustomers(20); // Fill the Database
+        SimpleCustomer c1 = makeSimpleCustomer(null, "Frau", "Lisa", "Lüstling", null, "Freie Straße 2", "98745", "Heimwehrhausen");
+        c1.setEmail(EMAIL);
+
+        agent.store(c1);
+
+        List<Customer> foundCustomers = eao.find(EMAIL, EnumSet.of(SearchField.COMMUNICATION));
+        System.out.println("------------------------");
+        System.out.println(foundCustomers);
+        System.out.println("------------------------");
+
+    }
+
+    private SimpleCustomer makeSimpleCustomer(String firma, String titel, String vorname, String nachname, String anmerkung, String REAdresse, String REPlz, String REOrt) {
+        SimpleCustomer sc = new SimpleCustomer();
+        sc.setCompanyName(firma);
+        sc.setTitle(titel);
+        sc.setFirstName(vorname);
+        sc.setLastName(nachname);
+        sc.setComment(anmerkung);
+        sc.setStreet(REAdresse);
+        sc.setZipCode(REPlz);
+        sc.setCity(REOrt);
+        return sc;
     }
 }
