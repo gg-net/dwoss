@@ -24,8 +24,9 @@ import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
+import org.apache.lucene.analysis.core.KeywordTokenizerFactory;
+import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
+import org.hibernate.search.annotations.*;
 
 import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 
@@ -37,6 +38,10 @@ import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 @Entity
 @Indexed
 @SuppressWarnings("PersistenceUnitPresent")
+@AnalyzerDef(name = "emailAnalyser",
+             tokenizer = @TokenizerDef(factory = KeywordTokenizerFactory.class),
+             filters = @TokenFilterDef(factory = LowerCaseFilterFactory.class)
+)
 public class Communication extends BaseEntity implements Serializable {
 
     public static final String EMAIL_PATTERN = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$";
@@ -93,11 +98,12 @@ public class Communication extends BaseEntity implements Serializable {
      */
     @NotNull
     @Field
+    @Analyzer(definition = "emailAnalyser")
     private String identifier;
 
     public Communication() {
     }
-    
+
     /**
      * Tryout constructor, do not use in productive.
      *
@@ -121,28 +127,28 @@ public class Communication extends BaseEntity implements Serializable {
     public long getId() {
         return id;
     }
-    
+
     public short getOptLock() {
         return optLock;
     }
-    
+
     public Type getType() {
         return type;
     }
-    
+
     public String getIdentifier() {
         return identifier;
     }
-    
+
     public void setType(Type type) {
         this.type = type;
     }
-    
+
     public void setIdentifier(String identifier) {
         this.identifier = identifier;
     }
     //</editor-fold>
-    
+
     /**
      * Html representation of the class.
      *
@@ -174,7 +180,7 @@ public class Communication extends BaseEntity implements Serializable {
         String toSingleLine = type.name() + " " + identifier;
         return toSingleLine;
     }
-    
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);

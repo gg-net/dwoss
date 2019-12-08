@@ -19,6 +19,8 @@ package eu.ggnet.dwoss.customer.ee.entity.projection;
 import java.io.Serializable;
 import java.util.Objects;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 /**
  * A Pico Customer concept.
  *
@@ -39,7 +41,12 @@ public class PicoCustomer implements Serializable {
     public PicoCustomer(long id, String shortDescription) {
         this.id = id;
         this.shortDescription = Objects.requireNonNull(shortDescription, "shortDescription must not be null");
-        if (shortDescription.trim().isEmpty()) throw new IllegalArgumentException("shortDescription must not be blank");
+        if ( shortDescription.trim().isEmpty() ) throw new IllegalArgumentException("shortDescription must not be blank");
     }
-   
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
+
 }

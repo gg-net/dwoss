@@ -1,6 +1,7 @@
 package eu.ggnet.dwoss.customer.ee.itest;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.ejb.EJB;
 import javax.inject.Inject;
@@ -25,6 +26,8 @@ import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.customer.ee.itest.support.Utils;
 
 import static eu.ggnet.dwoss.core.common.values.DocumentType.INVOICE;
+import static eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField.COMMUNICATION;
+import static java.util.EnumSet.of;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -124,10 +127,10 @@ public class CustomerEaoIT extends ArquillianProjectArchive {
 
         agent.store(c1);
 
-        List<Customer> foundCustomers = eao.find(EMAIL, EnumSet.of(SearchField.COMMUNICATION));
-        System.out.println("------------------------");
-        System.out.println(foundCustomers);
-        System.out.println("------------------------");
+        assertThat(agent.search("lisa@xxx.com", of(COMMUNICATION))).hasSize(1);
+        assertThat(agent.search("LiSa@xxX.com", of(COMMUNICATION))).hasSize(1);
+        assertThat(agent.search("lisa*", of(COMMUNICATION))).hasSizeGreaterThan(0);
+        assertThat(agent.search("isa@xxx.com", of(COMMUNICATION))).isEmpty();
 
     }
 
