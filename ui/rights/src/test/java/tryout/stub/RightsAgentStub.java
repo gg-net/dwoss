@@ -22,10 +22,8 @@ public class RightsAgentStub implements RightsAgent {
     Map<String, Operator> operators = new HashMap<>();
 
     {
-        for (int i = 0; i < 3; i++) {
-            Persona persona = new Persona();
-            persona.setName("Persona " + i);
-            persona.addAll(getRandomRights());
+        for (int i = 1; i < 4; i++) {
+            Persona persona = new Persona(i, 0, "Persona " + i, getRandomRights());
             personas.put(persona.getName(), persona);
         }
         for (int j = 0; j < 3; j++) {

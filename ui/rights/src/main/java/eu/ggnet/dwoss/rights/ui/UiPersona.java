@@ -86,6 +86,21 @@ public class UiPersona {
     }
 
     @Override
+    public final int hashCode() {
+        if ( idProperty.get() == 0 ) return super.hashCode(); // Not persisted.
+        return this.getClass().hashCode() * 7 + (int)(idProperty.get() ^ (idProperty.get() >>> 32));
+    }
+
+    public boolean equals(Object two) { // Used in Remove of unused personas
+        UiPersona one = this;
+        if ( two == null ) return false;
+        if ( one.getClass() != two.getClass() ) return false;
+        final UiPersona other = (UiPersona)two;
+        if ( one.idProperty.get() == 0 && other.idProperty.get() == 0 ) return one == other; // Not persisted use object identity
+        return one.idProperty.get() == other.idProperty.get();
+    }
+
+    @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
