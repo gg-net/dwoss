@@ -61,6 +61,7 @@ import eu.ggnet.saft.experimental.ops.Selector;
 import static eu.ggnet.dwoss.core.common.values.PositionType.UNIT;
 
 import eu.ggnet.dwoss.customer.spi.CustomerUiModifier;
+import eu.ggnet.saft.experimental.auth.Guardian;
 
 /**
  * The main UI for using RedTape components.
@@ -156,8 +157,8 @@ public class RedTapeView extends JPanel implements ClosedListener {
             });
             positionsFxList.setCellFactory(new PositionListCell.Factory());
             positionsFxList.setItems(positions);
-            positionsFxList.setContextMenu(FxOps.contextMenuOf(selectionModel, selectionEnhancer));
-            positionsFxList.setOnMouseClicked(FxOps.defaultMouseEventOf(selectionModel));
+            positionsFxList.setContextMenu(FxOps.contextMenuOf(selectionModel, selectionEnhancer, Dl.local().lookup(Guardian.class)));
+            positionsFxList.setOnMouseClicked(FxOps.defaultMouseEventOf(selectionModel, Dl.local().lookup(Guardian.class)));
 
             pane.setCenter(positionsFxList);
             jfxp.setScene(scene);

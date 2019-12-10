@@ -77,7 +77,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <slf4j.version>1.7.28</slf4j.version>
-        <saft.version>1.1-SNAPSHOT</saft.version>
+        <saft.version>1.1</saft.version>
         <wildfly.version></wildfly.version>
         <netbeans.version>RELEASE82</netbeans.version>
         <javaee.groupId>javax</javaee.groupId>
