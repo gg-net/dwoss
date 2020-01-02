@@ -78,7 +78,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <slf4j.version>1.7.28</slf4j.version>
         <saft.version>1.1</saft.version>
-        <wildfly.version></wildfly.version>
         <netbeans.version>RELEASE82</netbeans.version>
         <javaee.groupId>javax</javaee.groupId>
         <javaee.artifactId>javaee-api</javaee.artifactId>
@@ -633,7 +632,13 @@
                 <artifactId>querydsl-apt</artifactId>
                 <version>4.2.1</version>
             </dependency>
-            <dependency> <!-- For Indexer connection - keep in sync with wildfly, w10 = 5.5.4 , w12 = 5.5.8.Final, w15 = 5.10.3.Final -->
+            <dependency> <!-- Must be same as server for ejb connection -->
+                <groupId>org.wildfly</groupId>
+                <artifactId>wildfly-ejb-client-bom</artifactId>
+                <version>18.0.1.Final</version>
+                <type>pom</type>
+            </dependency>
+            <dependency> <!-- For Indexer connection - keep in sync with wildfly, w12 = 5.5.8.Final, w15 = 5.10.3.Final, w18 = 5.10.7.Final -->
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-search-orm</artifactId>
                 <version>5.10.7.Final</version>
@@ -1046,7 +1051,7 @@
                                         <artifactItem>
                                             <groupId>org.wildfly</groupId>
                                             <artifactId>wildfly-dist</artifactId>
-                                            <version>15.0.1.Final</version>
+                                            <version>18.0.1.Final</version>
                                             <type>zip</type>
                                             <overWrite>false</overWrite>
                                             <outputDirectory>target</outputDirectory>
