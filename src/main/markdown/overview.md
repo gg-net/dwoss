@@ -8,11 +8,21 @@ Overview
 ========
 
 The software is a classic client server application. The server part is based on
-the Java EE 7 Specs and uses multiple data sources. The client is a fat Swing and
+the Java EE 8 Specs and uses multiple data sources. The client is a fat Swing and
 JavaFx Client. The connection is made through remote ejb invocations.
 
 Project root package and maven groupid: "eu.ggnet.dwoss"
 Project: dwoss
+
+Assemblies
+----------
+
+There are two projects in der assembly folder, client and server. Both projects are templates to build your own client and server.
+
+The _client_ works with every server, just needs url and authentication.
+
+The _server_ needs to be extended with an implementation of the mandator features. There is a sample-server profile in der server project.
+This profile adds all components of a sample mandator and some entity generation. Look into this for more information.
 
 Architecture
 ============
@@ -172,7 +182,7 @@ Mandator implementation
 -----------------------
 
 The mandator implementations right now depend on many components. It is encouraged, that these components use only pulic apis but if this makes it all too
-complecated, the rule may be broken. 
+complecated, the rule may be broken.
 
  - Incubator projects have the same groupId, but might have a completely
    different artifact architecture.
@@ -192,7 +202,7 @@ If a new feature is developed the following architecture questions must be answe
    Then splitt and put the splitt feature in the existing module.
 3. If not or the non matching part of a splitt, create a new module.
 4. In the new module consider for every required api would make the feature sense without the implemation of the required api, than require it optional.
-5. Is still something missing, create an demand.  
+5. Is still something missing, create an demand.
 
 Implicite Knowledge
 -------------------

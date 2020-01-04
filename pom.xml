@@ -310,7 +310,7 @@
                                 <targetPath>WEB-INF</targetPath>
                             </resource>
                         </webResources>
-                        <dependentWarExcludes>index.xhtml,WEB-INF/web.xml,WEB-INF/jboss-deployment-structure.xml,WEB-INF/beans.xml,WEB-INF/classes/META-INF/persistence.xml,WEB-INF/persistence.xml,META-INF/persistence.xml,**/stub/**</dependentWarExcludes>
+                        <dependentWarExcludes>WEB-INF/classes/META-INF/persistence.xml,WEB-INF/persistence.xml,META-INF/persistence.xml,**/stub/**</dependentWarExcludes>
                     </configuration>
                 </plugin>
                 <plugin>
