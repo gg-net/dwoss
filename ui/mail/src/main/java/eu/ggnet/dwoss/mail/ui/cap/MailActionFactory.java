@@ -33,7 +33,7 @@ public class MailActionFactory implements ActionFactory {
 
     @Override
     public List<MetaAction> createMetaActions() {
-        return Arrays.asList(new MetaAction("Kunden und Aufträge", new SendResellerListToSubscribedCustomersAction()));
+        return Arrays.asList(new MetaAction("Listings", new SendResellerListToSubscribedCustomersAction()));
     }
 
 }
