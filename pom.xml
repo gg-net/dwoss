@@ -117,7 +117,6 @@
                     <property name="hibernate.search.default.indexmanager" value="near-real-time"/>
                     <property name="hibernate.search.default.worker.execution" value="sync"/>
                     <property name="hibernate.search.default.worker.thread_pool.size" value="3"/>
-                    <property name="tomee.jpa.factory.lazy" value="true" />
                 </properties>
           ]]>
         </customer-pu.test-create-drop-properties>
@@ -228,7 +227,6 @@
                 <properties>
                     <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
                     <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
-                    <property name="tomee.jpa.factory.lazy" value="true" />
                 </properties>
           ]]>
         </all-pu.test-create-drop-properties>
@@ -309,6 +307,11 @@
                             </manifest>
                         </archive>
                     </configuration>
+                </plugin>
+                <plugin> <!-- used in deployment process, see dwpro -->
+                    <groupId>org.wildfly.plugins</groupId>
+                    <artifactId>wildfly-maven-plugin</artifactId>
+                    <version>2.0.2.Final</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>

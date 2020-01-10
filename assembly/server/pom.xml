@@ -10,7 +10,7 @@
     <artifactId>dwoss-server</artifactId>
     <packaging>war</packaging>
 
-    <name>DwOss • Assembly • Server (${mandator.name})</name>
+    <name>DwOss • Assembly • Server</name>
 
     <build>
         <finalName>${project.artifactId}</finalName>
@@ -96,76 +96,5 @@
             <version>${project.version}</version>
         </dependency>
     </dependencies>
-
-    <profiles>
-        <profile>
-            <!-- The server combined with the productive gg-net mandator -->
-            <id>server-ggnet</id>
-            <properties>
-                <mandator.name>GG-Net GmbH</mandator.name>
-            </properties>
-            <build>
-                <finalName>dw-ggnet</finalName>
-            </build>
-            <dependencies>
-                <dependency>
-                    <groupId>eu.ggnet.dw</groupId>
-                    <artifactId>dw-mandator-ggnet</artifactId>
-                    <version>${dw.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>eu.ggnet.dw</groupId>
-                    <artifactId>dw-price-ee</artifactId>
-                    <version>${dw.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>eu.ggnet.dw</groupId>
-                    <artifactId>dw-repair-ee</artifactId>
-                    <version>${dw.version}</version>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
-            <!-- The server combined with the productive elus mandator -->
-            <id>server-elus</id>
-            <properties>
-                <mandator.name>ELUS</mandator.name>
-            </properties>
-            <build>
-                <finalName>dw-elus</finalName>
-            </build>
-            <dependencies>
-                <dependency>
-                    <groupId>eu.ggnet.dw</groupId>
-                    <artifactId>dw-mandator-elus</artifactId>
-                    <version>${dw.version}</version>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
-            <!-- The server combined with the testing sample mandator and entity generator -->
-            <id>server-sample</id>
-            <properties>
-                <mandator.name>Example GmbH</mandator.name>
-            </properties>
-            <dependencies>
-                <dependency>
-                    <groupId>${project.groupId}</groupId>
-                    <artifactId>dwoss-mandator-sample</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>${project.groupId}</groupId>
-                    <artifactId>dwoss-mandator-sample-service</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-                <dependency>
-                    <groupId>${project.groupId}</groupId>
-                    <artifactId>dwoss-mandator-sample-startupgenerator</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
 
 </project>
