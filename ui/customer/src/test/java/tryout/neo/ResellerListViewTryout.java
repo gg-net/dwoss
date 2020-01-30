@@ -22,6 +22,7 @@ import javafx.stage.Stage;
 
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ui.neo.ResellerListView;
+import eu.ggnet.saft.core.Dl;
 
 import tryout.stub.CustomerAgentStub;
 
@@ -33,14 +34,15 @@ public class ResellerListViewTryout {
 
     public static class InnerApplication extends Application {
 
-        CustomerAgent agent = new CustomerAgentStub();
-
         @Override
         public void start(Stage s) throws Exception {
+
+            Dl.remote().add(CustomerAgent.class, new CustomerAgentStub());
+
             ResellerListView view = new ResellerListView();
             s.setScene(new Scene(view));
 
-            view.accept(agent.findAllResellerListCustomersEager());
+            view.accept(Dl.remote().lookup(CustomerAgent.class).findAllResellerListCustomersEager());
 
             s.show();
         }

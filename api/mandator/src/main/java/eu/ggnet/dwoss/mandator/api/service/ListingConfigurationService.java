@@ -20,7 +20,6 @@ import java.util.*;
 
 import javax.ejb.Local;
 
-import eu.ggnet.dwoss.mandator.api.value.partial.ListingMailConfiguration;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.common.FileJacket;
 
@@ -35,7 +34,5 @@ public interface ListingConfigurationService {
     List<ListingConfiguration> listingConfigurations();
 
     FtpConfiguration listingFtpConfiguration(Map<TradeName, Collection<FileJacket>> files);
-
-    ListingMailConfiguration listingMailConfiguration();
 
 }

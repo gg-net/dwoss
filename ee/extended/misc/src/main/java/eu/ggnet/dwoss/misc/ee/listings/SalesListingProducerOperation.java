@@ -42,8 +42,6 @@ import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.util.JRSaver;
 
-import org.apache.commons.mail.EmailException;
-import org.apache.commons.mail.MultiPartEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +52,6 @@ import eu.ggnet.dwoss.customer.api.ResellerListService;
 import eu.ggnet.dwoss.mandator.api.service.FtpConfiguration.UploadCommand;
 import eu.ggnet.dwoss.mandator.api.service.*;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.mandator.api.value.partial.ListingMailConfiguration;
 import eu.ggnet.dwoss.misc.api.SalesListingService;
 import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
 import eu.ggnet.dwoss.core.system.progress.SubMonitor;
@@ -282,9 +279,6 @@ public class SalesListingProducerOperation implements SalesListingProducer, Sale
         switch (config.location) {
             case LOCAL:
                 return jackets;
-            case MAIL:
-                prepareAndSend(jackets);
-                break;
             case FTP:
                 prepareAndUpload(result);
                 break;
@@ -541,38 +535,6 @@ public class SalesListingProducerOperation implements SalesListingProducer, Sale
             return new FileJacket(config.filePrefix() + config.name(), ".pdf", pdfContend);
         } catch (JRException ex) {
             throw new RuntimeException(ex);
-        }
-    }
-
-    /**
-     * Prepare and send filejackets to the specified email address.
-     * <p>
-     * @param fileJackets files to be send
-     */
-    private void prepareAndSend(List<FileJacket> fileJackets) {
-        SubMonitor m = monitorFactory.newSubMonitor("Transfer");
-        m.message("sending Mail");
-        m.start();
-
-        try {
-            ListingMailConfiguration config = listingService.get().listingMailConfiguration();
-
-            MultiPartEmail email = mandator.prepareDirectMail();
-            email.setFrom(config.fromAddress());
-            email.addTo(config.toAddress());
-            email.setSubject(config.subject());
-            email.setMsg(config.message() + config.signature());
-
-            for (FileJacket fj : fileJackets) {
-                email.attach(
-                        new javax.mail.util.ByteArrayDataSource(fj.getContent(), "application/xls"),
-                        fj.getHead() + fj.getSuffix(), "Die Händlerliste für die Marke ");
-            }
-
-            email.send();
-            m.finish();
-        } catch (EmailException e) {
-            throw new RuntimeException(e);
         }
     }
 

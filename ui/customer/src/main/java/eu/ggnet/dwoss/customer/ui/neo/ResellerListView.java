@@ -22,11 +22,14 @@ import java.util.function.Consumer;
 import javafx.beans.property.ReadOnlyLongWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 
+import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
+import eu.ggnet.saft.core.Dl;
 
 /**
  *
@@ -38,6 +41,7 @@ public class ResellerListView extends BorderPane implements Consumer<List<Custom
 
     public ResellerListView() {
         table = new TableView<>();
+        table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         TableColumn<Customer, Number> tcKid = new TableColumn<>("Kid");
         TableColumn<Customer, String> tcName = new TableColumn<>("Name");
         TableColumn<Customer, String> tcMail = new TableColumn<>("Email für Händlerliste");
@@ -47,6 +51,22 @@ public class ResellerListView extends BorderPane implements Consumer<List<Custom
         tcMail.setCellValueFactory((cdf) -> new ReadOnlyStringWrapper(cdf.getValue().getResellerListEmailCommunication().get().getIdentifier()).getReadOnlyProperty());
 
         table.getColumns().addAll(tcKid, tcName, tcMail);
+        MenuItem select = new MenuItem("Abonnement beenden");
+        select.setOnAction(e -> {
+            Customer c = table.getSelectionModel().getSelectedItem();
+            Dl.remote().lookup(CustomerAgent.class).clearResellerListEmailCommunication(c.getId());
+            table.getItems().remove(c);
+            table.getSelectionModel().clearSelection();
+        });
+
+        ContextMenu cm = new ContextMenu();
+        cm.getItems().add(select);
+
+        table.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent t1) -> {
+            if ( t1.getButton() == MouseButton.SECONDARY ) {
+                cm.show(table, t1.getScreenX(), t1.getScreenY());
+            }
+        });
 
         setCenter(table);
         setPrefWidth(500);

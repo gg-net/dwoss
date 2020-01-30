@@ -21,9 +21,16 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+
 import eu.ggnet.dwoss.mail.ee.MailSalesListingService;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.builder.UiWorkflowBreak;
+
+import static javafx.scene.control.ButtonType.OK;
 
 /**
  *
@@ -41,6 +48,15 @@ public class SendResellerListToSubscribedCustomersAction extends AbstractAction 
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.exec(Ui.progress().wrap(() -> Dl.remote().lookup(MailSalesListingService.class).generateResellerXlsAndSendToSubscribedCustomers()));
+        Ui.build().dialog().eval(() -> {
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Händlerliste versenden");
+            alert.setHeaderText("Möchten Sie die Händlerliste jetzt versenden");
+            return alert;
+        }).cf().thenAccept((ButtonType t) -> {
+            if ( t != OK ) throw new UiWorkflowBreak(UiWorkflowBreak.Type.NULL_RESULT);
+        })
+                .thenRun(() -> Ui.progress().wrap(() -> Dl.remote().lookup(MailSalesListingService.class).generateResellerXlsAndSendToSubscribedCustomers()))
+                .handle(Ui.handler());
     }
 }
