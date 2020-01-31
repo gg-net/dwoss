@@ -43,10 +43,10 @@ public class AuthenticationBean implements Authentication {
 
     @Inject
     @Rights
-    EntityManager rightsEm;
+    private EntityManager rightsEm;
 
     @Inject
-    Instance<AuthenticationService> service;
+    private Instance<AuthenticationService> service;
 
     /**
      * This method returns a {@link Set} of {@link AtomicRight}'s when the {@link Operator} is authorized or throw a {@link UserInfoException} when username
