@@ -59,7 +59,7 @@ public class AuthenticationBean implements Authentication {
      */
     @Override
     public eu.ggnet.dwoss.rights.api.Operator login(String username, char[] password) throws UserInfoException {
-        L.info("Authentication request(user={})", username);
+        L.info("login(user={}, password=xxxxxxx) requested", username);
         //find users by Username
         List<Operator> result = rightsEm.createNamedQuery("Operator.byUsername", Operator.class).setParameter(1, username).getResultList();
         if ( result.isEmpty() ) throw new UserInfoException("User " + username + " ist noch nicht angelegt");
@@ -67,19 +67,19 @@ public class AuthenticationBean implements Authentication {
         if ( !service.isAmbiguous() && !service.isUnsatisfied() ) {
             if ( service.get().authenticate(username, password) ) {
                 eu.ggnet.dwoss.rights.api.Operator login = op.toDto();
-                L.info("Authentication successful: {}", login);
+                L.info("login(user={}, password=xxxxxxx) via AuthenticationService successful. {}", username, login);
                 return login;
             }
         } else {
             if ( op.getPassword() != null && op.getSalt() != null
                     && Arrays.equals(op.getPassword(), PasswordUtil.hashPassword(password, op.getSalt())) ) {
                 eu.ggnet.dwoss.rights.api.Operator login = op.toDto();
-                L.info("Authentication successful: {}", login);
+                L.info("login(user={}, password=xxxxxxx) via internal database successful. {}", username, login);
                 return login;
             }
 
         }
-        L.info("Authentication denied");
+        L.warn("login(user={}, password=xxxxxxx) failed.", username);
         throw new UserInfoException("Authentifizierung nicht gelungen!");
     }
 
