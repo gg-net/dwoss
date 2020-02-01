@@ -56,7 +56,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>eu.ggnet.dwoss.assembly.remote.RunClientFx</mainClass>
+                            <mainClass>eu.ggnet.dwoss.assembly.remote.Main</mainClass>
                         </manifest>
                         <manifestEntries>
                             <JavaFX-Preloader-Class>eu.ggnet.dwoss.assembly.remote.DwPreloader</JavaFX-Preloader-Class>
@@ -138,10 +138,6 @@
                     <artifactId>geronimo-jta_1.1_spec</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.github.insubstantial</groupId>
-            <artifactId>substance</artifactId>
         </dependency>
         <!-- components -->
         <dependency>

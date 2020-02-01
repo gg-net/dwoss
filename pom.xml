@@ -568,11 +568,6 @@
                 <artifactId>commons-httpclient</artifactId>
                 <version>3.1</version>
             </dependency>
-            <dependency>
-                <groupId>com.github.insubstantial</groupId>
-                <artifactId>substance</artifactId>
-                <version>7.3</version>
-            </dependency>
             <!-- Incubator Dependencies LucidCalc -->
             <dependency>
                 <groupId>net.sourceforge.jexcelapi</groupId>

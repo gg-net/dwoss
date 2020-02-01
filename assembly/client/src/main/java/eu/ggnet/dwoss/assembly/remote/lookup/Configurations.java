@@ -40,7 +40,7 @@ public class Configurations {
                 .port(8080)
                 .username("admin")
                 .password("admin")
-                .app("dwoss-server")
+                .app("dwoss-server-sample")
                 .build());
 
         Dl.local().optional(EjbConnectionConfigurationProvider.class).ifPresent(p -> conf.putAll(p.getConfigurations()));

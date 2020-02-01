@@ -46,19 +46,6 @@ import eu.ggnet.saft.experimental.ops.ActionFactory.MetaAction;
 
 public class SwingClient {
 
-    // Helper for Substance Lafs.
-    private static class SlafName {
-
-        public SlafName(String name, String className) {
-            this.name = name;
-            this.className = "org.pushingpixels.substance.api.skin." + className;
-        }
-
-        String name;
-
-        String className;
-    }
-
     private static class LafAction implements ActionListener {
 
         private final String className;
@@ -78,37 +65,6 @@ public class SwingClient {
             }
         }
     }
-
-    private static final SlafName[] substanceLaafs = {
-        new SlafName("Autumn", "SubstanceAutumnLookAndFeel"),
-        new SlafName("Business", "SubstanceBusinessLookAndFeel"),
-        new SlafName("Business Blue", "SubstanceBusinessBlueSteelLookAndFeel"),
-        new SlafName("Business Black", "SubstanceBusinessBlackSteelLookAndFeel"),
-        new SlafName("Cerulean", "SubstanceCeruleanLookAndFeel"),
-        new SlafName("Challenger Deep", "SubstanceChallengerDeepLookAndFeel"),
-        new SlafName("Creme", "SubstanceCremeLookAndFeel"),
-        new SlafName("Creme Coffee", "SubstanceCremeCoffeeLookAndFeel"),
-        new SlafName("Dust", "SubstanceDustLookAndFeel"),
-        new SlafName("Dust Coffee", "SubstanceDustCoffeeLookAndFeel"),
-        new SlafName("Emerald Dusk", "SubstanceEmeraldDuskLookAndFeel"),
-        new SlafName("Gemini", "SubstanceGeminiLookAndFeel"),
-        new SlafName("Graphite", "SubstanceGraphiteLookAndFeel"),
-        new SlafName("Graphite Aqua", "SubstanceGraphiteAquaLookAndFeel"),
-        new SlafName("Graphite Glass", "SubstanceGraphiteGlassLookAndFeel"),
-        new SlafName("Magellan", "SubstanceMagellanLookAndFeel"),
-        new SlafName("Mariner", "SubstanceMarinerLookAndFeel"),
-        new SlafName("Mist Aqua", "SubstanceMistAquaLookAndFeel"),
-        new SlafName("Mist Silver", "SubstanceMistSilverLookAndFeel"),
-        new SlafName("Moderate", "SubstanceModerateLookAndFeel"),
-        new SlafName("Nebula Brick Wall", "SubstanceNebulaBrickWallLookAndFeel"),
-        new SlafName("Nebula", "SubstanceNebulaLookAndFeel"),
-        new SlafName("Office Black 2007", "SubstanceOfficeBlack2007LookAndFeel"),
-        new SlafName("Office Blue 2007", "SubstanceOfficeBlue2007LookAndFeel"),
-        new SlafName("Office Silver 2007", "SubstanceOfficeSilver2007LookAndFeel"),
-        new SlafName("Raven", "SubstanceRavenLookAndFeel"),
-        new SlafName("Sahara", "SubstanceSaharaLookAndFeel"),
-        new SlafName("Twilight", "SubstanceTwilightLookAndFeel")
-    };
 
     private static final Logger L = LoggerFactory.getLogger(SwingClient.class);
 
@@ -322,20 +278,6 @@ public class SwingClient {
             if ( info.getClassName().equals(active) ) {
                 b.setSelected(true);
             }
-        }
-        try {
-            Class.forName("org.pushingpixels.substance.api.skin.SkinInfo");
-            for (SlafName slaf : substanceLaafs) {
-                JRadioButtonMenuItem b = new JRadioButtonMenuItem(slaf.name);
-                b.addActionListener(new LafAction(slaf.className));
-                bg.add(b);
-                lafMenu.add(b);
-                if ( slaf.className.equals(active) ) {
-                    b.setSelected(true);
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            L.info("Class SkinInfo not found, Substance Lafs are not installed.");
         }
 
         return lafMenu;
