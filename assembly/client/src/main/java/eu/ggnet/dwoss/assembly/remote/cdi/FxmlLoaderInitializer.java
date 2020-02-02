@@ -16,36 +16,27 @@
  */
 package eu.ggnet.dwoss.assembly.remote.cdi;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
+
+import javafx.fxml.FXMLLoader;
+import javafx.util.Callback;
 
 /**
- * Testing the producer
  *
  * @author oliver.guenther
  */
-public class Try {
+public class FxmlLoaderInitializer {
 
-    private final String value;
+    private final Callback<Class<?>, Object> factory;
 
-    public Try(String value) {
-        this.value = value;
+    public FxmlLoaderInitializer(Callback<Class<?>, Object> factory) {
+        this.factory = Objects.requireNonNull(factory, "factory must not be null");
     }
 
-    public Try() {
-        this.value = "Default";
+    public FXMLLoader createLoader(URL fxml) {
+        return new FXMLLoader(Objects.requireNonNull(fxml, "fxml must not be null"), null, null, factory, StandardCharsets.UTF_8);
     }
 
-    public String value() {
-        return value;
-    }
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
-//    @Produces
-//    public static Try produce() {
-//        return new Try("Produced");
-//    }
 }

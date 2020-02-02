@@ -19,7 +19,13 @@ package eu.ggnet.dwoss.assembly.remote;
 import javax.enterprise.inject.se.SeContainer;
 import javax.enterprise.inject.se.SeContainerInitializer;
 
+import javafx.application.Application;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
 import eu.ggnet.dwoss.assembly.remote.cdi.CdiClient;
+import eu.ggnet.dwoss.misc.ui.AboutController;
 
 /**
  * Experiment: https://jira.cybertron.global/browse/DWOSS-335
@@ -28,15 +34,27 @@ import eu.ggnet.dwoss.assembly.remote.cdi.CdiClient;
  */
 public class MainCdi {
 
-    public static void main(String[] args) {
-        SeContainerInitializer ci = SeContainerInitializer.newInstance();
-        ci.disableDiscovery();
-        ci.addPackages(true, MainCdi.class);
-        try (SeContainer container = ci.initialize()) {
-            CdiClient client = container.select(CdiClient.class).get();
-            client.main();
+    public static class CdiApplication extends Application {
+
+        @Override
+        public void start(Stage stage) throws Exception {
+            SeContainerInitializer ci = SeContainerInitializer.newInstance();
+            ci.disableDiscovery();
+            ci.addPackages(true, MainCdi.class);
+            ci.addPackages(true, AboutController.class);
+            try (SeContainer container = ci.initialize()) {
+                CdiClient client = container.select(CdiClient.class).get();
+                client.main();
+                Parent root = client.root();
+                stage.setScene(new Scene(root));
+                stage.show();
+            }
         }
 
+    }
+
+    public static void main(String[] args) {
+        Application.launch(CdiApplication.class, args);
     }
 
 }

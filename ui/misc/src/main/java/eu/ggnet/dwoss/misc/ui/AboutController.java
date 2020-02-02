@@ -19,6 +19,9 @@ package eu.ggnet.dwoss.misc.ui;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+import javax.enterprise.inject.spi.BeanManager;
+import javax.inject.Inject;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -57,6 +60,10 @@ public class AboutController implements FxController, Consumer<In> {
     @FXML
     private TextArea debugTextArea;
 
+    // Todo: This should be removed here an pushed via in. https://jira.cybertron.global/browse/DWOSS-335
+    @Inject
+    private BeanManager beanManager;
+
     @FXML
     public void initialize() {
         closeButton.setOnAction((e) -> Ui.closeWindowOf(closeButton));
@@ -65,7 +72,7 @@ public class AboutController implements FxController, Consumer<In> {
     @Override
     public void accept(In in) {
         Objects.requireNonNull(in, "in must not be null");
-        infoTextArea.setText(in.info);
+        infoTextArea.setText(in.info + "\n- CDI enabled: " + (beanManager == null ? "no" : "yes"));
         debugTextArea.setText(in.debug);
     }
 

@@ -16,36 +16,29 @@
  */
 package eu.ggnet.dwoss.assembly.remote.cdi;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import javax.enterprise.inject.Instance;
+import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Testing the producer
  *
  * @author oliver.guenther
  */
-public class Try {
+public class FxmlLoaderProducer {
 
-    private final String value;
+    private final Logger L = LoggerFactory.getLogger(FxmlLoaderProducer.class);
 
-    public Try(String value) {
-        this.value = value;
+    @Inject
+    private Instance<Object> instance;
+
+    @Produces
+    public FxmlLoaderInitializer createLoader() {
+        return new FxmlLoaderInitializer((Class<?> param) -> {
+            L.debug("call(): creating Loader for {}", param);
+            return instance.select(param).get();
+        });
     }
-
-    public Try() {
-        this.value = "Default";
-    }
-
-    public String value() {
-        return value;
-    }
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
-//    @Produces
-//    public static Try produce() {
-//        return new Try("Produced");
-//    }
 }
