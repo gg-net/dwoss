@@ -11,10 +11,7 @@
     <artifactId>dwoss-client</artifactId>
     <name>DwOss • Assembly • Client</name>
 
-    <!--
-        JDK 11 info https://stackoverflow.com/questions/52653836/maven-shade-javafx-runtime-components-are-missing/52654791#52654791
-        If we want a cross platform jar.
-    -->
+
     <build>
         <defaultGoal>install</defaultGoal>
         <finalName>client</finalName>
@@ -100,6 +97,11 @@
     </build>
 
     <dependencies>
+        <dependency>
+            <groupId>org.jboss.weld.se</groupId>
+            <artifactId>weld-se-core</artifactId>
+            <version>3.1.3.Final</version>
+        </dependency>
         <dependency>
             <groupId>${javaee.groupId}</groupId>
             <artifactId>${javaee.artifactId}</artifactId>
@@ -245,6 +247,10 @@
         <profile>
             <id>jdk11</id>
             <dependencies>
+                <!--
+                    JDK 11 info https://stackoverflow.com/questions/52653836/maven-shade-javafx-runtime-components-are-missing/52654791#52654791
+                    If we want a cross platform jar.
+                -->
                 <dependency>
                     <groupId>org.openjfx</groupId>
                     <artifactId>javafx-controls</artifactId>

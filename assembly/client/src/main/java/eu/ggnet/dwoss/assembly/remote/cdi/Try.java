@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
+ * Copyright (C) 2020 GG-Net GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,29 +14,40 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.misc.ui.cap;
+package eu.ggnet.dwoss.assembly.remote.cdi;
 
-import java.awt.event.ActionEvent;
+import javax.enterprise.inject.Produces;
 
-import javax.swing.AbstractAction;
-
-import eu.ggnet.dwoss.misc.ui.AboutController.In;
-import eu.ggnet.dwoss.misc.ui.*;
-import eu.ggnet.saft.core.Ui;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
+ * Testing the producer
  *
- * @author pascal.perau
+ * @author oliver.guenther
  */
-public class AboutAction extends AbstractAction {
+public class Try {
 
-    public AboutAction() {
-        super("Über ...");
+    private final String value;
+
+    public Try(String value) {
+        this.value = value;
+    }
+
+//    public Try() {
+//        this.value = "Default";
+//    }
+    public String value() {
+        return value;
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        Ui.build().fxml().show(() -> new In(AboutSources.info(), AboutSources.debug()), AboutController.class);
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
+
+    @Produces
+    public static Try produce() {
+        return new Try("Produced");
     }
 
 }
