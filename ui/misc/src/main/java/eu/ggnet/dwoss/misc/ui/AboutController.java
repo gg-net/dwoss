@@ -72,7 +72,7 @@ public class AboutController implements FxController, Consumer<In> {
     @Override
     public void accept(In in) {
         Objects.requireNonNull(in, "in must not be null");
-        infoTextArea.setText(in.info + "\n- CDI enabled: " + (beanManager == null ? "no" : "yes"));
+        infoTextArea.setText(in.info + "\n - CDI enabled: " + (beanManager == null ? "No" : "Yes"));
         debugTextArea.setText(in.debug);
     }
 
