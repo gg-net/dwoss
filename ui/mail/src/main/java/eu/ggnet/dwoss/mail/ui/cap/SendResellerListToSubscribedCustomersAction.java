@@ -25,6 +25,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import eu.ggnet.dwoss.mail.ee.MailSalesListingService;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
@@ -37,6 +40,8 @@ import static javafx.scene.control.ButtonType.OK;
  * @author oliver.guenther
  */
 public class SendResellerListToSubscribedCustomersAction extends AbstractAction {
+    
+    private final static Logger L = LoggerFactory.getLogger(SendResellerListToSubscribedCustomersAction.class);
 
     public SendResellerListToSubscribedCustomersAction() {
         super("Händlerliste versenden (neu)");
@@ -54,9 +59,10 @@ public class SendResellerListToSubscribedCustomersAction extends AbstractAction 
             alert.setHeaderText("Möchten Sie die Händlerliste jetzt versenden");
             return alert;
         }).cf().thenAccept((ButtonType t) -> {
+            L.debug("OK/Cancel Dialog result {}",t);
             if ( t != OK ) throw new UiWorkflowBreak(UiWorkflowBreak.Type.NULL_RESULT);
         })
-                .thenRun(() -> Ui.progress().wrap(() -> Dl.remote().lookup(MailSalesListingService.class).generateResellerXlsAndSendToSubscribedCustomers()))
+                .thenRun(() -> Ui.progress().wrap(() -> Dl.remote().lookup(MailSalesListingService.class).generateResellerXlsAndSendToSubscribedCustomers()).run())
                 .handle(Ui.handler());
     }
 }

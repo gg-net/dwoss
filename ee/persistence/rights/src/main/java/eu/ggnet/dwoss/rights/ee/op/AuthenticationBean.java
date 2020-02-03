@@ -66,16 +66,14 @@ public class AuthenticationBean implements Authentication {
         Operator op = result.get(0);
         if ( !service.isAmbiguous() && !service.isUnsatisfied() ) {
             if ( service.get().authenticate(username, password) ) {
-                eu.ggnet.dwoss.rights.api.Operator login = op.toDto();
-                L.info("login(user={}, password=xxxxxxx) via AuthenticationService successful. {}", username, login);
-                return login;
+                L.info("login(user={}, password=xxxxxxx) via AuthenticationService successful.", username);
+                return op.toDto();
             }
         } else {
             if ( op.getPassword() != null && op.getSalt() != null
                     && Arrays.equals(op.getPassword(), PasswordUtil.hashPassword(password, op.getSalt())) ) {
-                eu.ggnet.dwoss.rights.api.Operator login = op.toDto();
-                L.info("login(user={}, password=xxxxxxx) via internal database successful. {}", username, login);
-                return login;
+                L.info("login(user={}, password=xxxxxxx) via internal database successful.", username);
+                return op.toDto();
             }
 
         }
