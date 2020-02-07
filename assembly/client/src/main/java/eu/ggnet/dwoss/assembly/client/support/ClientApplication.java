@@ -16,75 +16,86 @@
  */
 package eu.ggnet.dwoss.assembly.client.support;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Objects;
+import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.se.SeContainer;
 import javax.enterprise.inject.se.SeContainerInitializer;
+import javax.swing.Action;
 
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import eu.ggnet.dwoss.assembly.client.Main;
 import eu.ggnet.dwoss.assembly.remote.MainCdi;
-import eu.ggnet.dwoss.assembly.remote.cdi.CdiClient;
 import eu.ggnet.dwoss.assembly.remote.cdi.FxmlLoaderInitializer;
+import eu.ggnet.dwoss.core.widget.AbstractGuardian;
 import eu.ggnet.dwoss.misc.ui.AboutController;
+import eu.ggnet.dwoss.misc.ui.cap.AboutAction;
+import eu.ggnet.saft.experimental.auth.AuthenticationException;
 
 /**
  *
  * @author oliver.guenther
  */
-public class ClientApplication extends Application {
+public class ClientApplication extends Application implements FirstLoginListener {
 
     private SeContainer container;
 
-    private ClientMainController mainController;
+    private Stage loginStage;
+
+    private Label info;
 
     private Parent mainView;
 
     @Override
-    public void start(Stage stage) throws Exception {
-        stage.setScene(new Scene(mainView));
-        stage.show();
-        mainController.add(new Menu("Testmenu"));
-        CompletableFuture.runAsync(new Runnable() {
-            @Override
-            public void run() {
-                container = initContainer();
-            }
+    public void start(Stage primaryStage) throws Exception {
 
-        }).thenRunAsync(new Runnable() {
-            @Override
-            public void run() {
-                MenuItem m = new MenuItem("Hallo Welt");
-                Menu mu = new Menu("Hallo");
-                mu.getItems().add(m);
-                mainController.add(mu);
-            }
+        info = new Label("Info here");
+        StackPane mainPane = new StackPane(info);
+        mainPane.setPrefSize(800, 600);
 
-        }, Platform::runLater);
-        // show minimal ui
-        // Open blocking login (will wait for connection completion, if you hit return, that authenticate)
-        // fill menu, Toolbar, Main
-        // Connect to server, Preload, Discovery e.t.c
-    }
+        primaryStage.setScene(new Scene(mainPane));
+        primaryStage.show();
 
-    @Override
-    public void init() throws Exception {
-        // Load the minimal Ui, so something gets visible.
-        FXMLLoader loader = new FXMLLoader(ClientMainController.class.getResource("ClientMainView.fxml"));
-        mainView = loader.load();
-        mainController = loader.getController();
+        FXMLLoader loader = new FXMLLoader(FirstLoginController.class.getResource("FirstLoginView.fxml"));
+        Parent loginView = loader.load();
+        FirstLoginController loginController = loader.getController();
+        loginController.setLoginListener(this);
+        loginStage = new Stage();
+        loginStage.initModality(Modality.APPLICATION_MODAL);
+        loginStage.initOwner(primaryStage);
+        loginStage.setScene(new Scene(loginView));
+        loginStage.show();
+
+        CompletableFuture
+                .runAsync(this::postInit)
+                .thenRun(() -> { // For now only a Stub, so I don't need the running server
+                    loginController.setAndActivateGuardian(new AbstractGuardian() {
+                        @Override
+                        public void login(String user, char[] pass) throws AuthenticationException {
+                            if ( "max".equalsIgnoreCase(user) && "pass".equals(String.valueOf(pass)) ) return; // success
+                            System.out.println("User:" + user + "|Pass:" + Arrays.toString(pass));
+                            throw new AuthenticationException("User or Pass wrong");
+                        }
+                    });
+                })
+                .thenRunAsync(() -> {
+                    // Replace Mainview, later kick in Swing temporyry
+                    // And remember to relocate
+                    mainPane.getChildren().clear(); // remove everything
+                    mainPane.getChildren().add(mainView);
+                }, Platform::runLater);
     }
 
     @Override
@@ -92,13 +103,46 @@ public class ClientApplication extends Application {
         if ( container.isRunning() ) container.close();
     }
 
-    public static SeContainer initContainer() {
+    /**
+     * init after start
+     */
+    public void postInit() {
         SeContainerInitializer ci = SeContainerInitializer.newInstance();
         ci.disableDiscovery();
         ci.addPackages(true, MainCdi.class);
         ci.addPackages(true, Main.class);
-        ci.addPackages(true, AboutController.class);
-        return ci.initialize();
+        ci.addPackages(true, AboutController.class); // misc.ui
+        container = ci.initialize();
+        // TODO: Remote connection and everything else.
+        Instance<Object> instance = container.getBeanManager().createInstance();
+        AboutAction aboutAction = instance.select(AboutAction.class).get();
+
+        MenuItem aboutItem = new MenuItem(aboutAction.getValue(Action.NAME).toString());
+        aboutItem.setOnAction((e) -> aboutAction.actionPerformed(new ActionEvent(aboutItem, ActionEvent.ACTION_PERFORMED, aboutAction.getValue(Action.NAME).toString())));
+
+        // TODO: Here we will have Saft already.
+        FXMLLoader mainLoader = instance.select(FxmlLoaderInitializer.class).get().createLoader(ClientMainController.class.getResource("ClientMainView.fxml"));
+        try {
+            mainLoader.load();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+        mainView = mainLoader.getRoot();
+
+        ClientMainController mainController = mainLoader.getController();
+        Menu m = new Menu("Info");
+        m.getItems().add(aboutItem);
+        mainController.add(m);
+    }
+
+    @Override
+    public void loginSuccessful() {
+        loginStage.close();
+    }
+
+    @Override
+    public void shutdown() {
+        Platform.exit();
     }
 
 }
