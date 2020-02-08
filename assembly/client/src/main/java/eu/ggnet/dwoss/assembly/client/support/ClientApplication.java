@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.assembly.client.support;
 
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
@@ -24,7 +23,6 @@ import java.util.concurrent.CompletableFuture;
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.se.SeContainer;
 import javax.enterprise.inject.se.SeContainerInitializer;
-import javax.swing.Action;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -41,7 +39,6 @@ import eu.ggnet.dwoss.assembly.remote.MainCdi;
 import eu.ggnet.dwoss.assembly.remote.cdi.FxmlLoaderInitializer;
 import eu.ggnet.dwoss.core.widget.AbstractGuardian;
 import eu.ggnet.dwoss.misc.ui.AboutController;
-import eu.ggnet.dwoss.misc.ui.cap.AboutAction;
 import eu.ggnet.saft.experimental.auth.AuthenticationException;
 
 /**
@@ -57,6 +54,8 @@ public class ClientApplication extends Application implements FirstLoginListener
     private Label info;
 
     private Parent mainView;
+
+    private Instance<Object> instance;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -114,11 +113,7 @@ public class ClientApplication extends Application implements FirstLoginListener
         ci.addPackages(true, AboutController.class); // misc.ui
         container = ci.initialize();
         // TODO: Remote connection and everything else.
-        Instance<Object> instance = container.getBeanManager().createInstance();
-        AboutAction aboutAction = instance.select(AboutAction.class).get();
-
-        MenuItem aboutItem = new MenuItem(aboutAction.getValue(Action.NAME).toString());
-        aboutItem.setOnAction((e) -> aboutAction.actionPerformed(new ActionEvent(aboutItem, ActionEvent.ACTION_PERFORMED, aboutAction.getValue(Action.NAME).toString())));
+        instance = container.getBeanManager().createInstance();
 
         // TODO: Here we will have Saft already.
         FXMLLoader mainLoader = instance.select(FxmlLoaderInitializer.class).get().createLoader(ClientMainController.class.getResource("ClientMainView.fxml"));
@@ -130,9 +125,6 @@ public class ClientApplication extends Application implements FirstLoginListener
         mainView = mainLoader.getRoot();
 
         ClientMainController mainController = mainLoader.getController();
-        Menu m = new Menu("Info");
-        m.getItems().add(aboutItem);
-        mainController.add(m);
     }
 
     @Override
