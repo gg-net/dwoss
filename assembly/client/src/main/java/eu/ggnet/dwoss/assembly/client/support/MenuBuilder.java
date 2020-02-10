@@ -17,15 +17,18 @@
 package eu.ggnet.dwoss.assembly.client.support;
 
 import java.awt.event.ActionEvent;
-import java.util.Arrays;
-import java.util.List;
+import java.lang.annotation.Annotation;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.swing.Action;
 
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Util to build a menu.
@@ -34,13 +37,26 @@ import javafx.scene.control.MenuItem;
  */
 public class MenuBuilder {
 
+    private Logger L = LoggerFactory.getLogger(MenuBuilder.class);
+
     @Inject
     private Instance<Object> instance;
 
-    public MenuItem item(Class<? extends Action> clazz) {
-        Action action = instance.select(clazz).get();
-        MenuItem item = new MenuItem(action.getValue(Action.NAME).toString());
+    public MenuItem item(Class<? extends Action> clazz, Annotation... qualifiers) {
+        L.debug("item(clazz={},qualifiers={}) starting", clazz, qualifiers);
+        Action action = instance.select(clazz, qualifiers).get();
+        L.debug("item() found action {}", action);
+        MenuItem item;
+        if ( Objects.nonNull(action.getValue(Action.SHORT_DESCRIPTION)) ) {
+            Label l = new Label(action.getValue(Action.NAME).toString());
+            Tooltip t = new Tooltip(action.getValue(Action.SHORT_DESCRIPTION).toString());
+            Tooltip.install(l, t);
+            item = new CustomMenuItem(l);
+        } else {
+            item = new MenuItem(action.getValue(Action.NAME).toString());
+        }
         item.setOnAction((e) -> action.actionPerformed(new ActionEvent(action, ActionEvent.ACTION_PERFORMED, action.getValue(Action.NAME).toString())));
+        L.info("item(clazz={},qualifiers={}) returning {}", clazz, qualifiers, item);
         return item;
     }
 
