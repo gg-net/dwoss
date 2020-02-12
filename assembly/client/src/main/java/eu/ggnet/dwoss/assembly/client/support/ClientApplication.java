@@ -29,7 +29,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -94,7 +94,11 @@ public class ClientApplication extends Application implements FirstLoginListener
                     // And remember to relocate
                     mainPane.getChildren().clear(); // remove everything
                     mainPane.getChildren().add(mainView);
-                }, Platform::runLater);
+                }, Platform::runLater)
+                .handle((Void t, Throwable u) -> {
+                    u.printStackTrace();
+                    return null;
+                });
     }
 
     @Override

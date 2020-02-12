@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.assembly.client.support;
 
+import java.lang.annotation.Annotation;
+
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
@@ -26,7 +28,14 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+import eu.ggnet.dwoss.core.common.values.SalesChannel;
+import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration.Location;
+import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration.Type;
 import eu.ggnet.dwoss.misc.ui.cap.*;
+
+import static eu.ggnet.dwoss.core.common.values.SalesChannel.CUSTOMER;
+import static eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration.Location.FTP;
+import static eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration.Type.PDF;
 
 /**
  * Main UI, consist of menubar, toolbar, statusline and main ui container.
@@ -93,15 +102,31 @@ public class ClientMainController {
         Menu gl = new Menu("Geschäftsführung");
         gl.getItems().addAll(gl_allgemein, gl_close, m.item(OpenSalesChannelManagerAction.class));
 
+        // -- Lager/Logistik
+        Menu logistik_inventur = new Menu("Inventur");
+        logistik_inventur.getItems().add(m.item(StockTakingAction.class));
+
+        Menu logistik = new Menu("Lager/Logistik");
+        logistik.getItems().add(logistik_inventur);
+
+        // -- Artikelstamm
+        Menu artikelstamm_imageIds = new Menu("Bilder Ids");
+        artikelstamm_imageIds.getItems().addAll(m.items(ExportImageIdsAction.class, ImportImageIdsAction.class));
+        // Todo: Solotion for: actions.add(new MetaAction("Artikelstamm", "Bilder Ids", new ExportImageIdsAction(SalesChannel.CUSTOMER)));
+
+        Menu artikelstamm = new Menu("Artikelstamm");
+        artikelstamm.getItems().addAll(artikelstamm_imageIds);
+
         // -- Hilfe
         Menu help = new Menu("Hilfe");
         help.getItems().addAll(
+                m.item(AnAction.class),
                 m.item(AboutAction.class),
                 m.item(ShowMandatorAction.class),
                 m.item(ExportImageIdsForCustomerMenuItem.class)
         );
 
-        menuBar.getMenus().addAll(system, gl, help);
+        menuBar.getMenus().addAll(system, gl, logistik, artikelstamm, help);
         menuBar.autosize();
     }
 
