@@ -51,5 +51,5 @@ public class Operator implements Serializable {
     public String toString() {
         return "Operator{" + "username=" + username + ", quickLoginKey=" + quickLoginKey + ", rights=" + rights + '}';
     }   
-
+   
 }

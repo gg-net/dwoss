@@ -37,11 +37,18 @@ public class MenuBuilder {
     @Inject
     private Instance<Object> instance;
 
-    public MenuItem item(Class<? extends Action> clazz) {
-        Action action = instance.select(clazz).get();
+    public MenuItem item(Class<?> clazz) {
+        if (clazz.isNestmateOf(MenuItem.class)) {
+        return (MenuItem)instance.select(clazz).get();
+            
+        }
+        else if (clazz.isNestmateOf(Action.class)) {
+        Action action = (Action)instance.select(clazz).get();
         MenuItem item = new MenuItem(action.getValue(Action.NAME).toString());
         item.setOnAction((e) -> action.actionPerformed(new ActionEvent(action, ActionEvent.ACTION_PERFORMED, action.getValue(Action.NAME).toString())));
-        return item;
+        return item;            
+        }
+        throw new RuntimeException("Class " + clazz + " not supported" );        
     }
 
     public List<MenuItem> items(Class<? extends Action>... classes) {

@@ -97,7 +97,8 @@ public class ClientMainController {
         Menu help = new Menu("Hilfe");
         help.getItems().addAll(
                 m.item(AboutAction.class),
-                m.item(ShowMandatorAction.class)
+                m.item(ShowMandatorAction.class),
+                m.item(ExportImageIdsForCustomerMenuItem.class)
         );
 
         menuBar.getMenus().addAll(system, gl, help);
