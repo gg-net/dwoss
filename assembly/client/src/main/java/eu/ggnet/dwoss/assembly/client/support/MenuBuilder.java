@@ -44,9 +44,9 @@ public class MenuBuilder {
 
     public MenuItem item(Class<?> clazz) {
         L.debug("item(clazz={},qualifiers={}) starting", clazz);
-        if ( clazz.isNestmateOf(MenuItem.class) ) {
+        if ( MenuItem.class.isAssignableFrom(clazz) ) {
             return (MenuItem)instance.select(clazz).get();
-        } else if ( clazz.isNestmateOf(Action.class) ) {
+        } else if ( Action.class.isAssignableFrom(clazz) ) {
             Action action = (Action)instance.select(clazz).get();
             MenuItem item = new MenuItem(action.getValue(Action.NAME).toString());
             L.debug("item() found action {}", action);
@@ -64,7 +64,7 @@ public class MenuBuilder {
         throw new RuntimeException("Class " + clazz + " not supported");
     }
 
-    public List<MenuItem> items(Class<? extends Action>... classes) {
+    public List<MenuItem> items(Class<?>... classes) {
         return Arrays.stream(classes).map(c -> item(c)).collect(Collectors.toList());
     }
 

@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.assembly.client.support;
 
-import java.lang.annotation.Annotation;
 
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
@@ -28,14 +27,8 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import eu.ggnet.dwoss.core.common.values.SalesChannel;
-import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration.Location;
-import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration.Type;
 import eu.ggnet.dwoss.misc.ui.cap.*;
 
-import static eu.ggnet.dwoss.core.common.values.SalesChannel.CUSTOMER;
-import static eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration.Location.FTP;
-import static eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration.Type.PDF;
 
 /**
  * Main UI, consist of menubar, toolbar, statusline and main ui container.
@@ -111,8 +104,7 @@ public class ClientMainController {
 
         // -- Artikelstamm
         Menu artikelstamm_imageIds = new Menu("Bilder Ids");
-        artikelstamm_imageIds.getItems().addAll(m.items(ExportImageIdsAction.class, ImportImageIdsAction.class));
-        // Todo: Solotion for: actions.add(new MetaAction("Artikelstamm", "Bilder Ids", new ExportImageIdsAction(SalesChannel.CUSTOMER)));
+        artikelstamm_imageIds.getItems().addAll(m.items(ExportImageIdsForCustomerMenuItem.class,ExportImageIdsAction.class, ImportImageIdsAction.class));
 
         Menu artikelstamm = new Menu("Artikelstamm");
         artikelstamm.getItems().addAll(artikelstamm_imageIds);
@@ -120,10 +112,8 @@ public class ClientMainController {
         // -- Hilfe
         Menu help = new Menu("Hilfe");
         help.getItems().addAll(
-                m.item(AnAction.class),
                 m.item(AboutAction.class),
-                m.item(ShowMandatorAction.class),
-                m.item(ExportImageIdsForCustomerMenuItem.class)
+                m.item(ShowMandatorAction.class)
         );
 
         menuBar.getMenus().addAll(system, gl, logistik, artikelstamm, help);
