@@ -20,20 +20,36 @@ import java.util.*;
 
 import javax.swing.JLabel;
 
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
 import eu.ggnet.dwoss.redtapext.ui.cap.UnitAvailabilityViewCask;
 import eu.ggnet.dwoss.uniqueunit.api.UnitShard;
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.redtape.ee.interactiveresult.Result;
+import eu.ggnet.dwoss.redtapext.ui.cap.UnitAvailabilityPane;
 import eu.ggnet.saft.core.*;
 
 /**
  *
  * @author oliver.guenther
  */
-public class UnitAvailabillityTryout {
+public class UnitAvailabillityPaneTryout {
 
+    public static class UnitAvailabilityTryoutApplication extends Application {
+
+        @Override
+        public void start(Stage primaryStage) throws Exception {
+            primaryStage.setScene(new Scene(new UnitAvailabilityPane()));
+            primaryStage.show();
+        }
+        
+    }
+    
+    
     private static class Wrap {
 
         private final UnitShard shard;
@@ -92,9 +108,6 @@ public class UnitAvailabillityTryout {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         });
-        Ui.exec(() -> {
-            UiCore.startSwing(() -> new JLabel("Main Application"));
-            Ui.build().swing().show(() -> new UnitAvailabilityViewCask());
-        });
+        Application.launch(UnitAvailabilityTryoutApplication.class);
     }
 }

@@ -23,6 +23,7 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.common.Css;
 import eu.ggnet.dwoss.core.widget.HtmlPane;
@@ -181,6 +182,7 @@ public class UnitAvailabilityViewCask extends javax.swing.JPanel implements Main
     private void searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchActionPerformed
         String refurbishedId = searchCommand.getText().trim();
         UnitShard us = Dl.remote().lookup(UnitOverseer.class).find(refurbishedId);
+        LoggerFactory.getLogger(UnitAvailabilityViewCask.class).debug("search({}) found {}", refurbishedId,us);
         model.add(0, us);
         searchCommand.setText("");
     }//GEN-LAST:event_searchActionPerformed

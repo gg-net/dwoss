@@ -25,7 +25,9 @@ import eu.ggnet.saft.api.IdSupplier;
  * The smallest representation of a unique unit.
  * <p>
  * @author oliver.guenther
+ * @deprecated use SimpleUnit.
  */
+@Deprecated
 public class PicoUnit implements IdSupplier, Serializable {
 
     public static final String MIME_TYPE = "dw-api/picounit";

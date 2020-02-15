@@ -3,6 +3,7 @@ package eu.ggnet.dwoss.uniqueunit.itest;
 import java.util.Date;
 import java.util.Iterator;
 
+import javax.ejb.EJB;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -16,12 +17,16 @@ import org.junit.runner.RunWith;
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.search.api.*;
+import eu.ggnet.dwoss.uniqueunit.api.SimpleUnit;
+import eu.ggnet.dwoss.uniqueunit.api.UnitFinder;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Condition;
 import eu.ggnet.dwoss.uniqueunit.itest.support.ArquillianProjectArchive;
+
+import com.google.common.base.Optional;
 
 import static eu.ggnet.dwoss.search.api.GlobalKey.Component.UNIQUE_UNIT;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.REFURBISHED_ID;
@@ -32,6 +37,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class UniqueUnitEaoFindsIT extends ArquillianProjectArchive {
 
     private final static String PARTNO_1 = "AA.BBBBB.CCC";
+    
+    private final static String UNIT_5_LAST_REFURIBISHID = "29471";
+
+            private final static String UNIT_5_REFURIBISHID =  "66666";
 
     @Inject
     private UserTransaction utx;
@@ -42,6 +51,9 @@ public class UniqueUnitEaoFindsIT extends ArquillianProjectArchive {
 
     @Inject
     private Instance<SearchProvider> searchProviders;
+    
+    @EJB
+    private UnitFinder unitFinder;
 
     /**
      * Multiple tests on find.
@@ -85,7 +97,7 @@ public class UniqueUnitEaoFindsIT extends ArquillianProjectArchive {
 
         UniqueUnit unit5 = new UniqueUnit();
         unit5.setIdentifier(SERIAL, "FDALOIFUOWE");
-        unit5.setIdentifier(REFURBISHED_ID, "29471");
+        unit5.setIdentifier(REFURBISHED_ID, UNIT_5_LAST_REFURIBISHID);
         unit5.setContractor(TradeName.ONESELF);
         unit5.setCondition(Condition.AS_NEW);
         unit5.setProduct(p);
@@ -102,7 +114,16 @@ public class UniqueUnitEaoFindsIT extends ArquillianProjectArchive {
 
         utx.begin();
         em.joinTransaction();
+        unit5 = em.find(UniqueUnit.class, unit5.getId());
+        unit5.setIdentifier(REFURBISHED_ID,UNIT_5_REFURIBISHID); // Adding a history in the Database.
+        
+        utx.commit();
 
+
+        utx.begin();
+        em.joinTransaction();
+
+        // Test EAO
         assertThat(eao.findByIdentifier(REFURBISHED_ID, "22223").getId()).as("Id of Unit1 via findByIdentifier 22223").isEqualTo(unit1.getId());
         assertThat(eao.findByIdentifier(REFURBISHED_ID, "54422").getId()).as("Id of Unit2 via findByIdentifier 54422").isEqualTo(unit2.getId());
         assertThat(eao.findByPartialIdentifier(REFURBISHED_ID, "54*")).as("Result of 54* should contation unit2 and unit4").contains(unit2, unit4);
@@ -112,6 +133,7 @@ public class UniqueUnitEaoFindsIT extends ArquillianProjectArchive {
         assertThat(eao.find("*5*")).as("Find of *5*").contains(unit2, unit3, unit4);
         utx.commit();
 
+        // Test SearchProvider
         SearchProvider search = null;
         for (Iterator<SearchProvider> iterator = searchProviders.iterator(); iterator.hasNext();) {
             SearchProvider next = iterator.next();
@@ -125,6 +147,15 @@ public class UniqueUnitEaoFindsIT extends ArquillianProjectArchive {
                         new GlobalKey(GlobalKey.Component.UNIQUE_UNIT, unit3.getId()),
                         new GlobalKey(GlobalKey.Component.UNIQUE_UNIT, unit4.getId())
                 );
+        
 
+        // Test UnitFinder
+        assertThat(unitFinder.findBy("AAAA")).isNull();
+        assertThat(unitFinder.findBy(UNIT_5_REFURIBISHID)).isNotNull().returns(unit5.getId(), su -> (int)su.id());
+        assertThat(unitFinder.findBy(UNIT_5_LAST_REFURIBISHID)).isNotNull()
+                .returns(unit5.getId(), su -> (int)su.id())
+                .returns(UNIT_5_REFURIBISHID, SimpleUnit::refurbishedId)
+                .returns(UNIT_5_LAST_REFURIBISHID, su -> su.lastRefurbishId().get());
+        
     }
 }
