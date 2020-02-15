@@ -18,11 +18,13 @@ package eu.ggnet.dwoss.assembly.client.support;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.se.SeContainer;
 import javax.enterprise.inject.se.SeContainerInitializer;
+import javax.persistence.LockModeType;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -37,8 +39,15 @@ import javafx.stage.Stage;
 import eu.ggnet.dwoss.assembly.client.Main;
 import eu.ggnet.dwoss.assembly.remote.MainCdi;
 import eu.ggnet.dwoss.assembly.remote.cdi.FxmlLoaderInitializer;
+import eu.ggnet.dwoss.core.system.autolog.LoggerProducer;
 import eu.ggnet.dwoss.core.widget.AbstractGuardian;
 import eu.ggnet.dwoss.misc.ui.AboutController;
+import eu.ggnet.dwoss.redtapext.ui.ReactivePicoUnitDetailViewCask;
+import eu.ggnet.dwoss.stock.ee.StockAgent;
+import eu.ggnet.dwoss.stock.ee.entity.*;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.core.dl.RemoteLookup;
 import eu.ggnet.saft.experimental.auth.AuthenticationException;
 
 /**
@@ -110,11 +119,122 @@ public class ClientApplication extends Application implements FirstLoginListener
      * init after start
      */
     public void postInit() {
+        
+        // TODO: remove later, 
+        Dl.local().add(RemoteLookup.class, new RemoteLookup() {
+            @Override
+            public <T> boolean contains(Class<T> clazz) {
+                if (StockAgent.class.equals(clazz)) return true;
+                return false;
+            }
+
+            @Override
+            public <T> T lookup(Class<T> clazz) {
+                if (StockAgent.class.equals(clazz)) return (T)new StockAgent() {
+                    @Override
+                    public StockUnit findStockUnitByUniqueUnitIdEager(Integer uniqueUnitId) {
+                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    }
+
+                    @Override
+                    public StockUnit findStockUnitByRefurbishIdEager(String refurbishId) {
+                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    }
+
+                    @Override
+                    public List<StockTransaction> findStockTransactionEager(StockTransactionType type, StockTransactionStatusType statusType) {
+                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    }
+
+                    @Override
+                    public List<StockTransaction> findStockTransactionEager(StockTransactionType type, StockTransactionStatusType statusType, int start, int amount) {
+                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    }
+
+                    @Override
+                    public List<StockUnit> findStockUnitsByRefurbishIdEager(List<String> refurbishIds) {
+                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    }
+
+                    @Override
+                    public <T> T persist(T t) {
+                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    }
+
+                    @Override
+                    public <T> T merge(T t) {
+                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    }
+
+                    @Override
+                    public <T> void delete(T t) {
+                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    }
+
+                    @Override
+                    public StockTransaction findOrCreateRollInTransaction(int stockId, String userName, String comment) {
+                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    }
+
+                    @Override
+                    public <T> long count(Class<T> entityClass) {
+                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    }
+
+                    @Override
+                    public <T> List<T> findAll(Class<T> entityClass) {
+                        if (entityClass.equals(Stock.class)) {
+                            return (List<T>)Arrays.asList(new Stock(0, "Hamburg"),new Stock(1, "Bremen"));
+                        }
+                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    }
+
+                    @Override
+                    public <T> List<T> findAll(Class<T> entityClass, int start, int amount) {
+                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    }
+
+                    @Override
+                    public <T> List<T> findAllEager(Class<T> entityClass) {
+                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    }
+
+                    @Override
+                    public <T> List<T> findAllEager(Class<T> entityClass, int start, int amount) {
+                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    }
+
+                    @Override
+                    public <T> T findById(Class<T> entityClass, Object id) {
+                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    }
+
+                    @Override
+                    public <T> T findById(Class<T> entityClass, Object id, LockModeType lockModeType) {
+                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    }
+
+                    @Override
+                    public <T> T findByIdEager(Class<T> entityClass, Object id) {
+                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    }
+
+                    @Override
+                    public <T> T findByIdEager(Class<T> entityClass, Object id, LockModeType lockModeType) {
+                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    }
+                };
+                return null;
+            }
+        });
+        
         SeContainerInitializer ci = SeContainerInitializer.newInstance();
         ci.disableDiscovery();
         ci.addPackages(true, MainCdi.class);
         ci.addPackages(true, Main.class);
         ci.addPackages(true, AboutController.class); // misc.ui
+        ci.addPackages(true,ReactivePicoUnitDetailViewCask.class); // redtapext.ui
+        ci.addPackages(LoggerProducer.class); // core.sysrtem. autolog
         container = ci.initialize();
         // TODO: Remote connection and everything else.
         instance = container.getBeanManager().createInstance();
@@ -139,6 +259,7 @@ public class ClientApplication extends Application implements FirstLoginListener
     @Override
     public void shutdown() {
         Platform.exit();
+        UiCore.shutdown();
     }
 
 }

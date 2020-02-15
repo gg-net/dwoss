@@ -30,7 +30,9 @@ import static javax.swing.Action.SMALL_ICON;
 /**
  *
  * @author pascal.perau
+ * @deprecated  use RedTapeMenuItem
  */
+@Deprecated
 public class RedTapeAction extends AbstractAction {
 
     @SuppressWarnings("OverridableMethodCallInConstructor")

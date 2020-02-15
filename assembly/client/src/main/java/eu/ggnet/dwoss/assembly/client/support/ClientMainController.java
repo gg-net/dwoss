@@ -16,19 +16,19 @@
  */
 package eu.ggnet.dwoss.assembly.client.support;
 
-
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
+import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import eu.ggnet.dwoss.misc.ui.cap.*;
-
+import eu.ggnet.dwoss.misc.ui.cap.MovmentMenuItemsProducer.MovementLists;
+import eu.ggnet.dwoss.misc.ui.cap.SalesListingCreateMenuItemProducer.SalesListingCreateMenus;
+import eu.ggnet.dwoss.redtapext.ui.cap.*;
 
 /**
  * Main UI, consist of menubar, toolbar, statusline and main ui container.
@@ -41,7 +41,7 @@ public class ClientMainController {
     private MenuBar menuBar;
 
     @FXML
-    private FlowPane toolBar;
+    private ToolBar toolBar;
 
     @FXML
     private Font x1;
@@ -61,6 +61,7 @@ public class ClientMainController {
     @FXML
     void initialize() {
         populateMenu();
+        populateToolbar();
     }
 
     public void add(Menu menu) {
@@ -83,31 +84,48 @@ public class ClientMainController {
         Menu system = new Menu("System");
         system.getItems().add(system_datenbank);
 
+        // -- Kunden und Aufträge
+        Menu cao = new Menu("Kunden und Aufträge");
+        cao.getItems().addAll(m.items(RedTapeMenuItem.class, DossiersByStatusAction.class, ShowUnitViewAction.class));
+
+        // -- Listings
+        Menu listings = new Menu("Listings");
+        SalesListingCreateMenus menus = instance.select(SalesListingCreateMenus.class).get();
+        listings.getItems().addAll(menus.items);
+
         // -- Geschäftsführung
         Menu gl_allgemein = new Menu("Allgemeine Reporte");
         gl_allgemein.getItems().addAll(m.items(
                 UnitQualityReportAction.class,
-                ExportInputReportAction.class));
+                ExportInputReportAction.class,
+                ExportDossierToXlsAction.class,
+                CreditMemoReportAction.class,
+                OptimizedCreditMemoReportAction.class,
+                DebitorsReportAction.class,
+                DirectDebitReportAction.class
+        ));
 
         Menu gl_close = new Menu("Abschluss Reporte");
-        gl_close.getItems().addAll(m.items(ResolveRepaymentAction.class));
+        gl_close.getItems().addAll(m.items(
+                ResolveRepaymentAction.class,
+                LastWeekCloseAction.class
+        ));
 
         Menu gl = new Menu("Geschäftsführung");
-        gl.getItems().addAll(gl_allgemein, gl_close, m.item(OpenSalesChannelManagerAction.class));
+        gl.getItems().addAll(gl_allgemein, gl_close, m.item(OpenSalesChannelManagerAction.class),m.item(SageExportAction.class));
 
         // -- Lager/Logistik
-        Menu logistik_inventur = new Menu("Inventur");
-        logistik_inventur.getItems().add(m.item(StockTakingAction.class));
+        MovementLists ml = instance.select(MovementLists.class).get();
 
         Menu logistik = new Menu("Lager/Logistik");
-        logistik.getItems().add(logistik_inventur);
+        logistik.getItems().addAll(ml.shippingOrPickup, ml.inventur);
 
         // -- Artikelstamm
         Menu artikelstamm_imageIds = new Menu("Bilder Ids");
-        artikelstamm_imageIds.getItems().addAll(m.items(ExportImageIdsForCustomerMenuItem.class,ExportImageIdsAction.class, ImportImageIdsAction.class));
+        artikelstamm_imageIds.getItems().addAll(m.items(ExportImageIdsForCustomerMenuItem.class, ExportImageIdsAction.class, ImportImageIdsAction.class));
 
         Menu artikelstamm = new Menu("Artikelstamm");
-        artikelstamm.getItems().addAll(artikelstamm_imageIds);
+        artikelstamm.getItems().addAll(m.item(SalesProductAction.class), artikelstamm_imageIds);
 
         // -- Hilfe
         Menu help = new Menu("Hilfe");
@@ -116,8 +134,12 @@ public class ClientMainController {
                 m.item(ShowMandatorAction.class)
         );
 
-        menuBar.getMenus().addAll(system, gl, logistik, artikelstamm, help);
+        menuBar.getMenus().addAll(system, cao, listings, gl, logistik, artikelstamm, help);
         menuBar.autosize();
+    }
+    
+    private void populateToolbar() {
+        toolBar.getItems().add(instance.select(RedTapeToolbarButton.class).get());
     }
 
 }
