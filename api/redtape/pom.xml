@@ -11,5 +11,13 @@
     <artifactId>dwoss-redtape-api</artifactId>
     <name>DwOss • RedTape • Api</name>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.inferred</groupId>
+            <artifactId>freebuilder</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+    
 </project>
 

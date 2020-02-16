@@ -58,7 +58,7 @@ public class StockApiBean implements StockApi {
         SimpleStockUnit.Builder ssub = new SimpleStockUnit.Builder()
                 .id(su.getId())
                 .uniqueUnitId(Optional.ofNullable(su.getUniqueUnitId()).orElse(0))
-                .shortDescription(su.toSimple());
+                .shortDescription(su.getName());
         if ( su.isInStock() ) {
             ssub.stock(su.getStock().toPicoStock());
         }
@@ -66,12 +66,18 @@ public class StockApiBean implements StockApi {
             StockTransaction st = su.getTransaction();
             ssub.stockTransaction(new SimpleStockTransaction.Builder()
                     .id(st.getId())
-                    .shortDescription(st.toSimpleLine())
+                    .shortDescription(format(st))
                     .source(Optional.ofNullable(st.getSource()).map(Stock::toPicoStock))
                     .destination(Optional.ofNullable(st.getDestination()).map(Stock::toPicoStock))
                     .build());
         }
         return ssub.build();
+    }
+
+    private static String format(StockTransaction st) {
+        return "Transaction(" + st.getId() + "," + st.getType() + ")"
+                + (st.getSource() == null ? "" : " von " + st.getSource().getName())
+                + (st.getDestination() == null ? "" : " nach " + st.getDestination().getName());
     }
 
 }
