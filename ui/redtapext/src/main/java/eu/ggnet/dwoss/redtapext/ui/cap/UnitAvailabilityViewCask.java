@@ -29,6 +29,7 @@ import eu.ggnet.dwoss.core.common.Css;
 import eu.ggnet.dwoss.core.widget.HtmlPane;
 import eu.ggnet.dwoss.core.widget.MainComponent;
 import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
+import eu.ggnet.dwoss.stock.spi.ActiveStock;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.api.UnitShard;
 import eu.ggnet.saft.core.Dl;
@@ -37,7 +38,6 @@ import eu.ggnet.saft.experimental.Ops;
 import eu.ggnet.saft.experimental.auth.Guardian;
 import eu.ggnet.saft.experimental.ops.SelectionEnhancer;
 import eu.ggnet.saft.experimental.ops.Selector;
-import eu.ggnet.dwoss.stock.spi.ActiveStock;
 
 /**
  * View that is used to quickly check availability.
@@ -68,7 +68,7 @@ public class UnitAvailabilityViewCask extends javax.swing.JPanel implements Main
 
         private Color getColor(UnitShard us) {
             if ( us.getAvailable() == null ) return Color.YELLOW;
-            if ( us.getAvailable() == false ) return Color.RED;
+//            if ( us.getAvailable() == false ) return Color.RED;
             // now we are available
             return Dl.local().optional(ActiveStock.class)
                     .map(ActiveStock::getActiveStock)
@@ -182,7 +182,7 @@ public class UnitAvailabilityViewCask extends javax.swing.JPanel implements Main
     private void searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchActionPerformed
         String refurbishedId = searchCommand.getText().trim();
         UnitShard us = Dl.remote().lookup(UnitOverseer.class).find(refurbishedId);
-        LoggerFactory.getLogger(UnitAvailabilityViewCask.class).debug("search({}) found {}", refurbishedId,us);
+        LoggerFactory.getLogger(UnitAvailabilityViewCask.class).debug("search({}) found {}", refurbishedId, us);
         model.add(0, us);
         searchCommand.setText("");
     }//GEN-LAST:event_searchActionPerformed

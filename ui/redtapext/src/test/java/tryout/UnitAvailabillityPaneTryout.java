@@ -16,22 +16,18 @@
  */
 package tryout;
 
-import java.util.*;
-
-import javax.swing.JLabel;
+import java.util.HashMap;
+import java.util.Map;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import eu.ggnet.dwoss.redtape.ee.entity.Position;
-import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
-import eu.ggnet.dwoss.redtapext.ui.cap.UnitAvailabilityViewCask;
-import eu.ggnet.dwoss.uniqueunit.api.UnitShard;
-import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.dwoss.redtape.ee.interactiveresult.Result;
 import eu.ggnet.dwoss.redtapext.ui.cap.UnitAvailabilityPane;
-import eu.ggnet.saft.core.*;
+import eu.ggnet.dwoss.uniqueunit.api.SimpleUniqueUnit;
+import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.dl.RemoteLookup;
 
 /**
  *
@@ -46,68 +42,33 @@ public class UnitAvailabillityPaneTryout {
             primaryStage.setScene(new Scene(new UnitAvailabilityPane()));
             primaryStage.show();
         }
-        
-    }
-    
-    
-    private static class Wrap {
-
-        private final UnitShard shard;
-
-        private final String details;
-
-        public Wrap(UnitShard shard, String details) {
-            this.shard = shard;
-            this.details = details;
-        }
 
     }
 
     public static void main(String[] args) {
-        Dl.remote().add(UnitOverseer.class, new UnitOverseer() {
-            private Map<String, Wrap> data = new HashMap<>();
+        final Map<String, SimpleUniqueUnit> suuMap = new HashMap<>();
+        suuMap.put("1", new SimpleUniqueUnit.Builder().id(1).refurbishedId("1").shortDescription("Gerät mit Id 1").build());
+        suuMap.put("2", new SimpleUniqueUnit.Builder().id(2).refurbishedId("10").lastRefurbishId("2").shortDescription("Aspire(2) Predator").build());
 
-            {
-                data.put("1", new Wrap(new UnitShard("1", 1, "<html>SopoNr.: 1 <br />Ein <strong>Text</strong></html>", Boolean.TRUE, 1), "Details zu Unit 1"));
-                data.put("2", new Wrap(new UnitShard("2", 2, "SopoNr.: 2", Boolean.FALSE, 1), "Details zu Unit 2"));
-                data.put("3", new Wrap(new UnitShard("3", 3, "SopoNr.: 3", Boolean.TRUE, 1), "Details zu Unit 3"));
-                data.put("4", new Wrap(new UnitShard("4", 4, "SopoNr.: 4", Boolean.FALSE, 1), "Details zu Unit 4"));
-                data.put("5", new Wrap(new UnitShard("5", 5, "SopoNr.: 5 exitiert nicht", null, null), "Existiert Nicht"));
-                data.put("6", new Wrap(new UnitShard("6", 6, "SopoNr.: 6", Boolean.FALSE, null), "Details zu Unit 6"));
+        Dl.local().add(RemoteLookup.class, new RemoteLookup() {
+            @Override
+            public <T> boolean contains(Class<T> clazz) {
+                return false;
             }
 
             @Override
-            public String toDetailedHtml(String refurbishId, String username) {
-                if ( !data.containsKey(refurbishId) ) return refurbishId + " existiert nicht";
-                return data.get(refurbishId).details;
-            }
-
-            @Override
-            public UnitShard find(String refurbishId) {
-                if ( !data.containsKey(refurbishId) ) return new UnitShard(refurbishId, 0, "SopoNr.: " + refurbishId + " exitiert nicht", null, null);
-                return data.get(refurbishId).shard;
-            }
-
-            @Override
-            public boolean isAvailable(String refurbishId) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public void lockStockUnit(long dossierId, String refurbishedId) throws IllegalStateException {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public Result<List<Position>> createUnitPosition(String refurbishId, long documentId) throws UserInfoException {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public String toDetailedHtml(int uniqueUnitId, String username) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            public <T> T lookup(Class<T> clazz) {
+                return null;
             }
         });
+
+        Dl.remote().add(UniqueUnitApi.class, new UniqueUnitApi() {
+            @Override
+            public SimpleUniqueUnit findByRefurbishedId(String refurbishId) {
+                return suuMap.get(refurbishId);
+            }
+        });
+
         Application.launch(UnitAvailabilityTryoutApplication.class);
     }
 }

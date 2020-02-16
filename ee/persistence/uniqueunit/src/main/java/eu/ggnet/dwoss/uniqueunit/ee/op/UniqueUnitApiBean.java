@@ -16,43 +16,41 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ee.op;
 
-import java.util.Optional;
-
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import eu.ggnet.dwoss.uniqueunit.api.SimpleUniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.api.SimpleUniqueUnit.Builder;
+import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier;
 import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
-import eu.ggnet.dwoss.uniqueunit.api.SimpleUniqueUnit;
-import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
 
 /**
  *
  * @author oliver.guenther
  */
 @Stateless
-public class UnitFinderOperation implements UniqueUnitApi {
+public class UniqueUnitApiBean implements UniqueUnitApi {
 
     @Inject
     private UniqueUnitEao eao;
-    
+
     @Override
     public SimpleUniqueUnit findByRefurbishedId(String refurbishId) {
         Builder suBuilder = new SimpleUniqueUnit.Builder();
         UniqueUnit uu = eao.findByIdentifier(Identifier.REFURBISHED_ID, refurbishId);
-        if (uu == null) {
+        if ( uu == null ) {
             uu = eao.findByRefurbishedIdInHistory(refurbishId);
             suBuilder.lastRefurbishId(refurbishId);
         }
-        if (uu == null) return null;
+        if ( uu == null ) return null;
         return suBuilder
                 .id(uu.getId())
                 .refurbishedId(uu.getRefurbishId())
                 .shortDescription(UniqueUnitFormater.toPositionName(uu))
-                .build();        
+                .build();
     }
-    
+
 }

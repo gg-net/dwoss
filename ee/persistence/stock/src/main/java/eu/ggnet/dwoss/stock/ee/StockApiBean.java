@@ -57,6 +57,7 @@ public class StockApiBean implements StockApi {
         if ( su == null ) return null;
         SimpleStockUnit.Builder ssub = new SimpleStockUnit.Builder()
                 .id(su.getId())
+                .onLogicTransaction(su.getLogicTransaction() != null)
                 .uniqueUnitId(Optional.ofNullable(su.getUniqueUnitId()).orElse(0))
                 .shortDescription(su.getName());
         if ( su.isInStock() ) {

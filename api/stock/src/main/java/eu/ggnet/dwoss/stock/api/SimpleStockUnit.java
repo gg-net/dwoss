@@ -54,6 +54,13 @@ public interface SimpleStockUnit extends Serializable {
     String shortDescription();
 
     /**
+     * Returns true if stock unit is on a logic transaction.
+     *
+     * @return true if stock unit is on a logic transaction
+     */
+    boolean onLogicTransaction();
+
+    /**
      * A optional stock, if the unit is on a stock.
      *
      * @return the optional stock
