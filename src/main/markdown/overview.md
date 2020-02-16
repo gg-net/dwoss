@@ -168,15 +168,20 @@ findXXX methodes and supply fetch eager versions.
 ### Ui Class and Method Names ####
 
 - UI Implementations (MVC, MVP, mixed, missing):
-	- \*Model, \*View, \*Controller, \*Presenter
-		- Controller and Presenter are syndonymes, just to represent the pattern
-		- Model may be missing.
-		- View may be a description file (fxml)
-	- Embedded (All in one Class): \*View or \*ViewCask
+    - \*Model, \*View, \*Controller, \*Presenter
+	- Controller and Presenter are syndonymes, just to represent the pattern
+	- Model may be missing.
+	- View may be a description file (fxml)
+    - Embedded (All in one Class): \*View or \*ViewCask
 - CRUD Implementations:
-	- Operation/View for creating,building,first time usage of something: Create\*
-	- Operation/View for modifying, editing, updating of something: Update\*
+    - Operation/View for creating,building,first time usage of something: Create\*
+    - Operation/View for modifying, editing, updating of something: Update\*
 
+- DTO Names (mostly in the API packages):
+    - Pico*
+        - Smallest representation and used for id transfer
+    - Simple*
+        - Simple representation. Will contation more information that Pico*, but also only an API DTO
 
 Mandator implementation
 -----------------------

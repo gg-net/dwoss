@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 GG-Net GmbH
+ * Copyright (C) 2018 GG-Net GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.uniqueunit.api;
+package eu.ggnet.dwoss.stock.api;
 
 import java.io.Serializable;
 import java.util.Optional;
@@ -22,33 +22,49 @@ import java.util.Optional;
 import org.inferred.freebuilder.FreeBuilder;
 
 /**
- * Simple Unit representation for other api usages.
- * 
+ * Simple representation of an Stockunit
+ *
  * @author oliver.guenther
  */
 @FreeBuilder
-public interface SimpleUnit extends Serializable {
+public interface SimpleStockUnit extends Serializable {
 
-    class Builder extends SimpleUnit_Builder {};
+    class Builder extends SimpleStockUnit_Builder {
+    };
 
     /**
-     * Database id. 
-     * Info: The database representation uses int, but all new elements use long for a later possible switch.
-     * 
-     * @return 
+     * Database id.
+     *
+     * @return the database id
      */
     long id();
 
-    String refurbishedId();
-
-    String shortDescription();
-    
     /**
-     * Is set if the unit had another refurbishId before.
-     * If the unit was in our hands more than once, the refurbishId will change.
-     * 
-     * @return an optional older refurbishId.
+     * Referencing unique unit id.
+     *
+     * @return the referencing uniqueUnit id
      */
-    Optional<String> lastRefurbishId();
+    long uniqueUnitId();
+
+    /**
+     * A short description
+     *
+     * @return a short description
+     */
+    String shortDescription();
+
+    /**
+     * A optional stock, if the unit is on a stock.
+     *
+     * @return the optional stock
+     */
+    Optional<PicoStock> stock();
+
+    /**
+     * An optional stockTransaction, if the unit is in motion.
+     *
+     * @return the optional stock transaction.
+     */
+    Optional<SimpleStockTransaction> stockTransaction();
 
 }

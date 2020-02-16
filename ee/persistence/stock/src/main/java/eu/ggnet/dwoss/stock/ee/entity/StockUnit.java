@@ -22,7 +22,6 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Null;
 
-import eu.ggnet.dwoss.stock.api.PicoStockUnit;
 import eu.ggnet.dwoss.core.system.persistence.EagerAble;
 
 import static javax.persistence.FetchType.EAGER;
@@ -117,21 +116,21 @@ public class StockUnit implements Serializable, EagerAble {
      * Constructor.
      *
      * @param uniqueUnitId the unique unit reference
-     * @param unitId       the unit id for the stock
+     * @param refurbishId  the refurbishId id for the stock
      */
-    public StockUnit(String unitId, Integer uniqueUnitId) {
-        this(unitId, null, uniqueUnitId);
+    public StockUnit(String refurbishId, Integer uniqueUnitId) {
+        this(refurbishId, null, uniqueUnitId);
     }
 
     /**
      * Constructor.
      *
      * @param uniqueUnitId the unique unit reference
-     * @param unitId       the unit id for the stock
+     * @param refurbishId  the refurbishId id for the stock
      * @param name         a human understandable name
      */
-    public StockUnit(String unitId, String name, Integer uniqueUnitId) {
-        this.refurbishId = unitId;
+    public StockUnit(String refurbishId, String name, Integer uniqueUnitId) {
+        this.refurbishId = refurbishId;
         this.name = name;
         this.uniqueUnitId = uniqueUnitId;
     }
@@ -140,52 +139,52 @@ public class StockUnit implements Serializable, EagerAble {
     public String getName() {
         return name;
     }
-    
+
     public void setName(String name) {
         this.name = name;
     }
-    
+
     public String getRefurbishId() {
         return refurbishId;
     }
-    
+
     public void setRefurbishId(String refurbishId) {
         this.refurbishId = refurbishId;
     }
-    
+
     public Integer getUniqueUnitId() {
         return uniqueUnitId;
     }
-    
+
     public void setUniqueUnitId(Integer uniqueUnitId) {
         this.uniqueUnitId = uniqueUnitId;
     }
-    
+
     public int getId() {
         return id;
     }
-    
+
     public short getOptLock() {
         return optLock;
     }
-    
+
     public Stock getStock() {
         return stock;
     }
-    
+
     public StockLocation getStockLocation() {
         return stockLocation;
     }
-    
+
     public StockTransactionPosition getPosition() {
         return position;
     }
-    
+
     public LogicTransaction getLogicTransaction() {
         return logicTransaction;
     }
     //</editor-fold>
-    
+
     /**
      * Returns null if Instance is valid, otherwise a message describing the problem
      * <p>
@@ -290,10 +289,6 @@ public class StockUnit implements Serializable, EagerAble {
         return "StockUnit{id=" + id + ",refurbishId=" + refurbishId + "}";
     }
 
-    public PicoStockUnit toPico() {
-        return new PicoStockUnit(id, uniqueUnitId == null ? 0 : uniqueUnitId, name + " mit refurbishId=" + refurbishId);
-    }
-
     //<editor-fold defaultstate="collapsed" desc="equals and hashCode of id">
     @Override
     public int hashCode() {
@@ -301,7 +296,7 @@ public class StockUnit implements Serializable, EagerAble {
         hash = 71 * hash + this.id;
         return hash;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if ( this == obj ) return true;
@@ -312,7 +307,7 @@ public class StockUnit implements Serializable, EagerAble {
         return true;
     }
     //</editor-fold>
-    
+
     @Override
     public String toString() {
         String location = "unknown";

@@ -16,24 +16,22 @@
  */
 package eu.ggnet.dwoss.uniqueunit.api;
 
-import java.util.Optional;
-
 import javax.ejb.Remote;
 
 /**
- * Finder for Units, based on the refurbishId.
- * 
+ * Main Api entrence point.
+ *
  * @author oliver.guenther
  */
 @Remote
-public interface UnitFinder {
-    
+public interface UniqueUnitApi {
+
     /**
      * Returns a SimpleUnit, if something with the supplied refurbishId exists.
-     * 
+     *
      * @param refurbishId
      * @return null or a simple unit, one exists.
      */
-    SimpleUnit findBy(String refurbishId);
-    
+    SimpleUniqueUnit findByRefurbishedId(String refurbishId);
+
 }

@@ -1,31 +1,21 @@
 package eu.ggnet.dwoss.stock.ee.itest;
 
-import eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType;
-import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransactionType;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransactionPosition;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatus;
-import eu.ggnet.dwoss.stock.ee.entity.StockLocation;
-import eu.ggnet.dwoss.stock.ee.entity.Stock;
-import eu.ggnet.dwoss.stock.ee.entity.LogicTransaction;
-
 import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.transaction.UserTransaction;
+import javax.transaction.*;
 
 import org.jboss.arquillian.junit.Arquillian;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 
+import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
+import eu.ggnet.dwoss.stock.ee.entity.*;
 import eu.ggnet.dwoss.stock.ee.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.core.system.util.Utils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;

@@ -21,27 +21,27 @@ import java.util.Optional;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import eu.ggnet.dwoss.uniqueunit.api.SimpleUnit;
-import eu.ggnet.dwoss.uniqueunit.api.SimpleUnit.Builder;
-import eu.ggnet.dwoss.uniqueunit.api.UnitFinder;
+import eu.ggnet.dwoss.uniqueunit.api.SimpleUniqueUnit.Builder;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier;
 import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
+import eu.ggnet.dwoss.uniqueunit.api.SimpleUniqueUnit;
+import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
 
 /**
  *
  * @author oliver.guenther
  */
 @Stateless
-public class UnitFinderOperation implements UnitFinder {
+public class UnitFinderOperation implements UniqueUnitApi {
 
     @Inject
     private UniqueUnitEao eao;
     
     @Override
-    public SimpleUnit findBy(String refurbishId) {
-        Builder suBuilder = new SimpleUnit.Builder();
+    public SimpleUniqueUnit findByRefurbishedId(String refurbishId) {
+        Builder suBuilder = new SimpleUniqueUnit.Builder();
         UniqueUnit uu = eao.findByIdentifier(Identifier.REFURBISHED_ID, refurbishId);
         if (uu == null) {
             uu = eao.findByRefurbishedIdInHistory(refurbishId);
