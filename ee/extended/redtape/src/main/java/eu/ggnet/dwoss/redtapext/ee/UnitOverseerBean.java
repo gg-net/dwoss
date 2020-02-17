@@ -123,23 +123,6 @@ public class UnitOverseerBean implements UnitOverseer {
      * Find a Unit and its representative and return a html formated String representing it.
      * Ensure to add the html start/end tags manually
      * <p/>
-     * @param uniqueUnitId the uniqueUnitId
-     * @param username
-     * @return a html formated String representing a Unit.
-     */
-    @Override
-    public String toDetailedHtml(int uniqueUnitId, String username) {
-        UniqueUnitEao uuEao = new UniqueUnitEao(uuEm);
-        UniqueUnit uniqueUnit = uuEao.findById(uniqueUnitId);
-        if ( uniqueUnit != null ) return toDetailedHtmlUnit(uniqueUnit, hasRight(username, AtomicRight.VIEW_COST_AND_REFERENCE_PRICES));
-        // Unique Unit is null, optional fallback to legacy system.
-        return "<h1>Keine Informationen zu UniqueUnitId " + uniqueUnitId + "</h1>";
-    }
-
-    /**
-     * Find a Unit and its representative and return a html formated String representing it.
-     * Ensure to add the html start/end tags manually
-     * <p/>
      * @param refurbishId the refurbishedId or serial
      * @param username
      * @return a html formated String representing a Unit.
@@ -310,28 +293,6 @@ public class UnitOverseerBean implements UnitOverseer {
                     + "\nKunde = " + customer.toTitleNameLine()
                     + "\n\nVorgang = " + dos.getIdentifier());
         }
-    }
-
-    /**
-     * Returns true if the unit identified by the refurbishId is available for sale, else false.
-     * <p/>
-     * @param refurbishId the id to check
-     * @return true if the unit identified by the refurbishId is available for sale, else false.
-     */
-    @Override
-    public boolean isAvailable(String refurbishId) {
-        return internalFind(refurbishId).isAvailable();
-    }
-
-    /**
-     * Returns a UnitShard, a small representation of the refurbishId and its status.
-     * <p/>
-     * @param refurbishId the refurbishId to check.
-     * @return a UnitShard, a small representation of the refurbishId and its status.
-     */
-    @Override
-    public UnitShard find(String refurbishId) {
-        return internalFind(refurbishId);
     }
 
     private UnitShard internalFind(String refurbishId) {

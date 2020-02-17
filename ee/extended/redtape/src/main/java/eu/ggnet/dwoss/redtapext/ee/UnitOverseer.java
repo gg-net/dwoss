@@ -21,7 +21,6 @@ import java.util.List;
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
-import eu.ggnet.dwoss.uniqueunit.api.UnitShard;
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.redtape.ee.interactiveresult.Result;
 
@@ -64,35 +63,11 @@ public interface UnitOverseer {
      * Find a Unit and its representative and return a html formated String representing it.
      * Ensure to add the html start/end tags manually
      * <p/>
-     * @param uniqueUnitId the uniqueUnitId
-     * @param username
-     * @return a html formated String representing a Unit.
-     */
-    String toDetailedHtml(int uniqueUnitId, String username);
-
-    /**
-     * Find a Unit and its representative and return a html formated String representing it.
-     * Ensure to add the html start/end tags manually
-     * <p/>
      * @param refurbishId the refurbishedId
      * @param user        optional username, if this user has
      * @return a html formated String representing a Unit.
      */
+    @Deprecated // Mach das weg.
     String toDetailedHtml(String refurbishId, String user);
 
-    /**
-     * Returns a UnitShard, a small representation of the refurbishId and its status.
-     * <p/>
-     * @param refurbishId the refurbishId to check.
-     * @return a UnitShard, a small representation of the refurbishId and its status.
-     */
-    UnitShard find(String refurbishId);
-
-    /**
-     * Returns true if the unit identified by the refurbishId is available for sale, else false.
-     * <p/>
-     * @param refurbishId the id to check
-     * @return true if the unit identified by the refurbishId is available for sale, else false.
-     */
-    boolean isAvailable(String refurbishId);
 }

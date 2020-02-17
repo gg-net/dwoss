@@ -21,14 +21,12 @@ import javax.inject.Inject;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 import eu.ggnet.dwoss.misc.ui.cap.*;
 import eu.ggnet.dwoss.misc.ui.cap.MovmentMenuItemsProducer.MovementLists;
 import eu.ggnet.dwoss.misc.ui.cap.SalesListingCreateMenuItemProducer.SalesListingCreateMenus;
 import eu.ggnet.dwoss.redtapext.ui.cap.*;
+import eu.ggnet.dwoss.search.ui.SearchCask;
 
 /**
  * Main UI, consist of menubar, toolbar, statusline and main ui container.
@@ -44,16 +42,7 @@ public class ClientMainController {
     private ToolBar toolBar;
 
     @FXML
-    private Font x1;
-
-    @FXML
-    private Color x2;
-
-    @FXML
-    private Font x3;
-
-    @FXML
-    private Color x4;
+    private SplitPane mainSplitPane;
 
     @Inject
     private Instance<Object> instance;
@@ -62,6 +51,11 @@ public class ClientMainController {
     void initialize() {
         populateMenu();
         populateToolbar();
+        
+        UnitAvailabilityPane unitAvailability = instance.select(UnitAvailabilityPane.class).get();
+        SearchCask search = instance.select(SearchCask.class).get();
+                
+        mainSplitPane.getItems().addAll(unitAvailability,search);
     }
 
     public void add(Menu menu) {
@@ -141,5 +135,6 @@ public class ClientMainController {
     private void populateToolbar() {
         toolBar.getItems().add(instance.select(RedTapeToolbarButton.class).get());
     }
+    
 
 }
