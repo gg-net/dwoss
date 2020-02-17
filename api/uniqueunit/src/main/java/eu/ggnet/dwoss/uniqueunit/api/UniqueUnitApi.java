@@ -34,4 +34,6 @@ public interface UniqueUnitApi {
      */
     SimpleUniqueUnit findByRefurbishedId(String refurbishId);
 
+    String findAsHtml(long id, String username);
+
 }

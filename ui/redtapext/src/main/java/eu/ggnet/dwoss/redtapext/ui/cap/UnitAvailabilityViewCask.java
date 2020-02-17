@@ -22,7 +22,6 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 
-import org.openide.util.lookup.ServiceProvider;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.common.Css;
@@ -44,7 +43,6 @@ import eu.ggnet.saft.experimental.ops.Selector;
  * <p/>
  * @author pascal.perau, oliver.guenther
  */
-@ServiceProvider(service = MainComponent.class)
 public class UnitAvailabilityViewCask extends javax.swing.JPanel implements MainComponent {
 
     public static class UnitShardRenderer extends DefaultListCellRenderer {

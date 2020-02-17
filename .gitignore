@@ -151,3 +151,4 @@ hs_err_pid*
 /yncubator/target/
 /yncubator/statemachine/target/
 /assembly/server-sample/target/
+/api/report/target/

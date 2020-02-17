@@ -16,14 +16,14 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cap;
 
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.*;
@@ -31,14 +31,20 @@ import javafx.scene.text.*;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.core.common.Css;
+import eu.ggnet.dwoss.core.widget.HtmlPane;
 import eu.ggnet.dwoss.redtape.api.RedTapeApi;
 import eu.ggnet.dwoss.redtape.api.SanityResult;
 import eu.ggnet.dwoss.stock.api.SimpleStockUnit;
 import eu.ggnet.dwoss.stock.api.StockApi;
 import eu.ggnet.dwoss.stock.spi.ActiveStock;
-import eu.ggnet.dwoss.uniqueunit.api.SimpleUniqueUnit;
-import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
+import eu.ggnet.dwoss.uniqueunit.api.*;
 import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.experimental.Ops;
+import eu.ggnet.saft.experimental.auth.Guardian;
+import eu.ggnet.saft.experimental.ops.SelectionEnhancer;
+import eu.ggnet.saft.experimental.ops.Selector;
 
 import static javafx.scene.text.FontPosture.ITALIC;
 
@@ -85,17 +91,20 @@ public class UnitAvailabilityPane extends BorderPane {
 
     private final ObservableList<Result> results;
 
+    private final Selector<SimpleUniqueUnit> selector; // No clear needed. This Panel is in the MainFrame.
+
     public UnitAvailabilityPane() {
         searchField = new TextField();
         clearButton = new Button("Liste leeren");
 
-        HBox top = new HBox(5, new Label("SopoNr:"), searchField, clearButton);
+        HBox top = new HBox(5, new Label(" SopoNr:"), searchField, clearButton);
         top.setAlignment(Pos.CENTER_LEFT);
         HBox.setHgrow(searchField, Priority.ALWAYS);
 
         results = FXCollections.observableArrayList();
 
         ListView<Result> resultListView = new ListView<>(results);
+        resultListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
         resultListView.setCellFactory((ListView<Result> view) -> new ListCell<Result>() {
             @Override
@@ -105,37 +114,73 @@ public class UnitAvailabilityPane extends BorderPane {
                 if ( empty ) {
                     setGraphic(null);
                 } else {
+                    /*
+                    SopoNr: 12322 verfügbar / nicht verfügbar
+                    (Fehler: Redtape Sanity check) (optional)
+                    Im Lager: ... / Auf Transaction (optional)
+                     */
                     Color color = Color.YELLOW;
                     Text sopoNr = new Text("SopoNr: ");
                     sopoNr.setFont(VERDANA);
                     Text sopoNrValue = new Text(r.refurbishId);
                     sopoNrValue.setFont(VERDANA_BOLD);
-                    Text status = r.uniqueUnit.map(uu -> new Text("\n" + uu.shortDescription())).orElse(new Text(" existiert nicht"));
+                    Text status = new Text(" existiert nicht");
                     status.setFont(VERDANA_ITALIC);
+                    Text line2 = new Text();
+                    Text line3 = new Text();
 
-                    if ( r.uniqueUnit.map(uu -> uu.lastRefurbishId()).isPresent() ) {
-                        SimpleUniqueUnit suu = r.uniqueUnit.get();
-                        sopoNrValue.setText(suu.refurbishedId() + suu.lastRefurbishId().map(l -> " (war " + l + ") ").orElse(" "));
-                    }
-
-                    if ( r.stockUnit.map(su -> su.onLogicTransaction()).orElse(true) ) {
+                    if ( r.uniqueUnit.isPresent() ) { // If a uu exist, the default is not avialable
+                        SimpleUniqueUnit uu = r.uniqueUnit.get();
+                        status.setText(" nicht verfügbar");
                         color = Color.RED;
-
-                    } else {
-
-                        Dl.local().optional(ActiveStock.class)
-                                .map(ActiveStock::getActiveStock)
-                                .map(as -> Objects.equals(as.id, r.stockUnit.get().stock().get().id) ? Color.GREEN : Color.CYAN)
-                                .orElse(Color.CYAN);
+                        // Update refurbishid display incl. last soponur
+                        sopoNrValue.setText(uu.refurbishedId() + uu.lastRefurbishId().map(l -> " (war " + l + ")").orElse(""));
+                        if ( r.stockUnit.isPresent() ) {
+                            SimpleStockUnit su = r.stockUnit.get();
+                            line3.setText(su.stockTransaction()
+                                    .map(t -> "\nAuf " + t.shortDescription())
+                                    .or(() -> su.stock().map(s -> "\nAuf " + s.shortDescription)).orElse(""));
+                            if ( !su.onLogicTransaction() && r.sanityResult.map(SanityResult::blocked).orElse(false) ) {
+                                line2.setText("\n" + r.sanityResult.get().details());
+                            } else if ( !su.onLogicTransaction() ) {
+                                status.setText(" verfügbar");
+                                color = Dl.local().optional(ActiveStock.class)
+                                        .map(ActiveStock::getActiveStock)
+                                        .map(as -> Objects.equals(as.id, su.stock().map(s -> s.id).orElse(-1)) ? Color.LIGHTGREEN : Color.CYAN)
+                                        .orElse(Color.CYAN);
+                            } // default is allready set.
+                        }
                     }
 
-                    TextFlow tf = new TextFlow(sopoNr, sopoNrValue, status);
-
+                    TextFlow tf = new TextFlow(sopoNr, sopoNrValue, status, line2, line3);
                     tf.setBackground(new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)));
                     setGraphic(tf);
                 }
             }
 
+        });
+
+        // TODO: After CDIing the full application, replace this through CDI Events
+        SelectionEnhancer<SimpleUniqueUnit> selectionEnhancer = (SimpleUniqueUnit selected) -> {
+            if ( selected != null )
+                return Arrays.asList(new PicoUnit((int)selected.id(), "SopoNr:" + selected.refurbishedId()));
+            return Collections.EMPTY_LIST;
+        };
+        selector = Ops.seletor(SimpleUniqueUnit.class, selectionEnhancer);
+
+        resultListView.getSelectionModel().selectedItemProperty()
+                .addListener((ov, o, n) -> Optional.ofNullable(n).map(r -> r.uniqueUnit.orElse(null)).ifPresent(uu -> selector.selected(uu)));
+        // --------------------------------------------------------------------------
+
+        resultListView.setOnMouseClicked((var e) -> {
+            Result sr = resultListView.getSelectionModel().getSelectedItem();
+            if ( sr == null ) return;
+            if ( sr.uniqueUnit.isEmpty() ) return;
+            SimpleUniqueUnit uu = sr.uniqueUnit.get();
+
+            if ( e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2 ) {
+                Ui.build().id(uu.refurbishedId()).fx().show(() -> Css.toHtml5WithStyle(Dl.remote().lookup(UniqueUnitApi.class).findAsHtml(uu.id(), Dl.local().lookup(Guardian.class).getUsername())), () -> new HtmlPane());
+            }
         });
 
         searchField.setOnAction((e) -> {
