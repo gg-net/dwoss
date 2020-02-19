@@ -16,14 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ui;
 
-import eu.ggnet.saft.core.ui.Title;
-import eu.ggnet.saft.core.ui.Frame;
-import eu.ggnet.saft.core.ui.ClosedListener;
-import eu.ggnet.saft.core.ui.StoreLocation;
-import eu.ggnet.saft.core.Dl;
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.experimental.Ops;
-
 import java.util.function.Consumer;
 
 import javafx.application.Platform;
@@ -33,12 +25,14 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.web.WebView;
 
-import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
 import eu.ggnet.dwoss.core.common.Css;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.*;
+import eu.ggnet.saft.experimental.Ops;
 import eu.ggnet.saft.experimental.auth.Guardian;
-import eu.ggnet.saft.core.ui.FxSaft;
 
 import static javafx.scene.text.Font.font;
 
