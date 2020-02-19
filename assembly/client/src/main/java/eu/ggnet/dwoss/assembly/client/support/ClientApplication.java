@@ -43,6 +43,7 @@ import eu.ggnet.dwoss.core.system.autolog.LoggerProducer;
 import eu.ggnet.dwoss.core.widget.AbstractGuardian;
 import eu.ggnet.dwoss.misc.ui.AboutController;
 import eu.ggnet.dwoss.redtapext.ui.ReactivePicoUnitDetailViewCask;
+import eu.ggnet.dwoss.search.ui.SearchCask;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.*;
 import eu.ggnet.saft.core.Dl;
@@ -234,7 +235,8 @@ public class ClientApplication extends Application implements FirstLoginListener
         ci.addPackages(true, Main.class);
         ci.addPackages(true, AboutController.class); // misc.ui
         ci.addPackages(true,ReactivePicoUnitDetailViewCask.class); // redtapext.ui
-        ci.addPackages(LoggerProducer.class); // core.sysrtem. autolog
+        ci.addPackages(true,SearchCask.class); // search.ui
+        ci.addPackages(LoggerProducer.class); // core.system. autolog
         container = ci.initialize();
         // TODO: Remote connection and everything else.
         instance = container.getBeanManager().createInstance();
