@@ -31,6 +31,7 @@ import eu.ggnet.dwoss.stock.api.StockApiLocal;
 import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnitHistory;
 import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
 
@@ -55,6 +56,13 @@ public class UniqueUnitApiBean implements UniqueUnitApi {
 
     @Inject
     private Instance<ReportApiLocal> reports;
+
+    @Override
+    public String findBySerialAsHtml(String serial, String username) {
+        UniqueUnit uu = eao.findByIdentifier(Identifier.SERIAL, serial);
+        if ( uu == null ) return "Kein Gerät mit Seriennummer: " + serial;
+        return findAsHtml(uu.getId(), username);
+    }
 
     @Override
     public String findAsHtml(long id, String username) {

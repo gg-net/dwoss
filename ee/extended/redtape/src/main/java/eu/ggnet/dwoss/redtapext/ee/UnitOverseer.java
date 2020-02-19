@@ -26,7 +26,7 @@ import eu.ggnet.dwoss.redtape.ee.interactiveresult.Result;
 
 /**
  * UnitOverseer, knows correctly about the status of a unit.
- * <p/>
+ * <p>
  * @author oliver.guenther
  */
 @Remote
@@ -34,9 +34,9 @@ public interface UnitOverseer {
 
     /**
      * Find an available StockUnit and locks it by add to a LogicTransaction via DossierId.
-     * <p/>
+     * <p>
      * If no unit is found a LayerEightException is thrown.
-     * <p/>
+     * <p>
      * @param dossierId     The Dossiers ID
      * @param refurbishedId The refurbished id for the Unique Unit search
      * @throws IllegalStateException if the refurbishId is not available
@@ -59,14 +59,4 @@ public interface UnitOverseer {
      */
     Result<List<Position>> createUnitPosition(String refurbishId, long documentId) throws UserInfoException;
 
-    /**
-     * Find a Unit and its representative and return a html formated String representing it.
-     * Ensure to add the html start/end tags manually
-     * <p/>
-     * @param refurbishId the refurbishedId
-     * @param user        optional username, if this user has
-     * @return a html formated String representing a Unit.
-     */
-    @Deprecated // Mach das weg.
-    String toDetailedHtml(String refurbishId, String user);
 }

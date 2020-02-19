@@ -16,6 +16,7 @@
  */
 package eu.ggnet.dwoss.redtape.ee;
 
+import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
@@ -34,6 +35,7 @@ import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApiLocal;
  * @author oliver.guenther
  */
 @Stateless
+@LocalBean
 public class RedTapeApiBean implements RedTapeApi {
 
     @Inject
@@ -50,21 +52,21 @@ public class RedTapeApiBean implements RedTapeApi {
         SimpleUniqueUnit suu = uniqueUnitApi.findByRefurbishedId(refurbishId);
         UnitAvailability.Builder builder = new UnitAvailability.Builder();
         // If no unique unit exits, not existend.
-        if ( suu == null ) return builder.refurbishId(refurbishId).avialable(false).exists(false).build();
+        if ( suu == null ) return builder.refurbishId(refurbishId).available(false).exists(false).build();
 
         builder.exists(true).refurbishId(suu.refurbishedId()).lastRefurbishId(suu.lastRefurbishId()).uniqueUnitId(suu.id());
         SimpleStockUnit ssu = stockApi.findByUniqueUnitId(suu.id());
         // If no stock unit exists, not avialable
-        if ( ssu == null ) return builder.avialable(false).build();
+        if ( ssu == null ) return builder.available(false).build();
 
         builder.stockInformation(ssu.stockTransaction().map(t -> "\nAuf " + t.shortDescription()).or(() -> ssu.stock().map(s -> "\nAuf " + s.shortDescription)));
         builder.stockId(ssu.stock().map(s -> s.id));
         // Blocked by logic transaction
-        if ( ssu.onLogicTransaction() ) return builder.avialable(false).build();
+        if ( ssu.onLogicTransaction() ) return builder.available(false).build();
 
         // Sanity check
-        if ( eao.isUnitBlocked((int)suu.id()) ) return builder.avialable(false).conflictDescription("RedTape hat ein offenes Dokument !").build();
+        if ( eao.isUnitBlocked((int)suu.id()) ) return builder.available(false).conflictDescription("RedTape hat ein offenes Dokument !").build();
 
-        return builder.avialable(true).build();
+        return builder.available(true).build();
     }
 }

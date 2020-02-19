@@ -57,16 +57,16 @@ public class UnitAvailabillityPaneTryout {
 
         final Map<String, UnitAvailability> r = new HashMap<>();
 
-        r.put("1", new UnitAvailability.Builder().refurbishId("1").avialable(false).exists(true).uniqueUnitId(1).build());
-        r.put("2", new UnitAvailability.Builder().refurbishId("2").avialable(false).exists(true).uniqueUnitId(2)
+        r.put("1", new UnitAvailability.Builder().refurbishId("1").available(false).exists(true).uniqueUnitId(1).build());
+        r.put("2", new UnitAvailability.Builder().refurbishId("2").available(false).exists(true).uniqueUnitId(2)
                 .stockInformation("Lager Hamburg").stockId(1).build());
-        r.put("3", new UnitAvailability.Builder().refurbishId("3").avialable(false).exists(true).uniqueUnitId(3)
+        r.put("3", new UnitAvailability.Builder().refurbishId("3").available(false).exists(true).uniqueUnitId(3)
                 .stockInformation("Umfuhr von Hamburg nach Berlin").build());
-        r.put("4", new UnitAvailability.Builder().refurbishId("4").avialable(false).exists(true).uniqueUnitId(4)
+        r.put("4", new UnitAvailability.Builder().refurbishId("4").available(false).exists(true).uniqueUnitId(4)
                 .stockInformation("Lager Hamburg").stockId(1).conflictDescription("RedTape hat ein offenes Dokument !").build());
-        r.put("5", new UnitAvailability.Builder().refurbishId("5").avialable(true).exists(true).uniqueUnitId(5)
+        r.put("5", new UnitAvailability.Builder().refurbishId("5").available(true).exists(true).uniqueUnitId(5)
                 .stockInformation("Lager Berlin").stockId(2).build());
-        r.put("6", new UnitAvailability.Builder().refurbishId("15").avialable(true).exists(true).uniqueUnitId(6)
+        r.put("6", new UnitAvailability.Builder().refurbishId("15").available(true).exists(true).uniqueUnitId(6)
                 .stockInformation("Lager Hamburg").stockId(1).lastRefurbishId("6").build());
 
         Dl.local().add(RemoteLookup.class, new RemoteLookup() {
@@ -85,7 +85,7 @@ public class UnitAvailabillityPaneTryout {
 
             @Override
             public UnitAvailability findUnitByRefurbishIdAndVerifyAviability(String refurbishId) {
-                return Optional.ofNullable(r.get(refurbishId)).orElse(new UnitAvailability.Builder().refurbishId(refurbishId).avialable(false).exists(false).build());
+                return Optional.ofNullable(r.get(refurbishId)).orElse(new UnitAvailability.Builder().refurbishId(refurbishId).available(false).exists(false).build());
             }
         });
 

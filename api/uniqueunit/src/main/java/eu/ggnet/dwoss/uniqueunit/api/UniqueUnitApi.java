@@ -26,6 +26,8 @@ import javax.ejb.Remote;
 @Remote
 public interface UniqueUnitApi {
 
+    String findBySerialAsHtml(String serial, String username);
+
     String findAsHtml(long id, String username);
 
 }

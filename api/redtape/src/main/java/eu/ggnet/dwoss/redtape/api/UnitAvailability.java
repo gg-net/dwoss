@@ -45,7 +45,7 @@ public interface UnitAvailability extends Serializable {
      *
      * @return the avialable status.
      */
-    boolean avialable();
+    boolean available();
 
     /**
      * Returns true if the unit exists.

@@ -112,7 +112,7 @@ public class UnitAvailabilityPane extends BorderPane {
                         ua.stockInformation().ifPresent(si -> line3.setText("\n" + si));
                         ua.conflictDescription().ifPresent(cd -> line2.setText("\n" + cd));
                     }
-                    if ( ua.avialable() ) {
+                    if ( ua.available() ) {
                         status.setText(" verfügbar");
                         color = Dl.local().optional(ActiveStock.class)
                                 .map(ActiveStock::getActiveStock)
