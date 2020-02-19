@@ -26,14 +26,6 @@ import javax.ejb.Remote;
 @Remote
 public interface UniqueUnitApi {
 
-    /**
-     * Returns a SimpleUnit, if something with the supplied refurbishId exists.
-     *
-     * @param refurbishId
-     * @return null or a simple unit, one exists.
-     */
-    SimpleUniqueUnit findByRefurbishedId(String refurbishId);
-
     String findAsHtml(long id, String username);
 
 }

@@ -14,34 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.redtape.api;
+package eu.ggnet.dwoss.uniqueunit.api;
 
-import java.io.Serializable;
-
-import org.inferred.freebuilder.FreeBuilder;
+import javax.ejb.Local;
 
 /**
+ * Local Api Implementation.
  *
  * @author oliver.guenther
  */
-@FreeBuilder
-public interface SanityResult extends Serializable {
-
-    class Builder extends SanityResult_Builder {
-    };
+@Local
+public interface UniqueUnitApiLocal {
 
     /**
-     * Indicates, that in the sanity check the unit was detected as blocked.
+     * Returns a SimpleUnit, if something with the supplied refurbishId exists.
      *
-     * @return
+     * @param refurbishId
+     * @return null or a simple unit, one exists.
      */
-    boolean blocked();
-
-    /**
-     * Returns a details about the sanity check
-     *
-     * @return details.
-     */
-    String details();
+    SimpleUniqueUnit findByRefurbishedId(String refurbishId);
 
 }

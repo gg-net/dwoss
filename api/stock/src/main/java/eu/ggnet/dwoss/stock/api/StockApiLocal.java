@@ -34,4 +34,11 @@ public interface StockApiLocal {
      */
     String findByUniqueUnitIdAsHtml(long uniqueUnitId);
 
+    /**
+     * Returns a stock unit based on the unique unit id.
+     *
+     * @param uniqueUnitId the referencing unique unit id.
+     * @return a stock unit or null if none.
+     */
+    SimpleStockUnit findByUniqueUnitId(long uniqueUnitId);
 }

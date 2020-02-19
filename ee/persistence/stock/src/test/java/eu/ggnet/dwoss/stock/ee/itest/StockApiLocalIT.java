@@ -1,6 +1,5 @@
 package eu.ggnet.dwoss.stock.ee.itest;
 
-import javax.ejb.EJB;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.UserTransaction;
@@ -10,7 +9,7 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.core.system.util.Utils;
-import eu.ggnet.dwoss.stock.api.StockApi;
+import eu.ggnet.dwoss.stock.api.StockApiLocal;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.emo.StockTransactionEmo;
 import eu.ggnet.dwoss.stock.ee.entity.*;
@@ -19,7 +18,7 @@ import eu.ggnet.dwoss.stock.ee.itest.support.ArquillianProjectArchive;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(Arquillian.class)
-public class StockApiIT extends ArquillianProjectArchive {
+public class StockApiLocalIT extends ArquillianProjectArchive {
 
     @Inject
     private UserTransaction utx;
@@ -28,8 +27,8 @@ public class StockApiIT extends ArquillianProjectArchive {
     @Stocks
     private EntityManager em;
 
-    @EJB
-    private StockApi api;
+    @Inject
+    private StockApiLocal api;
 
     private final static int STOCK0_ID = 0;
 

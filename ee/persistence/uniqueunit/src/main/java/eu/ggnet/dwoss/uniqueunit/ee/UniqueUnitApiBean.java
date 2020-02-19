@@ -28,12 +28,9 @@ import eu.ggnet.dwoss.report.api.ReportApiLocal;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.RightsApiLocal;
 import eu.ggnet.dwoss.stock.api.StockApiLocal;
-import eu.ggnet.dwoss.uniqueunit.api.SimpleUniqueUnit;
-import eu.ggnet.dwoss.uniqueunit.api.SimpleUniqueUnit.Builder;
 import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnitHistory;
 import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
 
@@ -58,22 +55,6 @@ public class UniqueUnitApiBean implements UniqueUnitApi {
 
     @Inject
     private Instance<ReportApiLocal> reports;
-
-    @Override
-    public SimpleUniqueUnit findByRefurbishedId(String refurbishId) {
-        Builder suBuilder = new SimpleUniqueUnit.Builder();
-        UniqueUnit uu = eao.findByIdentifier(Identifier.REFURBISHED_ID, refurbishId);
-        if ( uu == null ) {
-            uu = eao.findByRefurbishedIdInHistory(refurbishId);
-            suBuilder.lastRefurbishId(refurbishId);
-        }
-        if ( uu == null ) return null;
-        return suBuilder
-                .id(uu.getId())
-                .refurbishedId(uu.getRefurbishId())
-                .shortDescription(UniqueUnitFormater.toPositionName(uu))
-                .build();
-    }
 
     @Override
     public String findAsHtml(long id, String username) {

@@ -14,32 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.stock.api;
+package eu.ggnet.dwoss.redtape.itest.stub;
 
-import javax.ejb.Remote;
+import eu.ggnet.dwoss.uniqueunit.api.SimpleUniqueUnit;
+import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApiLocal;
 
 /**
- * Main Api entrance point for Stock.
  *
  * @author oliver.guenther
  */
-@Remote
-public interface StockApi {
+public class UniqueUnitApiLocalStub implements UniqueUnitApiLocal {
 
-    /**
-     * Returns a stock unit based on the database id.
-     *
-     * @param id the database id.
-     * @return a stock unit or null if none
-     */
-    SimpleStockUnit find(long id);
-
-    /**
-     * Returns a stock unit based on the unique unit id.
-     *
-     * @param uniqueUnitId the referencing unique unit id.
-     * @return a stock unit or null if none.
-     */
-    SimpleStockUnit findByUniqueUnitId(long uniqueUnitId);
+    @Override
+    public SimpleUniqueUnit findByRefurbishedId(String refurbishId) {
+        return null;
+    }
 
 }

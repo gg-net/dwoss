@@ -24,13 +24,11 @@ import javafx.stage.Stage;
 
 import eu.ggnet.dwoss.core.widget.AbstractGuardian;
 import eu.ggnet.dwoss.redtape.api.RedTapeApi;
-import eu.ggnet.dwoss.redtape.api.SanityResult;
+import eu.ggnet.dwoss.redtape.api.UnitAvailability;
 import eu.ggnet.dwoss.redtapext.ui.cap.UnitAvailabilityPane;
 import eu.ggnet.dwoss.rights.api.Operator;
-import eu.ggnet.dwoss.stock.api.*;
+import eu.ggnet.dwoss.stock.api.PicoStock;
 import eu.ggnet.dwoss.stock.spi.ActiveStock;
-import eu.ggnet.dwoss.uniqueunit.api.SimpleUniqueUnit;
-import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.dl.RemoteLookup;
 import eu.ggnet.saft.experimental.auth.AuthenticationException;
@@ -53,31 +51,23 @@ public class UnitAvailabillityPaneTryout {
     }
 
     public static void main(String[] args) {
-        final Map<String, SimpleUniqueUnit> suuMap = new HashMap<>();
-        suuMap.put("1", new SimpleUniqueUnit.Builder().id(1).refurbishedId("1").shortDescription("Gerät mit Id 1").build());
-        suuMap.put("2", new SimpleUniqueUnit.Builder().id(2).refurbishedId("10").lastRefurbishId("2").shortDescription("Aspire(2) Predator").build());
-        suuMap.put("3", new SimpleUniqueUnit.Builder().id(3).refurbishedId("3").shortDescription("Lenovo (3) Legion").build());
-        suuMap.put("4", new SimpleUniqueUnit.Builder().id(4).refurbishedId("4").shortDescription("Samsung (4) Gross und Klapbar").build());
-        suuMap.put("5", new SimpleUniqueUnit.Builder().id(5).refurbishedId("5").shortDescription("AEG Waschmaschine (5)").build());
-        suuMap.put("6", new SimpleUniqueUnit.Builder().id(6).refurbishedId("6").shortDescription("Handschrubber (6)").build());
-        suuMap.put("7", new SimpleUniqueUnit.Builder().id(7).refurbishedId("7").shortDescription("Staubsauger (7)").build());
 
         final PicoStock stock1 = new PicoStock(1, "Hamburg");
         final PicoStock stock2 = new PicoStock(2, "Berlin");
 
-        final Map<Long, SimpleStockUnit> stuMap = new HashMap<>();
-        stuMap.put(1l, new SimpleStockUnit.Builder().id(3).uniqueUnitId(1).onLogicTransaction(false).shortDescription("StockUnit(1)").stock(stock1).build());
-        stuMap.put(2l, new SimpleStockUnit.Builder().id(7).uniqueUnitId(2).onLogicTransaction(false).shortDescription("StockUnit(2)").stock(stock1).build());
-        stuMap.put(3l, new SimpleStockUnit.Builder().id(5).uniqueUnitId(3).onLogicTransaction(false).shortDescription("StockUnit(3)").stock(stock2).build());
-        stuMap.put(4l, new SimpleStockUnit.Builder().id(9).uniqueUnitId(4).onLogicTransaction(false).shortDescription("StockUnit(4)").stock(stock2).build());
-        stuMap.put(5l, new SimpleStockUnit.Builder().id(5).uniqueUnitId(5).onLogicTransaction(true).shortDescription("StockUnit(5)")
-                .stockTransaction(new SimpleStockTransaction.Builder().id(1).source(stock1).destination(stock2).shortDescription("Umfuhr von Hamburg nach Berlin").build())
-                .build());
+        final Map<String, UnitAvailability> r = new HashMap<>();
 
-        final Map<Long, SanityResult> srMap = new HashMap<>();
-        srMap.put(2l, new SanityResult.Builder().blocked(true).details("RedTape hat ein offenes Dokument").build());
-        srMap.put(3l, new SanityResult.Builder().blocked(false).details("").build());
-        srMap.put(5l, new SanityResult.Builder().blocked(true).details("RedTape hat ein offenes Dokument").build());
+        r.put("1", new UnitAvailability.Builder().refurbishId("1").avialable(false).exists(true).uniqueUnitId(1).build());
+        r.put("2", new UnitAvailability.Builder().refurbishId("2").avialable(false).exists(true).uniqueUnitId(2)
+                .stockInformation("Lager Hamburg").stockId(1).build());
+        r.put("3", new UnitAvailability.Builder().refurbishId("3").avialable(false).exists(true).uniqueUnitId(3)
+                .stockInformation("Umfuhr von Hamburg nach Berlin").build());
+        r.put("4", new UnitAvailability.Builder().refurbishId("4").avialable(false).exists(true).uniqueUnitId(4)
+                .stockInformation("Lager Hamburg").stockId(1).conflictDescription("RedTape hat ein offenes Dokument !").build());
+        r.put("5", new UnitAvailability.Builder().refurbishId("5").avialable(true).exists(true).uniqueUnitId(5)
+                .stockInformation("Lager Berlin").stockId(2).build());
+        r.put("6", new UnitAvailability.Builder().refurbishId("15").avialable(true).exists(true).uniqueUnitId(6)
+                .stockInformation("Lager Hamburg").stockId(1).lastRefurbishId("6").build());
 
         Dl.local().add(RemoteLookup.class, new RemoteLookup() {
             @Override
@@ -91,35 +81,11 @@ public class UnitAvailabillityPaneTryout {
             }
         });
 
-        Dl.remote().add(UniqueUnitApi.class, new UniqueUnitApi() {
-            @Override
-            public SimpleUniqueUnit findByRefurbishedId(String refurbishId) {
-                return suuMap.get(refurbishId);
-            }
-
-            @Override
-            public String findAsHtml(long id, String username) {
-                return "<html>Unitid " + id + "</html>";
-            }
-
-        });
-
-        Dl.remote().add(StockApi.class, new StockApi() {
-            @Override
-            public SimpleStockUnit find(long id) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public SimpleStockUnit findByUniqueUnitId(long uniqueUnitId) {
-                return stuMap.get(uniqueUnitId);
-            }
-        });
-
         Dl.remote().add(RedTapeApi.class, new RedTapeApi() {
+
             @Override
-            public SanityResult sanityCheck(long uniqueUnitId) {
-                return srMap.get(uniqueUnitId);
+            public UnitAvailability findUnitByRefurbishIdAndVerifyAviability(String refurbishId) {
+                return Optional.ofNullable(r.get(refurbishId)).orElse(new UnitAvailability.Builder().refurbishId(refurbishId).avialable(false).exists(false).build());
             }
         });
 

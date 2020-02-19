@@ -16,12 +16,14 @@
  */
 package eu.ggnet.dwoss.stock.ee;
 
+import java.util.Optional;
+
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import eu.ggnet.dwoss.stock.api.StockApiLocal;
+import eu.ggnet.dwoss.stock.api.*;
 import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
-import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
+import eu.ggnet.dwoss.stock.ee.entity.*;
 import eu.ggnet.dwoss.stock.ee.format.StockUnitFormater;
 
 /**
@@ -42,4 +44,36 @@ public class StockApiLocalBean implements StockApiLocal {
         return StockUnitFormater.toHtml(stockUnit);
     }
 
+    @Override
+    public SimpleStockUnit findByUniqueUnitId(long uniqueUnitId) {
+        return toSimple(eao.findByUniqueUnitId((int)uniqueUnitId));
+    }
+
+    static SimpleStockUnit toSimple(StockUnit su) {
+        if ( su == null ) return null;
+        SimpleStockUnit.Builder ssub = new SimpleStockUnit.Builder()
+                .id(su.getId())
+                .onLogicTransaction(su.getLogicTransaction() != null)
+                .uniqueUnitId(Optional.ofNullable(su.getUniqueUnitId()).orElse(0))
+                .shortDescription(su.getName());
+        if ( su.isInStock() ) {
+            ssub.stock(su.getStock().toPicoStock());
+        }
+        if ( su.isInTransaction() ) {
+            StockTransaction st = su.getTransaction();
+            ssub.stockTransaction(new SimpleStockTransaction.Builder()
+                    .id(st.getId())
+                    .shortDescription(format(st))
+                    .source(Optional.ofNullable(st.getSource()).map(Stock::toPicoStock))
+                    .destination(Optional.ofNullable(st.getDestination()).map(Stock::toPicoStock))
+                    .build());
+        }
+        return ssub.build();
+    }
+
+    private static String format(StockTransaction st) {
+        return "Transaction(" + st.getId() + "," + st.getType() + ")"
+                + (st.getSource() == null ? "" : " von " + st.getSource().getName())
+                + (st.getDestination() == null ? "" : " nach " + st.getDestination().getName());
+    }
 }

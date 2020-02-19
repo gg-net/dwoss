@@ -28,9 +28,11 @@ import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.core.common.values.PositionType;
 import eu.ggnet.dwoss.core.common.Css;
+import eu.ggnet.dwoss.core.common.UserInfoException;
+import eu.ggnet.dwoss.core.common.values.PositionType;
 import eu.ggnet.dwoss.core.system.autolog.AutoLogger;
+import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
@@ -40,6 +42,7 @@ import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.eao.*;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtape.ee.format.DossierFormater;
+import eu.ggnet.dwoss.redtape.ee.interactiveresult.Result;
 import eu.ggnet.dwoss.report.ee.assist.Reports;
 import eu.ggnet.dwoss.report.ee.eao.ReportLineEao;
 import eu.ggnet.dwoss.report.ee.entity.Report;
@@ -60,9 +63,6 @@ import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnitHistory;
 import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
-import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.dwoss.core.system.util.Utils;
-import eu.ggnet.dwoss.redtape.ee.interactiveresult.Result;
 
 import static eu.ggnet.dwoss.core.common.values.PositionType.PRODUCT_BATCH;
 import static eu.ggnet.dwoss.report.ee.entity.ReportLine.SingleReferenceType.WARRANTY;
@@ -318,7 +318,6 @@ public class UnitOverseerBean implements UnitOverseer {
      * @param refurbishId the id to check
      * @return true if the unit identified by the refurbishId is available for sale, else false.
      */
-    @Override
     public boolean isAvailable(String refurbishId) {
         return internalFind(refurbishId).isAvailable();
     }
@@ -329,7 +328,6 @@ public class UnitOverseerBean implements UnitOverseer {
      * @param refurbishId the refurbishId to check.
      * @return a UnitShard, a small representation of the refurbishId and its status.
      */
-    @Override
     public UnitShard find(String refurbishId) {
         return internalFind(refurbishId);
     }

@@ -20,10 +20,16 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import eu.ggnet.dwoss.redtape.api.RedTapeApi;
-import eu.ggnet.dwoss.redtape.api.SanityResult;
+import eu.ggnet.dwoss.redtape.api.UnitAvailability;
 import eu.ggnet.dwoss.redtape.ee.eao.DossierEao;
+import eu.ggnet.dwoss.stock.api.SimpleStockUnit;
+import eu.ggnet.dwoss.stock.api.StockApiLocal;
+import eu.ggnet.dwoss.uniqueunit.api.SimpleUniqueUnit;
+import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApiLocal;
 
 /**
+ * RedTape API implementation.
+ * Requires unique unit api and stock api, cause only that a global unit status can be resolved.
  *
  * @author oliver.guenther
  */
@@ -33,9 +39,32 @@ public class RedTapeApiBean implements RedTapeApi {
     @Inject
     private DossierEao eao;
 
+    @Inject
+    private UniqueUnitApiLocal uniqueUnitApi;
+
+    @Inject
+    private StockApiLocal stockApi;
+
     @Override
-    public SanityResult sanityCheck(long uniqueUnitId) {
-        if ( eao.isUnitBlocked((int)uniqueUnitId) ) return new SanityResult.Builder().blocked(true).details("RedTape hat ein offenes Dokument").build();
-        return new SanityResult.Builder().blocked(false).details("").build();
+    public UnitAvailability findUnitByRefurbishIdAndVerifyAviability(String refurbishId) {
+        SimpleUniqueUnit suu = uniqueUnitApi.findByRefurbishedId(refurbishId);
+        UnitAvailability.Builder builder = new UnitAvailability.Builder();
+        // If no unique unit exits, not existend.
+        if ( suu == null ) return builder.refurbishId(refurbishId).avialable(false).exists(false).build();
+
+        builder.exists(true).refurbishId(suu.refurbishedId()).lastRefurbishId(suu.lastRefurbishId()).uniqueUnitId(suu.id());
+        SimpleStockUnit ssu = stockApi.findByUniqueUnitId(suu.id());
+        // If no stock unit exists, not avialable
+        if ( ssu == null ) return builder.avialable(false).build();
+
+        builder.stockInformation(ssu.stockTransaction().map(t -> "\nAuf " + t.shortDescription()).or(() -> ssu.stock().map(s -> "\nAuf " + s.shortDescription)));
+        builder.stockId(ssu.stock().map(s -> s.id));
+        // Blocked by logic transaction
+        if ( ssu.onLogicTransaction() ) return builder.avialable(false).build();
+
+        // Sanity check
+        if ( eao.isUnitBlocked((int)suu.id()) ) return builder.avialable(false).conflictDescription("RedTape hat ein offenes Dokument !").build();
+
+        return builder.avialable(true).build();
     }
 }

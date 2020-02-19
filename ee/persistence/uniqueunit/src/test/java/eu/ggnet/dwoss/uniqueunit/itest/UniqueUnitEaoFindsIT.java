@@ -3,7 +3,6 @@ package eu.ggnet.dwoss.uniqueunit.itest;
 import java.util.Date;
 import java.util.Iterator;
 
-import javax.ejb.EJB;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -17,6 +16,8 @@ import org.junit.runner.RunWith;
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.search.api.*;
+import eu.ggnet.dwoss.uniqueunit.api.SimpleUniqueUnit;
+import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApiLocal;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
@@ -24,24 +25,19 @@ import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Condition;
 import eu.ggnet.dwoss.uniqueunit.itest.support.ArquillianProjectArchive;
 
-import com.google.common.base.Optional;
-
 import static eu.ggnet.dwoss.search.api.GlobalKey.Component.UNIQUE_UNIT;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.REFURBISHED_ID;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.SERIAL;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import eu.ggnet.dwoss.uniqueunit.api.SimpleUniqueUnit;
-import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
-
 @RunWith(Arquillian.class)
 public class UniqueUnitEaoFindsIT extends ArquillianProjectArchive {
 
     private final static String PARTNO_1 = "AA.BBBBB.CCC";
-    
+
     private final static String UNIT_5_LAST_REFURIBISHID = "29471";
 
-            private final static String UNIT_5_REFURIBISHID =  "66666";
+    private final static String UNIT_5_REFURIBISHID = "66666";
 
     @Inject
     private UserTransaction utx;
@@ -52,9 +48,9 @@ public class UniqueUnitEaoFindsIT extends ArquillianProjectArchive {
 
     @Inject
     private Instance<SearchProvider> searchProviders;
-    
-    @EJB
-    private UniqueUnitApi unitFinder;
+
+    @Inject
+    private UniqueUnitApiLocal unitFinder;
 
     /**
      * Multiple tests on find.
@@ -116,10 +112,9 @@ public class UniqueUnitEaoFindsIT extends ArquillianProjectArchive {
         utx.begin();
         em.joinTransaction();
         unit5 = em.find(UniqueUnit.class, unit5.getId());
-        unit5.setIdentifier(REFURBISHED_ID,UNIT_5_REFURIBISHID); // Adding a history in the Database.
-        
-        utx.commit();
+        unit5.setIdentifier(REFURBISHED_ID, UNIT_5_REFURIBISHID); // Adding a history in the Database.
 
+        utx.commit();
 
         utx.begin();
         em.joinTransaction();
@@ -148,7 +143,6 @@ public class UniqueUnitEaoFindsIT extends ArquillianProjectArchive {
                         new GlobalKey(GlobalKey.Component.UNIQUE_UNIT, unit3.getId()),
                         new GlobalKey(GlobalKey.Component.UNIQUE_UNIT, unit4.getId())
                 );
-        
 
         // Test UnitFinder
         assertThat(unitFinder.findByRefurbishedId("AAAA")).isNull();
@@ -157,6 +151,6 @@ public class UniqueUnitEaoFindsIT extends ArquillianProjectArchive {
                 .returns(unit5.getId(), su -> (int)su.id())
                 .returns(UNIT_5_REFURIBISHID, SimpleUniqueUnit::refurbishedId)
                 .returns(UNIT_5_LAST_REFURIBISHID, su -> su.lastRefurbishId().get());
-        
+
     }
 }

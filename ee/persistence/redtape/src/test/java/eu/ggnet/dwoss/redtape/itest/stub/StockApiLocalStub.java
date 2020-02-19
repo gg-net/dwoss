@@ -14,25 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.redtape.api;
+package eu.ggnet.dwoss.redtape.itest.stub;
 
-import javax.ejb.Remote;
+import eu.ggnet.dwoss.stock.api.SimpleStockUnit;
+import eu.ggnet.dwoss.stock.api.StockApiLocal;
 
 /**
- * Redtape Api.
  *
  * @author oliver.guenther
  */
-@Remote
-public interface RedTapeApi {
+public class StockApiLocalStub implements StockApiLocal {
 
-    /**
-     * Tries to find a Unit based on the refurbishId and verifies, if its aviable for sale.
-     * Uses {@link UniqueUnitApi} and {@link StockApi}
-     *
-     * @param refurbishId
-     * @return
-     */
-    UnitAvailability findUnitByRefurbishIdAndVerifyAviability(String refurbishId);
+    @Override
+    public String findByUniqueUnitIdAsHtml(long uniqueUnitId) {
+        return "Nix";
+    }
+
+    @Override
+    public SimpleStockUnit findByUniqueUnitId(long uniqueUnitId) {
+        return null;
+    }
 
 }

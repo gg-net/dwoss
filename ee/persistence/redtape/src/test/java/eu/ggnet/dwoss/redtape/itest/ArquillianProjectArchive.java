@@ -30,6 +30,8 @@ import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenDependencies;
 
 import eu.ggnet.dwoss.mandator.sample.datasource.SampleDataSourceDefinition;
 import eu.ggnet.dwoss.redtape.itest.eao.RedTapeHelper;
+import eu.ggnet.dwoss.redtape.itest.stub.StockApiLocalStub;
+import eu.ggnet.dwoss.redtape.itest.stub.UniqueUnitApiLocalStub;
 import eu.ggnet.dwoss.redtape.test.PositionTest;
 
 import static org.jboss.shrinkwrap.resolver.api.maven.ScopeType.RUNTIME;
@@ -59,6 +61,7 @@ public class ArquillianProjectArchive {
                 .addClass(SampleDataSourceDefinition.class) // Alle Datasources. More than we need.
                 .addClass(ArquillianProjectArchive.class) // The local deployer configuration
                 .addClass(RedTapeHelper.class)
+                .addClasses(StockApiLocalStub.class, UniqueUnitApiLocalStub.class) // Api Stubs
                 .addAsResource(new ClassLoaderAsset("META-INF/persistence.xml"), "META-INF/persistence.xml")
                 .addAsWebInfResource("jboss-deployment-structure.xml") // Needed for jboss/wildfly h2 enablement
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
