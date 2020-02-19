@@ -39,6 +39,7 @@ import javafx.stage.Stage;
 import eu.ggnet.dwoss.assembly.client.Main;
 import eu.ggnet.dwoss.assembly.remote.MainCdi;
 import eu.ggnet.dwoss.assembly.remote.cdi.FxmlLoaderInitializer;
+import eu.ggnet.dwoss.core.system.GlobalConfig;
 import eu.ggnet.dwoss.core.system.autolog.LoggerProducer;
 import eu.ggnet.dwoss.core.widget.AbstractGuardian;
 import eu.ggnet.dwoss.misc.ui.AboutController;
@@ -237,6 +238,7 @@ public class ClientApplication extends Application implements FirstLoginListener
         ci.addPackages(true,ReactivePicoUnitDetailViewCask.class); // redtapext.ui
         ci.addPackages(true,SearchCask.class); // search.ui
         ci.addPackages(LoggerProducer.class); // core.system. autolog
+        ci.addPackages(GlobalConfig.class); // Global Config produces.
         container = ci.initialize();
         // TODO: Remote connection and everything else.
         instance = container.getBeanManager().createInstance();
@@ -255,7 +257,7 @@ public class ClientApplication extends Application implements FirstLoginListener
 
     @Override
     public void loginSuccessful() {
-        loginStage.close();
+        Platform.runLater(() -> loginStage.close());
     }
 
     @Override

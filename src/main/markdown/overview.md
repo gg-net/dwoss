@@ -214,9 +214,13 @@ Implicite Knowledge
 
 Things we know, but haven't written down yet.
 
+ - API hard bound (Kurzgedanke, ein Projekt (auch persistent) darf, andere api zwingend implementieren) .. Das muss ich noch aufschreiben
  - http://stackoverflow.com/questions/40818396/unable-to-build-hibernate-sessionfactory-exception-from-nowhere
  - http://stackoverflow.com/questions/39410183/hibernate-5-2-2-no-persistence-provider-for-entitymanager
  - TransactionAttribute(Requires New) on every generator.
  - Wildfly Remote needs ApplicationRealm User https://www.schoenberg-solutions.de/roller/arndtsBlog/entry/remote-zugriff-wildfly-10-teil4
  - persistence.xml -> <property name="hibernate.id.new_generator_mappings" value="false" /> , since 5.x hibernate uses other default key generator.
    This returns to old behavior
+
+
+

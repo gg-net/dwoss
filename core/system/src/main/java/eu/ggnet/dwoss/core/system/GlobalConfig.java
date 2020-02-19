@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.core.system;
 
+import javax.enterprise.inject.Produces;
+
 import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.core.common.values.TaxType;
 
@@ -32,6 +34,7 @@ public final class GlobalConfig {
     /**
      * A central place there the client can put exports.
      */
+    @Produces @OutputPath
     public static final String APPLICATION_PATH_OUTPUT = Utils.getTempDirectory("output") + "/";
 
     /**

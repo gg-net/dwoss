@@ -20,7 +20,6 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.util.concurrent.*;
 
 import javax.swing.*;
 
@@ -63,16 +62,10 @@ public class FileListViewCask extends javax.swing.JPanel implements MainComponen
             }
         });
 
-        // This is a self shutdown executor.
-        ScheduledExecutorService es = Executors.newSingleThreadScheduledExecutor((r) -> {
-            Thread t = new Thread(r);
-            t.setDaemon(true);
-            return t;
-        });
-        DirectoryMonitor dm = new DirectoryMonitor(new File(GlobalConfig.APPLICATION_PATH_OUTPUT));
-        es.scheduleWithFixedDelay(dm, 2, 1, TimeUnit.SECONDS);
+        DirectoryMonitor dm = new DirectoryMonitor();
+        dm.init(GlobalConfig.APPLICATION_PATH_OUTPUT);
         fileList.setModel(dm);
-
+        dm.start();
     }
 
     @Override

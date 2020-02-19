@@ -25,6 +25,7 @@ import javafx.scene.control.*;
 import eu.ggnet.dwoss.misc.ui.cap.*;
 import eu.ggnet.dwoss.misc.ui.cap.MovmentMenuItemsProducer.MovementLists;
 import eu.ggnet.dwoss.misc.ui.cap.SalesListingCreateMenuItemProducer.SalesListingCreateMenus;
+import eu.ggnet.dwoss.misc.ui.mc.FileListPane;
 import eu.ggnet.dwoss.redtapext.ui.cap.*;
 import eu.ggnet.dwoss.search.ui.SearchCask;
 
@@ -54,8 +55,9 @@ public class ClientMainController {
         
         UnitAvailabilityPane unitAvailability = instance.select(UnitAvailabilityPane.class).get();
         SearchCask search = instance.select(SearchCask.class).get();
-                
-        mainSplitPane.getItems().addAll(unitAvailability,search);
+        FileListPane filelist = instance.select(FileListPane.class).get();
+        mainSplitPane.getItems().addAll(unitAvailability,search,filelist);
+        mainSplitPane.setDividerPositions(0.4,0.8,1);
     }
 
     public void add(Menu menu) {

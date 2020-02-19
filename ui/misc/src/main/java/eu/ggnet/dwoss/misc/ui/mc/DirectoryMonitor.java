@@ -24,11 +24,18 @@ import java.nio.file.WatchService;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import javax.inject.Inject;
 import javax.swing.AbstractListModel;
 
-import eu.ggnet.saft.core.Ui;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
+import eu.ggnet.dwoss.core.system.OutputPath;
 
 import static java.nio.file.StandardWatchEventKinds.*;
 
@@ -42,20 +49,23 @@ public class DirectoryMonitor extends AbstractListModel<File> implements Runnabl
 
     private File directory;
 
-    private List<File> fileList;
+    private final List<File> fileList = new ArrayList<>();
+
+    public final ObservableList<File> fileFxList = FXCollections.observableArrayList();
 
     private WatchService watchService;
 
-    public DirectoryMonitor(File directory) {
+    private ScheduledExecutorService es;
+
+    @Inject
+    public void init(@OutputPath String outputPath) {
+        directory = new File(outputPath);
+        if ( !directory.isDirectory() ) throw new IllegalArgumentException("Dir:" + directory + " is not a Directory");
         try {
-            if ( directory == null || !directory.isDirectory() ) throw new IllegalArgumentException("Dir:" + directory + " is not a Directory");
-            this.directory = directory;
-            this.fileList = new ArrayList<>();
             watchService = FileSystems.getDefault().newWatchService();
             directory.toPath().register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
             reloadView();
         } catch (IOException | RuntimeException ex) {
-            Ui.handle(ex);
             throw new RuntimeException(ex);
         }
     }
@@ -74,12 +84,26 @@ public class DirectoryMonitor extends AbstractListModel<File> implements Runnabl
     }
 
     private void reloadView() {
+        List<File> files = Stream.of(directory.list()).sorted().map(n -> new File(directory, n)).collect(Collectors.toList());
+
+        Platform.runLater(() -> {
+            fileFxList.clear();
+            fileFxList.addAll(fileList);
+        });
+
         fileList.clear();
-        for (String fileName : directory.list()) {
-            fileList.add(new File(directory, fileName));
-        }
+        fileList.addAll(files);
         Collections.sort(fileList);
         fireContentsChanged(this, 0, fileList.size() - 1);
+    }
+
+    public void start() {
+        es = Executors.newSingleThreadScheduledExecutor((r) -> {
+            Thread t = new Thread(r);
+            t.setDaemon(true);
+            return t;
+        });
+        es.scheduleWithFixedDelay(this, 2, 1, TimeUnit.SECONDS);
     }
 
     @Override
