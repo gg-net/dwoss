@@ -20,6 +20,7 @@ import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Orientation;
 import javafx.scene.control.*;
 
 import eu.ggnet.dwoss.misc.ui.cap.*;
@@ -56,8 +57,16 @@ public class ClientMainController {
         UnitAvailabilityPane unitAvailability = instance.select(UnitAvailabilityPane.class).get();
         SearchCask search = instance.select(SearchCask.class).get();
         FileListPane filelist = instance.select(FileListPane.class).get();
-        mainSplitPane.getItems().addAll(unitAvailability,search,filelist);
+        MonitorPane monitorPane = instance.select(MonitorPane.class).get();
+        
+        SplitPane right = new SplitPane(filelist,monitorPane);
+        right.setOrientation(Orientation.VERTICAL);
+        right.setDividerPositions(0.7);
+                
+        mainSplitPane.getItems().addAll(unitAvailability,search,right);
         mainSplitPane.setDividerPositions(0.4,0.8,1);
+        
+        //Scheduled Executor.  new MonitorServerManager(monitorPane));
     }
 
     public void add(Menu menu) {

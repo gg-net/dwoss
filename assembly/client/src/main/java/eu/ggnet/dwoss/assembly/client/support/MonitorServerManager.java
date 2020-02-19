@@ -14,7 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.assembly.remote.client;
+package eu.ggnet.dwoss.assembly.client.support;
+
 
 import java.util.SortedSet;
 import java.util.concurrent.ConcurrentSkipListSet;
@@ -26,18 +27,18 @@ import eu.ggnet.dwoss.core.system.progress.ProgressObserver;
 import eu.ggnet.saft.core.Dl;
 
 /**
- * HiddenMonitorDisplayer, considered for usage in a 
+ * MonitorServerManager, considered for usage in a 
  * {@link ScheduledExecutorService#scheduleAtFixedRate(java.lang.Runnable, long, long, java.util.concurrent.TimeUnit)} with periodic call.
  * <p/>
  * @author oliver.guenther
  */
-public class HiddenMonitorDisplayer implements Runnable {
+public class MonitorServerManager implements Runnable {
 
     private final SortedSet<Integer> localKeys = new ConcurrentSkipListSet<>();
 
-    private final ClientView view;
+    private final MonitorPane view;
 
-    public HiddenMonitorDisplayer(ClientView view) {
+    public MonitorServerManager(MonitorPane view) {
         this.view = view;
     }
     
@@ -45,17 +46,16 @@ public class HiddenMonitorDisplayer implements Runnable {
     public void run() {
         try {
             ProgressObserver po = Dl.remote().lookup(ProgressObserver.class);
-            if ( !po.hasProgress() ) return;
+            if (po == null || !po.hasProgress() ) return;
             SortedSet<Integer> remoteKeys = po.getActiveProgressKeys();
             if ( remoteKeys.equals(localKeys) ) return; // no new progress, all is tracked.
             remoteKeys.removeAll(localKeys);
             for (Integer key : remoteKeys) {
-                new HiddenMonitorDisplayTask(key, localKeys, view.progressBar, view.messageLabel).execute();
+                view.submit(new MonitorServerTask(key, localKeys));
                 localKeys.add(key);
             }
         } catch (IllegalArgumentException | NullPointerException ex) {
             LoggerFactory.getLogger(this.getClass()).warn("Exception during progress {}", ex.getMessage());
-            ex.printStackTrace(); // We know, but sometimes you want to se it explode somethere.
         }
     }
 }
