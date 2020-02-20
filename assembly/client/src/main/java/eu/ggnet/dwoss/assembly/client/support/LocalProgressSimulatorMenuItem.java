@@ -16,34 +16,32 @@
  */
 package eu.ggnet.dwoss.assembly.client.support;
 
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
 
-import javafx.beans.value.ChangeListener;
-import javafx.concurrent.Task;
+import javax.inject.Inject;
 
-import eu.ggnet.saft.core.UiCore;
+import javafx.scene.control.MenuItem;
+
+import eu.ggnet.saft.core.Ui;
 
 /**
- * Veriy simple task for minimal local progress.
  *
  * @author oliver.guenther
  */
-public class MonitorClientTask extends Task<Void> {
+public class LocalProgressSimulatorMenuItem extends MenuItem {
 
-    @Override
-    protected Void call() throws Exception {
-        updateTitle("Hintergrundaktivität");
-        updateMessage("Hintergrundaktivität");
-        CountDownLatch latch = new CountDownLatch(1);
-        ChangeListener<Boolean> l = (ob, o, n) -> {
-            if ( !n ) {
-                latch.countDown();
-            }
-        };
-        UiCore.backgroundActivityProperty().addListener(l);
-        latch.await();
-        UiCore.backgroundActivityProperty().removeListener(l);
-        return null;
+    @Inject @Executor
+    public ExecutorService es;
+    
+    public LocalProgressSimulatorMenuItem() {
+        super("Lokale Hintergrundaktivität simulieren");
+        setOnAction((e) -> es.submit(() -> Ui.progress().call(() -> {
+                    Thread.sleep(3000);
+                    System.out.println("done");
+                    return null;
+                })));
     }
-
+    
+    
+    
 }

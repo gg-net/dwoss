@@ -144,7 +144,8 @@ public class ClientMainController {
         Menu help = new Menu("Hilfe");
         help.getItems().addAll(
                 m.item(AboutAction.class),
-                m.item(ShowMandatorAction.class)
+                m.item(ShowMandatorAction.class),
+                m.item(LocalProgressSimulatorMenuItem.class)
         );
 
         menuBar.getMenus().addAll(system, cao, listings, gl, logistik, artikelstamm, help);
