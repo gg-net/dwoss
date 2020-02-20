@@ -70,6 +70,8 @@ public class ClientApplication extends Application implements FirstLoginListener
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        
+        LafMenuManager.loadAndSetUserLaf();
 
         info = new Label("Info here");
         StackPane mainPane = new StackPane(info);

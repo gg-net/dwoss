@@ -95,7 +95,7 @@ public class ClientMainController {
                 DatabaseValidationAction.class));
 
         Menu system = new Menu("System");
-        system.getItems().add(system_datenbank);
+        system.getItems().addAll(system_datenbank,LafMenuManager.createLafMenu());
 
         // -- Kunden und Aufträge
         Menu cao = new Menu("Kunden und Aufträge");
