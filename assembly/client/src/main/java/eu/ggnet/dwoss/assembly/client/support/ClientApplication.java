@@ -17,8 +17,7 @@
 package eu.ggnet.dwoss.assembly.client.support;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 import javax.enterprise.inject.Instance;
@@ -44,6 +43,8 @@ import eu.ggnet.dwoss.core.system.autolog.LoggerProducer;
 import eu.ggnet.dwoss.core.widget.AbstractGuardian;
 import eu.ggnet.dwoss.misc.ui.AboutController;
 import eu.ggnet.dwoss.redtapext.ui.ReactivePicoUnitDetailViewCask;
+import eu.ggnet.dwoss.rights.api.AtomicRight;
+import eu.ggnet.dwoss.rights.api.Operator;
 import eu.ggnet.dwoss.search.ui.SearchCask;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.*;
@@ -51,6 +52,7 @@ import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.core.dl.RemoteLookup;
 import eu.ggnet.saft.experimental.auth.AuthenticationException;
+import eu.ggnet.saft.experimental.auth.Guardian;
 
 /**
  *
@@ -70,7 +72,7 @@ public class ClientApplication extends Application implements FirstLoginListener
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        
+
         LafMenuManager.loadAndSetUserLaf();
 
         info = new Label("Info here");
@@ -92,15 +94,8 @@ public class ClientApplication extends Application implements FirstLoginListener
 
         CompletableFuture
                 .runAsync(this::postInit)
-                .thenRun(() -> { // For now only a Stub, so I don't need the running server
-                    loginController.setAndActivateGuardian(new AbstractGuardian() {
-                        @Override
-                        public void login(String user, char[] pass) throws AuthenticationException {
-                            if ( "max".equalsIgnoreCase(user) && "pass".equals(String.valueOf(pass)) ) return; // success
-                            System.out.println("User:" + user + "|Pass:" + Arrays.toString(pass));
-                            throw new AuthenticationException("User or Pass wrong");
-                        }
-                    });
+                .thenRun(() -> { // Phase one only classic lookups
+                    loginController.setAndActivateGuardian(Dl.local().lookup(Guardian.class));
                 })
                 .thenRunAsync(() -> {
                     // Replace Mainview, later kick in Swing temporyry
@@ -234,6 +229,21 @@ public class ClientApplication extends Application implements FirstLoginListener
                         }
                     };
                 return null;
+            }
+        });
+
+        Dl.local().add(Guardian.class, new AbstractGuardian() {
+            @Override
+            public void login(String user, char[] pass) throws AuthenticationException {
+                if ( "test".equalsIgnoreCase(user) && "test".equals(String.valueOf(pass)) ) {
+                    setRights(new Operator(user, 1, Collections.emptyList()));
+                    return;
+                } // success
+                if ( "admin".equalsIgnoreCase(user) && "admin".equals(String.valueOf(pass)) ) {
+                    setRights(new Operator(user, 1, Arrays.asList(AtomicRight.values())));
+                    return;
+                } // success
+                throw new AuthenticationException("User or Pass wrong");
             }
         });
 

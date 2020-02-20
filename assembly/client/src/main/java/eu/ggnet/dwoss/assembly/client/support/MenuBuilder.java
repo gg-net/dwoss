@@ -25,10 +25,16 @@ import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.swing.Action;
 
+import javafx.application.Platform;
 import javafx.scene.control.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import eu.ggnet.saft.api.Authorisation;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.experimental.auth.Accessable;
+import eu.ggnet.saft.experimental.auth.Guardian;
 
 /**
  * Util to build a menu.
@@ -37,7 +43,29 @@ import org.slf4j.LoggerFactory;
  */
 public class MenuBuilder {
 
-    private Logger L = LoggerFactory.getLogger(MenuBuilder.class);
+    private static class MenuActionAccessable implements Accessable {
+
+        private final MenuItem item;
+
+        private final Accessable accessable;
+
+        public MenuActionAccessable(MenuItem item, Accessable accessable) {
+            this.item = Objects.requireNonNull(item, "item must not be null");
+            this.accessable = Objects.requireNonNull(accessable, "accessable must not be null");
+        }
+
+        @Override
+        public void setEnabled(boolean enable) {
+            Platform.runLater(() -> item.setDisable(!enable));
+        }
+
+        @Override
+        public Authorisation getNeededRight() {
+            return accessable.getNeededRight();
+        }
+    };
+
+    private final Logger L = LoggerFactory.getLogger(MenuBuilder.class);
 
     @Inject
     private Instance<Object> instance;
@@ -48,7 +76,7 @@ public class MenuBuilder {
             return (MenuItem)instance.select(clazz).get();
         } else if ( Action.class.isAssignableFrom(clazz) ) {
             Action action = (Action)instance.select(clazz).get();
-            MenuItem item = new MenuItem(action.getValue(Action.NAME).toString());
+            MenuItem item;
             L.debug("item() found action {}", action);
             if ( Objects.nonNull(action.getValue(Action.SHORT_DESCRIPTION)) ) {
                 Label l = new Label(action.getValue(Action.NAME).toString());
@@ -58,7 +86,10 @@ public class MenuBuilder {
             } else {
                 item = new MenuItem(action.getValue(Action.NAME).toString());
             }
+
             item.setOnAction((e) -> action.actionPerformed(new ActionEvent(action, ActionEvent.ACTION_PERFORMED, action.getValue(Action.NAME).toString())));
+            // Remapping of old access rules.
+            if ( action instanceof Accessable ) Dl.local().lookup(Guardian.class).add(new MenuActionAccessable(item, (Accessable)action));            
             return item;
         }
         throw new RuntimeException("Class " + clazz + " not supported");
