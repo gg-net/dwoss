@@ -17,9 +17,11 @@
 package eu.ggnet.dwoss.assembly.client.support;
 
 
+import java.util.Objects;
 import java.util.SortedSet;
-import java.util.concurrent.ConcurrentSkipListSet;
-import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.*;
+
+import javax.inject.Inject;
 
 import org.slf4j.LoggerFactory;
 
@@ -29,17 +31,21 @@ import eu.ggnet.saft.core.Dl;
 /**
  * MonitorServerManager, considered for usage in a 
  * {@link ScheduledExecutorService#scheduleAtFixedRate(java.lang.Runnable, long, long, java.util.concurrent.TimeUnit)} with periodic call.
- * <p/>
+ * <p>
  * @author oliver.guenther
  */
 public class MonitorServerManager implements Runnable {
 
     private final SortedSet<Integer> localKeys = new ConcurrentSkipListSet<>();
 
-    private final MonitorPane view;
+    private MonitorPane view;
 
-    public MonitorServerManager(MonitorPane view) {
-        this.view = view;
+    @Inject @Executor
+    private ScheduledExecutorService ses;
+    
+    public void start(MonitorPane view) {
+        this.view = Objects.requireNonNull(view,"view must not be null");
+        ses.scheduleAtFixedRate(this, 2, 2, TimeUnit.SECONDS);
     }
     
     @Override
@@ -55,7 +61,7 @@ public class MonitorServerManager implements Runnable {
                 localKeys.add(key);
             }
         } catch (IllegalArgumentException | NullPointerException ex) {
-            LoggerFactory.getLogger(this.getClass()).warn("Exception during progress {}", ex.getMessage());
+            LoggerFactory.getLogger(this.getClass()).warn("run(): Exception during progress {}", ex.getMessage());
         }
     }
 }

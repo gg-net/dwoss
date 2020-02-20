@@ -114,129 +114,134 @@ public class ClientApplication extends Application implements FirstLoginListener
 
     @Override
     public void stop() throws Exception {
-        if ( container.isRunning() ) container.close();
+        if ( container.isRunning() ) {
+            // Shutdown the global executor.
+            container.getBeanManager().createInstance().select(ExecutorManager.class).get().shutdown();
+            container.close();
+        }
+        UiCore.shutdown();
     }
 
     /**
      * init after start
      */
     public void postInit() {
-        
+
         // TODO: remove later, 
         Dl.local().add(RemoteLookup.class, new RemoteLookup() {
             @Override
             public <T> boolean contains(Class<T> clazz) {
-                if (StockAgent.class.equals(clazz)) return true;
+                if ( StockAgent.class.equals(clazz) ) return true;
                 return false;
             }
 
             @Override
             public <T> T lookup(Class<T> clazz) {
-                if (StockAgent.class.equals(clazz)) return (T)new StockAgent() {
-                    @Override
-                    public StockUnit findStockUnitByUniqueUnitIdEager(Integer uniqueUnitId) {
-                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                    }
-
-                    @Override
-                    public StockUnit findStockUnitByRefurbishIdEager(String refurbishId) {
-                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                    }
-
-                    @Override
-                    public List<StockTransaction> findStockTransactionEager(StockTransactionType type, StockTransactionStatusType statusType) {
-                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                    }
-
-                    @Override
-                    public List<StockTransaction> findStockTransactionEager(StockTransactionType type, StockTransactionStatusType statusType, int start, int amount) {
-                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                    }
-
-                    @Override
-                    public List<StockUnit> findStockUnitsByRefurbishIdEager(List<String> refurbishIds) {
-                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                    }
-
-                    @Override
-                    public <T> T persist(T t) {
-                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                    }
-
-                    @Override
-                    public <T> T merge(T t) {
-                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                    }
-
-                    @Override
-                    public <T> void delete(T t) {
-                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                    }
-
-                    @Override
-                    public StockTransaction findOrCreateRollInTransaction(int stockId, String userName, String comment) {
-                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                    }
-
-                    @Override
-                    public <T> long count(Class<T> entityClass) {
-                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                    }
-
-                    @Override
-                    public <T> List<T> findAll(Class<T> entityClass) {
-                        if (entityClass.equals(Stock.class)) {
-                            return (List<T>)Arrays.asList(new Stock(0, "Hamburg"),new Stock(1, "Bremen"));
+                if ( StockAgent.class.equals(clazz) ) return (T)new StockAgent() {
+                        @Override
+                        public StockUnit findStockUnitByUniqueUnitIdEager(Integer uniqueUnitId) {
+                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
                         }
-                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                    }
 
-                    @Override
-                    public <T> List<T> findAll(Class<T> entityClass, int start, int amount) {
-                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                    }
+                        @Override
+                        public StockUnit findStockUnitByRefurbishIdEager(String refurbishId) {
+                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                        }
 
-                    @Override
-                    public <T> List<T> findAllEager(Class<T> entityClass) {
-                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                    }
+                        @Override
+                        public List<StockTransaction> findStockTransactionEager(StockTransactionType type, StockTransactionStatusType statusType) {
+                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                        }
 
-                    @Override
-                    public <T> List<T> findAllEager(Class<T> entityClass, int start, int amount) {
-                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                    }
+                        @Override
+                        public List<StockTransaction> findStockTransactionEager(StockTransactionType type, StockTransactionStatusType statusType, int start, int amount) {
+                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                        }
 
-                    @Override
-                    public <T> T findById(Class<T> entityClass, Object id) {
-                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                    }
+                        @Override
+                        public List<StockUnit> findStockUnitsByRefurbishIdEager(List<String> refurbishIds) {
+                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                        }
 
-                    @Override
-                    public <T> T findById(Class<T> entityClass, Object id, LockModeType lockModeType) {
-                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                    }
+                        @Override
+                        public <T> T persist(T t) {
+                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                        }
 
-                    @Override
-                    public <T> T findByIdEager(Class<T> entityClass, Object id) {
-                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                    }
+                        @Override
+                        public <T> T merge(T t) {
+                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                        }
 
-                    @Override
-                    public <T> T findByIdEager(Class<T> entityClass, Object id, LockModeType lockModeType) {
-                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                    }
-                };
+                        @Override
+                        public <T> void delete(T t) {
+                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                        }
+
+                        @Override
+                        public StockTransaction findOrCreateRollInTransaction(int stockId, String userName, String comment) {
+                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                        }
+
+                        @Override
+                        public <T> long count(Class<T> entityClass) {
+                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                        }
+
+                        @Override
+                        public <T> List<T> findAll(Class<T> entityClass) {
+                            if ( entityClass.equals(Stock.class) ) {
+                                return (List<T>)Arrays.asList(new Stock(0, "Hamburg"), new Stock(1, "Bremen"));
+                            }
+                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                        }
+
+                        @Override
+                        public <T> List<T> findAll(Class<T> entityClass, int start, int amount) {
+                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                        }
+
+                        @Override
+                        public <T> List<T> findAllEager(Class<T> entityClass) {
+                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                        }
+
+                        @Override
+                        public <T> List<T> findAllEager(Class<T> entityClass, int start, int amount) {
+                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                        }
+
+                        @Override
+                        public <T> T findById(Class<T> entityClass, Object id) {
+                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                        }
+
+                        @Override
+                        public <T> T findById(Class<T> entityClass, Object id, LockModeType lockModeType) {
+                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                        }
+
+                        @Override
+                        public <T> T findByIdEager(Class<T> entityClass, Object id) {
+                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                        }
+
+                        @Override
+                        public <T> T findByIdEager(Class<T> entityClass, Object id, LockModeType lockModeType) {
+                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                        }
+                    };
                 return null;
             }
         });
-        
+
         SeContainerInitializer ci = SeContainerInitializer.newInstance();
         ci.disableDiscovery();
         ci.addPackages(true, MainCdi.class);
         ci.addPackages(true, Main.class);
         ci.addPackages(true, AboutController.class); // misc.ui
-        ci.addPackages(true,ReactivePicoUnitDetailViewCask.class); // redtapext.ui
-        ci.addPackages(true,SearchCask.class); // search.ui
+        ci.addPackages(true, ReactivePicoUnitDetailViewCask.class); // redtapext.ui
+        ci.addPackages(true, SearchCask.class); // search.ui
         ci.addPackages(LoggerProducer.class); // core.system. autolog
         ci.addPackages(GlobalConfig.class); // Global Config produces.
         container = ci.initialize();
@@ -263,7 +268,6 @@ public class ClientApplication extends Application implements FirstLoginListener
     @Override
     public void shutdown() {
         Platform.exit();
-        UiCore.shutdown();
     }
 
 }
