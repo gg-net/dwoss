@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.assembly.client.support;
 
+import java.util.Arrays;
+
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
@@ -24,6 +26,8 @@ import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
 import javafx.scene.control.*;
 
+import eu.ggnet.dwoss.customer.ui.cap.*;
+import eu.ggnet.dwoss.mail.ui.cap.SendResellerListToSubscribedCustomersAction;
 import eu.ggnet.dwoss.misc.ui.cap.*;
 import eu.ggnet.dwoss.misc.ui.cap.MovmentMenuItemsProducer.MovementLists;
 import eu.ggnet.dwoss.misc.ui.cap.SalesListingCreateMenuItemProducer.SalesListingCreateMenus;
@@ -31,6 +35,7 @@ import eu.ggnet.dwoss.misc.ui.mc.FileListPane;
 import eu.ggnet.dwoss.redtapext.ui.cap.*;
 import eu.ggnet.dwoss.search.ui.SearchCask;
 import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.experimental.ops.ActionFactory.MetaAction;
 
 /**
  * Main UI, consist of menubar, toolbar, statusline and main ui container.
@@ -86,25 +91,36 @@ public class ClientMainController {
      * Fills all the menus
      */
     private void populateMenu() {
+        
         MenuBuilder m = instance.select(MenuBuilder.class).get();
 
         // -- System
         Menu system_datenbank = new Menu("Datenbank");
         system_datenbank.getItems().addAll(m.items(
                 ProductSpecExportAction.class,
-                DatabaseValidationAction.class));
+                DatabaseValidationAction.class,
+                RecreateSearchIndex.class));
 
         Menu system = new Menu("System");
-        system.getItems().addAll(system_datenbank,LafMenuManager.createLafMenu());
+        system.getItems().addAll(system_datenbank, LafMenuManager.createLafMenu());
 
         // -- Kunden und Aufträge
         Menu cao = new Menu("Kunden und Aufträge");
-        cao.getItems().addAll(m.items(RedTapeMenuItem.class, DossiersByStatusAction.class, ShowUnitViewAction.class));
+        cao.getItems().addAll(m.items(
+                RedTapeMenuItem.class,
+                DossiersByStatusAction.class,
+                ShowUnitViewAction.class,
+                CustomerSearchAction.class,
+                AddCustomerAction.class,
+                ShowResellerMailCustomers.class
+        ));
 
         // -- Listings
         Menu listings = new Menu("Listings");
         SalesListingCreateMenus menus = instance.select(SalesListingCreateMenus.class).get();
         listings.getItems().addAll(menus.items);
+        // See the setenabled bla.. ..
+        listings.getItems().add(m.item(SendResellerListToSubscribedCustomersAction.class));
 
         // -- Geschäftsführung
         Menu gl_allgemein = new Menu("Allgemeine Reporte");
@@ -125,7 +141,11 @@ public class ClientMainController {
         ));
 
         Menu gl = new Menu("Geschäftsführung");
-        gl.getItems().addAll(gl_allgemein, gl_close, m.item(OpenSalesChannelManagerAction.class), m.item(SageExportAction.class));
+        gl.getItems().addAll(gl_allgemein, gl_close,
+                m.item(OpenSalesChannelManagerAction.class),
+                m.item(SageExportAction.class),
+                m.item(ExportAllCustomers.class)
+        );
 
         // -- Lager/Logistik
         MovementLists ml = instance.select(MovementLists.class).get();
