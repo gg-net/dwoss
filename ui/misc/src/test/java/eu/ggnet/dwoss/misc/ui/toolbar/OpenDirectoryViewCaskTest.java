@@ -1,5 +1,8 @@
 package eu.ggnet.dwoss.misc.ui.toolbar;
 
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -12,7 +15,9 @@ public class OpenDirectoryViewCaskTest {
 
     @Test
     public void testLoadImage() {
-        assertThat(OpenDirectoryViewCask.OPEN_DIRECTORY_ICON).as("Open Dir Icon found").isNotNull();
+        JFXPanel p = new JFXPanel();
+        assertThat(OpenDirectoryToolbarButton.loadLargeIcon()).as("Open Dir Icon found").isNotNull();
+        Platform.exit();
     }
 
 }

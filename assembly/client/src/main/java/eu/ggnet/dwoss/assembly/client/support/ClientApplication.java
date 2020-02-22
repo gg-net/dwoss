@@ -16,6 +16,7 @@
  */
 package eu.ggnet.dwoss.assembly.client.support;
 
+import java.awt.Toolkit;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -24,6 +25,7 @@ import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.se.SeContainer;
 import javax.enterprise.inject.se.SeContainerInitializer;
 import javax.persistence.LockModeType;
+import javax.validation.ConstraintViolationException;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -38,6 +40,8 @@ import javafx.stage.Stage;
 import eu.ggnet.dwoss.assembly.client.Main;
 import eu.ggnet.dwoss.assembly.remote.MainCdi;
 import eu.ggnet.dwoss.assembly.remote.cdi.FxmlLoaderInitializer;
+import eu.ggnet.dwoss.assembly.remote.exception.*;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.system.GlobalConfig;
 import eu.ggnet.dwoss.core.system.autolog.LoggerProducer;
 import eu.ggnet.dwoss.core.widget.AbstractGuardian;
@@ -54,6 +58,8 @@ import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;
 import eu.ggnet.dwoss.rights.ui.UiPersona;
 import eu.ggnet.dwoss.search.ui.SearchCask;
+import eu.ggnet.dwoss.stock.api.PicoStock;
+import eu.ggnet.dwoss.stock.api.StockApi;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.*;
 import eu.ggnet.dwoss.stock.ui.StockUpiImpl;
@@ -136,6 +142,11 @@ public class ClientApplication extends Application implements FirstLoginListener
      */
     public void postInit() {
 
+        Toolkit.getDefaultToolkit().getSystemEventQueue().push(new UnhandledExceptionCatcher());
+        UiCore.overwriteFinalExceptionConsumer(new DwFinalExceptionConsumer());
+        UiCore.registerExceptionConsumer(UserInfoException.class, new UserInfoExceptionConsumer());
+        UiCore.registerExceptionConsumer(ConstraintViolationException.class, new ConstraintViolationConsumer());
+
         // TODO: remove later,
         Dl.local().add(RemoteLookup.class, new RemoteLookup() {
             @Override
@@ -200,7 +211,7 @@ public class ClientApplication extends Application implements FirstLoginListener
                         @Override
                         public <T> List<T> findAll(Class<T> entityClass) {
                             if ( entityClass.equals(Stock.class) ) {
-                                return (List<T>)Arrays.asList(new Stock(0, "Hamburg"), new Stock(1, "Bremen"));
+                                return (List<T>)Arrays.asList(new Stock(1, "Hamburg"), new Stock(2, "Bremen"));
                             }
                             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
                         }
@@ -269,6 +280,12 @@ public class ClientApplication extends Application implements FirstLoginListener
                         @Override
                         public PostLedger loadPostLedger() {
                             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                        }
+                    };
+                if ( StockApi.class.equals(clazz) ) return (T)new StockApi() {
+                        @Override
+                        public List<PicoStock> findAllStocks() {
+                            return Arrays.asList(new PicoStock(1, "Hamburg"), new PicoStock(2, "Bremen"));
                         }
                     };
                 return null;

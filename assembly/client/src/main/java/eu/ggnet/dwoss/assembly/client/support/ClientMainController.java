@@ -24,6 +24,9 @@ import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
 import javafx.scene.control.*;
 
+import org.slf4j.Logger;
+
+import eu.ggnet.dwoss.assembly.client.support.login.RightsToolbarNode;
 import eu.ggnet.dwoss.core.widget.event.UserChange;
 import eu.ggnet.dwoss.customer.ui.cap.*;
 import eu.ggnet.dwoss.mail.ui.cap.SendResellerListToSubscribedCustomersMenuItem;
@@ -31,6 +34,7 @@ import eu.ggnet.dwoss.misc.ui.cap.MovmentMenuItemsProducer.MovementLists;
 import eu.ggnet.dwoss.misc.ui.cap.SalesListingCreateMenuItemProducer.SalesListingCreateMenus;
 import eu.ggnet.dwoss.misc.ui.cap.*;
 import eu.ggnet.dwoss.misc.ui.mc.FileListPane;
+import eu.ggnet.dwoss.misc.ui.toolbar.OpenDirectoryToolbarButton;
 import eu.ggnet.dwoss.price.ui.cap.*;
 import eu.ggnet.dwoss.price.ui.cap.build.PriceSubMenuBuilder.PriceSubMenu;
 import eu.ggnet.dwoss.receipt.ui.cap.*;
@@ -72,11 +76,18 @@ public class ClientMainController {
     @Inject
     private Event<UserChange> event;
 
+    @Inject
+    private Logger log;
+
     @FXML
     void initialize() {
         populateMenu();
         populateToolbar();
+        populateMain();
+    }
 
+    private void populateMain() {
+        // -- Init Ui
         UnitAvailabilityPane unitAvailability = instance.select(UnitAvailabilityPane.class).get();
         SearchCask search = instance.select(SearchCask.class).get();
         FileListPane filelist = instance.select(FileListPane.class).get();
@@ -99,6 +110,7 @@ public class ClientMainController {
         guard.addUserChangeListener(new UserChangeListener() {
             @Override
             public void loggedIn(String username) {
+                log.info("loggedIn(username={}): fireing UserChange event");
                 event.fire(new UserChange(username, guard.getRights()));
             }
 
@@ -109,25 +121,10 @@ public class ClientMainController {
         });
     }
 
-    public void add(Menu menu) {
-        menuBar.getMenus().add(menu);
-        menuBar.autosize();
-    }
-
     /**
      * Fills all the menus
      */
     private void populateMenu() {
-        /*
-
-                        new MetaAction("Lager/Logistik", new CreateSimpleAction()),
-                new MetaAction("Lager/Logistik", new RemoveUnitFromTransactionAction()),
-                new MetaAction("Lager/Logistik", new OpenStockTransactionManager()),
-                new MetaAction("Lager/Logistik", new OpenCommissioningManager()));
-
-
-         */
-
         MenuBuilder m = instance.select(MenuBuilder.class).get();
 
         // -- System
@@ -154,8 +151,8 @@ public class ClientMainController {
 
         // -- Listings
         Menu listings = new Menu("Listings");
-        SalesListingCreateMenus menus = instance.select(SalesListingCreateMenus.class).get();
-        listings.getItems().addAll(menus.items);
+        listings.getItems().add(m.item(AllSalesListingAction.class));
+        listings.getItems().addAll(instance.select(SalesListingCreateMenus.class).get().items);
         listings.getItems().add(m.item(SendResellerListToSubscribedCustomersMenuItem.class));
 
         // -- Rechte
@@ -258,12 +255,15 @@ public class ClientMainController {
                 m.item(LocalProgressSimulatorMenuItem.class)
         );
 
-        menuBar.getMenus().addAll(system, cao, listings, rights, gl, logistik, artikelstamm, help);
+        menuBar.getMenus().addAll(system, cao, listings, gl, artikelstamm, rights, logistik, help);
         menuBar.autosize();
     }
 
     private void populateToolbar() {
         toolBar.getItems().add(instance.select(RedTapeToolbarButton.class).get());
+        toolBar.getItems().add(instance.select(RightsToolbarNode.class).get().node());
+        toolBar.getItems().add(instance.select(ActiveStockSelectorToolbarPane.class).get());
+        toolBar.getItems().add(instance.select(OpenDirectoryToolbarButton.class).get());
     }
 
 }

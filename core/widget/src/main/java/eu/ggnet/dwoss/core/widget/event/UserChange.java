@@ -19,6 +19,8 @@ package eu.ggnet.dwoss.core.widget.event;
 import java.util.Objects;
 import java.util.Set;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import eu.ggnet.saft.api.Authorisation;
 
 /**
@@ -53,6 +55,11 @@ public class UserChange {
      */
     public Set<Authorisation> allowedRights() {
         return allowedRights;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 
 }
