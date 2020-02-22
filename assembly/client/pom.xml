@@ -97,6 +97,7 @@
     </build>
 
     <dependencies>
+        <!-- Globaly set the version. -->
         <dependency>
             <groupId>org.jboss.weld.se</groupId>
             <artifactId>weld-se-core</artifactId>

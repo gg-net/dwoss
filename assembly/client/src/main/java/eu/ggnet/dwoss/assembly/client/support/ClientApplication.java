@@ -33,6 +33,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.input.*;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -71,6 +72,7 @@ import eu.ggnet.saft.experimental.auth.AuthenticationException;
 import eu.ggnet.saft.experimental.auth.Guardian;
 
 import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.*;
+import static javafx.event.EventType.ROOT;
 
 /**
  *
@@ -97,7 +99,19 @@ public class ClientApplication extends Application implements FirstLoginListener
         StackPane mainPane = new StackPane(info);
         mainPane.setPrefSize(800, 600);
 
-        primaryStage.setScene(new Scene(mainPane));
+        Scene s = new Scene(mainPane);
+
+        // TODO: Later we need some form of global registration, so that the KeyEvents are added to all future stages.
+        KeyCombination keysCtrlShiftL = new KeyCodeCombination(KeyCode.L, KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN);
+        primaryStage.setScene(s);
+        s.addEventHandler(ROOT, (e) -> {
+            System.out.println(e);
+
+        });
+        s.addEventFilter(KeyEvent.KEY_RELEASED, k -> {
+            if ( keysCtrlShiftL.match(k) ) System.out.println("Key Ctrl+Shift+L");
+        });
+
         primaryStage.show();
 
         FXMLLoader loader = new FXMLLoader(FirstLoginController.class.getResource("FirstLoginView.fxml"));
@@ -141,12 +155,27 @@ public class ClientApplication extends Application implements FirstLoginListener
      * init after start
      */
     public void postInit() {
-
+        // Setting the Exception Handler
         Toolkit.getDefaultToolkit().getSystemEventQueue().push(new UnhandledExceptionCatcher());
         UiCore.overwriteFinalExceptionConsumer(new DwFinalExceptionConsumer());
         UiCore.registerExceptionConsumer(UserInfoException.class, new UserInfoExceptionConsumer());
         UiCore.registerExceptionConsumer(ConstraintViolationException.class, new ConstraintViolationConsumer());
 
+        /*
+        // Global Key handler (Strg + Shift + L) für logout.
+        // Todo: This needs to go to saft somehow. In Swing
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
+            @Override
+            public boolean dispatchKeyEvent(KeyEvent e) {
+                if ( e.isControlDown() && e.isShiftDown() && e.getKeyCode() == KeyEvent.VK_L ) {
+                    System.out.println("Tastenkombination gefunden");
+                }
+                return false;
+            }
+        });
+        Toolkit.getDefaultToolkit().addAWTEventListener((AWTEvent event) -> System.out.println("Aktivität"),
+                MOUSE_MOTION_EVENT_MASK | MOUSE_EVENT_MASK | KEY_EVENT_MASK);
+         */
         // TODO: remove later,
         Dl.local().add(RemoteLookup.class, new RemoteLookup() {
             @Override
@@ -307,6 +336,7 @@ public class ClientApplication extends Application implements FirstLoginListener
             }
         });
 
+        // Initialize the Container
         SeContainerInitializer ci = SeContainerInitializer.newInstance();
         ci.disableDiscovery();
         ci.addPackages(true, MainCdi.class);
