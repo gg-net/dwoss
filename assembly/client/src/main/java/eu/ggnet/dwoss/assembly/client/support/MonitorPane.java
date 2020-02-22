@@ -23,7 +23,8 @@ import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 
 import eu.ggnet.saft.core.UiCore;
 
@@ -47,7 +48,6 @@ public class MonitorPane extends BorderPane {
             @Override
             protected void updateItem(Task<Void> item, boolean empty) {
                 super.updateItem(item, empty);
-                System.out.println(item);
                 if ( empty ) {
                     setText(null);
                     setGraphic(null);

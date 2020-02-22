@@ -16,9 +16,6 @@
  */
 package eu.ggnet.dwoss.stock.ui.cap;
 
-import eu.ggnet.dwoss.stock.ui.cap.OpenStockTransactionManager;
-import eu.ggnet.dwoss.stock.ui.cap.OpenCommissioningManager;
-
 import java.util.Arrays;
 import java.util.List;
 

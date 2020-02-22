@@ -41,18 +41,30 @@ import eu.ggnet.dwoss.assembly.remote.cdi.FxmlLoaderInitializer;
 import eu.ggnet.dwoss.core.system.GlobalConfig;
 import eu.ggnet.dwoss.core.system.autolog.LoggerProducer;
 import eu.ggnet.dwoss.core.widget.AbstractGuardian;
+import eu.ggnet.dwoss.customer.ui.CustomerTaskService;
+import eu.ggnet.dwoss.mail.ui.cap.SendResellerListToSubscribedCustomersMenuItem;
+import eu.ggnet.dwoss.mandator.api.Mandators;
+import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.misc.ui.AboutController;
+import eu.ggnet.dwoss.price.ui.PriceBlockerViewCask;
+import eu.ggnet.dwoss.receipt.ui.UiUnitSupport;
 import eu.ggnet.dwoss.redtapext.ui.ReactivePicoUnitDetailViewCask;
+import eu.ggnet.dwoss.report.ui.RawReportView;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;
+import eu.ggnet.dwoss.rights.ui.UiPersona;
 import eu.ggnet.dwoss.search.ui.SearchCask;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.*;
+import eu.ggnet.dwoss.stock.ui.StockUpiImpl;
+import eu.ggnet.dwoss.uniqueunit.ui.ProductTask;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.core.dl.RemoteLookup;
 import eu.ggnet.saft.experimental.auth.AuthenticationException;
 import eu.ggnet.saft.experimental.auth.Guardian;
+
+import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.*;
 
 /**
  *
@@ -124,7 +136,7 @@ public class ClientApplication extends Application implements FirstLoginListener
      */
     public void postInit() {
 
-        // TODO: remove later, 
+        // TODO: remove later,
         Dl.local().add(RemoteLookup.class, new RemoteLookup() {
             @Override
             public <T> boolean contains(Class<T> clazz) {
@@ -228,6 +240,37 @@ public class ClientApplication extends Application implements FirstLoginListener
                             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
                         }
                     };
+                if ( Mandators.class.equals(clazz) ) return (T)new Mandators() {
+                        @Override
+                        public Mandator loadMandator() {
+                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                        }
+
+                        @Override
+                        public DefaultCustomerSalesdata loadSalesdata() {
+                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                        }
+
+                        @Override
+                        public ReceiptCustomers loadReceiptCustomers() {
+                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                        }
+
+                        @Override
+                        public SpecialSystemCustomers loadSystemCustomers() {
+                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                        }
+
+                        @Override
+                        public Contractors loadContractors() { // used in price sub menu
+                            return new Contractors(EnumSet.of(ACER, LENOVO), EnumSet.of(ACER, PACKARD_BELL, LENOVO));
+                        }
+
+                        @Override
+                        public PostLedger loadPostLedger() {
+                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                        }
+                    };
                 return null;
             }
         });
@@ -251,8 +294,16 @@ public class ClientApplication extends Application implements FirstLoginListener
         ci.disableDiscovery();
         ci.addPackages(true, MainCdi.class);
         ci.addPackages(true, Main.class);
-        ci.addPackages(true, AboutController.class); // misc.ui
+        ci.addPackages(true, CustomerTaskService.class); // customer.ui
+        ci.addPackages(true, SendResellerListToSubscribedCustomersMenuItem.class); // mail.ui
+        ci.addPackages(true, PriceBlockerViewCask.class); // price.ui
+        ci.addPackages(true, UiUnitSupport.class); // receipt.ui
+        ci.addPackages(true, RawReportView.class); // report.ui
+        ci.addPackages(true, UiPersona.class); // rights.ui
+        ci.addPackages(true, StockUpiImpl.class); // stock.ui
+        ci.addPackages(true, ProductTask.class); // uniqueunit.ui
         ci.addPackages(true, ReactivePicoUnitDetailViewCask.class); // redtapext.ui
+        ci.addPackages(true, AboutController.class); // misc.ui
         ci.addPackages(true, SearchCask.class); // search.ui
         ci.addPackages(LoggerProducer.class); // core.system. autolog
         ci.addPackages(GlobalConfig.class); // Global Config produces.

@@ -16,26 +16,36 @@
  */
 package eu.ggnet.dwoss.assembly.client.support;
 
-import java.util.Arrays;
-
+import javax.enterprise.event.Event;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
 import javafx.scene.control.*;
 
+import eu.ggnet.dwoss.core.widget.event.UserChange;
 import eu.ggnet.dwoss.customer.ui.cap.*;
-import eu.ggnet.dwoss.mail.ui.cap.SendResellerListToSubscribedCustomersAction;
-import eu.ggnet.dwoss.misc.ui.cap.*;
+import eu.ggnet.dwoss.mail.ui.cap.SendResellerListToSubscribedCustomersMenuItem;
 import eu.ggnet.dwoss.misc.ui.cap.MovmentMenuItemsProducer.MovementLists;
 import eu.ggnet.dwoss.misc.ui.cap.SalesListingCreateMenuItemProducer.SalesListingCreateMenus;
+import eu.ggnet.dwoss.misc.ui.cap.*;
 import eu.ggnet.dwoss.misc.ui.mc.FileListPane;
+import eu.ggnet.dwoss.price.ui.cap.*;
+import eu.ggnet.dwoss.price.ui.cap.build.PriceSubMenuBuilder.PriceSubMenu;
+import eu.ggnet.dwoss.receipt.ui.cap.*;
+import eu.ggnet.dwoss.receipt.ui.product.SpecListAction;
 import eu.ggnet.dwoss.redtapext.ui.cap.*;
+import eu.ggnet.dwoss.report.ui.cap.*;
+import eu.ggnet.dwoss.rights.ui.cap.RightsManagmentAction;
 import eu.ggnet.dwoss.search.ui.SearchCask;
+import eu.ggnet.dwoss.search.ui.cap.OpenSearchAction;
+import eu.ggnet.dwoss.stock.ui.cap.*;
+import eu.ggnet.dwoss.uniqueunit.ui.cap.ProductListAction;
+import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.saft.experimental.ops.ActionFactory.MetaAction;
+import eu.ggnet.saft.experimental.auth.Guardian;
+import eu.ggnet.saft.experimental.auth.UserChangeListener;
 
 /**
  * Main UI, consist of menubar, toolbar, statusline and main ui container.
@@ -59,6 +69,9 @@ public class ClientMainController {
     @Inject
     private MonitorServerManager msm;
 
+    @Inject
+    private Event<UserChange> event;
+
     @FXML
     void initialize() {
         populateMenu();
@@ -80,6 +93,20 @@ public class ClientMainController {
         UiCore.backgroundActivityProperty().addListener((ob, o, n) -> {
             if ( n ) monitorPane.submit(new MonitorClientTask());
         });
+
+        Guardian guard = Dl.local().lookup(Guardian.class);
+
+        guard.addUserChangeListener(new UserChangeListener() {
+            @Override
+            public void loggedIn(String username) {
+                event.fire(new UserChange(username, guard.getRights()));
+            }
+
+            @Override
+            public void loggedOut() {
+                // Ignore
+            }
+        });
     }
 
     public void add(Menu menu) {
@@ -91,7 +118,16 @@ public class ClientMainController {
      * Fills all the menus
      */
     private void populateMenu() {
-        
+        /*
+
+                        new MetaAction("Lager/Logistik", new CreateSimpleAction()),
+                new MetaAction("Lager/Logistik", new RemoveUnitFromTransactionAction()),
+                new MetaAction("Lager/Logistik", new OpenStockTransactionManager()),
+                new MetaAction("Lager/Logistik", new OpenCommissioningManager()));
+
+
+         */
+
         MenuBuilder m = instance.select(MenuBuilder.class).get();
 
         // -- System
@@ -110,6 +146,7 @@ public class ClientMainController {
                 RedTapeMenuItem.class,
                 DossiersByStatusAction.class,
                 ShowUnitViewAction.class,
+                OpenSearchAction.class,
                 CustomerSearchAction.class,
                 AddCustomerAction.class,
                 ShowResellerMailCustomers.class
@@ -119,8 +156,11 @@ public class ClientMainController {
         Menu listings = new Menu("Listings");
         SalesListingCreateMenus menus = instance.select(SalesListingCreateMenus.class).get();
         listings.getItems().addAll(menus.items);
-        // See the setenabled bla.. ..
-        listings.getItems().add(m.item(SendResellerListToSubscribedCustomersAction.class));
+        listings.getItems().add(m.item(SendResellerListToSubscribedCustomersMenuItem.class));
+
+        // -- Rechte
+        Menu rights = new Menu("Rechte");
+        rights.getItems().add(m.item(RightsManagmentAction.class));
 
         // -- Geschäftsführung
         Menu gl_allgemein = new Menu("Allgemeine Reporte");
@@ -131,17 +171,35 @@ public class ClientMainController {
                 CreditMemoReportAction.class,
                 OptimizedCreditMemoReportAction.class,
                 DebitorsReportAction.class,
-                DirectDebitReportAction.class
+                DirectDebitReportAction.class,
+                ReportRefurbishmentAction.class
         ));
 
         Menu gl_close = new Menu("Abschluss Reporte");
         gl_close.getItems().addAll(m.items(
                 ResolveRepaymentAction.class,
-                LastWeekCloseAction.class
+                LastWeekCloseAction.class,
+                OpenRawReportLinesAction.class,
+                CreateNewReportAction.class,
+                SelectExistingReportAction.class,
+                CreateReturnsReportAction.class,
+                ExportRevenueReportAction.class
         ));
 
+        Menu gl_price = new Menu("Preise");
+        gl_price.getItems().addAll(m.items(
+                PriceExportAction.class,
+                PriceImportAction.class,
+                PriceBlockerAction.class,
+                GenerateOnePriceAction.class,
+                PriceExportImportAction.class,
+                PriceByInputFileAction.class
+        ));
+
+        Menu gl_imexport = instance.select(PriceSubMenu.class).get().menu;
+
         Menu gl = new Menu("Geschäftsführung");
-        gl.getItems().addAll(gl_allgemein, gl_close,
+        gl.getItems().addAll(gl_imexport, gl_price, gl_allgemein, gl_close,
                 m.item(OpenSalesChannelManagerAction.class),
                 m.item(SageExportAction.class),
                 m.item(ExportAllCustomers.class)
@@ -151,6 +209,29 @@ public class ClientMainController {
         MovementLists ml = instance.select(MovementLists.class).get();
 
         Menu logistik = new Menu("Lager/Logistik");
+        logistik.getItems().addAll(m.items(
+                OpenShipmentAction.class,
+                EditUnitAction.class,
+                ScrapUnitAction.class,
+                DeleteUnitAction.class
+        ));
+
+        logistik.getItems().add(new SeparatorMenuItem());
+        logistik.getItems().addAll(m.items(
+                CreateSimpleAction.class,
+                RemoveUnitFromTransactionAction.class,
+                OpenStockTransactionManager.class,
+                OpenCommissioningManager.class
+        ));
+
+        logistik.getItems().add(new SeparatorMenuItem());
+
+        logistik.getItems().addAll(m.items(
+                RollInPreparedTransactionsAction.class,
+                AuditReportByRangeAction.class,
+                AuditReportOnRollInAction.class
+        ));
+
         logistik.getItems().addAll(ml.shippingOrPickup, ml.inventur);
 
         // -- Artikelstamm
@@ -158,6 +239,15 @@ public class ClientMainController {
         artikelstamm_imageIds.getItems().addAll(m.items(ExportImageIdsForCustomerMenuItem.class, ExportImageIdsAction.class, ImportImageIdsAction.class));
 
         Menu artikelstamm = new Menu("Artikelstamm");
+        artikelstamm.getItems().addAll(m.items(
+                ProductListAction.class,
+                UpdateProductAction.class,
+                CpuManagementAction.class,
+                GpuManagementAction.class,
+                SpecListAction.class,
+                AddCommentAction.class
+        ));
+
         artikelstamm.getItems().addAll(m.item(SalesProductAction.class), artikelstamm_imageIds);
 
         // -- Hilfe
@@ -168,7 +258,7 @@ public class ClientMainController {
                 m.item(LocalProgressSimulatorMenuItem.class)
         );
 
-        menuBar.getMenus().addAll(system, cao, listings, gl, logistik, artikelstamm, help);
+        menuBar.getMenus().addAll(system, cao, listings, rights, gl, logistik, artikelstamm, help);
         menuBar.autosize();
     }
 
