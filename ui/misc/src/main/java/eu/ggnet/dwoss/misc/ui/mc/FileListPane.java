@@ -42,7 +42,7 @@ public class FileListPane extends BorderPane {
     public FileListPane() {
         fileListView = new ListView<>();
         fileListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        fileListView.setCellFactory((ListView<File> view) -> new ListCell<>() {
+        fileListView.setCellFactory((ListView<File> view) -> new ListCell<File>() {
             @Override
             protected void updateItem(File item, boolean empty) {
                 super.updateItem(item, empty);

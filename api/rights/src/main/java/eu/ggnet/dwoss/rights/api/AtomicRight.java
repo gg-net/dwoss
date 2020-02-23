@@ -19,8 +19,9 @@ package eu.ggnet.dwoss.rights.api;
 import eu.ggnet.saft.api.Authorisation;
 
 /**
+ * Enum Implementation of Authorisations.
  *
- * @author Bastian Venz
+ * @author oliver.guenther
  */
 public enum AtomicRight implements Authorisation {
 
@@ -145,10 +146,9 @@ public enum AtomicRight implements Authorisation {
      */
     EXPORT_DOCUMENTS_FOR_SAGE_IN_XML("Exportiere Dokumente zu Sage(GsOffice) XML"),
     /**
-     * Unused, can be reassigned.
+     * On/Off and modificaton of the auto logout timeout.
      */
-    @Deprecated
-    UNUSED_4("Unused 4, Kann umbenannt und neu verwendet werden."),
+    MODIFY_LOGGED_IN_TIMEOUT("Ein-/Ausschalten des automatischen Abmeldens von Benutzern"),
     /**
      * Allows to create a DebitorsReport.
      */
@@ -250,8 +250,8 @@ public enum AtomicRight implements Authorisation {
 
     private AtomicRight(String description) {
         this.description = description;
-    }    
-    
+    }
+
     @Override
     public String toName() {
         return description;
@@ -260,6 +260,6 @@ public enum AtomicRight implements Authorisation {
     @Override
     public String toString() {
         return "AtomicRight{" + "description=" + description + '}';
-    }    
+    }
 
 }

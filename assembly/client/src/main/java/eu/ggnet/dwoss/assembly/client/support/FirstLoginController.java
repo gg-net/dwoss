@@ -131,8 +131,8 @@ public class FirstLoginController implements ClosedListener {
      * starts authentication only if guardian and authenticationdata is set, otherwise does nothing.
      */
     private synchronized void lazyAuthenticate() {
-        if ( futureGuardian.isEmpty() ) return;
-        if ( authenticationData.isEmpty() ) return;
+        if ( !futureGuardian.isPresent() ) return;
+        if ( !authenticationData.isPresent() ) return;
         try {
             futureGuardian.get().login(authenticationData.get().userName, authenticationData.get().passWord);
             authenticationSuccessful = true;

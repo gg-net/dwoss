@@ -26,6 +26,8 @@ import javafx.scene.control.*;
 
 import org.slf4j.Logger;
 
+import eu.ggnet.dwoss.assembly.client.support.MenuBuilder;
+import eu.ggnet.dwoss.assembly.client.support.login.LoggedInTimeout;
 import eu.ggnet.dwoss.assembly.client.support.login.RightsToolbarNode;
 import eu.ggnet.dwoss.core.widget.event.UserChange;
 import eu.ggnet.dwoss.customer.ui.cap.*;
@@ -263,6 +265,7 @@ public class ClientMainController {
         toolBar.getItems().add(instance.select(RedTapeToolbarButton.class).get());
         toolBar.getItems().add(instance.select(RightsToolbarNode.class).get().node());
         toolBar.getItems().add(instance.select(ActiveStockSelectorToolbarPane.class).get());
+        toolBar.getItems().add(instance.select(LoggedInTimeout.class).get().createPane());
         toolBar.getItems().add(instance.select(OpenDirectoryToolbarButton.class).get());
     }
 

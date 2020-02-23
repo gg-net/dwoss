@@ -59,7 +59,8 @@ public class RedTapeApiBean implements RedTapeApi {
         // If no stock unit exists, not avialable
         if ( ssu == null ) return builder.available(false).build();
 
-        builder.stockInformation(ssu.stockTransaction().map(t -> "\nAuf " + t.shortDescription()).or(() -> ssu.stock().map(s -> "\nAuf " + s.shortDescription)));
+        builder.stockInformation(ssu.stockTransaction().map(t -> "\nAuf " + t.shortDescription())
+                .orElseGet(() -> ssu.stock().map(s -> "\nAuf " + s.shortDescription).orElse(null)));
         builder.stockId(ssu.stock().map(s -> s.id));
         // Blocked by logic transaction
         if ( ssu.onLogicTransaction() ) return builder.available(false).build();

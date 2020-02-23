@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
@@ -52,7 +53,7 @@ public class ActiveStockSelectorToolbarPane extends VBox {
     public ActiveStockSelectorToolbarPane() {
         stockComboBox = new ComboBox<>();
         // Todo: reconsider copy past. (remember, don't use the same instance)
-        stockComboBox.setCellFactory((view) -> new ListCell<>() {
+        stockComboBox.setCellFactory((view) -> new ListCell<Integer>() {
             @Override
             protected void updateItem(Integer id, boolean empty) {
                 super.updateItem(id, empty);
@@ -64,7 +65,7 @@ public class ActiveStockSelectorToolbarPane extends VBox {
                 }
             }
         });
-        stockComboBox.setButtonCell(new ListCell<>() {
+        stockComboBox.setButtonCell(new ListCell<Integer>() {
             @Override
             protected void updateItem(Integer id, boolean empty) {
                 super.updateItem(id, empty);
@@ -110,6 +111,7 @@ public class ActiveStockSelectorToolbarPane extends VBox {
             Dl.local().optional(ActiveStock.class).ifPresent(as -> as.setActiveStock(ps));
         });
 
+        setAlignment(Pos.CENTER);
         getChildren().addAll(new Label("Aktives Lager:"), stockComboBox);
     }
 

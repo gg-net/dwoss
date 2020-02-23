@@ -39,6 +39,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import eu.ggnet.dwoss.assembly.client.Main;
+import eu.ggnet.dwoss.assembly.client.support.login.LoggedInTimeout;
 import eu.ggnet.dwoss.assembly.remote.MainCdi;
 import eu.ggnet.dwoss.assembly.remote.cdi.FxmlLoaderInitializer;
 import eu.ggnet.dwoss.assembly.remote.exception.*;
@@ -104,7 +105,11 @@ public class ClientApplication extends Application {
         loginStage.setScene(new Scene(loginView));
         loginStage.setOnCloseRequest(e -> loginController.closed());
         loginStage.show();
-        loginController.setLoginListener(() -> Platform.runLater(() -> loginStage.close()));
+        loginController.setLoginListener(() -> {
+            Platform.runLater(() -> loginStage.close());
+            // Restart the timer.
+            instance.select(LoggedInTimeout.class).get().startTime();
+        });
         loginController.setCanceledListener(() -> Platform.exit());
         return loginController;
     }
@@ -122,20 +127,7 @@ public class ClientApplication extends Application {
 
         // Global KeyListener for Logout
         // TODO: Later we need some form of global registration, so that the KeyEvents are added to all future stages.
-        KeyCombination keysCtrlShiftL = new KeyCodeCombination(KeyCode.L, KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN);
         primaryStage.setScene(s);
-        s.addEventHandler(ROOT, (e) -> {
-            // Later timeout conneciton.
-        });
-
-        // Global Eventlistener for activity tracking
-        s.addEventFilter(KeyEvent.KEY_RELEASED, k -> {
-            if ( keysCtrlShiftL.match(k) ) {
-                Dl.local().lookup(Guardian.class).logout();
-                FirstLoginController controller = login(primaryStage);
-                controller.setAndActivateGuardian(Dl.local().lookup(Guardian.class));
-            }
-        });
 
         primaryStage.show();
 
@@ -152,6 +144,29 @@ public class ClientApplication extends Application {
                 }, Platform::runLater)
                 .thenRunAsync(() -> { // Phase one only classic lookups
                     loginController.setAndActivateGuardian(Dl.local().lookup(Guardian.class));
+
+                    LoggedInTimeout loggedInTimeout = instance.select(LoggedInTimeout.class).get();
+
+                    loggedInTimeout.setTimeoutAction(() -> {
+                        Dl.local().lookup(Guardian.class).logout();
+                        FirstLoginController controller = login(primaryStage);
+                        controller.setAndActivateGuardian(Dl.local().lookup(Guardian.class));
+                    });
+
+                    // Global Eventlistener for activity tracking
+                    s.addEventHandler(ROOT, (e) -> loggedInTimeout.resetTime());
+
+                    // Ctrl + Shift + L global keylistener.
+                    KeyCombination keysCtrlShiftL = new KeyCodeCombination(KeyCode.L, KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN);
+                    s.addEventFilter(KeyEvent.KEY_RELEASED, k -> {
+                        if ( keysCtrlShiftL.match(k) ) {
+                            loggedInTimeout.manualTimeout();
+                        }
+                    });
+                    // TODO: Load timeout from storage
+                    loggedInTimeout.setTimeoutAndStartTime(null);
+                    loggedInTimeout.setTimeoutStore(t -> System.out.println("Todo: Store Timechange " + t));
+
                 })
                 .handle((Void t, Throwable u) -> {
                     u.printStackTrace();
@@ -202,6 +217,7 @@ public class ClientApplication extends Application {
                 return false;
             }
 
+            //<editor-fold defaultstate="collapsed" desc="remoteAgent">
             @Override
             public <T> T lookup(Class<T> clazz) {
                 if ( StockAgent.class.equals(clazz) ) return (T)new StockAgent() {
@@ -337,6 +353,7 @@ public class ClientApplication extends Application {
                     };
                 return null;
             }
+            //</editor-fold>
         });
 
         Dl.local().add(Guardian.class, new AbstractGuardian() {
