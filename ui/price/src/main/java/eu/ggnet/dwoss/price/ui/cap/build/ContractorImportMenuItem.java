@@ -18,15 +18,12 @@ package eu.ggnet.dwoss.price.ui.cap.build;
 
 import java.io.File;
 
-import javax.enterprise.event.Observes;
-
 import javafx.scene.control.Alert;
 import javafx.scene.control.MenuItem;
 
 import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.widget.TikaUtil;
-import eu.ggnet.dwoss.core.widget.event.UserChange;
 import eu.ggnet.dwoss.core.widget.swing.DetailDialog;
 import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.price.ee.imex.ContractorPricePartNoImporter;
@@ -34,7 +31,6 @@ import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.experimental.auth.Guardian;
 
-import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_MISSING_CONTRACTOR_PRICES_DATA;
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
 import static javafx.scene.control.ButtonType.OK;
 
@@ -76,10 +72,6 @@ public class ContractorImportMenuItem extends MenuItem {
             });
         });
         return this;
-    }
-
-    private void userChange(@Observes UserChange userChange) {
-        setDisable(!userChange.allowedRights().contains(IMPORT_MISSING_CONTRACTOR_PRICES_DATA));
     }
 
 }

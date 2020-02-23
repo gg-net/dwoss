@@ -141,6 +141,7 @@ public class UnitAvailabilityPane extends BorderPane {
 
         resultListView.setOnMouseClicked((e) -> {
             UnitAvailability ua = resultListView.getSelectionModel().getSelectedItem();
+            if ( ua == null ) return;
             if ( !ua.uniqueUnitId().isPresent() ) return;
             if ( e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2 ) {
                 Ui.build().id(ua.refurbishId()).fx().show(() -> Css.toHtml5WithStyle(Dl.remote().lookup(UniqueUnitApi.class).findAsHtml(ua.uniqueUnitId().get(),

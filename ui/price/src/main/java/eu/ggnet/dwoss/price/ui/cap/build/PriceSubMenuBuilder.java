@@ -16,8 +16,10 @@
  */
 package eu.ggnet.dwoss.price.ui.cap.build;
 
-import java.util.Objects;
+import java.util.*;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
@@ -25,13 +27,17 @@ import javax.inject.Inject;
 import javafx.scene.control.Menu;
 
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.widget.event.UserChange;
 import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.saft.core.Dl;
+
+import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_MISSING_CONTRACTOR_PRICES_DATA;
 
 /**
  *
  * @author oliver.guenther
  */
+@ApplicationScoped // Pojos, managed beans cannot observe events, a new instance is created than.
 public class PriceSubMenuBuilder {
 
     public static class PriceSubMenu {
@@ -47,6 +53,8 @@ public class PriceSubMenuBuilder {
     @Inject
     private Instance<Object> instance;
 
+    private final List<ContractorImportMenuItem> contractorImportItems = new ArrayList<>();
+
     @Produces
     public PriceSubMenu createMenu() {
         Menu menu = new Menu("Im-/Export");
@@ -58,9 +66,15 @@ public class PriceSubMenuBuilder {
                 menu.getItems().add(instance.select(ContractorExportMenuItem.class).get().init(contractor, true));
                 menu.getItems().add(instance.select(ContractorExportMenuItem.class).get().init(contractor, false));
             }
-            menu.getItems().add(instance.select(ContractorImportMenuItem.class).get().init(contractor));
+            ContractorImportMenuItem item = instance.select(ContractorImportMenuItem.class).get().init(contractor);
+            contractorImportItems.add(item);
+            menu.getItems().add(item);
         }
         return new PriceSubMenu(menu);
+    }
+
+    private void userChange(@Observes UserChange userChange) {
+        contractorImportItems.forEach(i -> i.setDisable(!userChange.allowedRights().contains(IMPORT_MISSING_CONTRACTOR_PRICES_DATA)));
     }
 
 }

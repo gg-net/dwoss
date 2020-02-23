@@ -22,14 +22,14 @@ import java.util.concurrent.*;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.*;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import eu.ggnet.dwoss.assembly.client.support.FirstLoginController;
-import eu.ggnet.dwoss.assembly.client.support.FirstLoginListener;
 import eu.ggnet.dwoss.core.widget.AbstractGuardian;
 import eu.ggnet.saft.experimental.auth.AuthenticationException;
 
@@ -39,7 +39,7 @@ import eu.ggnet.saft.experimental.auth.AuthenticationException;
  */
 public class FirstLoginTryout {
 
-    public static class FirstLoginApplication extends Application implements FirstLoginListener {
+    public static class FirstLoginApplication extends Application {
 
         private Stage loginStage;
 
@@ -59,12 +59,19 @@ public class FirstLoginTryout {
             FXMLLoader loader = new FXMLLoader(FirstLoginController.class.getResource("FirstLoginView.fxml"));
             Parent root = loader.load();
             FirstLoginController controller = loader.getController();
-            controller.setLoginListener(this);
+            controller.setLoginListener(() -> {
+                loginStage.close();
+                info.setText("Login successfull");
+            });
+            controller.setCanceledListener(() -> Platform.exit());
+
             loginStage = new Stage();
             loginStage.initModality(Modality.APPLICATION_MODAL);
             loginStage.initOwner(primaryStage);
             loginStage.setScene(new Scene(root));
+            loginStage.setOnCloseRequest(e -> controller.closed());
             loginStage.show();
+
             // Simulate slowness
             ses.schedule(() -> {
                 controller.setAndActivateGuardian(new AbstractGuardian() {
@@ -84,16 +91,6 @@ public class FirstLoginTryout {
             ses.shutdown();
         }
 
-        @Override
-        public void loginSuccessful() {
-            loginStage.close();
-            info.setText("Login successfull");
-        }
-
-        @Override
-        public void shutdown() {
-            Platform.exit();
-        }
     }
 
     public static void main(String[] args) {

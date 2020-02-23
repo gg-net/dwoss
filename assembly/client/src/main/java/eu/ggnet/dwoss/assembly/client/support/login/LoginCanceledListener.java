@@ -14,23 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.assembly.client.support;
+package eu.ggnet.dwoss.assembly.client.support.login;
 
 /**
  * Classic interface way for login status information
- * 
+ *
  * @author oliver.guenther
  */
-public interface FirstLoginListener {
-    
-    /**
-     * Gets called, if the first login is successful.
-     */
-    void loginSuccessful();
-    
+public interface LoginCanceledListener {
+
     /**
      * Gets called, if the first login decides to shutdown everything.
      */
-    void shutdown();
-    
+    void loginCanceled();
+
 }

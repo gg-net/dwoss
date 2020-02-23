@@ -24,6 +24,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Circle;
 
+import eu.ggnet.dwoss.assembly.client.support.login.LoginCanceledListener;
+import eu.ggnet.dwoss.assembly.client.support.login.LoginSuccessfulListener;
+import eu.ggnet.saft.core.ui.ClosedListener;
 import eu.ggnet.saft.experimental.auth.AuthenticationException;
 import eu.ggnet.saft.experimental.auth.Guardian;
 
@@ -31,7 +34,7 @@ import eu.ggnet.saft.experimental.auth.Guardian;
  *
  * @author oliver.guenther
  */
-public class FirstLoginController {
+public class FirstLoginController implements ClosedListener {
 
     private static class AuthenticationData {
 
@@ -75,11 +78,15 @@ public class FirstLoginController {
     @FXML
     private Button loginButton;
 
+    private boolean authenticationSuccessful = false;
+
     private Optional<Guardian> futureGuardian = Optional.empty();
 
     private Optional<AuthenticationData> authenticationData = Optional.empty();
 
-    private FirstLoginListener loginListener;
+    private Optional<LoginSuccessfulListener> successfulListener = Optional.empty();
+
+    private Optional<LoginCanceledListener> canceledListener = Optional.empty();
 
     @FXML
     void initialize() {
@@ -93,11 +100,15 @@ public class FirstLoginController {
             lazyAuthenticate();
         });
 
-        shutdownButton.setOnAction(e -> loginListener().shutdown());
+        shutdownButton.setOnAction(e -> canceledListener.ifPresent(LoginCanceledListener::loginCanceled));
     }
 
-    public void setLoginListener(FirstLoginListener loginListener) {
-        this.loginListener = Objects.requireNonNull(loginListener, "loginListener must not be null");
+    public void setLoginListener(LoginSuccessfulListener loginListener) {
+        this.successfulListener = Optional.ofNullable(loginListener);
+    }
+
+    public void setCanceledListener(LoginCanceledListener canceledListener) {
+        this.canceledListener = Optional.ofNullable(canceledListener);
     }
 
     /**
@@ -124,7 +135,8 @@ public class FirstLoginController {
         if ( authenticationData.isEmpty() ) return;
         try {
             futureGuardian.get().login(authenticationData.get().userName, authenticationData.get().passWord);
-            loginListener().loginSuccessful();
+            authenticationSuccessful = true;
+            successfulListener.ifPresent(LoginSuccessfulListener::loginSuccessful);
         } catch (AuthenticationException ex) {
             Platform.runLater(() -> {
                 statusLabel.setText(ex.getMessage());
@@ -147,8 +159,10 @@ public class FirstLoginController {
         progressBar.progressProperty().set(0);
     }
 
-    private FirstLoginListener loginListener() {
-        // Safty bridge. As we can not be sure, the listener is set, but must be.
-        return Objects.requireNonNull(loginListener, "FirstLoginListener is null, but must be set. Verify, that setFirstLoginListener is called before");
+    @Override
+    public void closed() {
+        if ( authenticationSuccessful ) return;
+        canceledListener.ifPresent(LoginCanceledListener::loginCanceled);
     }
+
 }

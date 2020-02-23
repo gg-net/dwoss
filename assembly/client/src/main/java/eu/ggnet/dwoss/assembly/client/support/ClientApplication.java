@@ -78,17 +78,36 @@ import static javafx.event.EventType.ROOT;
  *
  * @author oliver.guenther
  */
-public class ClientApplication extends Application implements FirstLoginListener {
+public class ClientApplication extends Application {
 
     private SeContainer container;
-
-    private Stage loginStage;
 
     private Label info;
 
     private Parent mainView;
 
     private Instance<Object> instance;
+
+    private FirstLoginController login(Stage owner) {
+        FXMLLoader loader = new FXMLLoader(FirstLoginController.class.getResource("FirstLoginView.fxml"));
+        Parent loginView;
+        try {
+            loginView = loader.load();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+        FirstLoginController loginController = loader.getController();
+        // Manual FX, will be different in manual swing.
+        Stage loginStage = new Stage();
+        loginStage.initModality(Modality.APPLICATION_MODAL);
+        loginStage.initOwner(owner);
+        loginStage.setScene(new Scene(loginView));
+        loginStage.setOnCloseRequest(e -> loginController.closed());
+        loginStage.show();
+        loginController.setLoginListener(() -> Platform.runLater(() -> loginStage.close()));
+        loginController.setCanceledListener(() -> Platform.exit());
+        return loginController;
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -101,40 +120,39 @@ public class ClientApplication extends Application implements FirstLoginListener
 
         Scene s = new Scene(mainPane);
 
+        // Global KeyListener for Logout
         // TODO: Later we need some form of global registration, so that the KeyEvents are added to all future stages.
         KeyCombination keysCtrlShiftL = new KeyCodeCombination(KeyCode.L, KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN);
         primaryStage.setScene(s);
         s.addEventHandler(ROOT, (e) -> {
-            System.out.println(e);
-
+            // Later timeout conneciton.
         });
+
+        // Global Eventlistener for activity tracking
         s.addEventFilter(KeyEvent.KEY_RELEASED, k -> {
-            if ( keysCtrlShiftL.match(k) ) System.out.println("Key Ctrl+Shift+L");
+            if ( keysCtrlShiftL.match(k) ) {
+                Dl.local().lookup(Guardian.class).logout();
+                FirstLoginController controller = login(primaryStage);
+                controller.setAndActivateGuardian(Dl.local().lookup(Guardian.class));
+            }
         });
 
         primaryStage.show();
 
-        FXMLLoader loader = new FXMLLoader(FirstLoginController.class.getResource("FirstLoginView.fxml"));
-        Parent loginView = loader.load();
-        FirstLoginController loginController = loader.getController();
-        loginController.setLoginListener(this);
-        loginStage = new Stage();
-        loginStage.initModality(Modality.APPLICATION_MODAL);
-        loginStage.initOwner(primaryStage);
-        loginStage.setScene(new Scene(loginView));
-        loginStage.show();
+        // Non CDI mode, CDI stats in postInit.
+        FirstLoginController loginController = login(primaryStage);
 
         CompletableFuture
                 .runAsync(this::postInit)
-                .thenRun(() -> { // Phase one only classic lookups
-                    loginController.setAndActivateGuardian(Dl.local().lookup(Guardian.class));
-                })
                 .thenRunAsync(() -> {
                     // Replace Mainview, later kick in Swing temporyry
                     // And remember to relocate
                     mainPane.getChildren().clear(); // remove everything
                     mainPane.getChildren().add(mainView);
                 }, Platform::runLater)
+                .thenRunAsync(() -> { // Phase one only classic lookups
+                    loginController.setAndActivateGuardian(Dl.local().lookup(Guardian.class));
+                })
                 .handle((Void t, Throwable u) -> {
                     u.printStackTrace();
                     return null;
@@ -368,16 +386,6 @@ public class ClientApplication extends Application implements FirstLoginListener
         mainView = mainLoader.getRoot();
 
         ClientMainController mainController = mainLoader.getController();
-    }
-
-    @Override
-    public void loginSuccessful() {
-        Platform.runLater(() -> loginStage.close());
-    }
-
-    @Override
-    public void shutdown() {
-        Platform.exit();
     }
 
 }
