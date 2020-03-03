@@ -19,13 +19,19 @@ package eu.ggnet.dwoss.assembly.client.support;
 import java.util.*;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Circle;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import eu.ggnet.dwoss.assembly.client.support.login.LoginCanceledListener;
 import eu.ggnet.dwoss.assembly.client.support.login.LoginSuccessfulListener;
+import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.ui.ClosedListener;
 import eu.ggnet.saft.experimental.auth.AuthenticationException;
 import eu.ggnet.saft.experimental.auth.Guardian;
@@ -78,6 +84,8 @@ public class FirstLoginController implements ClosedListener {
     @FXML
     private Button loginButton;
 
+    private Logger log = LoggerFactory.getLogger(FirstLoginController.class);
+
     private boolean authenticationSuccessful = false;
 
     private Optional<Guardian> futureGuardian = Optional.empty();
@@ -87,6 +95,10 @@ public class FirstLoginController implements ClosedListener {
     private Optional<LoginSuccessfulListener> successfulListener = Optional.empty();
 
     private Optional<LoginCanceledListener> canceledListener = Optional.empty();
+
+    private boolean quickLogin = false;
+
+    private String quickLoginValue = "";
 
     @FXML
     void initialize() {
@@ -98,6 +110,40 @@ public class FirstLoginController implements ClosedListener {
             authenticationData = Optional.of(new AuthenticationData(userField.getText(), passField.getText().toCharArray()));
             disableInputAndSimulateProgress();
             lazyAuthenticate();
+        });
+
+        // wenn + eingegeben wird dann sammle die nächsten 3 werte ein
+        userField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> ob, String o, String n) {
+                if ( quickLogin == true ) {
+                    quickLoginValue += n;
+                    userField.setText("");
+                    if ( quickLoginValue.length() == 3 ) {
+
+                        try {
+                            int id = Integer.parseInt(quickLoginValue);
+                            // TODO: Wenn CDI geht, das noch mal überdenken, denn Controller ist der einziger ohne CDI.                            
+                            if ( Dl.local().lookup(Guardian.class).quickAuthenticate(id) ) {
+                                log.debug("Quicklogin succesful");
+                                authenticationSuccessful = true;
+                                successfulListener.ifPresent(LoginSuccessfulListener::loginSuccessful);
+                            } else {
+                                log.debug("Quicklogin failed, key does not match");
+                            }
+                        } catch (NumberFormatException e) {
+                            log.debug("Quicklogin failed, not a number");
+                        } finally {
+                            // Allways deactivate Quicklogin.
+                            quickLoginValue = "";
+                            quickLogin = false;
+                        }
+                    }
+                } else if ( "+".equals(n) ) {
+                    quickLogin = true;
+                    userField.setText("");
+                }
+            }
         });
 
         shutdownButton.setOnAction(e -> canceledListener.ifPresent(LoginCanceledListener::loginCanceled));

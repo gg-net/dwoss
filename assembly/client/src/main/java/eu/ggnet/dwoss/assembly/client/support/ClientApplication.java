@@ -360,11 +360,11 @@ public class ClientApplication extends Application {
             @Override
             public void login(String user, char[] pass) throws AuthenticationException {
                 if ( "test".equalsIgnoreCase(user) && "test".equals(String.valueOf(pass)) ) {
-                    setRights(new Operator(user, 1, Collections.emptyList()));
+                    setRights(new Operator(user, 123, Collections.emptyList()));
                     return;
                 } // success
                 if ( "admin".equalsIgnoreCase(user) && "admin".equals(String.valueOf(pass)) ) {
-                    setRights(new Operator(user, 1, Arrays.asList(AtomicRight.values())));
+                    setRights(new Operator(user, 666, Arrays.asList(AtomicRight.values())));
                     return;
                 } // success
                 throw new AuthenticationException("User or Pass wrong");

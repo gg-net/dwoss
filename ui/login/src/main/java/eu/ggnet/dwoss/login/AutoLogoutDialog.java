@@ -173,7 +173,7 @@ public class AutoLogoutDialog extends javax.swing.JDialog {
             try {
                 int id = Integer.parseInt(typed.substring(1));
                 Dl.local().lookup(Guardian.class).quickAuthenticate(id);
-                // TODO: Stupid use boolean return.
+                // TODO: Stupid, use boolean return.
                 if ( Dl.local().lookup(Guardian.class).getUsername() != null
                         && !Dl.local().lookup(Guardian.class).getUsername().trim().equals("") ) {
                     this.dispose();
