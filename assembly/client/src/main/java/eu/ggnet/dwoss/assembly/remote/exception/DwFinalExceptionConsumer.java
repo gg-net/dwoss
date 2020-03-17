@@ -25,7 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.widget.swing.DetailDialog;
-import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.SwingCore;
@@ -43,6 +42,12 @@ import static eu.ggnet.saft.core.ui.exception.ExceptionUtil.*;
 public class DwFinalExceptionConsumer implements Consumer<Throwable> {
 
     private final static Logger L = LoggerFactory.getLogger(DwFinalExceptionConsumer.class);
+
+    private final String bugMail;
+
+    public DwFinalExceptionConsumer(String bugMail) {
+        this.bugMail = bugMail;
+    }
 
     @Override
     public void accept(Throwable throwable) {
@@ -65,7 +70,7 @@ public class DwFinalExceptionConsumer implements Consumer<Throwable> {
             SwingSaft.run(() -> {
                 DetailDialog.show(SwingCore.mainFrame(), "Systemfehler", deepestMessage,
                         getUserInfo() + '\n' + toMultilineStacktraceMessages(b), getUserInfo() + '\n' + toStackStrace(b),
-                        Dl.local().lookup(CachedMandators.class).loadMandator().bugMail());
+                        bugMail);
             });
         }
     }

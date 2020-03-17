@@ -29,7 +29,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import eu.ggnet.dwoss.assembly.client.support.FirstLoginController;
+import eu.ggnet.dwoss.assembly.client.support.login.LoginScreenController;
 import eu.ggnet.dwoss.core.widget.AbstractGuardian;
 import eu.ggnet.saft.experimental.auth.AuthenticationException;
 
@@ -56,9 +56,9 @@ public class FirstLoginTryout {
             primaryStage.setScene(new Scene(mainPane));
             primaryStage.show();
 
-            FXMLLoader loader = new FXMLLoader(FirstLoginController.class.getResource("FirstLoginView.fxml"));
+            FXMLLoader loader = new FXMLLoader(LoginScreenController.class.getResource("FirstLoginView.fxml"));
             Parent root = loader.load();
-            FirstLoginController controller = loader.getController();
+            LoginScreenController controller = loader.getController();
             controller.setLoginListener(() -> {
                 loginStage.close();
                 info.setText("Login successfull");

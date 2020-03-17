@@ -14,25 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.assembly.client.support;
+package eu.ggnet.dwoss.assembly.client.support.login;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.assembly.client.support.login.LoginCanceledListener;
-import eu.ggnet.dwoss.assembly.client.support.login.LoginSuccessfulListener;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.ui.ClosedListener;
+import eu.ggnet.saft.core.ui.FxController;
 import eu.ggnet.saft.experimental.auth.AuthenticationException;
 import eu.ggnet.saft.experimental.auth.Guardian;
 
@@ -40,7 +39,7 @@ import eu.ggnet.saft.experimental.auth.Guardian;
  *
  * @author oliver.guenther
  */
-public class FirstLoginController implements ClosedListener {
+public class LoginScreenController implements ClosedListener, Consumer<LoginScreenConfiguration>, FxController {
 
     private static class AuthenticationData {
 
@@ -84,17 +83,17 @@ public class FirstLoginController implements ClosedListener {
     @FXML
     private Button loginButton;
 
-    private Logger log = LoggerFactory.getLogger(FirstLoginController.class);
+    private Logger log = LoggerFactory.getLogger(LoginScreenController.class);
 
     private boolean authenticationSuccessful = false;
 
-    private Optional<Guardian> futureGuardian = Optional.empty();
+    private Optional<Guardian> guardian = Optional.empty();
 
     private Optional<AuthenticationData> authenticationData = Optional.empty();
 
-    private Optional<LoginSuccessfulListener> successfulListener = Optional.empty();
+    private Consumer<Pane> onSuccess;
 
-    private Optional<LoginCanceledListener> canceledListener = Optional.empty();
+    private Runnable onCancel;
 
     private boolean quickLogin = false;
 
@@ -113,48 +112,45 @@ public class FirstLoginController implements ClosedListener {
         });
 
         // wenn + eingegeben wird dann sammle die nächsten 3 werte ein
-        userField.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> ob, String o, String n) {
-                if ( quickLogin == true ) {
-                    quickLoginValue += n;
-                    userField.setText("");
-                    if ( quickLoginValue.length() == 3 ) {
+        userField.textProperty().addListener((ob, o, n) -> {
+            if ( quickLogin == true ) {
+                quickLoginValue += n;
+                userField.setText("");
+                if ( quickLoginValue.length() == 3 ) {
 
-                        try {
-                            int id = Integer.parseInt(quickLoginValue);
-                            // TODO: Wenn CDI geht, das noch mal überdenken, denn Controller ist der einziger ohne CDI.                            
-                            if ( Dl.local().lookup(Guardian.class).quickAuthenticate(id) ) {
-                                log.debug("Quicklogin succesful");
-                                authenticationSuccessful = true;
-                                successfulListener.ifPresent(LoginSuccessfulListener::loginSuccessful);
-                            } else {
-                                log.debug("Quicklogin failed, key does not match");
-                            }
-                        } catch (NumberFormatException e) {
-                            log.debug("Quicklogin failed, not a number");
-                        } finally {
-                            // Allways deactivate Quicklogin.
-                            quickLoginValue = "";
-                            quickLogin = false;
+                    try {
+                        int id = Integer.parseInt(quickLoginValue);
+                        // TODO: Wenn CDI geht, das noch mal überdenken, der LoginScreenController ist der einziger ohne CDI.
+                        if ( Dl.local().lookup(Guardian.class) == null ) {
+                            log.warn("Guardian == null, no Quicklogin available (yet)");
+                        } else if ( Dl.local().lookup(Guardian.class).quickAuthenticate(id) ) {
+                            log.debug("Quicklogin successful");
+                            authenticationSuccessful = true;
+                            onSuccess.accept(root);
+                        } else {
+                            log.debug("Quicklogin failed, key does not match");
                         }
+                    } catch (NumberFormatException e) {
+                        log.debug("Quicklogin failed, not a number");
+                    } finally {
+                        // Allways deactivate Quicklogin.
+                        quickLoginValue = "";
+                        quickLogin = false;
                     }
-                } else if ( "+".equals(n) ) {
-                    quickLogin = true;
-                    userField.setText("");
                 }
+            } else if ( "+".equals(n) ) {
+                quickLogin = true;
+                userField.setText("");
             }
         });
 
-        shutdownButton.setOnAction(e -> canceledListener.ifPresent(LoginCanceledListener::loginCanceled));
+        shutdownButton.setOnAction(e -> onCancel.run());
     }
 
     public void setLoginListener(LoginSuccessfulListener loginListener) {
-        this.successfulListener = Optional.ofNullable(loginListener);
     }
 
     public void setCanceledListener(LoginCanceledListener canceledListener) {
-        this.canceledListener = Optional.ofNullable(canceledListener);
     }
 
     /**
@@ -163,8 +159,8 @@ public class FirstLoginController implements ClosedListener {
      * @param guardian the guardian
      */
     public void setAndActivateGuardian(Guardian guardian) {
-        futureGuardian = Optional.ofNullable(guardian);
-        if ( futureGuardian.isPresent() ) {
+        this.guardian = Optional.ofNullable(guardian);
+        if ( this.guardian.isPresent() ) {
             Platform.runLater(() -> {
                 statusLabel.setText("Serververbindung hergestellt");
                 connectionCircle.setFill(javafx.scene.paint.Color.GREEN);
@@ -177,12 +173,12 @@ public class FirstLoginController implements ClosedListener {
      * starts authentication only if guardian and authenticationdata is set, otherwise does nothing.
      */
     private synchronized void lazyAuthenticate() {
-        if ( !futureGuardian.isPresent() ) return;
+        if ( !guardian.isPresent() ) return;
         if ( !authenticationData.isPresent() ) return;
         try {
-            futureGuardian.get().login(authenticationData.get().userName, authenticationData.get().passWord);
+            guardian.get().login(authenticationData.get().userName, authenticationData.get().passWord);
             authenticationSuccessful = true;
-            successfulListener.ifPresent(LoginSuccessfulListener::loginSuccessful);
+            onSuccess.accept(root);
         } catch (AuthenticationException ex) {
             Platform.runLater(() -> {
                 statusLabel.setText(ex.getMessage());
@@ -208,7 +204,14 @@ public class FirstLoginController implements ClosedListener {
     @Override
     public void closed() {
         if ( authenticationSuccessful ) return;
-        canceledListener.ifPresent(LoginCanceledListener::loginCanceled);
+        onCancel.run();
+    }
+
+    @Override
+    public void accept(LoginScreenConfiguration c) {
+        onSuccess = c.onSuccess();
+        onCancel = c.onCancel();
+        c.guardian().ifPresent(g -> setAndActivateGuardian(g));
     }
 
 }

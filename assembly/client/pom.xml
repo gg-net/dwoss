@@ -97,6 +97,11 @@
     </build>
 
     <dependencies>
+        <dependency>
+            <groupId>org.inferred</groupId>
+            <artifactId>freebuilder</artifactId>
+            <optional>true</optional>
+        </dependency>
         <!-- Globaly set the version. -->
         <dependency>
             <groupId>org.jboss.weld.se</groupId>

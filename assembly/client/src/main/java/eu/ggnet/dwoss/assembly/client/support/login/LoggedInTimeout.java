@@ -21,27 +21,28 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoField;
 import java.time.temporal.TemporalAccessor;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.event.Observes;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import javafx.animation.*;
-import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.stage.Modality;
 import javafx.util.Duration;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.widget.event.UserChange;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
+import eu.ggnet.saft.core.*;
+import eu.ggnet.saft.experimental.auth.Guardian;
 
 /**
  * CDI Bean to enable disable the timeout and set it.
@@ -51,13 +52,22 @@ import eu.ggnet.dwoss.rights.api.AtomicRight;
 @Singleton
 public class LoggedInTimeout {
 
+    /**
+     * Default Timeout of 3 minutes.
+     */
     private LocalTime timeOut = LocalTime.of(0, 3, 0);
 
-    private Logger log = LoggerFactory.getLogger(LoggedInTimeout.class);
+    @Inject
+    private Logger log;
+
+    @Inject
+    private LoggedInTimoutStorage storage;
 
     private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("mm:ss");
 
-    private final AtomicBoolean timerOn = new AtomicBoolean(true);
+    private final AtomicBoolean timerOn = new AtomicBoolean(false);
+
+    private final AtomicBoolean loggedOut = new AtomicBoolean(false);
 
     private Timeline timeline;
 
@@ -65,21 +75,19 @@ public class LoggedInTimeout {
 
     private final RadioButton off = new RadioButton("Aus");
 
-    private Optional<Runnable> runOnTimeout = Optional.empty();
-
-    private Optional<Consumer<LocalTime>> timeOutStore = Optional.empty();
+    private final TextField countDown = new TextField("");
 
     private final IntegerProperty timeSeconds = new SimpleIntegerProperty();
 
     private boolean once = false;
 
-    public Pane createPane() {
+    public Pane createToolbarElementOnce() {
         if ( once ) throw new RuntimeException("createPane() called a second time. Not allowed");
         once = true;
         ToggleGroup tg = new ToggleGroup();
         tg.getToggles().addAll(on, off);
 
-        TextField countDown = new TextField(timeFormatter.format(timeOut));
+        countDown.setText(timeFormatter.format(timeOut));
         countDown.setPrefWidth(60);
         Tooltip tooltip = new Tooltip("Eingabe ist Ok.");
         Tooltip.install(countDown, tooltip);
@@ -88,9 +96,9 @@ public class LoggedInTimeout {
             try {
                 TemporalAccessor result = timeFormatter.parse(countDown.getText());
                 timeOut = LocalTime.of(0, result.get(ChronoField.MINUTE_OF_HOUR), result.get(ChronoField.SECOND_OF_MINUTE));
-                timeOutStore.ifPresent(s -> s.accept(timeOut));
                 tooltip.setText("Eingabe ist Ok.");
                 on.setDisable(false);
+                storage.storeTimeOut(timeOut);
                 log.debug("countDown.setOnAction() setting new timeOut {}", timeOut);
             } catch (DateTimeParseException ex) {
                 tooltip.setText("Eingabe " + countDown.getText() + " nicht ok. "
@@ -99,10 +107,15 @@ public class LoggedInTimeout {
             }
         });
 
-        // Default is on and selected.
-        // timeout and timeron are also defaults ...
-        countDown.setDisable(true);
-        on.setSelected(true);
+        // Load status
+        if ( storage.loadActive() ) {
+            countDown.setDisable(true);
+            on.setSelected(true);
+        } else {
+            countDown.setDisable(false);
+            off.setSelected(true);
+        }
+
         on.setDisable(true);
         off.setDisable(true);
 
@@ -114,20 +127,20 @@ public class LoggedInTimeout {
             }
             countDown.setText(timeFormatter.format(timeOut));
             countDown.setDisable(false);
+            storage.storeActive(false);
         });
 
         on.setOnAction(e -> {
             log.debug("on.setOnAction() called: starting timer");
             countDown.setDisable(true);
             startTime();
+            storage.storeActive(true);
         });
 
-        //----
         timeSeconds.addListener((ov, o, n) -> {
             countDown.setText(timeFormatter.format(LocalTime.ofSecondOfDay(n.intValue())));
         });
 
-        //----
         HBox low = new HBox(on, off, new Label("Countdown: "), countDown);
         low.setAlignment(Pos.CENTER);
         low.setSpacing(5);
@@ -155,44 +168,18 @@ public class LoggedInTimeout {
         if ( timerOn.compareAndSet(true, false) ) {
             timeline.stop();
         }
-        runOnTimeout.ifPresent(r -> Platform.runLater(r));
-    }
-
-    /**
-     * An optional action to be run on the end of the timer.
-     *
-     * @param runnable timeout action
-     */
-    public void setTimeoutAction(Runnable runnable) {
-        runOnTimeout = Optional.ofNullable(runnable);
-    }
-
-    /**
-     * Change the timeOut.
-     *
-     * @param localTime
-     */
-    public void setTimeoutAndStartTime(LocalTime localTime) {
-        if ( localTime == null ) return;
-        this.timeOut = localTime;
-        startTime();
-    }
-
-    /**
-     * Set a optional consumer for storing any new timeout.
-     *
-     * @param consumer the timeout consumer
-     */
-    public void setTimeoutStore(Consumer<LocalTime> consumer) {
-        timeOutStore = Optional.ofNullable(consumer);
+        runOnTimeout();
     }
 
     /**
      * Start the timer.
      */
     public void startTime() {
+        if ( on == null || !on.isSelected() ) {
+            log.debug("startTime() ignoring, LoggedInTimeout is set to off");
+            return;
+        }
         log.debug("startTime() starting a new timeline");
-        if ( on == null || !on.isSelected() ) return;
         timerOn.set(true);
 
         // create then new timeline
@@ -204,7 +191,7 @@ public class LoggedInTimeout {
         timeline.getKeyFrames().add(
                 new KeyFrame(Duration.seconds(timeOut.toSecondOfDay() + 1),
                         new KeyValue(timeSeconds, 0)));
-        timeline.setOnFinished(e -> runOnTimeout.ifPresent(r -> Platform.runLater(r)));
+        timeline.setOnFinished(e -> runOnTimeout());
         timeline.playFromStart();
     }
 
@@ -214,7 +201,33 @@ public class LoggedInTimeout {
      * @param userChange the userchange
      */
     public void changeUser(@Observes UserChange userChange) {
-        on.setDisable(!userChange.allowedRights().contains(AtomicRight.MODIFY_LOGGED_IN_TIMEOUT));
-        off.setDisable(!userChange.allowedRights().contains(AtomicRight.MODIFY_LOGGED_IN_TIMEOUT));
+        if ( userChange.allowedRights().contains(AtomicRight.MODIFY_LOGGED_IN_TIMEOUT) ) {
+            on.setDisable(false);
+            off.setDisable(false);
+            countDown.setDisable(on.isSelected());
+        } else {
+            on.setDisable(true);
+            off.setDisable(true);
+            countDown.setDisable(true);
+        }
+    }
+
+    private void runOnTimeout() {
+        if ( !loggedOut.compareAndSet(false, true) ) return; // disables Bounces
+        Dl.local().lookup(Guardian.class).logout();
+        Ui.build().title("Login").modality(Modality.APPLICATION_MODAL).fxml().show(() -> new LoginScreenConfiguration.Builder()
+                .onSuccess(p -> {
+                    Ui.closeWindowOf(p);
+                    loggedOut.set(false);
+                    startTime();
+                })
+                .onCancel(() -> UiCore.shutdown())
+                .guardian(Dl.local().lookup(Guardian.class))
+                .build(), LoginScreenController.class);
+    }
+
+    @PostConstruct
+    private void postInit() {
+        timeOut = storage.loadTimeout();
     }
 }

@@ -16,8 +16,8 @@
  */
 package eu.ggnet.dwoss.assembly.client.support;
 
-import java.awt.EventQueue;
-import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -32,6 +32,8 @@ import javax.validation.ConstraintViolationException;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -43,7 +45,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import eu.ggnet.dwoss.assembly.client.Main;
-import eu.ggnet.dwoss.assembly.client.support.login.LoggedInTimeout;
+import eu.ggnet.dwoss.assembly.client.support.login.*;
 import eu.ggnet.dwoss.assembly.remote.MainCdi;
 import eu.ggnet.dwoss.assembly.remote.cdi.FxmlLoaderInitializer;
 import eu.ggnet.dwoss.assembly.remote.exception.*;
@@ -77,7 +79,6 @@ import eu.ggnet.saft.experimental.auth.AuthenticationException;
 import eu.ggnet.saft.experimental.auth.Guardian;
 
 import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.*;
-import static javafx.event.EventType.ROOT;
 
 /**
  *
@@ -90,76 +91,10 @@ public class ClientApplication extends Application {
     private Label info;
 
     private Pane mainView;
-    
+
     private JFrame mainFrame;
 
     private Instance<Object> instance;
-
-    private FirstLoginController createLoginView(Stage owner) {
-        FXMLLoader loader = new FXMLLoader(FirstLoginController.class.getResource("FirstLoginView.fxml"));
-        Parent loginView;
-        try {
-            loginView = loader.load();
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-        FirstLoginController loginController = loader.getController();
-        // Manual FX, will be different in manual swing.
-        Stage loginStage = new Stage();
-        loginStage.initModality(Modality.APPLICATION_MODAL);
-        loginStage.initOwner(owner);
-        loginStage.setScene(new Scene(loginView));
-        loginStage.setOnCloseRequest(e -> loginController.closed());
-        loginStage.show();
-        loginController.setLoginListener(() -> {
-            EventQueue.invokeLater(() -> mainFrame.setVisible(true));
-            Platform.runLater(() -> {
-                loginStage.close();
-                owner.close();
-            });            
-            
-            // If saft in JavaFx mode, this is enought 
-            // Platform.runLater(() -> loginStage.close());
-      
-            // Restart the timer. Instance will not be null at that time.
-            instance.select(LoggedInTimeout.class).get().startTime();
-        });
-        loginController.setCanceledListener(() -> UiCore.shutdown());
-        return loginController;
-    }
-
-        private FirstLoginController createLoginViewOnSaft(Stage owner) {
-        FXMLLoader loader = new FXMLLoader(FirstLoginController.class.getResource("FirstLoginView.fxml"));
-        Parent loginView;
-        try {
-            loginView = loader.load();
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-        FirstLoginController loginController = loader.getController();
-        // Manual FX, will be different in manual swing.
-        Stage loginStage = new Stage();
-        loginStage.initModality(Modality.APPLICATION_MODAL);
-        loginStage.initOwner(owner);
-        loginStage.setScene(new Scene(loginView));
-        loginStage.setOnCloseRequest(e -> loginController.closed());
-        loginStage.show();
-        loginController.setLoginListener(() -> {
-            EventQueue.invokeLater(() -> mainFrame.setVisible(true));
-            Platform.runLater(() -> {
-                loginStage.close();
-                owner.close();
-            });            
-            
-            // If saft in JavaFx mode, this is enought 
-            // Platform.runLater(() -> loginStage.close());
-      
-            // Restart the timer. Instance will not be null at that time.
-            instance.select(LoggedInTimeout.class).get().startTime();
-        });
-        loginController.setCanceledListener(() -> UiCore.shutdown());
-        return loginController;
-    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -179,59 +114,46 @@ public class ClientApplication extends Application {
         primaryStage.show();
 
         // Non CDI mode, CDI stats in postInit.
-        FirstLoginController loginController = createLoginView(primaryStage);
+        LoginScreenController firstLoginScreen = createAndShowFirstLoginScreen(primaryStage);
 
         mainFrame = new JFrame("Todo: Fillme with mandator and database connection");
- 
-        
+
         CompletableFuture
                 .runAsync(this::postInit)
                 .thenRunAsync(() -> {
-                    // Todo: Store and Load location
                     JFXPanel p = new JFXPanel();
                     p.setScene(new Scene(mainView));
                     mainFrame.getContentPane().add(p);
-                    mainFrame.pack();
-                    mainFrame.setVisible(true);
-                                        
-                    UiCore.continueSwing(mainFrame);                   
-                    
-                    
+                    // Todo: Store and Load location
+                    mainFrame.setSize(800, 600);
+                    mainFrame.setLocationByPlatform(true);
+
+                    UiCore.continueSwing(mainFrame);
+                    mainFrame.addWindowListener(new WindowAdapter() {
+                        @Override
+                        public void windowClosing(WindowEvent e) {
+                            UiCore.shutdown(); // Todo: Saft does that on closed, but closed is never called.
+                        }
+
+                    });
+
                     /*
                     // If we switch to saft javafx, use this. And uns Platform::runLater
-                    
                     mainPane.getChildren().clear(); // remove everything
                     mainPane.getChildren().add(mainView);
-                    */
-                }, EventQueue::invokeLater)
-                .thenRunAsync(() -> { // Phase one only classic lookups
-                    loginController.setAndActivateGuardian(Dl.local().lookup(Guardian.class));
+                     */
+                }, java.awt.EventQueue::invokeLater)
+                .thenRunAsync(() -> {
 
-                    LoggedInTimeout loggedInTimeout = instance.select(LoggedInTimeout.class).get();
-                    loggedInTimeout.setTimeoutAction(() -> {
-                        Dl.local().lookup(Guardian.class).logout();
-                        FirstLoginController controller = createLoginView(primaryStage);
-                        controller.setAndActivateGuardian(Dl.local().lookup(Guardian.class));
-                    });
+                    // Init complete, setting the guardian.
+                    firstLoginScreen.setAndActivateGuardian(Dl.local().lookup(Guardian.class));
 
-                    // TODO: Add Swing version, later merge with saft
-                    // Global Eventlistener for activity tracking
-                    s.addEventHandler(ROOT, (e) -> loggedInTimeout.resetTime());
-
-                    // Ctrl + Shift + L global keylistener.
-                    KeyCombination keysCtrlShiftL = new KeyCodeCombination(KeyCode.L, KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN);
-                    s.addEventFilter(KeyEvent.KEY_RELEASED, k -> {
-                        if ( keysCtrlShiftL.match(k) ) {
-                            loggedInTimeout.manualTimeout();
-                        }
-                    });
-                    // TODO: Load timeout from storage
-                    loggedInTimeout.setTimeoutAndStartTime(null);
-                    loggedInTimeout.setTimeoutStore(t -> System.out.println("Todo: Store Timechange " + t));
+                    initSessionTimeoutAndManualLogout();
 
                 })
                 .handle((Void t, Throwable u) -> {
-                    u.printStackTrace();
+                    // Manual call in init
+                    new DwFinalExceptionConsumer(null).accept(u);
                     return null;
                 });
     }
@@ -249,7 +171,7 @@ public class ClientApplication extends Application {
     /**
      * init after start
      */
-    public void postInit() {
+    private void postInit() {
         // Initialize the Container
         SeContainerInitializer ci = SeContainerInitializer.newInstance();
         ci.disableDiscovery();
@@ -273,26 +195,12 @@ public class ClientApplication extends Application {
         instance = container.getBeanManager().createInstance();
 
         // Setting the Exception Handler
-        Toolkit.getDefaultToolkit().getSystemEventQueue().push(new UnhandledExceptionCatcher());
-        UiCore.overwriteFinalExceptionConsumer(new DwFinalExceptionConsumer());
+        java.awt.Toolkit.getDefaultToolkit().getSystemEventQueue().push(new UnhandledExceptionCatcher());
+        // Todo: Later:bugmail =  Dl.local().lookup(CachedMandators.class).loadMandator().bugMail()
+        UiCore.overwriteFinalExceptionConsumer(new DwFinalExceptionConsumer(null));
         UiCore.registerExceptionConsumer(UserInfoException.class, new UserInfoExceptionConsumer());
         UiCore.registerExceptionConsumer(ConstraintViolationException.class, new ConstraintViolationConsumer());
 
-        /*
-        // Global Key handler (Strg + Shift + L) für logout.
-        // Todo: This needs to go to saft somehow. In Swing
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
-            @Override
-            public boolean dispatchKeyEvent(KeyEvent e) {
-                if ( e.isControlDown() && e.isShiftDown() && e.getKeyCode() == KeyEvent.VK_L ) {
-                    System.out.println("Tastenkombination gefunden");
-                }
-                return false;
-            }
-        });
-        Toolkit.getDefaultToolkit().addAWTEventListener((AWTEvent event) -> System.out.println("Aktivität"),
-                MOUSE_MOTION_EVENT_MASK | MOUSE_EVENT_MASK | KEY_EVENT_MASK);
-         */
         // TODO: remove later,
         Dl.local().add(RemoteLookup.class, new RemoteLookup() {
             @Override
@@ -467,4 +375,95 @@ public class ClientApplication extends Application {
         ClientMainController mainController = mainLoader.getController();
     }
 
+    private LoginScreenController createAndShowFirstLoginScreen(Stage owner) {
+        FXMLLoader loader = new FXMLLoader(LoginScreenController.class.getResource("LoginScreenView.fxml"));
+        Parent loginView;
+        try {
+            loginView = loader.load();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+        LoginScreenController loginController = loader.getController();
+        // Manual FX, will be different in manual swing.
+        Stage loginStage = new Stage();
+        loginStage.initModality(Modality.APPLICATION_MODAL);
+        loginStage.initOwner(owner);
+        loginStage.setScene(new Scene(loginView));
+        loginStage.setOnCloseRequest(e -> loginController.closed());
+        loginStage.show();
+
+        loginController.accept(new LoginScreenConfiguration.Builder()
+                .onSuccess(p -> {
+                    java.awt.EventQueue.invokeLater(() -> mainFrame.setVisible(true));
+                    Platform.runLater(() -> {
+                        loginStage.close();
+                        owner.close();
+                    });
+
+                    // If saft in JavaFx mode, this is enought
+                    // Platform.runLater(() -> loginStage.close());
+                    // Restart the timer. Instance will not be null at that time.
+                    instance.select(LoggedInTimeout.class).get().startTime();
+                })
+                .onCancel(() -> UiCore.shutdown()).build()
+        );
+
+        return loginController;
+    }
+
+    /**
+     * Initializes and activates the session timout and the global Keyhandler.
+     * The session timout and the if it's activate is discovered in the user storage.
+     * The manual logout ist done via Ctrl + Shift + L and registered.
+     */
+    private void initSessionTimeoutAndManualLogout() {
+        // Global login/logout handler
+        LoggedInTimeout loggedInTimeout = instance.select(LoggedInTimeout.class).get();
+
+        // Swing: Ctrl + Shift + L
+        java.awt.KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher((java.awt.event.KeyEvent e) -> {
+            if ( e.getID() == java.awt.event.KeyEvent.KEY_PRESSED && e.isControlDown() && e.isShiftDown() && e.getKeyCode() == java.awt.event.KeyEvent.VK_L ) {
+                loggedInTimeout.manualTimeout();
+            }
+            return false;
+        });
+
+        // Swing: Session Timout activity detector
+        java.awt.Toolkit.getDefaultToolkit().addAWTEventListener((java.awt.AWTEvent event) -> loggedInTimeout.resetTime(),
+                java.awt.AWTEvent.MOUSE_MOTION_EVENT_MASK | java.awt.AWTEvent.MOUSE_EVENT_MASK | java.awt.AWTEvent.KEY_EVENT_MASK
+        );
+
+        // JavaFx: Ctrl + Shift + L global keylistener.
+        KeyCombination keysCtrlShiftL = new KeyCodeCombination(KeyCode.L, KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN);
+        addEventFilter(KeyEvent.KEY_RELEASED, k -> {
+            if ( keysCtrlShiftL.match(k) ) {
+                loggedInTimeout.manualTimeout();
+            }
+        });
+        // JavaFx: Session Timeout activity detector
+        addEventHandler(EventType.ROOT, (e) -> loggedInTimeout.resetTime());
+
+        // TODO: Load timeout and aktivation from storage. Dont start the timeout here. Change Method on the other side.
+        /*
+        loggedInTimeout.setTimeoutAndStartTime(null);
+        loggedInTimeout.setTimeoutStore(t -> System.out.println("Todo: Store Timechange " + t));
+         */
+    }
+
+    private <T extends javafx.event.Event> void addEventFilter(
+            final EventType<T> eventType,
+            final EventHandler<? super T> eventFilter) {
+        // TODO: Merge into saft an propagate to every stage
+        // Stage s ...;
+        // s.addEventFilter(....
+    }
+
+    private <T extends javafx.event.Event> void addEventHandler(
+            final EventType<T> eventType,
+            final EventHandler<? super T> eventHandler) {
+        // TODO: Merge into saft an propagate to every stage
+        // Stage s ...;
+        // s.addEventHandler(....
+
+    }
 }

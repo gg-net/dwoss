@@ -16,11 +16,6 @@
  */
 package eu.ggnet.dwoss.assembly.remote;
 
-import eu.ggnet.dwoss.assembly.remote.exception.UnhandledExceptionCatcher;
-import eu.ggnet.dwoss.assembly.remote.exception.DwFinalExceptionConsumer;
-import eu.ggnet.dwoss.assembly.remote.exception.ConstraintViolationConsumer;
-import eu.ggnet.dwoss.assembly.remote.exception.UserInfoExceptionConsumer;
-
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.util.Map;
@@ -34,11 +29,12 @@ import javafx.stage.Stage;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.assembly.remote.client.SwingClient;
+import eu.ggnet.dwoss.assembly.remote.exception.*;
 import eu.ggnet.dwoss.assembly.remote.lookup.Configurations;
 import eu.ggnet.dwoss.assembly.remote.lookup.WildflyLookup;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.remote.spi.EjbConnectionConfiguration;
-import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.dl.RemoteLookup;
 
@@ -109,7 +105,7 @@ public class RunClientFx extends Application {
 
         Toolkit.getDefaultToolkit().getSystemEventQueue().push(new UnhandledExceptionCatcher());
 
-        UiCore.overwriteFinalExceptionConsumer(new DwFinalExceptionConsumer());
+        UiCore.overwriteFinalExceptionConsumer(new DwFinalExceptionConsumer(Dl.local().lookup(CachedMandators.class).loadMandator().bugMail()));
         UiCore.registerExceptionConsumer(UserInfoException.class, new UserInfoExceptionConsumer());
         UiCore.registerExceptionConsumer(ConstraintViolationException.class, new ConstraintViolationConsumer());
 

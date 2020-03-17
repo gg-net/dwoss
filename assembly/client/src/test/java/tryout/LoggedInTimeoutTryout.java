@@ -16,17 +16,14 @@
  */
 package tryout;
 
-import java.time.LocalTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Arrays;
+import java.util.Collections;
 
 import javax.enterprise.inject.se.SeContainer;
 import javax.enterprise.inject.se.SeContainerInitializer;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.*;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -34,9 +31,12 @@ import javafx.stage.Stage;
 import eu.ggnet.dwoss.assembly.client.Main;
 import eu.ggnet.dwoss.assembly.client.support.login.LoggedInTimeout;
 import eu.ggnet.dwoss.core.system.autolog.LoggerProducer;
-import eu.ggnet.dwoss.core.widget.event.UserChange;
+import eu.ggnet.dwoss.core.widget.AbstractGuardian;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.saft.api.Authorisation;
+import eu.ggnet.dwoss.rights.api.Operator;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.experimental.auth.AuthenticationException;
+import eu.ggnet.saft.experimental.auth.Guardian;
 
 import static javafx.event.EventType.ROOT;
 
@@ -50,6 +50,21 @@ public class LoggedInTimeoutTryout {
 
         @Override
         public void start(Stage stage) throws Exception {
+            Dl.local().add(Guardian.class, new AbstractGuardian() {
+                @Override
+                public void login(String user, char[] pass) throws AuthenticationException {
+                    if ( "test".equalsIgnoreCase(user) && "test".equals(String.valueOf(pass)) ) {
+                        setRights(new Operator(user, 123, Collections.emptyList()));
+                        return;
+                    } // success
+                    if ( "admin".equalsIgnoreCase(user) && "admin".equals(String.valueOf(pass)) ) {
+                        setRights(new Operator(user, 666, Arrays.asList(AtomicRight.values())));
+                        return;
+                    } // success
+                    throw new AuthenticationException("User or Pass wrong");
+                }
+            });
+
             SeContainerInitializer initializer = SeContainerInitializer.newInstance();
             initializer.disableDiscovery();
             initializer.addPackages(true, Main.class);
@@ -58,7 +73,7 @@ public class LoggedInTimeoutTryout {
 
             LoggedInTimeout loggedInTimeout = container.getBeanManager().createInstance().select(LoggedInTimeout.class).get();
 
-            Pane pane = loggedInTimeout.createPane();
+            Pane pane = loggedInTimeout.createToolbarElementOnce();
             Scene s = new Scene(pane);
 
             KeyCombination keysCtrlShiftL = new KeyCodeCombination(KeyCode.L, KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN);
@@ -74,19 +89,9 @@ public class LoggedInTimeoutTryout {
                 }
             });
 
-            loggedInTimeout.setTimeoutAction(() -> {
-                Alert a = new Alert(AlertType.INFORMATION);
-                a.setContentText("Timeout Happend, updateing rights");
-                a.showAndWait();
-                loggedInTimeout.startTime();
-                Set<Authorisation> auth = new HashSet<>();
-                auth.add(AtomicRight.MODIFY_LOGGED_IN_TIMEOUT);
-                loggedInTimeout.changeUser(new UserChange("Demo", auth));
-            });
             stage.show();
             loggedInTimeout.startTime();
-            loggedInTimeout.setTimeoutAndStartTime(LocalTime.of(0, 1, 30));
-            loggedInTimeout.setTimeoutStore(e -> System.out.println("Storing: " + e));
+
         }
 
     }

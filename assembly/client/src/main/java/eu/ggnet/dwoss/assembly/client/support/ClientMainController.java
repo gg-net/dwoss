@@ -130,6 +130,7 @@ public class ClientMainController {
 
     /**
      * Fills all the menus.
+     *
      * @return list of menus
      */
     protected List<Menu> populateMenu() {
@@ -270,7 +271,7 @@ public class ClientMainController {
         return Arrays.asList(instance.select(RedTapeToolbarButton.class).get(),
                 instance.select(RightsToolbarNode.class).get().node(),
                 instance.select(ActiveStockSelectorToolbarPane.class).get(),
-                instance.select(LoggedInTimeout.class).get().createPane(),
+                instance.select(LoggedInTimeout.class).get().createToolbarElementOnce(),
                 instance.select(OpenDirectoryToolbarButton.class).get());
     }
 
