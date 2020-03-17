@@ -80,7 +80,7 @@ public class LoggedInTimeout {
         tg.getToggles().addAll(on, off);
 
         TextField countDown = new TextField(timeFormatter.format(timeOut));
-        countDown.setPrefWidth(50);
+        countDown.setPrefWidth(60);
         Tooltip tooltip = new Tooltip("Eingabe ist Ok.");
         Tooltip.install(countDown, tooltip);
 

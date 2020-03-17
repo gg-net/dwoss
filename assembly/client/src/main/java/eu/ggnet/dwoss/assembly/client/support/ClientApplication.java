@@ -16,6 +16,7 @@
  */
 package eu.ggnet.dwoss.assembly.client.support;
 
+import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.io.IOException;
 import java.util.*;
@@ -25,15 +26,18 @@ import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.se.SeContainer;
 import javax.enterprise.inject.se.SeContainerInitializer;
 import javax.persistence.LockModeType;
+import javax.swing.JFrame;
 import javax.validation.ConstraintViolationException;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.*;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -85,11 +89,13 @@ public class ClientApplication extends Application {
 
     private Label info;
 
-    private Parent mainView;
+    private Pane mainView;
+    
+    private JFrame mainFrame;
 
     private Instance<Object> instance;
 
-    private FirstLoginController login(Stage owner) {
+    private FirstLoginController createLoginView(Stage owner) {
         FXMLLoader loader = new FXMLLoader(FirstLoginController.class.getResource("FirstLoginView.fxml"));
         Parent loginView;
         try {
@@ -106,11 +112,52 @@ public class ClientApplication extends Application {
         loginStage.setOnCloseRequest(e -> loginController.closed());
         loginStage.show();
         loginController.setLoginListener(() -> {
-            Platform.runLater(() -> loginStage.close());
-            // Restart the timer.
+            EventQueue.invokeLater(() -> mainFrame.setVisible(true));
+            Platform.runLater(() -> {
+                loginStage.close();
+                owner.close();
+            });            
+            
+            // If saft in JavaFx mode, this is enought 
+            // Platform.runLater(() -> loginStage.close());
+      
+            // Restart the timer. Instance will not be null at that time.
             instance.select(LoggedInTimeout.class).get().startTime();
         });
-        loginController.setCanceledListener(() -> Platform.exit());
+        loginController.setCanceledListener(() -> UiCore.shutdown());
+        return loginController;
+    }
+
+        private FirstLoginController createLoginViewOnSaft(Stage owner) {
+        FXMLLoader loader = new FXMLLoader(FirstLoginController.class.getResource("FirstLoginView.fxml"));
+        Parent loginView;
+        try {
+            loginView = loader.load();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+        FirstLoginController loginController = loader.getController();
+        // Manual FX, will be different in manual swing.
+        Stage loginStage = new Stage();
+        loginStage.initModality(Modality.APPLICATION_MODAL);
+        loginStage.initOwner(owner);
+        loginStage.setScene(new Scene(loginView));
+        loginStage.setOnCloseRequest(e -> loginController.closed());
+        loginStage.show();
+        loginController.setLoginListener(() -> {
+            EventQueue.invokeLater(() -> mainFrame.setVisible(true));
+            Platform.runLater(() -> {
+                loginStage.close();
+                owner.close();
+            });            
+            
+            // If saft in JavaFx mode, this is enought 
+            // Platform.runLater(() -> loginStage.close());
+      
+            // Restart the timer. Instance will not be null at that time.
+            instance.select(LoggedInTimeout.class).get().startTime();
+        });
+        loginController.setCanceledListener(() -> UiCore.shutdown());
         return loginController;
     }
 
@@ -132,27 +179,42 @@ public class ClientApplication extends Application {
         primaryStage.show();
 
         // Non CDI mode, CDI stats in postInit.
-        FirstLoginController loginController = login(primaryStage);
+        FirstLoginController loginController = createLoginView(primaryStage);
 
+        mainFrame = new JFrame("Todo: Fillme with mandator and database connection");
+ 
+        
         CompletableFuture
                 .runAsync(this::postInit)
                 .thenRunAsync(() -> {
-                    // Replace Mainview, later kick in Swing temporyry
-                    // And remember to relocate
+                    // Todo: Store and Load location
+                    JFXPanel p = new JFXPanel();
+                    p.setScene(new Scene(mainView));
+                    mainFrame.getContentPane().add(p);
+                    mainFrame.pack();
+                    mainFrame.setVisible(true);
+                                        
+                    UiCore.continueSwing(mainFrame);                   
+                    
+                    
+                    /*
+                    // If we switch to saft javafx, use this. And uns Platform::runLater
+                    
                     mainPane.getChildren().clear(); // remove everything
                     mainPane.getChildren().add(mainView);
-                }, Platform::runLater)
+                    */
+                }, EventQueue::invokeLater)
                 .thenRunAsync(() -> { // Phase one only classic lookups
                     loginController.setAndActivateGuardian(Dl.local().lookup(Guardian.class));
 
                     LoggedInTimeout loggedInTimeout = instance.select(LoggedInTimeout.class).get();
-
                     loggedInTimeout.setTimeoutAction(() -> {
                         Dl.local().lookup(Guardian.class).logout();
-                        FirstLoginController controller = login(primaryStage);
+                        FirstLoginController controller = createLoginView(primaryStage);
                         controller.setAndActivateGuardian(Dl.local().lookup(Guardian.class));
                     });
 
+                    // TODO: Add Swing version, later merge with saft
                     // Global Eventlistener for activity tracking
                     s.addEventHandler(ROOT, (e) -> loggedInTimeout.resetTime());
 
@@ -188,6 +250,28 @@ public class ClientApplication extends Application {
      * init after start
      */
     public void postInit() {
+        // Initialize the Container
+        SeContainerInitializer ci = SeContainerInitializer.newInstance();
+        ci.disableDiscovery();
+        ci.addPackages(true, MainCdi.class);
+        ci.addPackages(true, Main.class);
+        ci.addPackages(true, CustomerTaskService.class); // customer.ui
+        ci.addPackages(true, SendResellerListToSubscribedCustomersMenuItem.class); // mail.ui
+        ci.addPackages(true, PriceBlockerViewCask.class); // price.ui
+        ci.addPackages(true, UiUnitSupport.class); // receipt.ui
+        ci.addPackages(true, RawReportView.class); // report.ui
+        ci.addPackages(true, UiPersona.class); // rights.ui
+        ci.addPackages(true, StockUpiImpl.class); // stock.ui
+        ci.addPackages(true, ProductTask.class); // uniqueunit.ui
+        ci.addPackages(true, ReactivePicoUnitDetailViewCask.class); // redtapext.ui
+        ci.addPackages(true, AboutController.class); // misc.ui
+        ci.addPackages(true, SearchCask.class); // search.ui
+        ci.addPackages(LoggerProducer.class); // core.system. autolog
+        ci.addPackages(GlobalConfig.class); // Global Config produces.
+        container = ci.initialize();
+        // TODO: Remote connection and everything else.
+        instance = container.getBeanManager().createInstance();
+
         // Setting the Exception Handler
         Toolkit.getDefaultToolkit().getSystemEventQueue().push(new UnhandledExceptionCatcher());
         UiCore.overwriteFinalExceptionConsumer(new DwFinalExceptionConsumer());
@@ -370,28 +454,6 @@ public class ClientApplication extends Application {
                 throw new AuthenticationException("User or Pass wrong");
             }
         });
-
-        // Initialize the Container
-        SeContainerInitializer ci = SeContainerInitializer.newInstance();
-        ci.disableDiscovery();
-        ci.addPackages(true, MainCdi.class);
-        ci.addPackages(true, Main.class);
-        ci.addPackages(true, CustomerTaskService.class); // customer.ui
-        ci.addPackages(true, SendResellerListToSubscribedCustomersMenuItem.class); // mail.ui
-        ci.addPackages(true, PriceBlockerViewCask.class); // price.ui
-        ci.addPackages(true, UiUnitSupport.class); // receipt.ui
-        ci.addPackages(true, RawReportView.class); // report.ui
-        ci.addPackages(true, UiPersona.class); // rights.ui
-        ci.addPackages(true, StockUpiImpl.class); // stock.ui
-        ci.addPackages(true, ProductTask.class); // uniqueunit.ui
-        ci.addPackages(true, ReactivePicoUnitDetailViewCask.class); // redtapext.ui
-        ci.addPackages(true, AboutController.class); // misc.ui
-        ci.addPackages(true, SearchCask.class); // search.ui
-        ci.addPackages(LoggerProducer.class); // core.system. autolog
-        ci.addPackages(GlobalConfig.class); // Global Config produces.
-        container = ci.initialize();
-        // TODO: Remote connection and everything else.
-        instance = container.getBeanManager().createInstance();
 
         // TODO: Here we will have Saft already.
         FXMLLoader mainLoader = instance.select(FxmlLoaderInitializer.class).get().createLoader(ClientMainController.class.getResource("ClientMainView.fxml"));

@@ -16,12 +16,16 @@
  */
 package eu.ggnet.dwoss.assembly.client.support;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.enterprise.event.Event;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 
 import org.slf4j.Logger;
@@ -83,9 +87,10 @@ public class ClientMainController {
 
     @FXML
     void initialize() {
-        populateMenu();
-        populateToolbar();
+        menuBar.getMenus().addAll(populateMenu());
+        toolBar.getItems().addAll(populateToolbar());
         populateMain();
+        menuBar.autosize();
     }
 
     private void populateMain() {
@@ -124,9 +129,10 @@ public class ClientMainController {
     }
 
     /**
-     * Fills all the menus
+     * Fills all the menus.
+     * @return list of menus
      */
-    private void populateMenu() {
+    protected List<Menu> populateMenu() {
         MenuBuilder m = instance.select(MenuBuilder.class).get();
 
         // -- System
@@ -257,16 +263,15 @@ public class ClientMainController {
                 m.item(LocalProgressSimulatorMenuItem.class)
         );
 
-        menuBar.getMenus().addAll(system, cao, listings, gl, artikelstamm, rights, logistik, help);
-        menuBar.autosize();
+        return Arrays.asList(system, cao, listings, gl, artikelstamm, rights, logistik, help);
     }
 
-    private void populateToolbar() {
-        toolBar.getItems().add(instance.select(RedTapeToolbarButton.class).get());
-        toolBar.getItems().add(instance.select(RightsToolbarNode.class).get().node());
-        toolBar.getItems().add(instance.select(ActiveStockSelectorToolbarPane.class).get());
-        toolBar.getItems().add(instance.select(LoggedInTimeout.class).get().createPane());
-        toolBar.getItems().add(instance.select(OpenDirectoryToolbarButton.class).get());
+    protected List<Node> populateToolbar() {
+        return Arrays.asList(instance.select(RedTapeToolbarButton.class).get(),
+                instance.select(RightsToolbarNode.class).get().node(),
+                instance.select(ActiveStockSelectorToolbarPane.class).get(),
+                instance.select(LoggedInTimeout.class).get().createPane(),
+                instance.select(OpenDirectoryToolbarButton.class).get());
     }
 
 }
