@@ -16,6 +16,7 @@
  */
 package eu.ggnet.dwoss.assembly.client.support;
 
+import java.awt.Window;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -43,6 +44,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.assembly.client.Main;
 import eu.ggnet.dwoss.assembly.client.support.login.*;
@@ -75,6 +79,8 @@ import eu.ggnet.dwoss.uniqueunit.ui.ProductTask;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.core.dl.RemoteLookup;
+import eu.ggnet.saft.core.ui.SwingCore;
+import eu.ggnet.saft.core.ui.UserPreferences;
 import eu.ggnet.saft.experimental.auth.AuthenticationException;
 import eu.ggnet.saft.experimental.auth.Guardian;
 
@@ -95,6 +101,8 @@ public class ClientApplication extends Application {
     private JFrame mainFrame;
 
     private Instance<Object> instance;
+
+    private final static Logger L = LoggerFactory.getLogger(ClientApplication.class);
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -132,10 +140,12 @@ public class ClientApplication extends Application {
                     mainFrame.addWindowListener(new WindowAdapter() {
                         @Override
                         public void windowClosing(WindowEvent e) {
+                            Dl.local().lookup(UserPreferences.class).storeLocation(ClientApplication.class, mainFrame);
                             UiCore.shutdown(); // Todo: Saft does that on closed, but closed is never called.
                         }
 
                     });
+                    Dl.local().lookup(UserPreferences.class).loadLocation(ClientApplication.class, mainFrame);
 
                     /*
                     // If we switch to saft javafx, use this. And uns Platform::runLater
@@ -149,6 +159,7 @@ public class ClientApplication extends Application {
                     firstLoginScreen.setAndActivateGuardian(Dl.local().lookup(Guardian.class));
 
                     initSessionTimeoutAndManualLogout();
+                    initRelocationKeys();
 
                 })
                 .handle((Void t, Throwable u) -> {
@@ -409,6 +420,35 @@ public class ClientApplication extends Application {
         );
 
         return loginController;
+    }
+
+    private void initRelocationKeys() {
+
+        // TODO: JavaFx mode fehlt. Und festelltung ob wir in JavaFX sind.
+        java.awt.KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher((java.awt.event.KeyEvent e) -> {
+            if ( e.getID() == java.awt.event.KeyEvent.KEY_PRESSED && e.isControlDown() && e.isShiftDown() && e.getKeyCode() == java.awt.event.KeyEvent.VK_R ) {
+                L.info("KeyEvent[Ctrl+Shift+L] detected");
+                int i = 20;
+
+                Window m = UiCore.getMainFrame();
+                L.debug("KeyEvent[Ctrl+Shift+L] relocating MainFrame {}", m);
+                m.setSize(800, 600);
+                m.setLocation(i, i);
+                i = i + 20;
+
+                for (Iterator<java.awt.Window> iterator = SwingCore.ACTIVE_WINDOWS.values().stream().map(w -> w.get()).filter(w -> w != null).iterator();
+                        iterator.hasNext();) {
+                    Window w = iterator.next();
+                    L.debug("KeyEvent[Ctrl+Shift+L] relocating {}", w);
+                    w.setSize(800, 600);
+                    i = i + 20;
+                }
+                // Todo: implement a global clear.
+                // Dl.local().lookup(UserPreferences.class).isReset();
+            }
+            return false;
+        });
+
     }
 
     /**

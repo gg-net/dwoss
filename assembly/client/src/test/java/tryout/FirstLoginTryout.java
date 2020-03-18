@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.concurrent.*;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -59,11 +58,11 @@ public class FirstLoginTryout {
             FXMLLoader loader = new FXMLLoader(LoginScreenController.class.getResource("FirstLoginView.fxml"));
             Parent root = loader.load();
             LoginScreenController controller = loader.getController();
-            controller.setLoginListener(() -> {
-                loginStage.close();
-                info.setText("Login successfull");
-            });
-            controller.setCanceledListener(() -> Platform.exit());
+//            controller.setLoginListener(() -> {
+//                loginStage.close();
+//                info.setText("Login successfull");
+//            });
+//            controller.setCanceledListener(() -> Platform.exit());
 
             loginStage = new Stage();
             loginStage.initModality(Modality.APPLICATION_MODAL);

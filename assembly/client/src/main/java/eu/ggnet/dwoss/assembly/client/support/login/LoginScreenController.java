@@ -147,12 +147,6 @@ public class LoginScreenController implements ClosedListener, Consumer<LoginScre
         shutdownButton.setOnAction(e -> onCancel.run());
     }
 
-    public void setLoginListener(LoginSuccessfulListener loginListener) {
-    }
-
-    public void setCanceledListener(LoginCanceledListener canceledListener) {
-    }
-
     /**
      * Setting the Guardian and if authetication data is available, starts the authentication.
      *
