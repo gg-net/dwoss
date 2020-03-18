@@ -26,7 +26,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
 
 import eu.ggnet.dwoss.misc.ee.movement.MovementListingProducer;
-import eu.ggnet.dwoss.stock.ee.entity.Stock;
+import eu.ggnet.dwoss.stock.api.PicoStock;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 
@@ -36,12 +36,12 @@ import eu.ggnet.saft.core.Ui;
  */
 public class MovementPdfAction extends AbstractAction {
 
-    private final Stock stock;
+    private final PicoStock stock;
 
     private final MovementListingProducer.ListType listType;
 
-    public MovementPdfAction(MovementListingProducer.ListType listType, Stock stock) {
-        super(listType.description + " - " + stock.getName() + " - PDF");
+    public MovementPdfAction(MovementListingProducer.ListType listType, PicoStock stock) {
+        super(listType.description + " - " + stock.shortDescription + " - PDF");
         this.stock = stock;
         this.listType = listType;
     }

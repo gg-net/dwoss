@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
-import eu.ggnet.dwoss.stock.ee.entity.Stock;
+import eu.ggnet.dwoss.stock.api.PicoStock;
 
 /**
  *
@@ -45,24 +45,24 @@ public interface MovementListingProducer {
             this.description = description;
             this.directive = directive;
         }
-                
+
     }
 
     /**
      * Generates either the shipping or pickup list of the supplied stock
-     * 
+     *
      * @param listType the list type
-     * @param stockId the stock id
+     * @param stockId  the stock id
      * @return a JasperPrint
      */
-    JasperPrint generateList(ListType listType, Stock stockId);
-    
+    JasperPrint generateList(ListType listType, PicoStock stockId);
+
     /**
      * Generates either the shipping or pickup list of the supplied stock
-     * 
+     *
      * @param listType the list type
-     * @param stockId the stock id
+     * @param stockId  the stock id
      * @return a filejacket with an xls
      */
-    FileJacket generateXls(ListType listType, Stock stockId);
+    FileJacket generateXls(ListType listType, PicoStock stockId);
 }

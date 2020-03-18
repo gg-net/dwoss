@@ -21,8 +21,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Stream;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -36,12 +34,13 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.system.autolog.AutoLogger;
-import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
 import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
 import eu.ggnet.dwoss.core.system.progress.SubMonitor;
+import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.eao.DocumentEao;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
+import eu.ggnet.dwoss.stock.api.PicoStock;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.eao.LogicTransactionEao;
 import eu.ggnet.dwoss.stock.ee.entity.*;
@@ -85,7 +84,8 @@ public class MovementListingProducerOperation implements MovementListingProducer
     private MonitorFactory monitorFactory;
 
     @Override
-    public JasperPrint generateList(ListType listType, Stock stock) {
+    public JasperPrint generateList(ListType listType, PicoStock ps) {
+        Stock stock = stockEm.find(Stock.class, ps.id);
         List<MovementLine> lines = generateLines(listType, stock);
         SubMonitor m = monitorFactory.newSubMonitor("Versand und Abholung - PDF", 10);
         m.start();
@@ -109,7 +109,8 @@ public class MovementListingProducerOperation implements MovementListingProducer
     }
 
     @Override
-    public FileJacket generateXls(ListType listType, Stock stock) {
+    public FileJacket generateXls(ListType listType, PicoStock ps) {
+        Stock stock = stockEm.find(Stock.class, ps.id);
         List<MovementLine> lines = generateLines(listType, stock);
         SubMonitor m = monitorFactory.newSubMonitor("Versand und Abholung - XLS", 10);
         m.start();
@@ -121,7 +122,7 @@ public class MovementListingProducerOperation implements MovementListingProducer
         for (MovementLine ml : lines) {
             for (MovementSubline sl : ml.getMovementSublines()) {
                 rows.add(new Object[]{
-                   sl.getRefurbishId(),
+                    sl.getRefurbishId(),
                     sl.getDescription(),
                     ml.getDeliveryAddress().replaceAll("\n", ","),
                     ml.getInvoiceAddress().replaceAll("\n", ",")

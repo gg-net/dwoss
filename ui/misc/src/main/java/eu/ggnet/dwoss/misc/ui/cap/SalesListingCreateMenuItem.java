@@ -27,6 +27,8 @@ import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 
 /**
+ * Saleslistingmenuitem, used in CDI discovery and later configuration.
+ * Workaround, if an unknown amount of differnt Instances is needed.
  *
  * @author oliver.guenther
  */
@@ -44,5 +46,5 @@ public class SalesListingCreateMenuItem extends MenuItem {
             });
         });
     }
-    
+
 }

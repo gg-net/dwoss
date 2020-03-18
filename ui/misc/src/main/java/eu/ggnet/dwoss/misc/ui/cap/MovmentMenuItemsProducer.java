@@ -36,8 +36,8 @@ import eu.ggnet.dwoss.core.widget.TikaUtil;
 import eu.ggnet.dwoss.misc.ee.StockTaking;
 import eu.ggnet.dwoss.misc.ee.movement.MovementListingProducer;
 import eu.ggnet.dwoss.misc.ee.movement.MovementListingProducer.ListType;
-import eu.ggnet.dwoss.stock.ee.StockAgent;
-import eu.ggnet.dwoss.stock.ee.entity.Stock;
+import eu.ggnet.dwoss.stock.api.PicoStock;
+import eu.ggnet.dwoss.stock.api.StockApi;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
@@ -47,17 +47,17 @@ import static javafx.scene.control.ButtonType.OK;
 
 /**
  * Produces Menus Invetur and Versund & Abholung.
- * 
+ *
  * @author oliver.guenther
  */
 public class MovmentMenuItemsProducer {
 
     public static class MovementXlsMenuItem extends MenuItem {
 
-        public void setStockAndType(MovementListingProducer.ListType listType, Stock stock) {
+        public void setStockAndType(MovementListingProducer.ListType listType, PicoStock stock) {
             Objects.requireNonNull(stock, "stock must not be null");
             Objects.requireNonNull(listType, "listType must not be null");
-            setText(listType.description + " - " + stock.getName() + " - XLS");
+            setText(listType.description + " - " + stock.shortDescription + " - XLS");
             setOnAction((e) -> {
                 Ui.exec(() -> {
                     Ui.osOpen(Ui.progress().call(() -> Dl.remote().lookup(MovementListingProducer.class).generateXls(listType, stock).toTemporaryFile()));
@@ -68,10 +68,10 @@ public class MovmentMenuItemsProducer {
 
     public static class MovementPdfMenuItem extends MenuItem {
 
-        public void setStockAndType(MovementListingProducer.ListType listType, Stock stock) {
+        public void setStockAndType(MovementListingProducer.ListType listType, PicoStock stock) {
             Objects.requireNonNull(stock, "stock must not be null");
             Objects.requireNonNull(listType, "listType must not be null");
-            setText(listType.description + " - " + stock.getName() + " - PDF");
+            setText(listType.description + " - " + stock.shortDescription + " - PDF");
             setOnAction((e) -> {
                 Ui.exec(() -> {
                     // TODO: Switch to JavaFX Implementation of RedTape.
@@ -85,9 +85,9 @@ public class MovmentMenuItemsProducer {
 
     public static class StockTakingMenuItem extends CustomMenuItem {
 
-        public StockTakingMenuItem nullableStock(Stock stock) {
+        public StockTakingMenuItem nullableStock(PicoStock stock) {
 
-            Label l = new Label("Inventur" + (stock == null ? "" : " für " + stock.getName()) + " vervollständigen");
+            Label l = new Label("Inventur" + (stock == null ? "" : " für " + stock.shortDescription) + " vervollständigen");
             Tooltip t = new Tooltip("Vervollständigt eine Inventur mit den Informationen aus der Datenbank\n"
                     + "Benötigt eine XLS Datei die in der ersten Tabelle in der ersten Spalte die Sonderposten Nummern hat\n"
                     + "Die oberste Zeile wird als Überschrift ignoriert.");
@@ -98,13 +98,13 @@ public class MovmentMenuItemsProducer {
                     Optional<File> inFile = Ui.fileChooser().open().opt();
                     if ( !inFile.isPresent() ) return;
                     Ui.build().dialog().eval(
-                            () -> new Alert(CONFIRMATION, (stock == null ? "" : " für " + stock.getName()) + " aus der Datei:" + inFile.get().getPath() + " vervollständigen ?"))
+                            () -> new Alert(CONFIRMATION, (stock == null ? "" : " für " + stock.shortDescription) + " aus der Datei:" + inFile.get().getPath() + " vervollständigen ?"))
                             .opt()
                             .filter(b -> b == OK)
                             .map(b -> TikaUtil.isExcel(inFile.get()))
                             .filter(Ui.failure()::handle)
                             .map(Reply::getPayload)
-                            .map(f -> Ui.progress().call(() -> Dl.remote().lookup(StockTaking.class).fullfillDetails(new FileJacket("in", ".xls", f), (stock == null ? null : stock.getId()))))
+                            .map(f -> Ui.progress().call(() -> Dl.remote().lookup(StockTaking.class).fullfillDetails(new FileJacket("in", ".xls", f), (stock == null ? null : stock.id))))
                             .ifPresent(f -> Ui.osOpen(f.toTemporaryFile()));
 
                 });
@@ -129,35 +129,34 @@ public class MovmentMenuItemsProducer {
     @Inject
     private Instance<Object> instance;
 
-    
     @Inject
     private Logger log;
-    
+
     @Produces
     public MovementLists createLists() {
-        List<Stock> allStocks = Dl.remote().lookup(StockAgent.class).findAll(Stock.class);
+        List<PicoStock> allStocks = Dl.remote().lookup(StockApi.class).findAllStocks();
         Menu shippingOrPickup = new Menu("Versand & Abholung");
         Menu inventur = new Menu("Inventur");
 
-        for (Stock stock : allStocks) {
+        for (PicoStock ps : allStocks) {
             for (ListType listType : MovementListingProducer.ListType.values()) {
                 MovementPdfMenuItem item = instance.select(MovementPdfMenuItem.class).get();
-                item.setStockAndType(listType, stock);
+                item.setStockAndType(listType, ps);
                 shippingOrPickup.getItems().add(item);
             }
             for (ListType listType : MovementListingProducer.ListType.values()) {
                 MovementXlsMenuItem item = instance.select(MovementXlsMenuItem.class).get();
-                item.setStockAndType(listType, stock);
+                item.setStockAndType(listType, ps);
                 shippingOrPickup.getItems().add(item);
             }
-            StockTakingMenuItem item = instance.select(StockTakingMenuItem.class).get().nullableStock(stock);
+            StockTakingMenuItem item = instance.select(StockTakingMenuItem.class).get().nullableStock(ps);
             inventur.getItems().add(item);
         }
-        
+
         StockTakingMenuItem item = instance.select(StockTakingMenuItem.class).get().nullableStock(null);
         inventur.getItems().add(item);
-        
-        log.debug("createLists() created: shippingOrPickup={}, inventur={}",shippingOrPickup.getItems(), inventur.getItems());
+
+        log.debug("createLists() created: shippingOrPickup={}, inventur={}", shippingOrPickup.getItems(), inventur.getItems());
         return new MovementLists(shippingOrPickup, inventur);
     }
 }

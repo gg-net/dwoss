@@ -26,7 +26,6 @@ import java.util.concurrent.CompletableFuture;
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.se.SeContainer;
 import javax.enterprise.inject.se.SeContainerInitializer;
-import javax.persistence.LockModeType;
 import javax.swing.JFrame;
 import javax.validation.ConstraintViolationException;
 
@@ -73,14 +72,12 @@ import eu.ggnet.dwoss.search.ui.SearchCask;
 import eu.ggnet.dwoss.stock.api.PicoStock;
 import eu.ggnet.dwoss.stock.api.StockApi;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
-import eu.ggnet.dwoss.stock.ee.entity.*;
 import eu.ggnet.dwoss.stock.ui.StockUpiImpl;
 import eu.ggnet.dwoss.uniqueunit.ui.ProductTask;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.core.dl.RemoteLookup;
-import eu.ggnet.saft.core.ui.SwingCore;
-import eu.ggnet.saft.core.ui.UserPreferences;
+import eu.ggnet.saft.core.ui.*;
 import eu.ggnet.saft.experimental.auth.AuthenticationException;
 import eu.ggnet.saft.experimental.auth.Guardian;
 
@@ -220,143 +217,10 @@ public class ClientApplication extends Application {
                 return false;
             }
 
-            //<editor-fold defaultstate="collapsed" desc="remoteAgent">
             @Override
             public <T> T lookup(Class<T> clazz) {
-                if ( StockAgent.class.equals(clazz) ) return (T)new StockAgent() {
-                        @Override
-                        public StockUnit findStockUnitByUniqueUnitIdEager(Integer uniqueUnitId) {
-                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                        }
-
-                        @Override
-                        public StockUnit findStockUnitByRefurbishIdEager(String refurbishId) {
-                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                        }
-
-                        @Override
-                        public List<StockTransaction> findStockTransactionEager(StockTransactionType type, StockTransactionStatusType statusType) {
-                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                        }
-
-                        @Override
-                        public List<StockTransaction> findStockTransactionEager(StockTransactionType type, StockTransactionStatusType statusType, int start, int amount) {
-                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                        }
-
-                        @Override
-                        public List<StockUnit> findStockUnitsByRefurbishIdEager(List<String> refurbishIds) {
-                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                        }
-
-                        @Override
-                        public <T> T persist(T t) {
-                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                        }
-
-                        @Override
-                        public <T> T merge(T t) {
-                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                        }
-
-                        @Override
-                        public <T> void delete(T t) {
-                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                        }
-
-                        @Override
-                        public StockTransaction findOrCreateRollInTransaction(int stockId, String userName, String comment) {
-                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                        }
-
-                        @Override
-                        public <T> long count(Class<T> entityClass) {
-                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                        }
-
-                        @Override
-                        public <T> List<T> findAll(Class<T> entityClass) {
-                            if ( entityClass.equals(Stock.class) ) {
-                                return (List<T>)Arrays.asList(new Stock(1, "Hamburg"), new Stock(2, "Bremen"));
-                            }
-                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                        }
-
-                        @Override
-                        public <T> List<T> findAll(Class<T> entityClass, int start, int amount) {
-                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                        }
-
-                        @Override
-                        public <T> List<T> findAllEager(Class<T> entityClass) {
-                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                        }
-
-                        @Override
-                        public <T> List<T> findAllEager(Class<T> entityClass, int start, int amount) {
-                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                        }
-
-                        @Override
-                        public <T> T findById(Class<T> entityClass, Object id) {
-                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                        }
-
-                        @Override
-                        public <T> T findById(Class<T> entityClass, Object id, LockModeType lockModeType) {
-                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                        }
-
-                        @Override
-                        public <T> T findByIdEager(Class<T> entityClass, Object id) {
-                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                        }
-
-                        @Override
-                        public <T> T findByIdEager(Class<T> entityClass, Object id, LockModeType lockModeType) {
-                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                        }
-                    };
-                if ( Mandators.class.equals(clazz) ) return (T)new Mandators() {
-                        @Override
-                        public Mandator loadMandator() {
-                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                        }
-
-                        @Override
-                        public DefaultCustomerSalesdata loadSalesdata() {
-                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                        }
-
-                        @Override
-                        public ReceiptCustomers loadReceiptCustomers() {
-                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                        }
-
-                        @Override
-                        public SpecialSystemCustomers loadSystemCustomers() {
-                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                        }
-
-                        @Override
-                        public Contractors loadContractors() { // used in price sub menu
-                            return new Contractors(EnumSet.of(ACER, LENOVO), EnumSet.of(ACER, PACKARD_BELL, LENOVO));
-                        }
-
-                        @Override
-                        public PostLedger loadPostLedger() {
-                            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                        }
-                    };
-                if ( StockApi.class.equals(clazz) ) return (T)new StockApi() {
-                        @Override
-                        public List<PicoStock> findAllStocks() {
-                            return Arrays.asList(new PicoStock(1, "Hamburg"), new PicoStock(2, "Bremen"));
-                        }
-                    };
                 return null;
             }
-            //</editor-fold>
         });
 
         Dl.local().add(Guardian.class, new AbstractGuardian() {
@@ -371,6 +235,45 @@ public class ClientApplication extends Application {
                     return;
                 } // success
                 throw new AuthenticationException("User or Pass wrong");
+            }
+        });
+
+        Dl.remote().add(StockApi.class, new StockApi() {
+            @Override
+            public List<PicoStock> findAllStocks() {
+                return Arrays.asList(new PicoStock(1, "Hamburg"), new PicoStock(2, "Bremen"));
+            }
+        });
+
+        Dl.remote().add(Mandators.class, new Mandators() {
+            @Override
+            public Mandator loadMandator() {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public DefaultCustomerSalesdata loadSalesdata() {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public ReceiptCustomers loadReceiptCustomers() {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public SpecialSystemCustomers loadSystemCustomers() {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public Contractors loadContractors() {
+                return new Contractors(EnumSet.of(ACER, LENOVO), EnumSet.of(ACER, PACKARD_BELL, LENOVO));
+            }
+
+            @Override
+            public PostLedger loadPostLedger() {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         });
 
@@ -424,31 +327,71 @@ public class ClientApplication extends Application {
 
     private void initRelocationKeys() {
 
-        // TODO: JavaFx mode fehlt. Und festelltung ob wir in JavaFX sind.
+        // Swing: Ctrl + Shift + R
         java.awt.KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher((java.awt.event.KeyEvent e) -> {
             if ( e.getID() == java.awt.event.KeyEvent.KEY_PRESSED && e.isControlDown() && e.isShiftDown() && e.getKeyCode() == java.awt.event.KeyEvent.VK_R ) {
-                L.info("KeyEvent[Ctrl+Shift+L] detected");
-                int i = 20;
-
-                Window m = UiCore.getMainFrame();
-                L.debug("KeyEvent[Ctrl+Shift+L] relocating MainFrame {}", m);
-                m.setSize(800, 600);
-                m.setLocation(i, i);
-                i = i + 20;
-
-                for (Iterator<java.awt.Window> iterator = SwingCore.ACTIVE_WINDOWS.values().stream().map(w -> w.get()).filter(w -> w != null).iterator();
-                        iterator.hasNext();) {
-                    Window w = iterator.next();
-                    L.debug("KeyEvent[Ctrl+Shift+L] relocating {}", w);
-                    w.setSize(800, 600);
-                    i = i + 20;
-                }
-                // Todo: implement a global clear.
-                // Dl.local().lookup(UserPreferences.class).isReset();
+                L.info("KeyEvent[Ctrl+Shift+R] detected");
+                if ( UiCore.isSwing() ) relocateWindowsInSwingMode();
+                if ( UiCore.isFx() ) relocateWindowsInJavaFxMode();
             }
             return false;
         });
 
+        // JavaFx: Ctrl + Shift + R
+        KeyCombination keysCtrlShiftR = new KeyCodeCombination(KeyCode.R, KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN);
+        addEventFilter(KeyEvent.KEY_PRESSED, k -> {
+            if ( keysCtrlShiftR.match(k) ) {
+                L.info("KeyEvent[Ctrl+Shift+R] detected");
+                if ( UiCore.isSwing() ) relocateWindowsInSwingMode();
+                if ( UiCore.isFx() ) relocateWindowsInJavaFxMode();
+            }
+        });
+
+    }
+
+    private void relocateWindowsInSwingMode() {
+        int i = 20;
+
+        Window m = UiCore.getMainFrame();
+        L.debug("relocateWindowsInSwingMode() relocating MainFrame {}", m);
+        m.setSize(800, 600);
+        m.setLocation(i, i);
+        i = i + 20;
+
+        for (Iterator<java.awt.Window> iterator = SwingCore.ACTIVE_WINDOWS.values().stream().map(w -> w.get()).filter(w -> w != null).iterator();
+                iterator.hasNext();) {
+            Window w = iterator.next();
+            L.debug("relocateWindowsInSwingMode() relocating {}", w);
+            w.setSize(800, 600);
+            w.setLocation(i, i);
+            i = i + 20;
+        }
+        // Todo: implement a global clear.
+        // Dl.local().lookup(UserPreferences.class).isReset();
+
+    }
+
+    private void relocateWindowsInJavaFxMode() {
+        int i = 20;
+        Stage m = UiCore.getMainStage();
+        L.debug("relocateWindowsInJavaFxMode() relocating MainWindow {}", m);
+        m.setX(i);
+        m.setY(i);
+        m.setWidth(800);
+        m.setHeight(600);
+
+        i = i + 20;
+
+        for (Iterator<Stage> iterator = FxCore.ACTIVE_STAGES.values().stream().map(w -> w.get()).filter(w -> w != null).iterator();
+                iterator.hasNext();) {
+            Stage w = iterator.next();
+            L.debug("relocateWindowsInJavaFxMode() relocating {}", w);
+            w.setX(i);
+            w.setY(i);
+            w.setWidth(800);
+            w.setHeight(600);
+            i = i + 20;
+        }
     }
 
     /**
@@ -475,7 +418,7 @@ public class ClientApplication extends Application {
 
         // JavaFx: Ctrl + Shift + L global keylistener.
         KeyCombination keysCtrlShiftL = new KeyCodeCombination(KeyCode.L, KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN);
-        addEventFilter(KeyEvent.KEY_RELEASED, k -> {
+        addEventFilter(KeyEvent.KEY_PRESSED, k -> {
             if ( keysCtrlShiftL.match(k) ) {
                 loggedInTimeout.manualTimeout();
             }

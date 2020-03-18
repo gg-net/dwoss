@@ -25,13 +25,13 @@ import javax.swing.Action;
 
 import javafx.scene.control.Alert;
 
+import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.widget.TikaUtil;
 import eu.ggnet.dwoss.misc.ee.StockTaking;
-import eu.ggnet.dwoss.stock.ee.entity.Stock;
-import eu.ggnet.dwoss.core.common.FileJacket;
+import eu.ggnet.dwoss.stock.api.PicoStock;
+import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.api.Reply;
 
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
 import static javafx.scene.control.ButtonType.OK;
@@ -42,10 +42,10 @@ import static javafx.scene.control.ButtonType.OK;
  */
 public class StockTakingAction extends AbstractAction {
 
-    private final Stock stock;
+    private final PicoStock stock;
 
-    public StockTakingAction(Stock stock) {
-        super("Inventur" + (stock == null ? "" : " für " + stock.getName()) + " vervollständigen");
+    public StockTakingAction(PicoStock stock) {
+        super("Inventur" + (stock == null ? "" : " für " + stock.shortDescription) + " vervollständigen");
         this.stock = stock;
         putValue(Action.SHORT_DESCRIPTION, "Vervollständigt eine Inventur mit den Informationen aus der Datenbank\n"
                 + "Benötigt eine XLS Datei die in der ersten Tabelle in der ersten Spalte die Sonderposten Nummern hat\n"
@@ -62,13 +62,13 @@ public class StockTakingAction extends AbstractAction {
             Optional<File> inFile = Ui.fileChooser().open().opt();
             if ( !inFile.isPresent() ) return;
             Ui.build().dialog().eval(
-                    () -> new Alert(CONFIRMATION, (stock == null ? "" : " für " + stock.getName()) + " aus der Datei:" + inFile.get().getPath() + " vervollständigen ?"))
+                    () -> new Alert(CONFIRMATION, (stock == null ? "" : " für " + stock.shortDescription) + " aus der Datei:" + inFile.get().getPath() + " vervollständigen ?"))
                     .opt()
                     .filter(b -> b == OK)
                     .map(b -> TikaUtil.isExcel(inFile.get()))
                     .filter(Ui.failure()::handle)
                     .map(Reply::getPayload)
-                    .map(f -> Ui.progress().call(() -> Dl.remote().lookup(StockTaking.class).fullfillDetails(new FileJacket("in", ".xls", f), (stock == null ? null : stock.getId()))))
+                    .map(f -> Ui.progress().call(() -> Dl.remote().lookup(StockTaking.class).fullfillDetails(new FileJacket("in", ".xls", f), (stock == null ? null : stock.id))))
                     .ifPresent(f -> Ui.osOpen(f.toTemporaryFile()));
         });
 

@@ -31,24 +31,31 @@ import eu.ggnet.dwoss.mandator.api.service.ListingActionService;
 import eu.ggnet.saft.core.Dl;
 
 /**
+ * Producer for all Saleslisting menu items.
  *
  * @author oliver.guenther
  */
 public class SalesListingCreateMenuItemProducer {
-    
+
     public static class SalesListingCreateMenus {
 
         public final List<SalesListingCreateMenuItem> items;
 
         public SalesListingCreateMenus(List<SalesListingCreateMenuItem> items) {
-            this.items = Objects.requireNonNull(items,"items must not be null");
+            this.items = Objects.requireNonNull(items, "items must not be null");
         }
-         
+
     }
 
     @Inject
     private Instance<SalesListingCreateMenuItem> instances;
 
+    /**
+     * Produces all Menuitems, wrapped into one instance, either using the Remote implementation of
+     * {@link ListingActionService}, if existing, or creating some defaults.
+     *
+     * @return all Menuitems, wrapped into one instance.
+     */
     @Produces
     public SalesListingCreateMenus createMenuItems() {
         List<SalesListingCreateMenuItem> items = new ArrayList<>();

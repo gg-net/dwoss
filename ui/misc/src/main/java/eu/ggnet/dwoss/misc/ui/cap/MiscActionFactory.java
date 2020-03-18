@@ -28,8 +28,8 @@ import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration.Type;
 import eu.ggnet.dwoss.mandator.api.service.ListingActionService;
 import eu.ggnet.dwoss.misc.ee.movement.MovementListingProducer;
 import eu.ggnet.dwoss.misc.ee.movement.MovementListingProducer.ListType;
-import eu.ggnet.dwoss.stock.ee.StockAgent;
-import eu.ggnet.dwoss.stock.ee.entity.Stock;
+import eu.ggnet.dwoss.stock.api.PicoStock;
+import eu.ggnet.dwoss.stock.api.StockApi;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.experimental.ops.ActionFactory;
 
@@ -67,8 +67,8 @@ public class MiscActionFactory implements ActionFactory {
             actions.add(new MetaAction(s, new SalesListingCreateAction(new ListingActionConfiguration(Type.PDF, Location.LOCAL, SalesChannel.CUSTOMER, "PDF für Endkunden"))));
         }
 
-        List<Stock> allStocks = Dl.remote().lookup(StockAgent.class).findAll(Stock.class);
-        for (Stock stock : allStocks) {
+        List<PicoStock> allStocks = Dl.remote().lookup(StockApi.class).findAllStocks();
+        for (PicoStock stock : allStocks) {
             for (ListType listType : MovementListingProducer.ListType.values()) {
                 actions.add(new MetaAction("Lager/Logistik", "Versand & Abholung", new MovementPdfAction(listType, stock)));
             }

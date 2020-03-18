@@ -21,23 +21,23 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import eu.ggnet.dwoss.misc.ee.movement.MovementListingProducer;
-import eu.ggnet.dwoss.stock.ee.entity.Stock;
+import eu.ggnet.dwoss.stock.api.PicoStock;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 
 /**
  * Opens the MovementList as XLS.
- * 
+ *
  * @author oliver.guenther
  */
 public class MovementXlsAction extends AbstractAction {
 
-    private final Stock stock;
+    private final PicoStock stock;
 
     private final MovementListingProducer.ListType listType;
 
-    public MovementXlsAction(MovementListingProducer.ListType listType, Stock stock) {
-        super(listType.description + " - " + stock.getName() + " - XLS");
+    public MovementXlsAction(MovementListingProducer.ListType listType, PicoStock stock) {
+        super(listType.description + " - " + stock.shortDescription + " - XLS");
         this.stock = stock;
         this.listType = listType;
     }
