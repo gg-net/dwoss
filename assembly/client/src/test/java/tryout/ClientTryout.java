@@ -22,6 +22,7 @@ import eu.ggnet.dwoss.assembly.client.Main;
 import eu.ggnet.dwoss.core.widget.AbstractGuardian;
 import eu.ggnet.dwoss.mandator.api.Mandators;
 import eu.ggnet.dwoss.mandator.api.value.*;
+import eu.ggnet.dwoss.mandator.sample.impl.Sample;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;
 import eu.ggnet.dwoss.stock.api.PicoStock;
@@ -30,8 +31,6 @@ import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.dl.RemoteLookup;
 import eu.ggnet.saft.experimental.auth.AuthenticationException;
 import eu.ggnet.saft.experimental.auth.Guardian;
-
-import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.*;
 
 /**
  *
@@ -80,7 +79,7 @@ public class ClientTryout {
         Dl.remote().add(Mandators.class, new Mandators() {
             @Override
             public Mandator loadMandator() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                return Sample.MANDATOR;
             }
 
             @Override
@@ -100,7 +99,7 @@ public class ClientTryout {
 
             @Override
             public Contractors loadContractors() {
-                return new Contractors(EnumSet.of(ACER, LENOVO), EnumSet.of(ACER, PACKARD_BELL, LENOVO));
+                return Sample.CONTRACTORS;
             }
 
             @Override

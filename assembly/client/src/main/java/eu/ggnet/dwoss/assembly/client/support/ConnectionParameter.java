@@ -80,4 +80,8 @@ public class ConnectionParameter {
         return ToStringBuilder.reflectionToString(this);
     }
 
+    public String toUrl() {
+        return "http://" + host + ":" + port + "/" + app;
+    }
+
 }

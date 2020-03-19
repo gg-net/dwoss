@@ -20,12 +20,14 @@ import java.awt.Window;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Iterator;
 import java.util.concurrent.CompletableFuture;
 
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.se.SeContainer;
 import javax.enterprise.inject.se.SeContainerInitializer;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.validation.ConstraintViolationException;
 
@@ -57,6 +59,7 @@ import eu.ggnet.dwoss.core.system.GlobalConfig;
 import eu.ggnet.dwoss.core.system.autolog.LoggerProducer;
 import eu.ggnet.dwoss.customer.ui.CustomerTaskService;
 import eu.ggnet.dwoss.mail.ui.cap.SendResellerListToSubscribedCustomersMenuItem;
+import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.misc.ui.AboutController;
 import eu.ggnet.dwoss.price.ui.PriceBlockerViewCask;
 import eu.ggnet.dwoss.receipt.ui.UiUnitSupport;
@@ -121,6 +124,8 @@ public class ClientApplication extends Application {
                     // Todo: Store and Load location
                     mainFrame.setSize(800, 600);
                     mainFrame.setLocationByPlatform(true);
+                    mainFrame.setTitle(discoverTitle());
+                    mainFrame.setIconImage(new ImageIcon(loadIcon()).getImage());
 
                     UiCore.continueSwing(mainFrame);
                     mainFrame.addWindowListener(new WindowAdapter() {
@@ -273,6 +278,17 @@ public class ClientApplication extends Application {
 
     }
 
+    /**
+     * Discover the Title of the DW.
+     *
+     * @return the title
+     */
+    private String discoverTitle() {
+        return Dl.local().lookup(CachedMandators.class).loadMandator().company().name()
+                + " - Deutsche Warenwirtschaft - "
+                + ApplicationConfiguration.instance().connectionParameter().toUrl();
+    }
+
     private void relocateWindowsInSwingMode() {
         int i = 20;
 
@@ -296,6 +312,7 @@ public class ClientApplication extends Application {
     }
 
     private void relocateWindowsInJavaFxMode() {
+        // INFO: Untested.
         int i = 20;
         Stage m = UiCore.getMainStage();
         L.debug("relocateWindowsInJavaFxMode() relocating MainWindow {}", m);
@@ -373,4 +390,9 @@ public class ClientApplication extends Application {
         // s.addEventHandler(....
 
     }
+
+    static URL loadIcon() {
+        return ClientApplication.class.getResource("app-icon3.png"); // NOI18N
+    }
+
 }
