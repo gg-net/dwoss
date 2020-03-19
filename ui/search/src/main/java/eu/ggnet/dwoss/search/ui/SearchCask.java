@@ -66,6 +66,8 @@ public class SearchCask extends BorderPane implements ClosedListener {
 
     private final Searcher searcher;
 
+    private final BorderPane bottom;
+
     public SearchCask() {
         searcher = Dl.remote().lookup(Searcher.class);
         // Creating and laying out the Ui
@@ -87,7 +89,7 @@ public class SearchCask extends BorderPane implements ClosedListener {
         top.setRight(searchButton);
         top.setCenter(searchField);
 
-        BorderPane bottom = new BorderPane();
+        bottom = new BorderPane();
         bottom.setCenter(progressBar);
         bottom.setRight(progressIndicator);
 
@@ -166,6 +168,10 @@ public class SearchCask extends BorderPane implements ClosedListener {
                 seletor.selected(new PicoUnit((int)selectedResult.key.id, selectedResult.shortDescription));
             }
         });
+    }
+
+    public void disableProgressBar() {
+        this.getChildren().remove(bottom);
     }
 
     private void search() {

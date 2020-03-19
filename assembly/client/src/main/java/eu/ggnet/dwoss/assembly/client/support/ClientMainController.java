@@ -97,6 +97,7 @@ public class ClientMainController {
         // -- Init Ui
         UnitAvailabilityPane unitAvailability = instance.select(UnitAvailabilityPane.class).get();
         SearchCask search = instance.select(SearchCask.class).get();
+        search.disableProgressBar();
         FileListPane filelist = instance.select(FileListPane.class).get();
         MonitorPane monitorPane = instance.select(MonitorPane.class).get();
 
@@ -108,9 +109,7 @@ public class ClientMainController {
         mainSplitPane.setDividerPositions(0.4, 0.8, 1);
 
         msm.start(monitorPane);
-        UiCore.backgroundActivityProperty().addListener((ob, o, n) -> {
-            if ( n ) monitorPane.submit(new MonitorClientTask());
-        });
+        UiCore.backgroundActivityProperty().addListener((ob, o, n) -> monitorPane.saftBackground(n));
 
         Guardian guard = Dl.local().lookup(Guardian.class);
 

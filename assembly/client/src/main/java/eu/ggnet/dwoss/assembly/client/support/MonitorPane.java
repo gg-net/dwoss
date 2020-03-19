@@ -16,7 +16,11 @@
  */
 package eu.ggnet.dwoss.assembly.client.support;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -36,9 +40,35 @@ import static java.lang.Double.MAX_VALUE;
  */
 public class MonitorPane extends BorderPane {
 
+    private class SaftVirtualClientTask extends Task<Void> {
+
+        @Override
+        protected Void call() throws Exception {
+            updateTitle("Hintergrundaktivität");
+            updateMessage("Hintergrundaktivität");
+            CountDownLatch latch = new CountDownLatch(1);
+            ChangeListener<Boolean> l = (ob, o, n) -> {
+                if ( !n ) {
+                    latch.countDown();
+                }
+            };
+            UiCore.backgroundActivityProperty().addListener(l);
+            if ( !runningSaftBackgroundTask.get() ) latch.countDown(); // Doublecheck, if we ended befor creation.
+            latch.await();
+            UiCore.backgroundActivityProperty().removeListener(l);
+            return null;
+        }
+
+    }
+
     private final ListView<Task<Void>> taskListView;
 
     private final ObservableList<Task<Void>> taskList;
+
+    /**
+     * Workarround for the case, that the saftbackgrountask is created but the end has allready happend.
+     */
+    private final AtomicBoolean runningSaftBackgroundTask = new AtomicBoolean(false);
 
     public MonitorPane() {
         taskList = FXCollections.observableArrayList();
@@ -70,6 +100,16 @@ public class MonitorPane extends BorderPane {
         setCenter(taskListView);
     }
 
+    /**
+     * Helpermethod for the stupid saft background construct.
+     *
+     * @param running state of the required background activity.
+     */
+    public void saftBackground(boolean running) {
+        if ( !runningSaftBackgroundTask.compareAndSet(!running, running) ) return; // Allready in the right state
+        if ( running ) submit(new SaftVirtualClientTask());
+    }
+
     public void submit(Task<Void> t) {
         Platform.runLater(() -> {
             // Eviction handler.
@@ -78,6 +118,7 @@ public class MonitorPane extends BorderPane {
             t.setOnSucceeded(e);
             t.setOnFailed(e);
             t.setOnCancelled(e);
+
             taskList.add(t);
         });
         UiCore.getExecutor().execute(t);

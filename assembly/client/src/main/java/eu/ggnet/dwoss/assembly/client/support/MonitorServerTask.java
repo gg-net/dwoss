@@ -28,7 +28,7 @@ import eu.ggnet.saft.core.Dl;
 
 /**
  * Task to get poll the progress form the server.
- * 
+ *
  * @author oliver.guenther
  */
 public class MonitorServerTask extends Task<Void> {
@@ -36,8 +36,8 @@ public class MonitorServerTask extends Task<Void> {
     private final int key;
 
     private final SortedSet<Integer> localKeys;
-    
-    public MonitorServerTask(int key,SortedSet<Integer> localKeys) {
+
+    public MonitorServerTask(int key, SortedSet<Integer> localKeys) {
         this.key = key;
         this.localKeys = localKeys;
     }
@@ -53,7 +53,7 @@ public class MonitorServerTask extends Task<Void> {
             if ( progress > 100 ) progress = 100;
             updateProgress(progress, 100);
             updateMessage(hm.getTitle() + ":" + StringUtils.defaultIfBlank(hm.getMessage(), ""));
-            Thread.sleep(250);
+            Thread.sleep(250); // Poll Step Size
             hm = Dl.remote().lookup(ProgressObserver.class).getMonitor(key);
         }
         // Todo: Later, maybe try with events.

@@ -16,10 +16,6 @@
  */
 package tryout;
 
-import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.Dl;
-
 import java.util.*;
 
 import javax.swing.JLabel;
@@ -31,6 +27,7 @@ import eu.ggnet.dwoss.search.api.GlobalKey.Component;
 import eu.ggnet.dwoss.search.api.*;
 import eu.ggnet.dwoss.search.ee.Searcher;
 import eu.ggnet.dwoss.search.ui.SearchCask;
+import eu.ggnet.saft.core.*;
 
 /**
  *
@@ -92,7 +89,11 @@ public class SearchTryout {
         Ui.exec(() -> {
             UiCore.startSwing(() -> new JLabel("Main Applikation"));
 
-            Ui.build().fx().show(() -> new SearchCask());
+            Ui.build().fx().show(() -> {
+                SearchCask s = new SearchCask();
+                // s.disableProgressBar();
+                return s;
+            });
         });
     }
 }
