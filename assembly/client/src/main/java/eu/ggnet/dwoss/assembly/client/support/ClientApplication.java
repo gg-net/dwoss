@@ -49,7 +49,7 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.assembly.client.Main;
+import eu.ggnet.dwoss.assembly.client.DwOssMain;
 import eu.ggnet.dwoss.assembly.client.support.login.*;
 import eu.ggnet.dwoss.assembly.remote.MainCdi;
 import eu.ggnet.dwoss.assembly.remote.cdi.FxmlLoaderInitializer;
@@ -103,11 +103,7 @@ public class ClientApplication extends Application {
         mainPane.setPrefSize(800, 600);
 
         Scene s = new Scene(mainPane);
-
-        // Global KeyListener for Logout
-        // TODO: Later we need some form of global registration, so that the KeyEvents are added to all future stages.
         primaryStage.setScene(s);
-
         primaryStage.show();
 
         // Non CDI mode, CDI stats in postInit.
@@ -174,24 +170,28 @@ public class ClientApplication extends Application {
      * init after start
      */
     private void postInit() {
+        ContainerConfiguration cc = ContainerConfiguration.instance();
+        cc.addPackages(true, MainCdi.class);
+        cc.addPackages(true, DwOssMain.class);
+        cc.addPackages(true, CustomerTaskService.class); // customer.ui
+        cc.addPackages(true, SendResellerListToSubscribedCustomersMenuItem.class); // mail.ui
+        cc.addPackages(true, PriceBlockerViewCask.class); // price.ui
+        cc.addPackages(true, UiUnitSupport.class); // receipt.ui
+        cc.addPackages(true, RawReportView.class); // report.ui
+        cc.addPackages(true, UiPersona.class); // rights.ui
+        cc.addPackages(true, StockUpiImpl.class); // stock.ui
+        cc.addPackages(true, ProductTask.class); // uniqueunit.ui
+        cc.addPackages(true, ReactivePicoUnitDetailViewCask.class); // redtapext.ui
+        cc.addPackages(true, AboutController.class); // misc.ui
+        cc.addPackages(true, SearchCask.class); // search.ui
+        cc.addPackages(LoggerProducer.class); // core.system. autolog
+        cc.addPackages(GlobalConfig.class); // Global Config produces.
+
         // Initialize the Container
         SeContainerInitializer ci = SeContainerInitializer.newInstance();
+        ci.addPackages(cc.packages());
+        ci.addPackages(true, cc.fullPackages());
         ci.disableDiscovery();
-        ci.addPackages(true, MainCdi.class);
-        ci.addPackages(true, Main.class);
-        ci.addPackages(true, CustomerTaskService.class); // customer.ui
-        ci.addPackages(true, SendResellerListToSubscribedCustomersMenuItem.class); // mail.ui
-        ci.addPackages(true, PriceBlockerViewCask.class); // price.ui
-        ci.addPackages(true, UiUnitSupport.class); // receipt.ui
-        ci.addPackages(true, RawReportView.class); // report.ui
-        ci.addPackages(true, UiPersona.class); // rights.ui
-        ci.addPackages(true, StockUpiImpl.class); // stock.ui
-        ci.addPackages(true, ProductTask.class); // uniqueunit.ui
-        ci.addPackages(true, ReactivePicoUnitDetailViewCask.class); // redtapext.ui
-        ci.addPackages(true, AboutController.class); // misc.ui
-        ci.addPackages(true, SearchCask.class); // search.ui
-        ci.addPackages(LoggerProducer.class); // core.system. autolog
-        ci.addPackages(GlobalConfig.class); // Global Config produces.
         container = ci.initialize();
         // TODO: Remote connection and everything else.
         instance = container.getBeanManager().createInstance();

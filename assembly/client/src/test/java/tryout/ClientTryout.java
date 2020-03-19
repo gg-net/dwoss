@@ -18,7 +18,7 @@ package tryout;
 
 import java.util.*;
 
-import eu.ggnet.dwoss.assembly.client.Main;
+import eu.ggnet.dwoss.assembly.client.DwOssMain;
 import eu.ggnet.dwoss.core.widget.AbstractGuardian;
 import eu.ggnet.dwoss.mandator.api.Mandators;
 import eu.ggnet.dwoss.mandator.api.value.*;
@@ -108,7 +108,7 @@ public class ClientTryout {
             }
         });
 
-        Main.main(new String[]{"--host=localhost", "--app=dw-sample", "--user=admin", "--pass=admin", "--disableRemote"});
+        DwOssMain.main(new String[]{"--host=localhost", "--app=noapp", "--user=admin", "--pass=admin", "--disableRemote"});
     }
 
 }

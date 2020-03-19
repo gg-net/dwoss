@@ -28,7 +28,7 @@ import javafx.scene.input.*;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import eu.ggnet.dwoss.assembly.client.Main;
+import eu.ggnet.dwoss.assembly.client.DwOssMain;
 import eu.ggnet.dwoss.assembly.client.support.login.LoggedInTimeout;
 import eu.ggnet.dwoss.core.system.autolog.LoggerProducer;
 import eu.ggnet.dwoss.core.widget.AbstractGuardian;
@@ -67,7 +67,7 @@ public class LoggedInTimeoutTryout {
 
             SeContainerInitializer initializer = SeContainerInitializer.newInstance();
             initializer.disableDiscovery();
-            initializer.addPackages(true, Main.class);
+            initializer.addPackages(true, DwOssMain.class);
             initializer.addPackages(LoggerProducer.class); // core.system. autolog
             SeContainer container = initializer.initialize();
 

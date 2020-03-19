@@ -20,10 +20,10 @@ package eu.ggnet.dwoss.assembly.client;
  *
  * @author oliver.guenther
  */
-public class SampleMain {
+public class DwOssMainWithSampleConfig {
 
     public static void main(String[] args) {
-        Main.main(new String[]{"--host=localhost", "--app=dwoss-server-sample", "--user=admin", "--pass=admin"});
+        DwOssMain.main(new String[]{"--host=localhost", "--app=dwoss-server-sample", "--user=admin", "--pass=admin"});
     }
 
 }

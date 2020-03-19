@@ -74,7 +74,7 @@ public class ClientMainController {
     private SplitPane mainSplitPane;
 
     @Inject
-    private Instance<Object> instance;
+    protected Instance<Object> instance;
 
     @Inject
     private MonitorServerManager msm;

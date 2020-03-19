@@ -29,13 +29,13 @@ import com.beust.jcommander.ParameterException;
  *
  * @author oliver.guenther
  */
-public class Main {
+public class DwOssMain {
 
     public static void main(String[] args) {
         try {
             // Evaluate the console paramters
             ConnectionParameter cp = new ConnectionParameter();
-            JCommander.newBuilder().addObject(cp).programName(Main.class.getName()).build().parse(args);
+            JCommander.newBuilder().addObject(cp).programName(DwOssMain.class.getName()).build().parse(args);
             ApplicationConfiguration.initInstance(cp);
             // Continue the start in JavaFx 
             Application.launch(ClientApplication.class);
