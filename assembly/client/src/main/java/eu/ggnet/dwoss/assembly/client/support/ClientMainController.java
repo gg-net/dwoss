@@ -98,6 +98,8 @@ public class ClientMainController {
         UnitAvailabilityPane unitAvailability = instance.select(UnitAvailabilityPane.class).get();
         SearchCask search = instance.select(SearchCask.class).get();
         search.disableProgressBar();
+        UiCore.addOnShutdown(() -> search.closed());
+
         FileListPane filelist = instance.select(FileListPane.class).get();
         MonitorPane monitorPane = instance.select(MonitorPane.class).get();
 

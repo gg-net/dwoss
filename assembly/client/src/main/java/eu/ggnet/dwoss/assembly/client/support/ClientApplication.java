@@ -20,7 +20,7 @@ import java.awt.Window;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.util.*;
+import java.util.Iterator;
 import java.util.concurrent.CompletableFuture;
 
 import javax.enterprise.inject.Instance;
@@ -55,33 +55,22 @@ import eu.ggnet.dwoss.assembly.remote.exception.*;
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.system.GlobalConfig;
 import eu.ggnet.dwoss.core.system.autolog.LoggerProducer;
-import eu.ggnet.dwoss.core.widget.AbstractGuardian;
 import eu.ggnet.dwoss.customer.ui.CustomerTaskService;
 import eu.ggnet.dwoss.mail.ui.cap.SendResellerListToSubscribedCustomersMenuItem;
-import eu.ggnet.dwoss.mandator.api.Mandators;
-import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.misc.ui.AboutController;
 import eu.ggnet.dwoss.price.ui.PriceBlockerViewCask;
 import eu.ggnet.dwoss.receipt.ui.UiUnitSupport;
 import eu.ggnet.dwoss.redtapext.ui.ReactivePicoUnitDetailViewCask;
 import eu.ggnet.dwoss.report.ui.RawReportView;
-import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.dwoss.rights.api.Operator;
 import eu.ggnet.dwoss.rights.ui.UiPersona;
 import eu.ggnet.dwoss.search.ui.SearchCask;
-import eu.ggnet.dwoss.stock.api.PicoStock;
-import eu.ggnet.dwoss.stock.api.StockApi;
-import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ui.StockUpiImpl;
 import eu.ggnet.dwoss.uniqueunit.ui.ProductTask;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.core.dl.RemoteLookup;
 import eu.ggnet.saft.core.ui.*;
-import eu.ggnet.saft.experimental.auth.AuthenticationException;
 import eu.ggnet.saft.experimental.auth.Guardian;
-
-import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.*;
 
 /**
  *
@@ -209,75 +198,10 @@ public class ClientApplication extends Application {
         UiCore.registerExceptionConsumer(UserInfoException.class, new UserInfoExceptionConsumer());
         UiCore.registerExceptionConsumer(ConstraintViolationException.class, new ConstraintViolationConsumer());
 
-        // TODO: remove later,
-        Dl.local().add(RemoteLookup.class, new RemoteLookup() {
-            @Override
-            public <T> boolean contains(Class<T> clazz) {
-                if ( StockAgent.class.equals(clazz) ) return true;
-                return false;
-            }
+        if ( !ApplicationConfiguration.instance().connectionParameter().disableRemote() ) // So the tryout can use everything of the global main.
+            Dl.local().add(RemoteLookup.class, new WildflyLookup(ApplicationConfiguration.instance().connectionParameter()));
 
-            @Override
-            public <T> T lookup(Class<T> clazz) {
-                return null;
-            }
-        });
-
-        Dl.local().add(Guardian.class, new AbstractGuardian() {
-            @Override
-            public void login(String user, char[] pass) throws AuthenticationException {
-                if ( "test".equalsIgnoreCase(user) && "test".equals(String.valueOf(pass)) ) {
-                    setRights(new Operator(user, 123, Collections.emptyList()));
-                    return;
-                } // success
-                if ( "admin".equalsIgnoreCase(user) && "admin".equals(String.valueOf(pass)) ) {
-                    setRights(new Operator(user, 666, Arrays.asList(AtomicRight.values())));
-                    return;
-                } // success
-                throw new AuthenticationException("User or Pass wrong");
-            }
-        });
-
-        Dl.remote().add(StockApi.class, new StockApi() {
-            @Override
-            public List<PicoStock> findAllStocks() {
-                return Arrays.asList(new PicoStock(1, "Hamburg"), new PicoStock(2, "Bremen"));
-            }
-        });
-
-        Dl.remote().add(Mandators.class, new Mandators() {
-            @Override
-            public Mandator loadMandator() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public DefaultCustomerSalesdata loadSalesdata() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public ReceiptCustomers loadReceiptCustomers() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public SpecialSystemCustomers loadSystemCustomers() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public Contractors loadContractors() {
-                return new Contractors(EnumSet.of(ACER, LENOVO), EnumSet.of(ACER, PACKARD_BELL, LENOVO));
-            }
-
-            @Override
-            public PostLedger loadPostLedger() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-        });
-
-        // TODO: Here we will have Saft already.
+        // TODO: If Saft uses CDI, we can start unsing it here.
         FXMLLoader mainLoader = instance.select(FxmlLoaderInitializer.class).get().createLoader(ClientMainController.class.getResource("ClientMainView.fxml"));
         try {
             mainLoader.load();

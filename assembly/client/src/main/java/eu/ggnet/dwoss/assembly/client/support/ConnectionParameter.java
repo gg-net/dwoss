@@ -44,6 +44,13 @@ public class ConnectionParameter {
     @Parameter(names = "--pass", description = "Password to connect to the Wildfly server", required = true)
     private String pass;
 
+    /**
+     * Special parameter to disable the remote connection entierly.
+     * Used in the tryout contruct.
+     */
+    @Parameter(names = "--disableRemote", hidden = true)
+    private boolean disableRemote = false;
+
     public String host() {
         return host;
     }
@@ -63,7 +70,11 @@ public class ConnectionParameter {
     public String pass() {
         return pass;
     }
-    
+
+    public boolean disableRemote() {
+        return disableRemote;
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);

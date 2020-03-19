@@ -21,9 +21,9 @@ package eu.ggnet.dwoss.assembly.client;
  * @author oliver.guenther
  */
 public class SampleMain {
-    
+
     public static void main(String[] args) {
-       Main.main(new String[]{"--host=localhost", "--app=dw-sample", "--user=admin", "--pass=admin"});
+        Main.main(new String[]{"--host=localhost", "--app=dwoss-server-sample", "--user=admin", "--pass=admin"});
     }
-    
+
 }
