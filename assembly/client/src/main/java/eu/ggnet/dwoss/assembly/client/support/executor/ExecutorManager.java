@@ -14,27 +14,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.assembly.client.support;
+package eu.ggnet.dwoss.assembly.client.support.executor;
 
-import javafx.application.Application;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.stage.Stage;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+
+import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import org.slf4j.Logger;
 
 /**
- * Used to display a default Error message on Startup.
+ * First throw with an alternative to static UiCore executors.
  *
  * @author oliver.guenther
  */
-public class ErrorApplication extends Application {
+@Singleton
+public class ExecutorManager {
 
-    @Override
-    public void start(Stage stage) throws Exception {
-        Alert a = new Alert(AlertType.ERROR);
-        a.setTitle("Fehler beim Start");
-        a.setHeaderText("Fehler bei Start.");
-        a.setContentText("Es ist ein Fehler beim Start aufgetreten. Bitte Console und/oder Logs prüfen.");
-        a.show();
+    @Inject
+    private Logger log;
+
+    @Produces
+    @Executor
+    private final ScheduledExecutorService ses = Executors.newScheduledThreadPool(6);
+
+    public void shutdown() {
+        log.debug("shutdown()");
+        ses.shutdown();
     }
-
 }

@@ -16,34 +16,57 @@
  */
 package eu.ggnet.dwoss.assembly.client;
 
+import java.util.Arrays;
 
 import javafx.application.Application;
 
-import eu.ggnet.dwoss.assembly.client.support.*;
+import org.slf4j.LoggerFactory;
 
-import com.beust.jcommander.JCommander;
-import com.beust.jcommander.ParameterException;
+import eu.ggnet.dwoss.assembly.client.support.ContainerConfiguration;
+import eu.ggnet.dwoss.assembly.remote.MainCdi;
+import eu.ggnet.dwoss.core.system.GlobalConfig;
+import eu.ggnet.dwoss.core.system.autolog.LoggerProducer;
+import eu.ggnet.dwoss.customer.ui.CustomerTaskService;
+import eu.ggnet.dwoss.mail.ui.cap.SendResellerListToSubscribedCustomersMenuItem;
+import eu.ggnet.dwoss.misc.ui.AboutController;
+import eu.ggnet.dwoss.price.ui.PriceBlockerViewCask;
+import eu.ggnet.dwoss.receipt.ui.UiUnitSupport;
+import eu.ggnet.dwoss.redtapext.ui.ReactivePicoUnitDetailViewCask;
+import eu.ggnet.dwoss.report.ui.RawReportView;
+import eu.ggnet.dwoss.rights.ui.UiPersona;
+import eu.ggnet.dwoss.search.ui.SearchCask;
+import eu.ggnet.dwoss.stock.ui.StockUpiImpl;
+import eu.ggnet.dwoss.uniqueunit.ui.ProductTask;
 
 /**
- * Main Startup Class for the Client.
+ * Main Startup Class for the Client, starting the Application.
+ * Setting the container configuration, cause auto discovery is disabled in dw and then starting the Application.
  *
+ * @see DwOssApplication.
  * @author oliver.guenther
  */
 public class DwOssMain {
 
     public static void main(String[] args) {
-        try {
-            // Evaluate the console paramters
-            ConnectionParameter cp = new ConnectionParameter();
-            JCommander.newBuilder().addObject(cp).programName(DwOssMain.class.getName()).build().parse(args);
-            ApplicationConfiguration.initInstance(cp);
-            // Continue the start in JavaFx 
-            Application.launch(ClientApplication.class);
-        } catch (ParameterException e) {
-            System.out.println(e.getMessage());
-            System.out.println();
-            e.getJCommander().usage();
-            Application.launch(ErrorApplication.class);
-        }
+        LoggerFactory.getLogger(DwOssMain.class).info("main({}) starting", Arrays.asList(args));
+
+        ContainerConfiguration cc = ContainerConfiguration.instance();
+        cc.addPackages(true, MainCdi.class);
+        cc.addPackages(true, DwOssMain.class);
+        cc.addPackages(true, CustomerTaskService.class); // customer.ui
+        cc.addPackages(true, SendResellerListToSubscribedCustomersMenuItem.class); // mail.ui
+        cc.addPackages(true, PriceBlockerViewCask.class); // price.ui
+        cc.addPackages(true, UiUnitSupport.class); // receipt.ui
+        cc.addPackages(true, RawReportView.class); // report.ui
+        cc.addPackages(true, UiPersona.class); // rights.ui
+        cc.addPackages(true, StockUpiImpl.class); // stock.ui
+        cc.addPackages(true, ProductTask.class); // uniqueunit.ui
+        cc.addPackages(true, ReactivePicoUnitDetailViewCask.class); // redtapext.ui
+        cc.addPackages(true, AboutController.class); // misc.ui
+        cc.addPackages(true, SearchCask.class); // search.ui
+        cc.addPackages(LoggerProducer.class); // core.system. autolog
+        cc.addPackages(GlobalConfig.class); // Global Config produces.
+
+        Application.launch(DwOssApplication.class, args);
     }
 }

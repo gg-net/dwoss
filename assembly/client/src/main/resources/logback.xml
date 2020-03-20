@@ -62,6 +62,7 @@
     <logger name="eu.ggnet.saft.core.dl.LocalDl" level="INFO"/>
     <logger name="eu.ggnet.saft.core.dl.RemoteDl" level="INFO"/>
     <logger name="eu.ggnet.dwoss.assembly.remote.lookup.WildflyLookup" level="INFO"/>
+    <logger name="eu.ggnet.dwoss.assembly.client.support.WildflyLookup" level="INFO"/>
     <logger name="org.jboss.ejb.client.EJBClientContext" level="INFO"/>
     <logger name="org.jboss.ejb.client.ReceiverInterceptor" level="INFO"/>
     <logger name="org.jboss.ejb.client.invocation" level="INFO" />

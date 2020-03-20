@@ -105,7 +105,7 @@ public class RunClientFx extends Application {
 
         Toolkit.getDefaultToolkit().getSystemEventQueue().push(new UnhandledExceptionCatcher());
 
-        UiCore.overwriteFinalExceptionConsumer(new DwFinalExceptionConsumer(Dl.local().lookup(CachedMandators.class).loadMandator().bugMail()));
+        UiCore.overwriteFinalExceptionConsumer(new DwFinalExceptionConsumer(() -> Dl.local().lookup(CachedMandators.class).loadMandator().bugMail()));
         UiCore.registerExceptionConsumer(UserInfoException.class, new UserInfoExceptionConsumer());
         UiCore.registerExceptionConsumer(ConstraintViolationException.class, new ConstraintViolationConsumer());
 

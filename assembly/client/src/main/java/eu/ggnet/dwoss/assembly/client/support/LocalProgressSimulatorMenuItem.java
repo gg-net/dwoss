@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.assembly.client.support;
 
+import eu.ggnet.dwoss.assembly.client.support.executor.Executor;
+
 import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;

@@ -31,7 +31,11 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.saft.core.UiCore;
 
 /**
- * We still have some information about laf of swing, which are handeld here.
+ * Swing Look and Feel Manager.
+ * All methods are wrapping as much as possible of the Laf handling.
+ * <p>
+ * <i>This class is safe as classic Util/Singleton, as it will never be used in jpro</i>
+ * </p>
  *
  * @author oliver.guenther
  */
@@ -53,7 +57,7 @@ public class LafMenuManager {
                         Optional.ofNullable(UiCore.getMainFrame()).ifPresent(m -> SwingUtilities.updateComponentTreeUI(m));
                         storeLaf(className);
                     } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-                        L.error("Error on changing LAF", ex);
+                        L.error("setOnAction(): Error on changing LAF", ex);
                     }
                 });
             });
@@ -62,11 +66,16 @@ public class LafMenuManager {
     }
 
     /**
-     * Creates the laf menu old style.
+     * Creates a javafx menu of all available swing lafs.
+     * The menuitems are radio buttom menu items and the active
+     * laf is selected. A selection of a laf in the menu will result in
+     * the global activation of the laf and the storage of the laf in
+     * the user preferences.
      *
-     * @return
+     * @return a javafx men of all available swing lafs.
      */
     public static Menu createLafMenu() {
+        L.debug("createLafMenu() called");
         String active = UIManager.getLookAndFeel().getClass().getName();
         Menu lafMenu = new Menu("Look & Feel (Swing Components Only)");
         ToggleGroup tg = new ToggleGroup();
@@ -83,18 +92,18 @@ public class LafMenuManager {
     }
 
     /**
-     * Loads the user laf from some local storage and sets it.
-     * Usefull on startup.
+     * Loads the laf for the user preferences and tries to set it in the UIManager.
+     * If no Laf was stored before or something fails on the setting, only a warning is logged.
      */
     public static void loadAndSetUserLaf() {
         EventQueue.invokeLater(() -> {
             try {
                 UIManager.setLookAndFeel(loadLaf());
+                L.debug("loadAndSetUserLaf() successful");
             } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-                L.warn("Cound not set LAF:" + ex.getMessage(), ex);
+                L.warn("loadAndSetUserLaf() could not be set, keeping default. Message {}" + ex.getMessage());
             }
         });
-
     }
 
     private static void storeLaf(String className) {

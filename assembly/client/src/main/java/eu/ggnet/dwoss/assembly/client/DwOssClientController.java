@@ -14,8 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.assembly.client.support;
+package eu.ggnet.dwoss.assembly.client;
 
+import eu.ggnet.dwoss.assembly.client.support.ActiveStockSelectorToolbarPane;
+import eu.ggnet.dwoss.assembly.client.support.LafMenuManager;
+import eu.ggnet.dwoss.assembly.client.support.LocalProgressSimulatorMenuItem;
+
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,8 +36,10 @@ import javafx.scene.control.*;
 import org.slf4j.Logger;
 
 import eu.ggnet.dwoss.assembly.client.support.MenuBuilder;
-import eu.ggnet.dwoss.assembly.client.support.login.LoggedInTimeout;
-import eu.ggnet.dwoss.assembly.client.support.login.RightsToolbarNode;
+import eu.ggnet.dwoss.assembly.client.support.MenuBuilder;
+import eu.ggnet.dwoss.assembly.client.support.RightsToolbarManager;
+import eu.ggnet.dwoss.assembly.client.support.login.LoggedInTimeoutManager;
+import eu.ggnet.dwoss.assembly.client.support.monitor.*;
 import eu.ggnet.dwoss.core.widget.event.UserChange;
 import eu.ggnet.dwoss.customer.ui.cap.*;
 import eu.ggnet.dwoss.mail.ui.cap.SendResellerListToSubscribedCustomersMenuItem;
@@ -62,7 +69,7 @@ import eu.ggnet.saft.experimental.auth.UserChangeListener;
  *
  * @author oliver.guenther
  */
-public class ClientMainController {
+public class DwOssClientController {
 
     @FXML
     private MenuBar menuBar;
@@ -77,7 +84,10 @@ public class ClientMainController {
     protected Instance<Object> instance;
 
     @Inject
-    private MonitorServerManager msm;
+    private ServerAllProgressPoller msm;
+
+    @Inject
+    private MonitorManager monitorManager;
 
     @Inject
     private Event<UserChange> event;
@@ -101,7 +111,7 @@ public class ClientMainController {
         UiCore.addOnShutdown(() -> search.closed());
 
         FileListPane filelist = instance.select(FileListPane.class).get();
-        MonitorPane monitorPane = instance.select(MonitorPane.class).get();
+        MonitorPane monitorPane = monitorManager.createPane();
 
         SplitPane right = new SplitPane(filelist, monitorPane);
         right.setOrientation(Orientation.VERTICAL);
@@ -109,9 +119,6 @@ public class ClientMainController {
 
         mainSplitPane.getItems().addAll(unitAvailability, search, right);
         mainSplitPane.setDividerPositions(0.4, 0.8, 1);
-
-        msm.start(monitorPane);
-        UiCore.backgroundActivityProperty().addListener((ob, o, n) -> monitorPane.saftBackground(n));
 
         Guardian guard = Dl.local().lookup(Guardian.class);
 
@@ -270,10 +277,14 @@ public class ClientMainController {
 
     protected List<Node> populateToolbar() {
         return Arrays.asList(instance.select(RedTapeToolbarButton.class).get(),
-                instance.select(RightsToolbarNode.class).get().node(),
+                instance.select(RightsToolbarManager.class).get().createNode(),
                 instance.select(ActiveStockSelectorToolbarPane.class).get(),
-                instance.select(LoggedInTimeout.class).get().createToolbarElementOnce(),
+                instance.select(LoggedInTimeoutManager.class).get().createToolbarElementOnce(),
                 instance.select(OpenDirectoryToolbarButton.class).get());
+    }
+
+    public static URL loadIcon() {
+        return DwOssClientController.class.getResource("app-icon3.png"); // NOI18N
     }
 
 }

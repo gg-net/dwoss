@@ -29,7 +29,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import eu.ggnet.dwoss.assembly.client.DwOssMain;
-import eu.ggnet.dwoss.assembly.client.support.login.LoggedInTimeout;
+import eu.ggnet.dwoss.assembly.client.support.login.LoggedInTimeoutManager;
 import eu.ggnet.dwoss.core.system.autolog.LoggerProducer;
 import eu.ggnet.dwoss.core.widget.AbstractGuardian;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
@@ -71,7 +71,7 @@ public class LoggedInTimeoutTryout {
             initializer.addPackages(LoggerProducer.class); // core.system. autolog
             SeContainer container = initializer.initialize();
 
-            LoggedInTimeout loggedInTimeout = container.getBeanManager().createInstance().select(LoggedInTimeout.class).get();
+            LoggedInTimeoutManager loggedInTimeout = container.getBeanManager().createInstance().select(LoggedInTimeoutManager.class).get();
 
             Pane pane = loggedInTimeout.createToolbarElementOnce();
             Scene s = new Scene(pane);

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.assembly.client.support.login;
+package eu.ggnet.dwoss.assembly.client.support;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,11 +37,12 @@ import eu.ggnet.dwoss.core.widget.event.UserChange;
 import eu.ggnet.saft.core.Ui;
 
 /**
+ * Manager for the RightsToolBar Node.
  *
  * @author oliver.guenther
  */
 @ApplicationScoped // Can only be added to classe with non final methods. And everything extending node has final methodes.
-public class RightsToolbarNode {
+public class RightsToolbarManager {
 
     public static class ToolbarNode extends HBox {
 
@@ -84,7 +85,7 @@ public class RightsToolbarNode {
         tn.userChange = Optional.of(userChange);
     }
 
-    public ToolbarNode node() {
+    public ToolbarNode createNode() {
         return tn;
     }
 

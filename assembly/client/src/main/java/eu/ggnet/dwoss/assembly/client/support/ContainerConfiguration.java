@@ -23,7 +23,15 @@ import java.util.stream.Stream;
 import javax.enterprise.inject.se.SeContainerInitializer;
 
 /**
- * Helper Configuration, cause we cannot use auto discovery and pro adds some packages and classes.
+ * Helper class to create a configuriation for a cdi SeContainer.
+ * This class is a classic singleton. This is needed and ok cause of:
+ * <ul>
+ * <li>The configuration is used globally and will be used globally in jpro.one</li>
+ * <li>The configuration is needed to create the container, not in the container</li>
+ * <li>The only way to get parameters to the javafx application directly is via String parameters, which is improbable for this case</li>
+ * <li>There needs to be a way to supply container configuration information for dw pro.</li>
+ * <li>Auto discovery is disabled in the contationer, as we pull in classes from the server, which should not be injectable in the client</li>
+ * </ul>
  *
  * @author oliver.guenther
  */
@@ -31,9 +39,9 @@ public class ContainerConfiguration {
 
     private static ContainerConfiguration instance;
 
-    private List<Class<?>> fullPackages = new ArrayList<>();
+    private final List<Class<?>> fullPackages = new ArrayList<>();
 
-    private List<Class<?>> packages = new ArrayList<>();
+    private final List<Class<?>> packages = new ArrayList<>();
 
     public static ContainerConfiguration instance() {
         if ( instance == null ) instance = new ContainerConfiguration();

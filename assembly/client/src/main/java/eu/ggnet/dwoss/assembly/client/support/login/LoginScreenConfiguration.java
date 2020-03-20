@@ -26,7 +26,8 @@ import org.inferred.freebuilder.FreeBuilder;
 import eu.ggnet.saft.experimental.auth.Guardian;
 
 /**
- * Config vor the LoginScreen.
+ * Configuration for the LoginScreen.
+ * Combines success, cancel on optional guardian configuration.
  *
  * @author oliver.guenther
  */
@@ -51,7 +52,8 @@ public interface LoginScreenConfiguration {
     Runnable onCancel();
 
     /**
-     * Guardian for authentication.
+     * Optional guardian for authentication.
+     * It's optional here, as the login screen can be used in a lazy mode.
      *
      * @return Guardian for authentication.
      */

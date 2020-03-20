@@ -19,7 +19,9 @@ package eu.ggnet.dwoss.assembly.remote.exception;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,10 +45,10 @@ public class DwFinalExceptionConsumer implements Consumer<Throwable> {
 
     private final static Logger L = LoggerFactory.getLogger(DwFinalExceptionConsumer.class);
 
-    private final String bugMail;
+    private final Optional<Supplier<String>> bugMail;
 
-    public DwFinalExceptionConsumer(String bugMail) {
-        this.bugMail = bugMail;
+    public DwFinalExceptionConsumer(Supplier<String> bugMail) {
+        this.bugMail = Optional.ofNullable(bugMail);
     }
 
     @Override
@@ -70,7 +72,7 @@ public class DwFinalExceptionConsumer implements Consumer<Throwable> {
             SwingSaft.run(() -> {
                 DetailDialog.show(SwingCore.mainFrame(), "Systemfehler", deepestMessage,
                         getUserInfo() + '\n' + toMultilineStacktraceMessages(b), getUserInfo() + '\n' + toStackStrace(b),
-                        bugMail);
+                        bugMail.orElse(() -> null).get());
             });
         }
     }

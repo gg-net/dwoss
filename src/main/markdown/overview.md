@@ -14,25 +14,66 @@ JavaFx Client. The connection is made through remote ejb invocations.
 Project root package and maven groupid: "eu.ggnet.dwoss"
 Project: dwoss
 
-Assemblies
-----------
+Server
+------
 
-There are two projects in der assembly folder, client and server. Both projects are templates to build your own client and server.
+The server is designed as a deployable war, optimized for the wildfly server. The basis is found
+under assembly/server. For the final product database definitions and an implementation of mandator is
+needed. 
 
-The _client_ works with every server, just needs url and authentication.
+A sample implementation is found under assembly/server-sample. The war can be deployed to an empty wildfly (V18) and
+will generate sample data for an in memory database.
 
-The _server_ needs to be extended with an implementation of the mandator features. There is a sample-server profile in der server project.
-This profile adds all components of a sample mandator and some entity generation. Look into this for more information.
+Client
+------
+
+The client is designed as a classic fat jar running on a desktop operating system. There has been some work to run the client
+via jpro.one but it is in an early stage. It can be found under assembly/client.
+
+The client uses javafx and swing elements bridged through saft. It leverages a CDI backend (SeContainer) and uses RemoteEJB connections
+for communication with the server. 
+
+### Swing, JavaFx and Saft
+
+The usage of swing and javafx all together has historical reasons. The application development started in 2008. At that time 
+Swing was the best choice for a fat client. JavaFx 2 was released in 2011. Till then, a huge amount of Ui's was already up and 
+running. But all the features of javafx and the nature of this project (also to be a playground for some technics) motivated the
+integration of javafx components and later the development of saft as a bridging api/framework.
+
+### CDI on the Client
+
+The CDI integration started 2019. This happened with the long term target jpro.one client in mind. One limitation or feature of jpro.one
+is, that everything runs in one JVM. This changes the behavior of static values, methods and singletons as they are available through out
+all client sessions. CDI with the SeContainer allows the startup of multiple containers in one jvm. And features like @Singleton provide 
+the expected functionality of a classic self-designed singleton. 
+
+CDI also has so many cool features (like Events and Interceptors) that simplify the development on the client side.
+
+It has to be noted that the auto discovery of the SeContainer needs to be disabled as most of the server classes are available on 
+the client side. The splitting of data objects, remote interfaces and server implementation would be a tremendous effort and is not
+considered yet.
+
+### RemoteEjbs
+
+A typical application of today would probably use something like jackson -> json/xml -> jackson for client server communication.
+But in the beginning of the project remote ejb connections where chosen and most of the jpa entity models where exposed 
+(used in the client). A transformation would be a tremendous effort and is not considered yet. 
+Newly developed components try to hide the entity model but all the connections are still done via remote ejbs. 
+
+The only drawbacks so far are:
+- A client dependency to the wildfly server
+- Some weird serialization/deserialization problems. (e.g. TreeMap)
+- Usage of different jdks on client and server side.
 
 Architecture
 ============
 
-An architecture must be testable (e.g. Archunit/Mavenresolver). Even if no test is written, but it is possible and may happen any time.
-Everything, that is not testable, should be defined as guidelines, good style. But it _may_ be violated.
-And above all an architecture must make sense. Splitting modules int artifacts without a technical or functional requirement
-is not usefull and must be avoided.
-(e.g. the remote interfaces for EJB clients. If entites are exposed, expose the hole ejb to the client. An extra layer which only contains
-remote interfaces and entites, but not the implemation of the ejbs, even if it isn't used on the client side, doesn't make sense.
+An architecture must be testable (e.g. Archunit/Mavenresolver) even if no test is written, but it is possible and may happen any time.
+Everything that is not testable should be defined as guidelines, good style. But it _may_ be violated.
+And above all an architecture must make sense. Splitting modules into artifacts without a technical or functional requirement
+is not useful and must be avoided.
+(e.g. the remote interfaces for EJB clients. If entities are exposed, expose the hole ejb to the client. An extra layer which only contains
+remote interfaces and entities but not the implementation of the ejbs, even if it isn't used on the client side, doesn't make sense.
 If only a small amount of information should be exposed, design a public api)
 
 Module
@@ -42,32 +83,32 @@ Module
 Components
 ----------
 
-A module can consist of the following layered components. The layered order describes the allowed usage. Only for the top to the bottom, may
+A module can consist of the following layered components. The layered order describes the allowed usage. Only for the top to the bottom may
 dependencies exist.
 - root package: "project-root"."module"."component"
 - maven artifactid: "project"-"module"-"component"
 
-A module comes in two forms of assemblys:
+A module comes in two forms of assemblies:
 - server: deployed on an jakarta ee server, for now only wildfly is tested.
 - client: deployed as desktop (swing and javafx) desktop client.
 
-Each assambly may dependen on the common subcomponent and has it's own components only used in that form of assembly.
+Each assembly may depend on the common subcomponent and has it's own components only used in that form of assembly.
 
 1. **Common components** (may be used by both assemblies)
     1. **api** - public api. This is, what other modules may depend on
         - should only contain: interfaces or serializable value objects. Interfaces may be annotated with @Remote oder @Local
-        - must not contail: EJBs, Webbeans, Javafx or Swing (Desktop Ui) code.
+        - must not contain: EJBs, Webbeans, Javafx or Swing (Desktop Ui) code.
         - must not depend on any other module, even apis.
     2. **demand** - revers form of the pulic api. Things that the module wants but not implements.
         - should only contain: interfaces or serializable value objects.
-        - must not contail: EJBs, Webbeans, Javafx or Swing (Desktop Ui) code.
+        - must not contain: EJBs, Webbeans, Javafx or Swing (Desktop Ui) code.
         - must not depend on any other module, even apis.
     3. **ee** - enterprise engine, the working code.
         - should only contain: ejbs and supplementary implemented code.
         - should be: tested heaviliy
         - may only define: entity or other persistence like classes or code.
         - may contain @Remote Interfaces for (Desktop) remote client usage
-        - may contain Serialzable Value objects for (Desktop) remote client usage or web client usage.
+        - may contain Serializable Value objects for (Desktop) remote client usage or web client usage.
         - must not contain: web or desktop ui code.
         - must not depend on other modules expect public apis.
 4. **Assembly server**
@@ -79,24 +120,24 @@ Each assambly may dependen on the common subcomponent and has it's own component
     1. **spi** - Ui Service Api, allows the usage of other ui components (See the customer spi for an idea)
         - must not depend on other modules or public apis
         - must not expose the ee component.
-        - must only contail: Interfaces and value objects.
-    2. **ui** - Ui componenten
-        - should contail javafx or swing desktop client code.
+        - must only contain: Interfaces and value objects.
+    2. **ui** - Ui components
+        - should contain javafx or swing desktop client code.
         - must not depend on other modules expect public apis and spis.
 
 ### Module dependencies
 
 There are three modes of dependence between modules.
 1. _Optional_: A module "A" depends optionally on module "B" if it declares the public api or spi of "B" as a dependency (in the maven pom.xml)
-   but does not need an implementation at runtime. (e.g. user can print or mail a document. mailing is only available if an implemation of
-   the public mail api is supplied at runtime. If not, the module would disable the mail button. TODO: Linkt to an example)
+   but does not need an implementation at runtime. (e.g. user can print or mail a document. mailing is only available if an implementation of
+   the public mail api is supplied at runtime. If not, the module would disable the mail button. TODO: Linked to an example)
    It is encouraged to write an comment <!-- depends optional --> in the pom.xml.
 
 2. _Required_: A module "A" requires a module "B" if it declares the public api or spi of "B" as a dependency (in the maven pom.xml) and will
    fail at runtime if no implementation is available. (TODO: How to test this via unittesting)
 
 3. _Bound_ (do not use anymore): A module "A" binds a module "B" if it violates the rules of component dependencies such as "A" depends and
-    uses classes defined in "B".ee. This is forbided in future implementations and is only discribed as there are still such dependencies in place.
+    uses classes defined in "B".ee. This is forbidden in future implementations and is only described as there are still such dependencies in place.
     Also all the mandator implementations violate this restriction.
 
 The Core Components
@@ -104,7 +145,7 @@ The Core Components
 
 The Core Components have special rules.
 1. common - contains constants and interfaces
-    - may be requiered by apis
+    - may be required by apis
 2. system - contains interceptors, beans and libraries, very thin
     - may be bound by ee
 3. widget - contains ui components, global handlers (tba)
@@ -124,7 +165,7 @@ Typical Packages, Classes and Methods with their Nature
 -------------------------------------------------------
 
 Here are typical names of packages, classes and method, which imply some nature.
-Most of these are not self invented but seen in other projects and reused.
+Most of these are not self-invented but seen in other projects and reused.
 
  - \*.entity | Persistent Entities. Entity classes are named like their intention
    (e.g. Person, Order, Customer)
@@ -146,8 +187,8 @@ Most of these are not self invented but seen in other projects and reused.
           context of one entity.
 		- request\* | Either finds a requested instance or if non exists,
                   creates one.
- - *.op | Operations. Businesslogic that ist more that a "simple" emo
- - *.cap | ActionFactories, MetaActions and eveything that connects to the ui
+ - *.op | Operations. Business logic that is more complex than a "simple" emo
+ - *.cap | ActionFactories, MetaActions and everything that connects to the ui
    Framework via services.
 
 ### Local and Remote Service Names ####
@@ -162,34 +203,36 @@ The implementation reuses the interface name and extends it with Operation or Be
 This allows our actual remote discovery through interface usage to work.
 
 Each persistence Project may supply a "Project"Agent. This is the simplest way to get
-to entites from the remote side. The Agent implementation should consit mostly of
-findXXX methodes and supply fetch eager versions.
+to entities from the remote side. The Agent implementation should consist mostly of
+findXXX methods and supply fetch eager versions.
 
 ### Ui Class and Method Names ####
 
 - UI Implementations (MVC, MVP, mixed, missing):
     - \*Model, \*View, \*Controller, \*Presenter
-	- Controller and Presenter are syndonymes, just to represent the pattern
+	- Controller and Presenter are interchangeably, just to represent the pattern
 	- Model may be missing.
-	- View may be a description file (fxml)
+	- \*View may be a description file (fxml)
     - Embedded (All in one Class): \*View or \*ViewCask
+	- \*Manager a backing cdi bean or management class which connects some ui element and some background activity
+		- e.g. LogginTimeoutManager 
 - CRUD Implementations:
-    - Operation/View for creating,building,first time usage of something: Create\*
+    - Operation/View for creating, building, first time usage of something: Create\*
     - Operation/View for modifying, editing, updating of something: Update\*
 
 - DTO Names (mostly in the API packages):
     - Pico*
         - Smallest representation and used for id transfer
     - Simple*
-        - Simple representation. Will contation more information that Pico*, but also only an API DTO
+        - Simple representation. Will contain more information than Pico*, but also only an API DTO
 
 Mandator implementation
 -----------------------
 
-The mandator implementations right now depend on many components. It is encouraged, that these components use only pulic apis but if this makes it all too
-complecated, the rule may be broken.
+The mandator implementations right now depend on many components. It is encouraged that these components use only public apis but if this makes it all too
+complicated the rule may be broken.
 
- - Incubator projects have the same groupId, but might have a completely
+ - Incubator projects have the same groupId but might have a completely
    different artifact architecture.
 
 DwPro Components
@@ -200,19 +243,19 @@ The dw pro components have the same architecture. They differ only in the groupi
 Architectur implemation
 =======================
 
-If a new feature is developed the following architecture questions must be answerd:
+If a new feature is developed the following architecture questions must be answered:
 
-1. Does the feature nature match any existing module nature, than put it in that module.
-2. If not, can the feature be splitt such as a part of the feature matches the nature of any existing module and the splitt feature is useful by itself.
-   Then splitt and put the splitt feature in the existing module.
-3. If not or the non matching part of a splitt, create a new module.
-4. In the new module consider for every required api would make the feature sense without the implemation of the required api, than require it optional.
-5. Is still something missing, create an demand.
+1. Does the feature nature match any existing module nature then put it in that module.
+2. If not, can the feature be splitted such as a part of the feature matches the nature of any existing module and the splitting feature is useful by itself.
+   Then split and put the splitting feature in the existing module.
+3. If not or the non matching part of a splitting, create a new module.
+4. In the new module consider for every required api would make the feature sense without the implementation of the required api, than require it optional.
+5. Is still something missing, create a demand.
 
-Implicite Knowledge
+Implicit Knowledge
 -------------------
 
-Things we know, but haven't written down yet.
+Things we know but haven't written down yet.
 
  - API hard bound (Kurzgedanke, ein Projekt (auch persistent) darf, andere api zwingend implementieren) .. Das muss ich noch aufschreiben
  - http://stackoverflow.com/questions/40818396/unable-to-build-hibernate-sessionfactory-exception-from-nowhere

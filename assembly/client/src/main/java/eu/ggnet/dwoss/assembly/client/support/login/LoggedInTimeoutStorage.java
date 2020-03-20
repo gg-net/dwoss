@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) 2020 GG-Net GmbH
  *
@@ -33,12 +34,12 @@ import org.slf4j.Logger;
  *
  * @author oliver.guenther
  */
-public class LoggedInTimoutStorage {
+public class LoggedInTimeoutStorage {
 
     @Inject
     private Logger log;
 
-    private final Preferences P = Preferences.userNodeForPackage(LoggedInTimoutStorage.class);
+    private final Preferences P = Preferences.userNodeForPackage(LoggedInTimeoutStorage.class);
 
     private final DateTimeFormatter TF = DateTimeFormatter.ofPattern("mm:ss");
 

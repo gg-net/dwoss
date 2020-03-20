@@ -36,6 +36,23 @@ import eu.ggnet.saft.experimental.auth.AuthenticationException;
 import eu.ggnet.saft.experimental.auth.Guardian;
 
 /**
+ * A loginscreen for user/pass authentication, quicklogin authentication and lazy setting of the authentication system.
+ * This loginscreen displays two fields: user and pass. The focus is set on the user field.
+ * <p>
+ * The quicklogin feature is used by pressing "+" followed by 3 numbers.
+ * The three characters will not be displayed and consumed directly.
+ * A failed quicklogin will not be visible.
+ * </p>
+ * <p>
+ * The lazy setting of the authentication system is done via {@link #setAndActivateGuardian(eu.ggnet.saft.experimental.auth.Guardian) }.
+ * The first authentication is happening, if user and pass is supplied and the guardian is set. Both things can happen in paralell.
+ * </p>
+ * <p>
+ * The success and cancel operation are consumed, as this class is also used with saft.
+ * </p>
+ * <p>
+ * <i>This class cannot use CDI, as it is used at least once before the CDI container startup</i>
+ * </p>
  *
  * @author oliver.guenther
  */
@@ -195,12 +212,20 @@ public class LoginScreenController implements ClosedListener, Consumer<LoginScre
         progressBar.progressProperty().set(0);
     }
 
+    /**
+     * On close (via ui x) runs the cancel operation.
+     */
     @Override
     public void closed() {
         if ( authenticationSuccessful ) return;
         onCancel.run();
     }
 
+    /**
+     * Consumes the screen configuration for success, cancel and optional a guardian.
+     *
+     * @param c the configuration.
+     */
     @Override
     public void accept(LoginScreenConfiguration c) {
         onSuccess = c.onSuccess();

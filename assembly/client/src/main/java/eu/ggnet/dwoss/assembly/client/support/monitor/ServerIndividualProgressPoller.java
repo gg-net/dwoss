@@ -14,30 +14,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.assembly.client.support;
+package eu.ggnet.dwoss.assembly.client.support.monitor;
 
 import java.util.SortedSet;
 
 import javafx.concurrent.Task;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.system.progress.HiddenMonitor;
 import eu.ggnet.dwoss.core.system.progress.ProgressObserver;
 import eu.ggnet.saft.core.Dl;
 
 /**
- * Task to get poll the progress form the server.
+ * Task to poll the progress of one running activity on the server.
  *
+ * @see ServerAllProgressPoller
  * @author oliver.guenther
  */
-public class MonitorServerTask extends Task<Void> {
+public class ServerIndividualProgressPoller extends Task<Void> {
 
     private final int key;
 
     private final SortedSet<Integer> localKeys;
 
-    public MonitorServerTask(int key, SortedSet<Integer> localKeys) {
+    public ServerIndividualProgressPoller(int key, SortedSet<Integer> localKeys) {
         this.key = key;
         this.localKeys = localKeys;
     }
@@ -46,6 +48,7 @@ public class MonitorServerTask extends Task<Void> {
     protected Void call() throws Exception {
         // Hint: the supplied Monitor has a length of 100;
         HiddenMonitor hm = Dl.remote().lookup(ProgressObserver.class).getMonitor(key);
+        LoggerFactory.getLogger(ServerIndividualProgressPoller.class).debug("call() starting to poll progress of {}", hm.getTitle());
         updateTitle(hm.getTitle());
         while (hm != null && !hm.isFinished() && !hm.isStale()) {
             int progress = 100 - hm.getAbsolutRemainingTicks();

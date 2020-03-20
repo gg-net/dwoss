@@ -50,7 +50,7 @@ import eu.ggnet.saft.experimental.auth.Guardian;
  * @author oliver.guenther
  */
 @Singleton
-public class LoggedInTimeout {
+public class LoggedInTimeoutManager {
 
     /**
      * Default Timeout of 3 minutes.
@@ -61,7 +61,7 @@ public class LoggedInTimeout {
     private Logger log;
 
     @Inject
-    private LoggedInTimoutStorage storage;
+    private LoggedInTimeoutStorage storage;
 
     private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("mm:ss");
 

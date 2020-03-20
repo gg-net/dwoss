@@ -14,13 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.assembly.client.support;
+package eu.ggnet.dwoss.assembly.client.support.monitor;
 
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import javax.inject.Inject;
+
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -30,40 +31,24 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
-import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.dwoss.assembly.client.support.executor.Executor;
 
 import static java.lang.Double.MAX_VALUE;
 
 /**
+ * Pane containing a ListView to display instances of {@link Task}.
  *
  * @author oliver.guenther
  */
 public class MonitorPane extends BorderPane {
 
-    private class SaftVirtualClientTask extends Task<Void> {
+    private final ListView<Task<?>> taskListView;
 
-        @Override
-        protected Void call() throws Exception {
-            updateTitle("Hintergrundaktivität");
-            updateMessage("Hintergrundaktivität");
-            CountDownLatch latch = new CountDownLatch(1);
-            ChangeListener<Boolean> l = (ob, o, n) -> {
-                if ( !n ) {
-                    latch.countDown();
-                }
-            };
-            UiCore.backgroundActivityProperty().addListener(l);
-            if ( !runningSaftBackgroundTask.get() ) latch.countDown(); // Doublecheck, if we ended befor creation.
-            latch.await();
-            UiCore.backgroundActivityProperty().removeListener(l);
-            return null;
-        }
+    private final ObservableList<Task<?>> taskList;
 
-    }
-
-    private final ListView<Task<Void>> taskListView;
-
-    private final ObservableList<Task<Void>> taskList;
+    @Inject
+    @Executor
+    private ScheduledExecutorService ses;
 
     /**
      * Workarround for the case, that the saftbackgrountask is created but the end has allready happend.
@@ -74,9 +59,9 @@ public class MonitorPane extends BorderPane {
         taskList = FXCollections.observableArrayList();
         taskListView = new ListView<>(taskList);
 
-        taskListView.setCellFactory((ListView<Task<Void>> view) -> new ListCell<Task<Void>>() {
+        taskListView.setCellFactory((ListView<Task<?>> view) -> new ListCell<Task<?>>() {
             @Override
-            protected void updateItem(Task<Void> item, boolean empty) {
+            protected void updateItem(Task<?> item, boolean empty) {
                 super.updateItem(item, empty);
                 if ( empty ) {
                     setText(null);
@@ -105,12 +90,17 @@ public class MonitorPane extends BorderPane {
      *
      * @param running state of the required background activity.
      */
-    public void saftBackground(boolean running) {
+    void saftBackground(boolean running) {
         if ( !runningSaftBackgroundTask.compareAndSet(!running, running) ) return; // Allready in the right state
-        if ( running ) submit(new SaftVirtualClientTask());
+        if ( running ) submit(new SaftNaiveProgressTask(this));
     }
 
-    public void submit(Task<Void> t) {
+    /**
+     * Allows submisson of task to be displayed and run on the global executor.
+     *
+     * @param t the task to display
+     */
+    void submit(Task<?> t) {
         Platform.runLater(() -> {
             // Eviction handler.
             EventHandler<WorkerStateEvent> e = (WorkerStateEvent event) -> Platform.runLater(() -> taskList.remove(t));
@@ -121,6 +111,16 @@ public class MonitorPane extends BorderPane {
 
             taskList.add(t);
         });
-        UiCore.getExecutor().execute(t);
+        ses.execute(t);
     }
+
+    /**
+     * Returns a status of the saft background activity.
+     *
+     * @return a status of the saft background activity.
+     */
+    AtomicBoolean runningSaftBackgroundTask() {
+        return runningSaftBackgroundTask;
+    }
+
 }

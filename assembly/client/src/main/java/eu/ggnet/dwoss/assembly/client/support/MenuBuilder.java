@@ -17,7 +17,6 @@
 package eu.ggnet.dwoss.assembly.client.support;
 
 import java.awt.event.ActionEvent;
-import java.lang.annotation.Annotation;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,13 +30,14 @@ import javafx.scene.control.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.assembly.client.support.MenuBuilder;
 import eu.ggnet.saft.api.Authorisation;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.experimental.auth.Accessable;
 import eu.ggnet.saft.experimental.auth.Guardian;
 
 /**
- * Util to build a menu.
+ * Util to build javafx menuitems via CDI wrapping swing actions.
  *
  * @author oliver.guenther
  */
@@ -70,6 +70,13 @@ public class MenuBuilder {
     @Inject
     private Instance<Object> instance;
 
+    /**
+     * Selects the class in the running CDI context.#
+     * It the class is an {@link Action} it is wrapped into a {@link MenuItem}
+     *
+     * @param clazz the class to lookup
+     * @return the resulting Menuitem.
+     */
     public MenuItem item(Class<?> clazz) {
         L.debug("item(clazz={},qualifiers={}) starting", clazz);
         if ( MenuItem.class.isAssignableFrom(clazz) ) {
@@ -89,12 +96,19 @@ public class MenuBuilder {
 
             item.setOnAction((e) -> action.actionPerformed(new ActionEvent(action, ActionEvent.ACTION_PERFORMED, action.getValue(Action.NAME).toString())));
             // Remapping of old access rules.
-            if ( action instanceof Accessable ) Dl.local().lookup(Guardian.class).add(new MenuActionAccessable(item, (Accessable)action));            
+            if ( action instanceof Accessable ) Dl.local().lookup(Guardian.class).add(new MenuActionAccessable(item, (Accessable)action));
             return item;
         }
         throw new RuntimeException("Class " + clazz + " not supported");
     }
 
+    /**
+     * Shortcut for multiple lookups at once.
+     *
+     * @see #item(java.lang.Class)
+     * @param classes
+     * @return
+     */
     public List<MenuItem> items(Class<?>... classes) {
         return Arrays.stream(classes).map(c -> item(c)).collect(Collectors.toList());
     }
