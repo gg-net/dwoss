@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther.
  *
  * This library is free software; you can redistribute it and/or
@@ -19,11 +19,12 @@ package eu.ggnet.statemachine;
 /**
  *
  * @author oliver.guenther
+ * @param <T>
  */
 public interface StateFormater<T> {
 
     String toHtml(State<T> state);
 
     String toToolTipHtml(State<T> state);
-    
+
 }

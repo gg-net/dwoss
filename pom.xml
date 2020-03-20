@@ -779,9 +779,9 @@
                 <type>pom</type>
             </dependency>
             <dependency>
-                <groupId>org.hibernate.validator</groupId> <!-- W15 = 6.0.13 -->
+                <groupId>org.hibernate.validator</groupId> <!-- W18 = 6.0.18 -->
                 <artifactId>hibernate-validator</artifactId>
-                <version>6.0.17.Final</version>
+                <version>6.0.18.Final</version>
             </dependency>
             <dependency> <!-- Expresion factory for hibernate validator -->
                 <groupId>org.glassfish</groupId>
