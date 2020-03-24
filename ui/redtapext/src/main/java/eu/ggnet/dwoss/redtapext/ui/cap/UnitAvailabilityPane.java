@@ -63,19 +63,18 @@ public class UnitAvailabilityPane extends BorderPane {
 
     private final Button clearButton;
 
-    private final ObservableList<UnitAvailability> results;
+    private final ObservableList<UnitAvailability> results = FXCollections.observableArrayList();
 
     private final Selector<UnitAvailability> selector; // No clear needed. This Panel is in the MainFrame.
 
     public UnitAvailabilityPane() {
         searchField = new TextField();
         clearButton = new Button("Liste leeren");
+        clearButton.setOnAction(e -> results.clear());
 
         HBox top = new HBox(5, new Label(" SopoNr:"), searchField, clearButton);
         top.setAlignment(Pos.CENTER_LEFT);
         HBox.setHgrow(searchField, Priority.ALWAYS);
-
-        results = FXCollections.observableArrayList();
 
         ListView<UnitAvailability> resultListView = new ListView<>(results);
         resultListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
