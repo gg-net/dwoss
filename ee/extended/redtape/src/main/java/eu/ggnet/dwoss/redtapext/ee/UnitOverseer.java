@@ -39,9 +39,9 @@ public interface UnitOverseer {
      * <p>
      * @param dossierId     The Dossiers ID
      * @param refurbishedId The refurbished id for the Unique Unit search
-     * @throws IllegalStateException if the refurbishId is not available
+     * @throws UserInfoException if the refurbishId is not available
      */
-    void lockStockUnit(long dossierId, String refurbishedId) throws IllegalStateException;
+    void lockStockUnit(long dossierId, String refurbishedId) throws UserInfoException;
 
     /**
      * Builds a result object that contains positions build for a available unit.
