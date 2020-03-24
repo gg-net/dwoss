@@ -10,6 +10,8 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import eu.ggnet.dwoss.core.common.FileJacket;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.receipt.ee.gen.ReceiptGeneratorOperation;
@@ -24,7 +26,6 @@ import eu.ggnet.dwoss.stock.ee.entity.LogicTransaction;
 import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcReader;
 
 import static eu.ggnet.dwoss.core.common.values.PositionType.PRODUCT_BATCH;
@@ -66,10 +67,6 @@ public class CreditMemoReportIT extends ArquillianProjectArchive {
             this.netto = netto;
             this.brutto = brutto;
         }
-        
-        
-        
-        
 
     }
 
@@ -95,7 +92,7 @@ public class CreditMemoReportIT extends ArquillianProjectArchive {
     private ReceiptGeneratorOperation receiptGenerator;
 
     @Test
-    public void testCreditMemoReportOperation() throws IOException, InterruptedException {
+    public void testCreditMemoReportOperation() throws IOException, InterruptedException, UserInfoException {
         long customerId = customerGenerator.makeCustomer();
         List<UniqueUnit> uus = receiptGenerator.makeUniqueUnits(4, true, true);
         UniqueUnit uu1 = uus.get(0);

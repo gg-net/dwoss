@@ -101,7 +101,7 @@ public class UnitOverseerBean implements UnitOverseer {
     @Override
     public void lockStockUnit(long dossierId, String refurbishedId) throws UserInfoException {
         if ( !redTapeApi.findUnitByRefurbishIdAndVerifyAviability(refurbishedId).available() )
-            throw new IllegalStateException("Trying to lock refusbishId " + refurbishedId + ", but it is not available!");
+            throw new UserInfoException("Trying to lock refusbishId " + refurbishedId + ", but it is not available!");
         UniqueUnit uu = new UniqueUnitEao(uuEm).findByIdentifier(Identifier.REFURBISHED_ID, refurbishedId);
         StockUnit stockUnit = new StockUnitEao(stockEm).findByUniqueUnitId(uu.getId());
         LogicTransaction lt = new LogicTransactionEmo(stockEm).request(dossierId);
