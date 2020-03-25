@@ -16,10 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ee;
 
-import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.dwoss.core.system.util.Utils;
-import eu.ggnet.dwoss.core.common.FileJacket;
-
 import java.io.*;
 import java.net.URL;
 import java.util.*;
@@ -40,7 +36,10 @@ import org.apache.commons.mail.MultiPartEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.core.common.FileJacket;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
@@ -157,7 +156,8 @@ public class DocumentSupporterOperation implements DocumentSupporter {
      * @return a JasperPrint
      */
     @Override
-    public JasperPrint render(Document document, DocumentViewType viewType) {
+    public JasperPrint render(Document document, DocumentViewType viewType) throws UserInfoException {
+        Objects.requireNonNull(document, "document must not be null");
         return jasper(document, viewType);
     }
 
@@ -310,7 +310,9 @@ public class DocumentSupporterOperation implements DocumentSupporter {
      * @param document the document
      * @return a JasperPrint
      */
-    private JasperPrint jasper(Document document, DocumentViewType viewType) {
+    private JasperPrint jasper(Document document, DocumentViewType viewType) throws UserInfoException {
+        if ( !document.hasSingleTax() )
+            throw new UserInfoException("Dokument " + document.toSimpleLine() + " hat verschiedenen Werte für Steuer, die Vorlage unterstüzt das nicht");
         URL url = mandator.documentIntermix().getTemplate(viewType) != null
                 ? mandator.documentIntermix().getTemplate(viewType)
                 : DocumentSupporterOperation.class.getResource(viewType.fileName);

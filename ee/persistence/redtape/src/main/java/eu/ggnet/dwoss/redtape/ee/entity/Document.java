@@ -16,10 +16,6 @@
  */
 package eu.ggnet.dwoss.redtape.ee.entity;
 
-import eu.ggnet.dwoss.core.common.values.PositionType;
-import eu.ggnet.dwoss.core.common.values.TaxType;
-import eu.ggnet.dwoss.core.common.values.DocumentType;
-
 import java.io.Serializable;
 import java.util.*;
 
@@ -30,10 +26,11 @@ import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.core.common.values.*;
 import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
+import eu.ggnet.dwoss.core.system.util.TwoDigits;
 import eu.ggnet.dwoss.redtape.ee.entity.util.DocumentEquals;
 import eu.ggnet.dwoss.redtape.ee.format.DocumentFormater;
-import eu.ggnet.dwoss.core.system.util.TwoDigits;
 
 import static eu.ggnet.dwoss.core.common.values.PositionType.COMMENT;
 import static eu.ggnet.dwoss.core.common.values.TaxType.GENERAL_SALES_TAX_DE_SINCE_2007;
@@ -817,7 +814,7 @@ public class Document extends BaseEntity implements Serializable, Comparable<Doc
     public boolean hasSingleTax() {
         // HINT: In the future, we may have documents with multiple taxes. This should be identified in the tax type and verified. For now, this is enought.
         if ( positions.isEmpty() ) return true;
-        double refTax = taxType.getTax();
+        double refTax = taxType.tax;
         for (Position pos : positions.values()) {
             if ( pos.getType() == COMMENT ) continue; // Commet Tax is not relevant.
             if ( Double.compare(refTax, pos.getTax()) != 0 ) return false;
@@ -834,10 +831,10 @@ public class Document extends BaseEntity implements Serializable, Comparable<Doc
      * @throws IllegalStateException if the document has different tax positions.
      */
     public double getSingleTax() throws IllegalStateException {
-        if ( positions.isEmpty() ) return taxType.getTax();
+        if ( positions.isEmpty() ) return taxType.tax;
         if ( !hasSingleTax() )
             throw new IllegalStateException("Document(id=" + id + ",identifier=" + identifier + ") has Positions with different taxes.  " + positions);
-        return taxType.getTax();
+        return taxType.tax;
     }
 
     /**

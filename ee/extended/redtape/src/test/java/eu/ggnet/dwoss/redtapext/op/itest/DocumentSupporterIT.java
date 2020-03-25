@@ -1,10 +1,5 @@
 package eu.ggnet.dwoss.redtapext.op.itest;
 
-import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
-import eu.ggnet.dwoss.redtape.ee.entity.Address;
-import eu.ggnet.dwoss.redtape.ee.entity.DocumentHistory;
-import eu.ggnet.dwoss.redtape.ee.entity.Document;
-
 import javax.ejb.EJB;
 import javax.inject.Inject;
 
@@ -15,11 +10,13 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.mandator.api.DocumentViewType;
-import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
-import eu.ggnet.dwoss.redtapext.op.itest.support.*;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.core.common.values.PaymentMethod;
+import eu.ggnet.dwoss.mandator.api.DocumentViewType;
+import eu.ggnet.dwoss.redtape.ee.entity.*;
+import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
+import eu.ggnet.dwoss.redtapext.op.itest.support.*;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -45,7 +42,7 @@ public class DocumentSupporterIT extends ArquillianProjectArchive {
      * Test of create method, of class RedTapeOperation.
      */
     @Test
-    public void testCreate() {
+    public void testCreate() throws UserInfoException {
         Dossier dos = new Dossier();
         dos.setPaymentMethod(PaymentMethod.ADVANCE_PAYMENT);
         dos.setDispatch(true);

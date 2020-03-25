@@ -16,11 +16,6 @@
  */
 package tryout;
 
-
-import eu.ggnet.dwoss.core.common.values.TaxType;
-import eu.ggnet.dwoss.core.common.values.PaymentMethod;
-import eu.ggnet.dwoss.core.common.values.DocumentType;
-
 import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
@@ -28,6 +23,8 @@ import javax.swing.JFrame;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.swing.JRViewer;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
+import eu.ggnet.dwoss.core.common.values.*;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.mandator.sample.impl.Sample;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
@@ -40,7 +37,7 @@ import eu.ggnet.dwoss.redtapext.op.itest.support.NaivBuilderUtil;
  */
 public class DocumentRendererTryout {
 
-    private static JasperPrint makeStaticDocument() {
+    private static JasperPrint makeStaticDocument() throws UserInfoException {
         @SuppressWarnings("UseInjectionInsteadOfInstantion")
         DocumentSupporterOperation documentSupporter = new DocumentSupporterOperation();
         documentSupporter.setMandator(Sample.MANDATOR);
@@ -75,7 +72,7 @@ public class DocumentRendererTryout {
         return documentSupporter.render(doc, DocumentViewType.DEFAULT);
     }
 
-    private static void showSwing() {
+    private static void showSwing() throws UserInfoException {
         JRViewer viewer = new JRViewer(makeStaticDocument());
         JFrame frame = new JFrame("Viewer");
         frame.getContentPane().setLayout(new BorderLayout());
@@ -85,8 +82,7 @@ public class DocumentRendererTryout {
         frame.setVisible(true);
     }
 
-
-    public static void main(String[] args) {
+    public static void main(String[] args) throws UserInfoException {
         showSwing();
     }
 

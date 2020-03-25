@@ -20,16 +20,16 @@ import javax.ejb.Remote;
 
 import net.sf.jasperreports.engine.JasperPrint;
 
+import eu.ggnet.dwoss.core.common.FileJacket;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Flag;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
-import eu.ggnet.dwoss.core.common.FileJacket;
-import eu.ggnet.dwoss.core.common.UserInfoException;
 
 /**
  * Supporter for Documents, mainly for mail or printing.
- * <p/>
+ *
  * @author oliver.guenther
  */
 @Remote
@@ -37,7 +37,7 @@ public interface DocumentSupporter {
 
     /**
      * This method sends a document to the e-Mail address of the customer.
-     * <p/>
+     *
      * @param document This is the Document that will be send.
      * @param jtype
      * @throws UserInfoException if the sending of the Mail is not successful.
@@ -51,8 +51,9 @@ public interface DocumentSupporter {
      * @param document the document
      * @param viewType
      * @return a JasperPrint
+     * @throws UserInfoException if document cannot be rendered, e.g. multitax document.
      */
-    JasperPrint render(Document document, DocumentViewType viewType);
+    JasperPrint render(Document document, DocumentViewType viewType) throws UserInfoException;
 
     /**
      * Sets the Flags {@link Flag#CUSTOMER_BRIEFED} and {@link Flag#CUSTOMER_EXACTLY_BRIEFED} at the document.

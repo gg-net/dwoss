@@ -23,7 +23,6 @@ import java.util.Optional;
 import javax.swing.AbstractAction;
 
 import org.apache.commons.lang3.StringUtils;
-import org.openide.util.Lookup;
 
 import eu.ggnet.dwoss.customer.api.CustomerMetaData;
 import eu.ggnet.dwoss.customer.api.CustomerService;
@@ -78,7 +77,6 @@ public class DocumentViewAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
         Ui.build(controller.getView()).fx().eval(() -> {
             JasperFxViewData.Builder bin = new JasperFxViewData.Builder()
                     .document(document)
@@ -90,7 +88,8 @@ public class DocumentViewAction extends AbstractAction {
         }, () -> new JasperFxView())
                 .cf()
                 .thenApplyAsync(r -> updateBriefedInDatabase(r), UiCore.getExecutor())
-                .thenAcceptAsync(od -> od.ifPresent(d -> controller.reloadSelectionOnStateChange(d)), EventQueue::invokeLater);
+                .thenAcceptAsync(od -> od.ifPresent(d -> controller.reloadSelectionOnStateChange(d)), EventQueue::invokeLater)
+                .handle(Ui.handler());
     }
 
     // TODO: Verbessere mich :-)
