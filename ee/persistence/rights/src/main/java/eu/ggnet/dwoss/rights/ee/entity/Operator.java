@@ -146,13 +146,8 @@ public class Operator extends BaseEntity implements Serializable, EagerAble {
     }
     //</editor-fold>
 
-    /**
-     * Defensive copy return of rights.
-     * <p>
-     * @return defensive copy return of rights
-     */
     public List<AtomicRight> getRights() {
-        return new ArrayList<>(rights);
+        return rights;
     }
 
     /**

@@ -97,7 +97,32 @@ public class RightsManagmentController implements Initializable, FxController {
         userlist.setCellFactory(new OperatorListCell.Factory());
         ReadOnlyObjectProperty<UiOperator> opProp = userlist.getSelectionModel().selectedItemProperty();
         addRightButton.visibleProperty().bind(deactiveRights.getSelectionModel().selectedIndexProperty().greaterThanOrEqualTo(0).and(opProp.isNotNull()));
+        addRightButton.setOnAction(e -> {
+            UiOperator op = userlist.getSelectionModel().getSelectedItem();
+            long selectedId = op.idProperty().get();
+            RightsAgent agent = Dl.remote().lookup(RightsAgent.class);
+            deactiveRights.getSelectionModel().getSelectedItems().forEach(r -> agent.addRightToOperator(selectedId, r));
+            refreshAll();
+            // Reselect last
+            userlist.getItems().forEach(o -> {
+                if ( o.idProperty().get() == selectedId ) userlist.getSelectionModel().select(o);
+            });
+
+        });
+
         removeRightButton.visibleProperty().bind(activeRights.getSelectionModel().selectedIndexProperty().greaterThanOrEqualTo(0).and(opProp.isNotNull()));
+        removeRightButton.setOnAction(e -> {
+            UiOperator op = userlist.getSelectionModel().getSelectedItem();
+            long selectedId = op.idProperty().get();
+            RightsAgent agent = Dl.remote().lookup(RightsAgent.class);
+            activeRights.getSelectionModel().getSelectedItems().forEach(r -> agent.removeRightFromOperator(selectedId, r));
+            refreshAll();
+            // Reselect last
+            userlist.getItems().forEach(o -> {
+                if ( o.idProperty().get() == selectedId ) userlist.getSelectionModel().select(o);
+            });
+        });
+
         addPersonaButton.visibleProperty().bind(deactivePersonas.getSelectionModel().selectedIndexProperty().greaterThanOrEqualTo(0).and(opProp.isNotNull()));
         removePersonaButton.visibleProperty().bind(activePersonas.getSelectionModel().selectedIndexProperty().greaterThanOrEqualTo(0).and(opProp.isNotNull()));
 
@@ -163,24 +188,6 @@ public class RightsManagmentController implements Initializable, FxController {
             activePersonas.getSelectionModel().clearSelection();
             activeRights.getSelectionModel().clearSelection();
         });
-        refreshAll();
-    }
-
-    @FXML
-    private void handleAddRightButton() {
-        UiOperator op = userlist.getSelectionModel().getSelectedItem();
-        List<AtomicRight> selectedItems = new ArrayList<>(deactiveRights.getSelectionModel().getSelectedItems());
-        op.addAllRight(selectedItems);
-        Dl.remote().lookup(RightsAgent.class).store(op.toOperator());
-        refreshAll();
-    }
-
-    @FXML
-    private void handleRemoveRightButton() {
-        UiOperator op = userlist.getSelectionModel().getSelectedItem();
-        List<AtomicRight> selectedItems = new ArrayList<>(activeRights.getSelectionModel().getSelectedItems());
-        op.removeAllRight(selectedItems);
-        Dl.remote().lookup(RightsAgent.class).store(op.toOperator());
         refreshAll();
     }
 

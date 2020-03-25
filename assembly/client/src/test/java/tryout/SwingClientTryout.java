@@ -9,9 +9,10 @@ import javax.persistence.LockModeType;
 import javafx.embed.swing.JFXPanel;
 
 import eu.ggnet.dwoss.assembly.remote.client.SwingClient;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
-import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.mandator.api.Mandators;
+import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.ee.RightsAgent;
 import eu.ggnet.dwoss.rights.ee.entity.Operator;
@@ -19,7 +20,6 @@ import eu.ggnet.dwoss.rights.ee.entity.Persona;
 import eu.ggnet.dwoss.rights.ee.op.Authentication;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.*;
-import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.dl.RemoteLookup;
 
@@ -234,6 +234,16 @@ public class SwingClientTryout {
 
             @Override
             public <T> T findByIdEager(Class<T> entityClass, Object id, LockModeType lockModeType) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void addRightToOperator(long operatorId, AtomicRight right) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void removeRightFromOperator(long operatorId, AtomicRight right) {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         });

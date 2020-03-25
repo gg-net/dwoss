@@ -24,12 +24,14 @@ import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.core.system.autolog.AutoLogger;
+import eu.ggnet.dwoss.core.system.persistence.AbstractAgentBean;
+import eu.ggnet.dwoss.core.system.persistence.RemoteAgent;
+import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.ee.assist.Rights;
 import eu.ggnet.dwoss.rights.ee.eao.OperatorEao;
 import eu.ggnet.dwoss.rights.ee.entity.Operator;
 import eu.ggnet.dwoss.rights.ee.entity.Persona;
-import eu.ggnet.dwoss.core.system.persistence.AbstractAgentBean;
-import eu.ggnet.dwoss.core.system.persistence.RemoteAgent;
 
 /**
  * This is the {@link RemoteAgent} for Rights.
@@ -82,6 +84,36 @@ public class RightsAgentBean extends AbstractAgentBean implements RightsAgent {
         Operator singleResult = new OperatorEao(em).findByUsername(username);
         singleResult.fetchEager();
         return singleResult;
+    }
+
+    @AutoLogger
+    @Override
+    public void addRightToOperator(long operatorId, AtomicRight right) {
+        if ( right == null ) return;
+        Operator op = em.find(Operator.class, operatorId);
+        if ( op == null ) {
+            L.error("addRightToOperator() operator.id={} not found.", operatorId);
+            return;
+        }
+        if ( op.getAllActiveRights().contains(right) ) {
+            L.info("addRightToOperator() operator.id={} has {} allready, doing nothing.", operatorId, right);
+            return;
+        }
+        op.add(right);
+        L.info("addRightToOperator(operatorId={},right={}) right added to operator {}.", operatorId, right, op.getUsername());
+    }
+
+    @AutoLogger
+    @Override
+    public void removeRightFromOperator(long operatorId, AtomicRight right) {
+        if ( right == null ) return;
+        Operator op = em.find(Operator.class, operatorId);
+        if ( op == null ) {
+            L.error("removeRightFromOperator() operator.id={} not found.", operatorId);
+            return;
+        }
+        op.getRights().remove(right);
+        L.info("removeRightFromOperator(operatorId={},right={}) right removed from operator {}.", operatorId, right, op.getUsername());
     }
 
 }

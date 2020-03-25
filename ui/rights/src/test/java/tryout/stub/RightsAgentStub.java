@@ -152,4 +152,14 @@ public class RightsAgentStub implements RightsAgent {
         return findById(entityClass, id);
     }
 
+    @Override
+    public void addRightToOperator(long operatorId, AtomicRight right) {
+        System.out.println("Add right called");
+    }
+
+    @Override
+    public void removeRightFromOperator(long operatorId, AtomicRight right) {
+        System.out.println("remove right called");
+    }
+
 }

@@ -18,9 +18,10 @@ package eu.ggnet.dwoss.rights.ee;
 
 import javax.ejb.Remote;
 
+import eu.ggnet.dwoss.core.system.persistence.RemoteAgent;
+import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.ee.entity.Operator;
 import eu.ggnet.dwoss.rights.ee.entity.Persona;
-import eu.ggnet.dwoss.core.system.persistence.RemoteAgent;
 
 /**
  * Agent for the Right Persistence Layer.
@@ -45,6 +46,24 @@ public interface RightsAgent extends RemoteAgent {
      * @return the stored instance
      */
     public Operator store(Operator object);
+
+    /**
+     * Add a right to an operator.
+     * If anything goes wrong, only error log.
+     *
+     * @param operatorId the operator id
+     * @param right      the right
+     */
+    public void addRightToOperator(long operatorId, AtomicRight right);
+
+    /**
+     * Remove a right from an operator.
+     * If anything goes wrong, only error log.
+     *
+     * @param operatorId the operator id
+     * @param right      the right
+     */
+    public void removeRightFromOperator(long operatorId, AtomicRight right);
 
     /**
      * Finds a Operator with the given username.
