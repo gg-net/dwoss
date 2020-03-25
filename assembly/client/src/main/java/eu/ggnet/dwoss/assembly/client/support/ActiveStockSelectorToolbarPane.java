@@ -77,7 +77,8 @@ public class ActiveStockSelectorToolbarPane extends VBox {
                 }
             }
         });
-        stockComboBox.setPrefWidth(120);
+        stockComboBox.setPrefWidth(160);
+        stockComboBox.autosize();
     }
 
     @PostConstruct

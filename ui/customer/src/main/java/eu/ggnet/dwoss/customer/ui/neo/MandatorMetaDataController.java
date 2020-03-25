@@ -16,11 +16,6 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo;
 
-import eu.ggnet.dwoss.core.common.values.PaymentMethod;
-import eu.ggnet.dwoss.core.common.values.SalesChannel;
-import eu.ggnet.dwoss.core.common.values.PaymentCondition;
-import eu.ggnet.dwoss.core.common.values.ShippingCondition;
-
 import java.net.URL;
 import java.util.*;
 import java.util.function.Consumer;
@@ -36,6 +31,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.util.StringConverter;
 
+import eu.ggnet.dwoss.core.common.values.*;
 import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.spi.CachedMandators;
@@ -84,22 +80,23 @@ public class MandatorMetaDataController implements Initializable, FxController, 
 
     }
 
-    private static class ToWayOnlyConverter<T> extends StringConverter<T> {
+    private static class FunctionListCell<T> extends ListCell<T> {
 
-        private final Function<T, String> toFunction;
+        private final Function<T, String> renderer;
 
-        public ToWayOnlyConverter(Function<T, String> toFunction) {
-            this.toFunction = toFunction;
+        public FunctionListCell(Function<T, String> renderer) {
+            this.renderer = Objects.requireNonNull(renderer, "renderer must not be null");
         }
 
         @Override
-        public String toString(T object) {
-            return toFunction.apply(object);
-        }
-
-        @Override
-        public T fromString(String string) {
-            throw new UnsupportedOperationException("From not implemented");
+        protected void updateItem(T item, boolean empty) {
+            super.updateItem(item, empty);
+            if ( item == null || empty ) {
+                setGraphic(null);
+                setText(null);
+            } else {
+                setText(renderer.apply(item));
+            }
         }
 
     }
@@ -142,45 +139,46 @@ public class MandatorMetaDataController implements Initializable, FxController, 
         defaultSalesChannelsListView.setItems(visibleSalseChannels.stream()
                 .map(s -> new SelectableSalesChannel(s))
                 .collect(Collectors.toCollection(() -> FXCollections.observableArrayList())));
-        defaultSalesChannelsListView.setCellFactory(CheckBoxListCell.forListView(SelectableSalesChannel::selectedProperty, new ToWayOnlyConverter<>(s -> s.getSalesChannel().getName())));
+
+        defaultSalesChannelsListView.setCellFactory(CheckBoxListCell.forListView(SelectableSalesChannel::selectedProperty, new StringConverter<SelectableSalesChannel>() {
+            @Override
+            public String toString(SelectableSalesChannel t) {
+                return t.getSalesChannel().description;
+            }
+
+            @Override
+            public SelectableSalesChannel fromString(String string) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        }));
 
         allowedSalesChannelsListView.setItems(visibleSalseChannels.stream()
                 .map(s -> new SelectableSalesChannel(s))
                 .collect(Collectors.toCollection(() -> FXCollections.observableArrayList())));
-        allowedSalesChannelsListView.setCellFactory(CheckBoxListCell.forListView(SelectableSalesChannel::selectedProperty, new ToWayOnlyConverter<>(s -> s.getSalesChannel().getName())));
+        allowedSalesChannelsListView.setCellFactory(CheckBoxListCell.forListView(SelectableSalesChannel::selectedProperty, new StringConverter<SelectableSalesChannel>() {
+            @Override
+            public String toString(SelectableSalesChannel t) {
+                return t.getSalesChannel().description;
+            }
+
+            @Override
+            public SelectableSalesChannel fromString(String string) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        }));
 
         shippingConditionComboBox.getItems().setAll(ShippingCondition.values());
         paymentConditionComboBox.getItems().setAll(PaymentCondition.values());
         paymentMethodComboBox.getItems().setAll(PaymentMethod.values());
 
-        shippingConditionComboBox.setConverter(new ToWayOnlyConverter<>(s -> s.getName()));
-        paymentConditionComboBox.setConverter(new ToWayOnlyConverter<>(s -> s.getNote()));
-        paymentMethodComboBox.setConverter(new ToWayOnlyConverter<>(s -> s.getNote()));
+        shippingConditionComboBox.setCellFactory((ListView<ShippingCondition> p) -> new FunctionListCell<>(i -> i.description));
+        shippingConditionComboBox.setButtonCell(new FunctionListCell<>(i -> i.description));
 
-        paymentConditionComboBox.setCellFactory((ListView<PaymentCondition> l) -> new ListCell<PaymentCondition>() {
+        paymentConditionComboBox.setCellFactory((ListView<PaymentCondition> p) -> new FunctionListCell<>(i -> i.description));
+        paymentConditionComboBox.setButtonCell(new FunctionListCell<>(i -> i.description));
 
-            @Override
-            protected void updateItem(PaymentCondition item, boolean empty) {
-                super.updateItem(item, empty);
-                if ( item == null || empty ) {
-                    setGraphic(null);
-                } else {
-                    setText(item.getNote());
-                }
-            }
-        });
-
-        paymentMethodComboBox.setCellFactory((ListView<PaymentMethod> l) -> new ListCell<PaymentMethod>() {
-            @Override
-            protected void updateItem(PaymentMethod item, boolean empty) {
-                super.updateItem(item, empty);
-                if ( item == null || empty ) {
-                    setGraphic(null);
-                } else {
-                    setText(item.getNote());
-                }
-            }
-        });
+        paymentMethodComboBox.setCellFactory((ListView<PaymentMethod> p) -> new FunctionListCell<>(i -> i.description));
+        paymentMethodComboBox.setButtonCell(new FunctionListCell<>(i -> i.description));
 
         defaultCsd = Dl.local().lookup(CachedMandators.class).loadSalesdata();
         defaultshippingConditionTextField.setText(defaultCsd.shippingCondition().description);
@@ -230,7 +228,7 @@ public class MandatorMetaDataController implements Initializable, FxController, 
 
     @Override
     public void accept(MandatorMetadata consumable) {
-        this.mandatorMetaData = Objects.requireNonNull(consumable,"mandator metadata must not be null");
+        this.mandatorMetaData = Objects.requireNonNull(consumable, "mandator metadata must not be null");
 
         this.paymentConditionComboBox.getSelectionModel().select(mandatorMetaData.getPaymentCondition());
         this.paymentMethodComboBox.getSelectionModel().select(mandatorMetaData.getPaymentMethod());

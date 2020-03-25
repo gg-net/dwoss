@@ -38,8 +38,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.core.common.values.PositionType;
+import eu.ggnet.dwoss.core.system.util.ValidationUtil;
 import eu.ggnet.dwoss.core.widget.saft.VetoableOnOk;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;
@@ -49,8 +51,6 @@ import eu.ggnet.dwoss.redtape.ee.api.WarrantyHook;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.PositionListCell;
-import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.dwoss.core.system.util.ValidationUtil;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.ResultProducer;
@@ -138,7 +138,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements VetoableOn
     public long getCustomerId() {
         return customerId;
     }
-    
+
     private void initFxComponents() {
         final JFXPanel jfxp = new JFXPanel();
         positionPanelFx.add(jfxp, BorderLayout.CENTER);
@@ -152,7 +152,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements VetoableOn
             positionsFxList.setCellFactory(new PositionListCell.Factory());
             positionsFxList.setItems(positions);
             positionsFxList.setOnMouseClicked((mouseEvent) -> {
-                if ( mouseEvent.getButton().equals(MouseButton.PRIMARY) && mouseEvent.getClickCount() == 2 ) {
+                if ( mouseEvent.getButton().equals(MouseButton.PRIMARY) && mouseEvent.getClickCount() == 2 && positionsFxList.getSelectionModel().getSelectedItem() != null ) {
                     if ( isChangeAllowed() ) {
                         Ui.exec(() -> {
                             controller.editPosition(positionsFxList.getSelectionModel().getSelectedItem());
@@ -732,6 +732,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements VetoableOn
     }
 
     private boolean isChangeAllowed() {
+        if ( positionsFxList.getSelectionModel().getSelectedItem() == null ) return false;
         if ( positionsFxList.getSelectionModel().getSelectedItem().getType() != PositionType.COMMENT ) {
             if ( document.isClosed() ) {
                 return false;
