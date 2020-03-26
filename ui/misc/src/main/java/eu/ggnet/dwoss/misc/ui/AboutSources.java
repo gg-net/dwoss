@@ -45,7 +45,7 @@ public class AboutSources {
     public static String info() {
 
         String text
-                = "Copyright 2014" + "\n"
+                = "Copyright 2020" + "\n"
                 + "GG-Net GmbH, Oliver Günther" + "\n"
                 + "http://gg-net.de/" + "\n"
                 + "http://deutschewarenwirtschaft.de/" + "\n"

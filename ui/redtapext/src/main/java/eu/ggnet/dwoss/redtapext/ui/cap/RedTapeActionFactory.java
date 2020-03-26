@@ -16,14 +16,11 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cap;
 
-
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Consumer;
 
 import org.openide.util.lookup.ServiceProvider;
 
-import eu.ggnet.dwoss.redtapext.ui.cao.document.position.PositionViewAction;
 import eu.ggnet.saft.experimental.ops.ActionFactory;
 
 /**
@@ -48,11 +45,6 @@ public class RedTapeActionFactory implements ActionFactory {
                 new MetaAction("Geschäftsführung", "Abschluss Reporte", new LastWeekCloseAction()),
                 new MetaAction("Geschäftsführung", new SageExportAction())
         );
-    }
-
-    @Override
-    public List<Consumer<?>> createDependentActions() {
-        return Arrays.asList(new PositionViewAction());
     }
 
 }

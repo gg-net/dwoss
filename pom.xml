@@ -74,7 +74,7 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <openjfx.version>11.0.2</openjfx.version>
+        <openjfx.version>14</openjfx.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <slf4j.version>1.7.28</slf4j.version>
@@ -860,7 +860,6 @@
                 <maven.compiler.release>11</maven.compiler.release>
                 <netbeans.hint.jdkPlatform>JDK_11</netbeans.hint.jdkPlatform>
                 <netbeans.version>RELEASE111</netbeans.version>
-                <openjfx.version>11.0.2</openjfx.version>
             </properties>
             <dependencyManagement>
                 <dependencies>

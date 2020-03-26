@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.misc.ui.mc;
 
-import java.awt.Desktop;
 import java.io.File;
 
 import javax.annotation.PostConstruct;
@@ -55,7 +54,9 @@ public class FileListPane extends BorderPane {
         fileListView.setOnMouseClicked((e) -> {
             File selectedFile = fileListView.getSelectionModel().getSelectedItem();
             if ( selectedFile == null ) return;
-            if ( Desktop.isDesktopSupported() && e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2 ) {
+            System.out.println("E:" + e);
+
+            if ( e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2 ) {
                 Ui.exec(() -> Ui.osOpen(selectedFile));
             }
         });

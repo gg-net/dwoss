@@ -37,6 +37,7 @@ import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 
 import org.slf4j.Logger;
@@ -44,10 +45,12 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.widget.HtmlPane;
 import eu.ggnet.dwoss.customer.api.*;
+import eu.ggnet.dwoss.customer.spi.CustomerUiModifier;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.redtapext.ee.state.*;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.*;
+import eu.ggnet.dwoss.redtapext.ui.cao.document.position.PositionViewCask;
 import eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableView;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.saft.core.Dl;
@@ -55,13 +58,11 @@ import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.*;
 import eu.ggnet.saft.experimental.FxOps;
 import eu.ggnet.saft.experimental.Ops;
+import eu.ggnet.saft.experimental.auth.Guardian;
 import eu.ggnet.saft.experimental.ops.SelectionEnhancer;
 import eu.ggnet.saft.experimental.ops.Selector;
 
 import static eu.ggnet.dwoss.core.common.values.PositionType.UNIT;
-
-import eu.ggnet.dwoss.customer.spi.CustomerUiModifier;
-import eu.ggnet.saft.experimental.auth.Guardian;
 
 /**
  * The main UI for using RedTape components.
@@ -158,7 +159,11 @@ public class RedTapeView extends JPanel implements ClosedListener {
             positionsFxList.setCellFactory(new PositionListCell.Factory());
             positionsFxList.setItems(positions);
             positionsFxList.setContextMenu(FxOps.contextMenuOf(selectionModel, selectionEnhancer, Dl.local().lookup(Guardian.class)));
-            positionsFxList.setOnMouseClicked(FxOps.defaultMouseEventOf(selectionModel, Dl.local().lookup(Guardian.class)));
+            positionsFxList.setOnMouseClicked(e -> {
+                if ( !positionsFxList.getSelectionModel().isEmpty() && e.getClickCount() == 2 && e.getButton() == MouseButton.PRIMARY ) {
+                    Ui.build(this).fx().show(() -> positionsFxList.getSelectionModel().getSelectedItem(), () -> new PositionViewCask());
+                }
+            });
 
             pane.setCenter(positionsFxList);
             jfxp.setScene(scene);
