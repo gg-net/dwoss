@@ -25,7 +25,6 @@ import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
@@ -48,6 +47,7 @@ import eu.ggnet.saft.experimental.ops.Selector;
 import static eu.ggnet.dwoss.search.api.GlobalKey.Component.UNIQUE_UNIT;
 import static java.lang.Double.MAX_VALUE;
 import static javafx.concurrent.Worker.State.READY;
+import static javafx.scene.input.MouseButton.PRIMARY;
 
 /**
  * Search View, new Version.
@@ -142,18 +142,16 @@ public class SearchCask extends BorderPane implements ClosedListener {
             else resultProperty.addAll(n);
         });
 
-        searchButton.setOnAction((ActionEvent event) -> search());
+        searchButton.setOnAction(e -> search());
         searchField.setOnKeyPressed((ke) -> {
             if ( ke.getCode() == KeyCode.ENTER ) search();
         });
 
         resultListView.setOnMouseClicked((MouseEvent click) -> {
-            if ( click.getClickCount() == 2 ) {
-                ShortSearchResult selectedItem = resultListView.getSelectionModel().getSelectedItem();
-                Ui.exec(() -> {
-                    Ui.build(SearchCask.this).title(selectedItem.key.toString()).fx()
-                            .show(() -> searcher.details(selectedItem.key), () -> new HtmlPane());
-                });
+            MultipleSelectionModel<ShortSearchResult> selection = resultListView.getSelectionModel();
+            if ( !selection.isEmpty() && click.getClickCount() == 2 && click.getButton() == PRIMARY ) {
+                Ui.build(SearchCask.this).title(selection.getSelectedItem().key.toString()).fx()
+                        .show(() -> searcher.details(selection.getSelectedItem().key), () -> new HtmlPane());
             }
         });
 
