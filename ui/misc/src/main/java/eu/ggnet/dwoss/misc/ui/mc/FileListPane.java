@@ -52,12 +52,8 @@ public class FileListPane extends BorderPane {
         });
 
         fileListView.setOnMouseClicked((e) -> {
-            File selectedFile = fileListView.getSelectionModel().getSelectedItem();
-            if ( selectedFile == null ) return;
-            System.out.println("E:" + e);
-
-            if ( e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2 ) {
-                Ui.exec(() -> Ui.osOpen(selectedFile));
+            if ( !fileListView.getSelectionModel().isEmpty() && e.getButton() == MouseButton.PRIMARY && e.getClickCount() == 2 ) {
+                Ui.exec(() -> Ui.osOpen(fileListView.getSelectionModel().getSelectedItem()));
             }
         });
 
