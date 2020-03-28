@@ -41,8 +41,8 @@ import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.*;
-import eu.ggnet.saft.experimental.Ops;
-import eu.ggnet.saft.experimental.ops.Selector;
+import eu.ggnet.dwoss.core.widget.Ops;
+import eu.ggnet.dwoss.core.widget.ops.Selector;
 
 import static eu.ggnet.dwoss.search.api.GlobalKey.Component.UNIQUE_UNIT;
 import static java.lang.Double.MAX_VALUE;

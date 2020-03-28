@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.core.widget;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.saft.experimental.auth.Accessable;
+import eu.ggnet.dwoss.core.widget.auth.Accessable;
 import eu.ggnet.saft.api.Authorisation;
 
 /**

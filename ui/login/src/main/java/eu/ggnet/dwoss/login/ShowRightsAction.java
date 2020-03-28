@@ -24,7 +24,7 @@ import eu.ggnet.dwoss.core.widget.HtmlPane;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.api.Authorisation;
-import eu.ggnet.saft.experimental.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
 
 /**
  * An Action, that opens a HtmlDialog to show all active Rights.

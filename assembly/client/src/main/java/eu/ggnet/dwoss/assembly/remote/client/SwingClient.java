@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.assembly.remote.client;
 
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.auth.Accessable;
+import eu.ggnet.dwoss.core.widget.auth.UserChangeListener;
+
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
@@ -39,10 +43,9 @@ import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.core.ui.UserPreferences;
 import eu.ggnet.saft.core.ui.UserPreferencesJdk;
-import eu.ggnet.saft.experimental.Ops;
-import eu.ggnet.saft.experimental.auth.*;
-import eu.ggnet.saft.experimental.ops.ActionFactory;
-import eu.ggnet.saft.experimental.ops.ActionFactory.MetaAction;
+import eu.ggnet.dwoss.core.widget.Ops;
+import eu.ggnet.dwoss.core.widget.ops.ActionFactory;
+import eu.ggnet.dwoss.core.widget.ops.ActionFactory.MetaAction;
 
 public class SwingClient {
 

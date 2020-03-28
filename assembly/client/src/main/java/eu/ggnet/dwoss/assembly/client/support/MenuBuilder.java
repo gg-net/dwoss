@@ -33,8 +33,8 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.assembly.client.support.MenuBuilder;
 import eu.ggnet.saft.api.Authorisation;
 import eu.ggnet.saft.core.Dl;
-import eu.ggnet.saft.experimental.auth.Accessable;
-import eu.ggnet.saft.experimental.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.auth.Accessable;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
 
 /**
  * Util to build javafx menuitems via CDI wrapping swing actions.

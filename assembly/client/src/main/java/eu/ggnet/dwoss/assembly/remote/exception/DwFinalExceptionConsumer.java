@@ -32,7 +32,7 @@ import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.SwingCore;
 import eu.ggnet.saft.core.ui.SwingSaft;
 import eu.ggnet.saft.core.ui.builder.UiWorkflowBreak;
-import eu.ggnet.saft.experimental.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
 
 import static eu.ggnet.saft.core.ui.AlertType.WARNING;
 import static eu.ggnet.saft.core.ui.exception.ExceptionUtil.*;

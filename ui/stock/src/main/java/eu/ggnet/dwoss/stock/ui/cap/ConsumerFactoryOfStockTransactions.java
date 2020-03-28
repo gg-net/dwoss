@@ -30,9 +30,9 @@ import eu.ggnet.dwoss.stock.ui.transactions.CreateQuestionView;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.experimental.auth.Guardian;
-import eu.ggnet.saft.experimental.ops.DescriptiveConsumer;
-import eu.ggnet.saft.experimental.ops.DescriptiveConsumerFactory;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.ops.DescriptiveConsumer;
+import eu.ggnet.dwoss.core.widget.ops.DescriptiveConsumerFactory;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_TRANSACTION_FOR_SINGLE_UNIT;
 

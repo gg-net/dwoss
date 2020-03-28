@@ -61,8 +61,8 @@ import eu.ggnet.dwoss.stock.ui.cap.*;
 import eu.ggnet.dwoss.uniqueunit.ui.cap.ProductListAction;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.saft.experimental.auth.Guardian;
-import eu.ggnet.saft.experimental.auth.UserChangeListener;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.auth.UserChangeListener;
 
 /**
  * Main UI, consist of menubar, toolbar, statusline and main ui container.

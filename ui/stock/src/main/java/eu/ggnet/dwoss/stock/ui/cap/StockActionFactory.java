@@ -21,8 +21,8 @@ import java.util.List;
 
 import org.openide.util.lookup.ServiceProvider;
 
-import eu.ggnet.saft.experimental.ops.ActionFactory;
-import eu.ggnet.saft.experimental.ops.DescriptiveConsumerFactory;
+import eu.ggnet.dwoss.core.widget.ops.ActionFactory;
+import eu.ggnet.dwoss.core.widget.ops.DescriptiveConsumerFactory;
 
 /**
  * ActionFactory for Stock.

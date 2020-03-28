@@ -37,7 +37,7 @@ import eu.ggnet.dwoss.redtapext.ui.cao.document.AfterInvoicePosition;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.annulation.CreditMemoView;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.dwoss.core.widget.AccessableAction;
-import eu.ggnet.saft.experimental.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_ANNULATION_INVOICE;
 

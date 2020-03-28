@@ -23,7 +23,7 @@ import javafx.scene.layout.Pane;
 
 import org.inferred.freebuilder.FreeBuilder;
 
-import eu.ggnet.saft.experimental.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
 
 /**
  * Configuration for the LoginScreen.

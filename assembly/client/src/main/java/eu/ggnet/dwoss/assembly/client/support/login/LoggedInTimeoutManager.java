@@ -42,7 +42,7 @@ import org.slf4j.Logger;
 import eu.ggnet.dwoss.core.widget.event.UserChange;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.saft.core.*;
-import eu.ggnet.saft.experimental.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
 
 /**
  * CDI Bean to enable disable the timeout and set it.

@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;
-import eu.ggnet.saft.experimental.auth.UserChangeListener;
+import eu.ggnet.dwoss.core.widget.auth.UserChangeListener;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_IMAGE_IDS;
 import static org.junit.Assert.*;

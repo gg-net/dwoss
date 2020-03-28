@@ -61,7 +61,7 @@ import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.core.dl.RemoteLookup;
 import eu.ggnet.saft.core.ui.*;
-import eu.ggnet.saft.experimental.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;

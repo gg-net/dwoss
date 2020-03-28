@@ -12,7 +12,7 @@ import org.openide.util.lookup.ServiceProvider;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.dwoss.core.system.progress.ProgressObserver;
-import eu.ggnet.saft.experimental.ops.ActionFactory;
+import eu.ggnet.dwoss.core.widget.ops.ActionFactory;
 
 import static javax.swing.Action.LARGE_ICON_KEY;
 import static javax.swing.Action.SMALL_ICON;

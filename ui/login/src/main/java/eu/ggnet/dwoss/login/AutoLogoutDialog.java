@@ -21,8 +21,8 @@ import java.awt.event.*;
 import java.util.Set;
 import java.util.logging.Level;
 
-import eu.ggnet.saft.experimental.auth.Guardian;
-import eu.ggnet.saft.experimental.auth.AuthenticationException;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.auth.AuthenticationException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

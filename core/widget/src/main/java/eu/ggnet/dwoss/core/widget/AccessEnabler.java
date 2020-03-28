@@ -20,7 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
-import eu.ggnet.saft.experimental.auth.Accessable;
+import eu.ggnet.dwoss.core.widget.auth.Accessable;
 import eu.ggnet.saft.api.Authorisation;
 
 /**

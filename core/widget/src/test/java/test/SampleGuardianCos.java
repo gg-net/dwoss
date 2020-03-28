@@ -1,8 +1,8 @@
 package test;
 
 import eu.ggnet.dwoss.core.widget.AbstractGuardian;
-import eu.ggnet.saft.experimental.auth.AuthenticationException;
-import eu.ggnet.saft.experimental.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.auth.AuthenticationException;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
 
 import eu.ggnet.dwoss.rights.api.Operator;
 

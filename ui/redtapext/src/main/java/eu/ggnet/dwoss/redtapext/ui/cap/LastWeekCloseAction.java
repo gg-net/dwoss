@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.widget.AccessableAction;
 import eu.ggnet.saft.core.*;
-import eu.ggnet.saft.experimental.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXECUTE_MANUAL_CLOSING;
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;

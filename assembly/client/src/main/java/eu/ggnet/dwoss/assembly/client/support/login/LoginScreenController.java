@@ -32,8 +32,8 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.ui.ClosedListener;
 import eu.ggnet.saft.core.ui.FxController;
-import eu.ggnet.saft.experimental.auth.AuthenticationException;
-import eu.ggnet.saft.experimental.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.auth.AuthenticationException;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
 
 /**
  * A loginscreen for user/pass authentication, quicklogin authentication and lazy setting of the authentication system.

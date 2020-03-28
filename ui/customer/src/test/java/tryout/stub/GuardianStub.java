@@ -7,11 +7,10 @@ package tryout.stub;
 
 import java.util.*;
 
-import eu.ggnet.saft.experimental.auth.AuthenticationException;
-import eu.ggnet.saft.experimental.auth.UserChangeListener;
-import eu.ggnet.saft.experimental.auth.Guardian;
-
-import eu.ggnet.saft.experimental.auth.Accessable;
+import eu.ggnet.dwoss.core.widget.auth.AuthenticationException;
+import eu.ggnet.dwoss.core.widget.auth.UserChangeListener;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.auth.Accessable;
 import eu.ggnet.saft.api.Authorisation;
 
 /**

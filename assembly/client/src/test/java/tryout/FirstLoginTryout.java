@@ -30,7 +30,7 @@ import javafx.stage.Stage;
 
 import eu.ggnet.dwoss.assembly.client.support.login.LoginScreenController;
 import eu.ggnet.dwoss.core.widget.AbstractGuardian;
-import eu.ggnet.saft.experimental.auth.AuthenticationException;
+import eu.ggnet.dwoss.core.widget.auth.AuthenticationException;
 
 /**
  *

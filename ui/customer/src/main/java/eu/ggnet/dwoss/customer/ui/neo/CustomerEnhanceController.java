@@ -51,7 +51,7 @@ import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.*;
-import eu.ggnet.saft.experimental.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
 
 import static eu.ggnet.dwoss.core.common.values.CustomerFlag.SYSTEM_CUSTOMER;
 import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.EMAIL;

@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.openide.util.lookup.ServiceProvider;
 
-import eu.ggnet.saft.experimental.ops.ActionFactory;
+import eu.ggnet.dwoss.core.widget.ops.ActionFactory;
 
 @ServiceProvider(service = ActionFactory.class)
 public class ReportActionFactory implements ActionFactory {

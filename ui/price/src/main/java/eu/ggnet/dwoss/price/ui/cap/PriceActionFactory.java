@@ -24,7 +24,7 @@ import org.openide.util.lookup.ServiceProvider;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.saft.core.Dl;
-import eu.ggnet.saft.experimental.ops.ActionFactory;
+import eu.ggnet.dwoss.core.widget.ops.ActionFactory;
 
 /**
  * ActionFactory for Prices.

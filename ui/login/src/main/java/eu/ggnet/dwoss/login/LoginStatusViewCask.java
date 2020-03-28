@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.login;
 
 import org.openide.util.lookup.ServiceProvider;
 
-import eu.ggnet.saft.experimental.auth.UserChangeListener;
+import eu.ggnet.dwoss.core.widget.auth.UserChangeListener;
 import eu.ggnet.dwoss.core.widget.ToolbarComponent;
 
 /**

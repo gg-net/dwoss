@@ -24,7 +24,7 @@ import org.openide.util.lookup.ServiceProvider;
 
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.saft.experimental.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
 
 import static java.awt.AWTEvent.*;
 

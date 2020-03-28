@@ -36,7 +36,7 @@ import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateTransition;
 import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.*;
-import eu.ggnet.saft.experimental.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.statemachine.StateTransition;
 
 /**

@@ -24,7 +24,7 @@ import javafx.scene.Node;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import eu.ggnet.saft.api.Authorisation;
-import eu.ggnet.saft.experimental.auth.Accessable;
+import eu.ggnet.dwoss.core.widget.auth.Accessable;
 
 
 /**

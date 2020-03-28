@@ -34,8 +34,8 @@ import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.dl.RemoteLookup;
 import eu.ggnet.saft.core.ui.UiParent;
-import eu.ggnet.saft.experimental.auth.AuthenticationException;
-import eu.ggnet.saft.experimental.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.auth.AuthenticationException;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
 
 import tryout.stub.*;
 
