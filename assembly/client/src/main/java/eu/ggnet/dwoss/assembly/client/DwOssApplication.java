@@ -56,12 +56,12 @@ import eu.ggnet.dwoss.assembly.client.support.monitor.MonitorManager;
 import eu.ggnet.dwoss.assembly.remote.cdi.FxmlLoaderInitializer;
 import eu.ggnet.dwoss.assembly.remote.exception.*;
 import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.dwoss.mandator.spi.CachedMandators;
-import eu.ggnet.saft.core.Dl;
-import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.saft.core.dl.RemoteLookup;
-import eu.ggnet.saft.core.ui.*;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.dwoss.mandator.spi.CachedMandators;
+import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.dwoss.core.widget.dl.RemoteLookup;
+import eu.ggnet.saft.core.ui.*;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
@@ -322,6 +322,7 @@ public class DwOssApplication extends Application {
                 + cp.toUrl());
         mainFrame.setIconImage(new ImageIcon(DwOssClientController.loadIcon()).getImage());
 
+        Dl.local().add(UserPreferences.class, new UserPreferencesJdk()); // Hard added here.
         UiCore.continueSwing(mainFrame);
         mainFrame.addWindowListener(new WindowAdapter() {
             @Override

@@ -38,7 +38,7 @@ import eu.ggnet.dwoss.search.api.SearchRequest;
 import eu.ggnet.dwoss.search.api.ShortSearchResult;
 import eu.ggnet.dwoss.search.ee.Searcher;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.*;
 import eu.ggnet.dwoss.core.widget.Ops;

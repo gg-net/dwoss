@@ -31,7 +31,7 @@ import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
 import eu.ggnet.dwoss.receipt.ui.AbstractController;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Gpu;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 
 /**
  *

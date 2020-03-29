@@ -1,5 +1,7 @@
 package tryout;
 
+import eu.ggnet.dwoss.core.widget.Dl;
+
 import java.util.*;
 
 import javax.swing.JLabel;
@@ -10,7 +12,7 @@ import eu.ggnet.dwoss.report.ee.assist.gen.ReportLineGenerator;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ui.main.ReportController;
 import eu.ggnet.saft.core.*;
-import eu.ggnet.saft.core.dl.RemoteLookup;
+import eu.ggnet.dwoss.core.widget.dl.RemoteLookup;
 
 import static eu.ggnet.dwoss.report.ee.ViewReportResult.Type.INVOICED;
 import static eu.ggnet.dwoss.report.ee.ViewReportResult.Type.REPAYMENTS;

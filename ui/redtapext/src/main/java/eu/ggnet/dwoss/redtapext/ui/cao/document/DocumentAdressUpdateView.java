@@ -25,7 +25,7 @@ import javax.swing.JOptionPane;
 import eu.ggnet.dwoss.core.common.values.AddressType;
 import eu.ggnet.dwoss.customer.api.AddressService;
 import eu.ggnet.dwoss.redtape.ee.entity.Address;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 
 /**
  *

@@ -37,7 +37,7 @@ import eu.ggnet.dwoss.redtape.api.UnitAvailability;
 import eu.ggnet.dwoss.stock.spi.ActiveStock;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.dwoss.core.widget.Ops;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;

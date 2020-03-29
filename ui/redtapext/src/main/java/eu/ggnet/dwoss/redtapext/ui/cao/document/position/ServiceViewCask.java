@@ -21,7 +21,7 @@ import java.util.function.Consumer;
 import eu.ggnet.dwoss.redtape.ee.api.PositionService;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.core.common.values.TaxType;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.ui.ResultProducer;
 import eu.ggnet.dwoss.core.widget.saft.VetoableOnOk;
 

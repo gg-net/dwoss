@@ -23,7 +23,7 @@
         </dependency>
         <dependency>
             <groupId>eu.ggnet.saft</groupId>
-            <artifactId>saft-experimental</artifactId>
+            <artifactId>saft-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

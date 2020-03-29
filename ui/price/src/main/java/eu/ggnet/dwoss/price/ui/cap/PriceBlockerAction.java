@@ -29,7 +29,7 @@ import eu.ggnet.dwoss.price.ee.Importer;
 import eu.ggnet.dwoss.price.ee.engine.PriceEngineResult.Change;
 import eu.ggnet.dwoss.price.ui.PriceBlockerViewCask;
 import eu.ggnet.saft.api.Reply;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
 

@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.ui.UiParent;
 import eu.ggnet.dwoss.customer.spi.CustomerUiModifier;
 

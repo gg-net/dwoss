@@ -22,7 +22,7 @@ import javafx.stage.Stage;
 
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ui.neo.ResellerListView;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 
 import tryout.stub.CustomerAgentStub;
 

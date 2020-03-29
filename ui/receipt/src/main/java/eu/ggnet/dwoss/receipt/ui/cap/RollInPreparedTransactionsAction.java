@@ -22,7 +22,7 @@ import java.awt.event.ActionEvent;
 
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.StockTransactionProcessor;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.dwoss.core.widget.AccessableAction;

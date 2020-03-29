@@ -1,5 +1,7 @@
 package tryout;
 
+import eu.ggnet.dwoss.core.widget.Dl;
+
 import javax.swing.JLabel;
 
 import eu.ggnet.dwoss.mandator.api.Mandators;

@@ -23,7 +23,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.system.progress.ProgressObserver;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 
 /**
  * HiddenMonitorDisplayer, considered for usage in a 

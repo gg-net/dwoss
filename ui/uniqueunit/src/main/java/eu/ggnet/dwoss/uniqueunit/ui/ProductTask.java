@@ -14,7 +14,7 @@ import javafx.concurrent.Task;
 
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 
 /**
  * Task to obtain all Products from the database with partial results.

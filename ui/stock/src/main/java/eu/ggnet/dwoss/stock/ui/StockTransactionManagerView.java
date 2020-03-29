@@ -26,7 +26,7 @@ import javax.swing.*;
 
 import eu.ggnet.dwoss.stock.ee.entity.*;
 import eu.ggnet.dwoss.stock.ui.cap.RemoveUnitFromTransactionAction;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_TRANSACTION_TO_CANCLE;

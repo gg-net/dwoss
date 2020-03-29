@@ -25,7 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.core.widget.saft.ReplyUtil;
 import eu.ggnet.dwoss.receipt.ee.UnitDestroyer;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.dwoss.core.widget.AccessableAction;

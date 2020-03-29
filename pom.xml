@@ -491,11 +491,6 @@
                 <artifactId>saft-core</artifactId>
                 <version>${saft.version}</version>
             </dependency>
-            <dependency>
-                <groupId>eu.ggnet.saft</groupId>
-                <artifactId>saft-experimental</artifactId>
-                <version>${saft.version}</version>
-            </dependency>
             <!-- Mobile Ui Usage -->
             <dependency>
                 <groupId>commons-httpclient</groupId>

@@ -28,7 +28,7 @@ import javax.swing.JOptionPane;
 
 import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Cpu;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 
 /**
  *

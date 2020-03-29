@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.login;
 
+import eu.ggnet.dwoss.core.widget.Dl;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Set;

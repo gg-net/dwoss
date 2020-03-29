@@ -21,7 +21,7 @@ import eu.ggnet.dwoss.receipt.ui.cap.support.AddCommentCask;
 import java.awt.event.ActionEvent;
 
 import eu.ggnet.dwoss.uniqueunit.ee.op.AddUnitHistory;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.dwoss.core.widget.AccessableAction;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;

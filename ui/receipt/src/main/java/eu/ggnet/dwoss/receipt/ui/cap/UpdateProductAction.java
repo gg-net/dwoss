@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.receipt.ui.cap;
 
 import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 
 import java.awt.event.ActionEvent;
 

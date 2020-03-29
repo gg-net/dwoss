@@ -24,7 +24,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.ui.ClosedListener;
 import eu.ggnet.saft.core.ui.Title;
 import eu.ggnet.dwoss.core.widget.FxOps;

@@ -27,7 +27,7 @@ import org.wildfly.security.auth.client.*;
 
 import eu.ggnet.dwoss.core.common.IsStateful;
 import eu.ggnet.dwoss.discovery.Discovery;
-import eu.ggnet.saft.core.dl.RemoteLookup;
+import eu.ggnet.dwoss.core.widget.dl.RemoteLookup;
 
 import static java.util.Objects.requireNonNull;
 

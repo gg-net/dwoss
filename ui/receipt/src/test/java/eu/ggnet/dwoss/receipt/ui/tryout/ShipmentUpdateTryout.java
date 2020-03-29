@@ -9,7 +9,7 @@ import eu.ggnet.dwoss.mandator.api.Mandators;
 import eu.ggnet.dwoss.receipt.ui.shipment.ShipmentUpdateStage;
 import eu.ggnet.dwoss.receipt.ui.tryout.stub.MandatorsStub;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 
 /**
  *

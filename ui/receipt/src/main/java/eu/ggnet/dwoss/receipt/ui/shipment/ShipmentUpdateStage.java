@@ -37,7 +37,7 @@ import org.apache.commons.lang3.StringUtils;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 
 import static eu.ggnet.dwoss.stock.ee.entity.Shipment.Status.OPENED;
 import static java.lang.Double.MAX_VALUE;

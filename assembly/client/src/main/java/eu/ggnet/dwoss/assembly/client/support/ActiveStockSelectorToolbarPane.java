@@ -34,7 +34,7 @@ import eu.ggnet.dwoss.mandator.api.service.MandatorService;
 import eu.ggnet.dwoss.stock.api.PicoStock;
 import eu.ggnet.dwoss.stock.api.StockApi;
 import eu.ggnet.dwoss.stock.spi.ActiveStock;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 
 /**
  * Toolbar object to select the active stock.

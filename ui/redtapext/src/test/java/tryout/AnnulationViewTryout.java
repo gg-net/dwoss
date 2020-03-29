@@ -24,8 +24,8 @@ import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.AfterInvoicePosition;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.annulation.CreditMemoView;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
-import eu.ggnet.saft.core.Dl;
-import eu.ggnet.saft.core.dl.RemoteLookup;
+import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.dl.RemoteLookup;
 
 import static org.mockito.Mockito.mock;
 

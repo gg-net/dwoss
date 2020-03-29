@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.misc.ui.cap;
 import javafx.scene.control.MenuItem;
 
 import eu.ggnet.dwoss.misc.ee.ImageIdHandler;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 
 import static eu.ggnet.dwoss.core.common.values.SalesChannel.CUSTOMER;

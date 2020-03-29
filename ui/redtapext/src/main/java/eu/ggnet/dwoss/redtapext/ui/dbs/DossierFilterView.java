@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.dbs;
 
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.core.Ui;
 

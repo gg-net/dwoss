@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.core.widget.MainComponent;
 import eu.ggnet.dwoss.core.widget.ToolbarComponent;
 import eu.ggnet.dwoss.login.AutoLoginLogout;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.core.ui.UserPreferences;
 import eu.ggnet.saft.core.ui.UserPreferencesJdk;

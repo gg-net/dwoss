@@ -27,7 +27,7 @@ import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.assist.gen.SpecGenerator;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 
 import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.ACER;
 import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.ONESELF;

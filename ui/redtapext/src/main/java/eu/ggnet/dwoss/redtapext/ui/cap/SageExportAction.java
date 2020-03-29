@@ -22,7 +22,7 @@ import eu.ggnet.dwoss.core.system.GlobalConfig;
 import eu.ggnet.dwoss.core.widget.AccessableAction;
 import eu.ggnet.dwoss.core.widget.DateRangeChooserView;
 import eu.ggnet.dwoss.redtapext.ee.sage.SageExporter;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_DOCUMENTS_FOR_SAGE_IN_XML;

@@ -16,6 +16,8 @@
  */
 package tryout.neo;
 
+import eu.ggnet.dwoss.core.widget.Dl;
+
 import javax.swing.JButton;
 import javax.swing.JPanel;
 

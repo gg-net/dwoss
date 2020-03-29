@@ -23,7 +23,7 @@ import javafx.scene.control.Alert;
 import eu.ggnet.dwoss.core.widget.TikaUtil;
 import eu.ggnet.dwoss.price.ee.Exporter;
 import eu.ggnet.dwoss.core.common.FileJacket;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.dwoss.core.widget.AccessableAction;

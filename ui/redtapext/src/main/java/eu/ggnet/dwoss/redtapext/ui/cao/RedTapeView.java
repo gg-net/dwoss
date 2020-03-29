@@ -53,7 +53,7 @@ import eu.ggnet.dwoss.redtapext.ui.cao.common.*;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.position.PositionViewCask;
 import eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableView;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.*;
 import eu.ggnet.dwoss.core.widget.FxOps;

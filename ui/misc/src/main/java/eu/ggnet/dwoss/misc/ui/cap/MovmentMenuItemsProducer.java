@@ -39,7 +39,7 @@ import eu.ggnet.dwoss.misc.ee.movement.MovementListingProducer.ListType;
 import eu.ggnet.dwoss.stock.api.PicoStock;
 import eu.ggnet.dwoss.stock.api.StockApi;
 import eu.ggnet.saft.api.Reply;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;

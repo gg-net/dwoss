@@ -23,7 +23,7 @@ import javax.swing.JOptionPane;
 import eu.ggnet.dwoss.receipt.ui.UiUnitSupport;
 import eu.ggnet.dwoss.receipt.ee.UnitProcessor;
 import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.dwoss.core.widget.AccessableAction;
 

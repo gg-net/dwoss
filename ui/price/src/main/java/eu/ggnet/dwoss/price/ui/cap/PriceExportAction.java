@@ -20,7 +20,7 @@ import eu.ggnet.dwoss.price.ee.Exporter;
 
 import java.awt.event.ActionEvent;
 
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.dwoss.core.widget.AccessableAction;
 

@@ -23,7 +23,7 @@ import javax.swing.AbstractAction;
 import eu.ggnet.dwoss.core.common.Css;
 import eu.ggnet.dwoss.core.widget.HtmlPane;
 import eu.ggnet.dwoss.mandator.spi.CachedMandators;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 
 /**

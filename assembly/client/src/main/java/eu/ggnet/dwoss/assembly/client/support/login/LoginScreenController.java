@@ -29,7 +29,7 @@ import javafx.scene.shape.Circle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.ui.ClosedListener;
 import eu.ggnet.saft.core.ui.FxController;
 import eu.ggnet.dwoss.core.widget.auth.AuthenticationException;

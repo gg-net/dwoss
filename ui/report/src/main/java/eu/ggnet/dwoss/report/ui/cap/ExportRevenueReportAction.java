@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 
 import eu.ggnet.dwoss.report.ee.op.RevenueReporter;
 import eu.ggnet.dwoss.report.ui.cap.support.RevenueReportSelectionView;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.dwoss.core.widget.AccessableAction;
 

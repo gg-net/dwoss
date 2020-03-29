@@ -20,8 +20,8 @@ import eu.ggnet.dwoss.rights.ee.entity.Persona;
 import eu.ggnet.dwoss.rights.ee.op.Authentication;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.*;
-import eu.ggnet.saft.core.Dl;
-import eu.ggnet.saft.core.dl.RemoteLookup;
+import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.dl.RemoteLookup;
 
 /**
  *

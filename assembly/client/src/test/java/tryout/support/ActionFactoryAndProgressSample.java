@@ -9,7 +9,7 @@ import javax.swing.ImageIcon;
 
 import org.openide.util.lookup.ServiceProvider;
 
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.dwoss.core.system.progress.ProgressObserver;
 import eu.ggnet.dwoss.core.widget.ops.ActionFactory;

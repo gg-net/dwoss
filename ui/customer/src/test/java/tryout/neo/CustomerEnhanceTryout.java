@@ -16,6 +16,8 @@
  */
 package tryout.neo;
 
+import eu.ggnet.dwoss.core.widget.Dl;
+
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -30,7 +32,7 @@ import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController;
 import eu.ggnet.dwoss.mandator.api.Mandators;
 import eu.ggnet.saft.core.*;
-import eu.ggnet.saft.core.dl.RemoteLookup;
+import eu.ggnet.dwoss.core.widget.dl.RemoteLookup;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
 
 import tryout.stub.*;

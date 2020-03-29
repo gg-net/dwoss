@@ -30,7 +30,7 @@ import eu.ggnet.dwoss.core.widget.TikaUtil;
 import eu.ggnet.dwoss.misc.ee.StockTaking;
 import eu.ggnet.dwoss.stock.api.PicoStock;
 import eu.ggnet.saft.api.Reply;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;

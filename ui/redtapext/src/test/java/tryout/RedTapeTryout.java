@@ -1,5 +1,6 @@
 package tryout;
 
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.common.values.PaymentCondition;
 import eu.ggnet.dwoss.core.common.values.SalesChannel;
 import eu.ggnet.dwoss.core.common.values.PaymentMethod;
@@ -32,7 +33,7 @@ import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.saft.core.*;
-import eu.ggnet.saft.core.dl.RemoteLookup;
+import eu.ggnet.dwoss.core.widget.dl.RemoteLookup;
 import eu.ggnet.saft.core.ui.UiParent;
 import eu.ggnet.dwoss.core.widget.auth.AuthenticationException;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;

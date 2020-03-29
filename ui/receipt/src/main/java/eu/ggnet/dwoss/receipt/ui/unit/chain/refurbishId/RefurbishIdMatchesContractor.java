@@ -22,7 +22,7 @@ import eu.ggnet.dwoss.mandator.api.service.MandatorService;
 import eu.ggnet.dwoss.receipt.ui.unit.ValidationStatus;
 import eu.ggnet.dwoss.receipt.ui.unit.chain.ChainLink;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 
 /**
  * Tries to lookup the refurbishId in the Database, continues if it doesn't exist.

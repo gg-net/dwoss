@@ -28,7 +28,7 @@ import javafx.scene.web.WebView;
 import eu.ggnet.dwoss.core.common.Css;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.*;
 import eu.ggnet.dwoss.core.widget.Ops;

@@ -22,7 +22,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.ui.Title;
 import eu.ggnet.dwoss.core.widget.FxOps;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;

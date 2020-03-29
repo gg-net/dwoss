@@ -22,7 +22,7 @@ import javafx.beans.binding.Bindings;
 import javafx.scene.control.TextInputDialog;
 
 import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.dwoss.core.widget.AccessableAction;
 

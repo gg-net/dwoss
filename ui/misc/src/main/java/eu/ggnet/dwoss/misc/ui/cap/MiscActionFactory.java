@@ -30,7 +30,7 @@ import eu.ggnet.dwoss.misc.ee.movement.MovementListingProducer;
 import eu.ggnet.dwoss.misc.ee.movement.MovementListingProducer.ListType;
 import eu.ggnet.dwoss.stock.api.PicoStock;
 import eu.ggnet.dwoss.stock.api.StockApi;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.ops.ActionFactory;
 
 /**

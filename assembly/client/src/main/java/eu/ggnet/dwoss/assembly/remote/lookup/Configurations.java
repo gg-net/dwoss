@@ -20,7 +20,7 @@ import java.util.*;
 
 import eu.ggnet.dwoss.remote.spi.EjbConnectionConfiguration;
 import eu.ggnet.dwoss.remote.spi.EjbConnectionConfigurationProvider;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 
 /**
  *

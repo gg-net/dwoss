@@ -20,7 +20,7 @@ import org.openide.util.lookup.ServiceProvider;
 
 import eu.ggnet.dwoss.stock.api.PicoStock;
 import eu.ggnet.dwoss.stock.spi.ActiveStock;
-import eu.ggnet.saft.core.dl.LocalSingleton;
+import eu.ggnet.dwoss.core.widget.dl.LocalSingleton;
 
 /**
  *

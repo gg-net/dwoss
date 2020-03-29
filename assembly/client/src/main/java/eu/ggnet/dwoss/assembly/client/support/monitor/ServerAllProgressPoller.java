@@ -25,7 +25,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 
 import eu.ggnet.dwoss.core.system.progress.ProgressObserver;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 
 /**
  * Polls the progress from the {@link ProgressObserver} for all serverside activity.

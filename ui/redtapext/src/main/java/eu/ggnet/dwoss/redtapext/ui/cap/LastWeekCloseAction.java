@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cap;
 
+import eu.ggnet.dwoss.core.widget.Dl;
+
 import java.awt.event.ActionEvent;
 
 import javafx.scene.control.Alert;

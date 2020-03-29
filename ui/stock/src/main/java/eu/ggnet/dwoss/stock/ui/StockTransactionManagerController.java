@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.stock.ui;
 
+import eu.ggnet.dwoss.core.widget.Dl;
+
 import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;

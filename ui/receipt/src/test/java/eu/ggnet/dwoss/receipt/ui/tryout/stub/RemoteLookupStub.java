@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.receipt.ui.tryout.stub;
 
-import eu.ggnet.saft.core.dl.RemoteLookup;
+import eu.ggnet.dwoss.core.widget.dl.RemoteLookup;
 
 /**
  *

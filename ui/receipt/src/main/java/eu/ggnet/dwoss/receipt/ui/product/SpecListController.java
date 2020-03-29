@@ -28,7 +28,7 @@ import java.util.regex.PatternSyntaxException;
 import eu.ggnet.dwoss.receipt.ui.AbstractController;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 
 /*
  * To change this template, choose Tools | Templates

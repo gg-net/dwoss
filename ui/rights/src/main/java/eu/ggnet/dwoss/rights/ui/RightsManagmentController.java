@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.rights.ui;
 
+import eu.ggnet.dwoss.core.widget.Dl;
+
 import java.net.URL;
 import java.util.*;
 

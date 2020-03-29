@@ -31,7 +31,7 @@ import javafx.scene.layout.GridPane;
 import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.core.system.util.Step;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.ResultProducer;
 

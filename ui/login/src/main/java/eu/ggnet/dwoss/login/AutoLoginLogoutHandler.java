@@ -22,7 +22,7 @@ import java.util.concurrent.*;
 
 import org.openide.util.lookup.ServiceProvider;
 
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
 

@@ -27,7 +27,7 @@ import eu.ggnet.dwoss.core.widget.saft.ReplyUtil;
 import eu.ggnet.dwoss.core.widget.HtmlPane;
 import eu.ggnet.dwoss.price.ee.Exporter;
 import eu.ggnet.dwoss.price.ee.engine.support.PriceEngineResultFormater;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.dwoss.core.widget.AccessableAction;

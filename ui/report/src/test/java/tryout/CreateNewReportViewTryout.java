@@ -16,6 +16,8 @@
  */
 package tryout;
 
+import eu.ggnet.dwoss.core.widget.Dl;
+
 import javax.swing.JLabel;
 
 import eu.ggnet.dwoss.core.widget.saft.OkCancelWrap;

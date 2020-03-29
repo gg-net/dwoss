@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.customer.ui.cap;
 import java.awt.event.ActionEvent;
 
 import eu.ggnet.dwoss.customer.ee.CustomerExporter;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.dwoss.core.widget.AccessableAction;
 

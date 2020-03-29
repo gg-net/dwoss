@@ -23,7 +23,7 @@ import javafx.application.Platform;
 import eu.ggnet.dwoss.misc.ui.cap.support.OkCancelStage;
 import eu.ggnet.dwoss.misc.ui.cap.support.InputReportSelectorPane;
 import eu.ggnet.dwoss.uniqueunit.ee.op.UniqueUnitReporter;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.dwoss.core.widget.AccessableAction;
 

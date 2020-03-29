@@ -17,7 +17,7 @@
 package eu.ggnet.dwoss.misc.ui.cap;
 
 import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 
 import java.awt.event.ActionEvent;

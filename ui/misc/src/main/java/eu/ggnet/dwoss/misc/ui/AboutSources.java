@@ -24,7 +24,7 @@ import java.util.Properties;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.spec.api.SpecApi;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 
 /**
  * Sources for the About Dialog.

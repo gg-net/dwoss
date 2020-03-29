@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.assembly.remote;
 
+import eu.ggnet.dwoss.core.widget.Dl;
+
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.util.Map;
@@ -36,7 +38,7 @@ import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.remote.spi.EjbConnectionConfiguration;
 import eu.ggnet.saft.core.*;
-import eu.ggnet.saft.core.dl.RemoteLookup;
+import eu.ggnet.dwoss.core.widget.dl.RemoteLookup;
 
 import static eu.ggnet.saft.core.ui.AlertType.ERROR;
 

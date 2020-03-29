@@ -22,7 +22,7 @@ import eu.ggnet.dwoss.core.widget.AccessableAction;
 import eu.ggnet.dwoss.core.widget.DateRangeChooserView;
 import eu.ggnet.dwoss.report.ee.ReportAgent;
 import eu.ggnet.dwoss.report.ui.returns.ReturnsReportView;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 
 import static eu.ggnet.dwoss.core.common.values.DocumentType.RETURNS;
