@@ -61,6 +61,8 @@
     <!-- Needed to exclude, otherwise oure lookup of progress creates messages every 2 sec -->
     <logger name="eu.ggnet.saft.core.dl.LocalDl" level="INFO"/>
     <logger name="eu.ggnet.saft.core.dl.RemoteDl" level="INFO"/>
+    <logger name="eu.ggnet.dwoss.core.widget.dl.LocalDl" level="INFO"/>
+    <logger name="eu.ggnet.dwoss.core.widget.dl.RemoteDl" level="INFO"/>
     <logger name="eu.ggnet.dwoss.assembly.remote.lookup.WildflyLookup" level="INFO"/>
     <logger name="eu.ggnet.dwoss.assembly.client.support.WildflyLookup" level="INFO"/>
     <logger name="org.jboss.ejb.client.EJBClientContext" level="INFO"/>
