@@ -16,27 +16,23 @@
  */
 package tryout;
 
-import eu.ggnet.dwoss.core.widget.Dl;
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.UiCore;
-
 import java.util.*;
 
 import javax.persistence.LockModeType;
 import javax.swing.JLabel;
 
-import eu.ggnet.dwoss.report.ee.ReportAgent;
-import eu.ggnet.dwoss.report.ee.ReportParameter;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.report.ee.ReportAgent.SearchParameter;
-import eu.ggnet.dwoss.report.ee.ViewReportResult;
+import eu.ggnet.dwoss.report.ee.*;
 import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine.Storeable;
 import eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine;
 import eu.ggnet.dwoss.report.ui.cap.support.SelectExistingReportView;
-import eu.ggnet.dwoss.core.common.values.DocumentType;
-import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
-import eu.ggnet.saft.api.Reply;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
 
 /**
  *
@@ -147,15 +143,15 @@ public class SelectExistingReportViewTryout {
 
             //</editor-fold>
             @Override
-            public Reply<String> updateReportName(Report.OptimisticKey key, String name) {
+            public String updateReportName(Report.OptimisticKey key, String name) {
                 System.out.println("Report Name updated with " + name + " calles");
                 counter++;
                 if ( (counter % 2) != 0 ) {
                     System.out.println("Counter=" + counter + " simulating Error");
-                    return Reply.failure("Counter=" + counter + " simulating Error");
+                    throw new IllegalArgumentException("Counter=" + counter + " simulating Error");
                 } else {
                     System.out.println("Counter=" + counter + " simulating Success");
-                    return Reply.success(name);
+                    return name;
                 }
             }
 

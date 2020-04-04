@@ -1,7 +1,5 @@
 package tryout;
 
-import eu.ggnet.dwoss.core.widget.Dl;
-
 import java.util.*;
 
 import javax.persistence.LockModeType;
@@ -10,6 +8,7 @@ import javax.swing.JLabel;
 import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.core.common.values.PositionType;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.report.ee.ReportAgent.SearchParameter;
 import eu.ggnet.dwoss.report.ee.*;
 import eu.ggnet.dwoss.report.ee.entity.Report;
@@ -17,8 +16,8 @@ import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine.Storeable;
 import eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine;
 import eu.ggnet.dwoss.report.ui.RawReportView;
-import eu.ggnet.saft.api.Reply;
-import eu.ggnet.saft.core.*;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
 
 /**
  *
@@ -156,9 +155,9 @@ public class SimpleReportLineTryout {
             }
 
             @Override
-            public Reply<String> updateReportName(Report.OptimisticKey key, String name) {
+            public String updateReportName(Report.OptimisticKey key, String name) {
                 System.out.println("Report = " + key + " changing name = " + name);
-                return Reply.success(name);
+                return name;
             }
             //</editor-fold>
 

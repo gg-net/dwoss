@@ -28,7 +28,6 @@ import eu.ggnet.dwoss.report.ee.entity.Report.OptimisticKey;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine.Storeable;
 import eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine;
-import eu.ggnet.saft.api.Reply;
 
 /**
  *
@@ -74,7 +73,7 @@ public class ReportAgentStub implements ReportAgent {
     }
 
     @Override
-    public Reply<String> updateReportName(OptimisticKey key, String name) {
+    public String updateReportName(OptimisticKey key, String name) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
