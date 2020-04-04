@@ -26,11 +26,12 @@ import javax.swing.Action;
 import javafx.scene.control.Alert;
 
 import eu.ggnet.dwoss.core.common.FileJacket;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.TikaUtil;
+import eu.ggnet.dwoss.core.widget.saft.Failure;
 import eu.ggnet.dwoss.misc.ee.StockTaking;
 import eu.ggnet.dwoss.stock.api.PicoStock;
-import eu.ggnet.saft.api.Reply;
-import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.saft.Reply;
 import eu.ggnet.saft.core.Ui;
 
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
@@ -66,7 +67,7 @@ public class StockTakingAction extends AbstractAction {
                     .opt()
                     .filter(b -> b == OK)
                     .map(b -> TikaUtil.isExcel(inFile.get()))
-                    .filter(Ui.failure()::handle)
+                    .filter(Failure::handle)
                     .map(Reply::getPayload)
                     .map(f -> Ui.progress().call(() -> Dl.remote().lookup(StockTaking.class).fullfillDetails(new FileJacket("in", ".xls", f), (stock == null ? null : stock.id))))
                     .ifPresent(f -> Ui.osOpen(f.toTemporaryFile()));

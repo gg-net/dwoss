@@ -21,17 +21,16 @@ import java.util.Optional;
 
 import javafx.scene.control.TextInputDialog;
 
-import eu.ggnet.dwoss.core.widget.saft.ReplyUtil;
 import eu.ggnet.dwoss.core.widget.AccessableAction;
-import eu.ggnet.dwoss.core.widget.saft.OkCancelWrap;
+import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.saft.*;
 import eu.ggnet.dwoss.price.ee.Exporter;
 import eu.ggnet.dwoss.price.ee.Importer;
 import eu.ggnet.dwoss.price.ee.engine.PriceEngineResult.Change;
 import eu.ggnet.dwoss.price.ui.PriceBlockerViewCask;
-import eu.ggnet.saft.api.Reply;
-import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.saft.Reply;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.dwoss.core.widget.auth.Guardian;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_SET_UNIT_PRICE;
 
@@ -60,11 +59,11 @@ public class PriceBlockerAction extends AccessableAction {
                     .opt();
 
             sopoOptional.map(sopoNr -> ReplyUtil.wrap(() -> Dl.remote().lookup(Exporter.class).load(sopoNr)))
-                    .filter(Ui.failure()::handle)
+                    .filter(Failure::handle)
                     .map(Reply::getPayload)
                     .ifPresent(priceEngineResult -> {
                         Ui.build().swing().eval(() -> OkCancelWrap.vetoResult(new PriceBlockerViewCask(sopoOptional.get(), priceEngineResult.getProductDescription(), priceEngineResult.getCustomerPrice(), priceEngineResult.getRetailerPrice()))).opt()
-                                .filter(Ui.failure()::handle)
+                                .filter(Failure::handle)
                                 .map(Reply::getPayload)
                                 .ifPresent(payload -> {
                                     priceEngineResult.setCustomerPrice(payload.customerPrice);

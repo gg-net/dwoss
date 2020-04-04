@@ -18,7 +18,6 @@ package eu.ggnet.dwoss.core.widget.saft;
 
 import javax.swing.JPanel;
 
-import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.ui.ResultProducer;
 
 public class OkCancelResult<V, T extends JPanel & ResultProducer<V>> extends AbstractOkCancelPanelWrapper<T> implements ResultProducer<Reply<V>> {

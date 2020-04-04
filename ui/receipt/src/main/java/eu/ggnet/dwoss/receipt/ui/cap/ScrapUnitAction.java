@@ -24,13 +24,14 @@ import javafx.scene.control.TextInputDialog;
 
 import org.apache.commons.lang3.StringUtils;
 
+import eu.ggnet.dwoss.core.widget.AccessableAction;
+import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.saft.Failure;
 import eu.ggnet.dwoss.core.widget.saft.ReplyUtil;
 import eu.ggnet.dwoss.receipt.ee.UnitDestroyer;
-import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.saft.Reply;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.api.Reply;
-import eu.ggnet.dwoss.core.widget.AccessableAction;
-import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.saft.core.ui.AlertType;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_UNIQUE_UNIT_TO_SCRAP_UNIT;
@@ -61,7 +62,7 @@ public class ScrapUnitAction extends AccessableAction {
                                 .opt()
                                 .filter(b -> b == OK)
                                 .map(u -> ReplyUtil.wrap(() -> Dl.remote().lookup(UnitDestroyer.class).verifyScarpOrDeleteAble(r)))
-                                .filter(Ui.failure()::handle)
+                                .filter(Failure::handle)
                                 .map(Reply::getPayload)
                                 .ifPresent(u -> {
                                     Ui.build().title("Bitte Grund angeben").dialog().eval(() -> {

@@ -16,19 +16,19 @@
  */
 package eu.ggnet.dwoss.receipt.ui.cap;
 
-import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.dwoss.core.widget.Dl;
-
 import java.awt.event.ActionEvent;
 
 import javafx.scene.control.TextInputDialog;
 
+import eu.ggnet.dwoss.core.widget.AccessableAction;
+import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.saft.Failure;
 import eu.ggnet.dwoss.core.widget.saft.ReplyUtil;
 import eu.ggnet.dwoss.receipt.ui.UiProductSupport;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
-import eu.ggnet.saft.api.Reply;
-import eu.ggnet.dwoss.core.widget.AccessableAction;
+import eu.ggnet.dwoss.core.widget.saft.Reply;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_PRODUCT;
 
@@ -52,10 +52,10 @@ public class UpdateProductAction extends AccessableAction {
                 return dialog;
             }).opt()
                     .map(s -> ReplyUtil.wrap(() -> Dl.remote().lookup(UniqueUnitAgent.class).findProductByPartNo(s)))
-                    .filter(Ui.failure()::handle)
+                    .filter(Failure::handle)
                     .map(Reply::getPayload)
                     .map(p -> ReplyUtil.wrap(() -> UiProductSupport.createOrEditPart(p.getTradeName().getManufacturer(), p.getPartNo(), UiCore.getMainFrame())))
-                    .filter(Ui.failure()::handle);
+                    .filter(Failure::handle);
         });
     }
 }

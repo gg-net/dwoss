@@ -20,7 +20,6 @@ import java.util.function.Consumer;
 
 import javax.swing.JPanel;
 
-import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.ui.ResultProducer;
 
 public class OkCancelConsumerResult<V, U, T extends JPanel & ResultProducer<V> & Consumer<U>> extends AbstractOkCancelPanelWrapper<T> implements ResultProducer<Reply<V>>, Consumer<U> {

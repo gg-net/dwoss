@@ -17,7 +17,6 @@
 package eu.ggnet.dwoss.core.widget.saft;
 
 import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.saft.api.Reply;
 
 /**
  * Utility Class to wrap replies.

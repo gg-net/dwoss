@@ -20,13 +20,12 @@ import java.awt.event.ActionEvent;
 
 import javafx.scene.control.Alert;
 
-import eu.ggnet.dwoss.core.widget.TikaUtil;
-import eu.ggnet.dwoss.price.ee.Exporter;
 import eu.ggnet.dwoss.core.common.FileJacket;
-import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.*;
+import eu.ggnet.dwoss.core.widget.saft.Failure;
+import eu.ggnet.dwoss.price.ee.Exporter;
+import eu.ggnet.dwoss.core.widget.saft.Reply;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.api.Reply;
-import eu.ggnet.dwoss.core.widget.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_PRICE_BY_XLS;
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
@@ -52,7 +51,7 @@ public class PriceByInputFileAction extends AccessableAction {
                                 .opt()
                                 .filter(b -> b == OK)
                                 .map(b -> TikaUtil.isExcel(r))
-                                .filter(Ui.failure()::handle)
+                                .filter(Failure::handle)
                                 .map(Reply::getPayload)
                                 .map(f -> Ui.progress().call(() -> Dl.remote().lookup(Exporter.class).toXlsByXls(new FileJacket("in", ".xls", f))))
                                 .ifPresent(c -> Ui.osOpen(c.toTemporaryFile()));

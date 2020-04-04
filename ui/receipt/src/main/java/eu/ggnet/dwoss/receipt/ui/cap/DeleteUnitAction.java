@@ -23,13 +23,14 @@ import javafx.scene.control.TextInputDialog;
 
 import org.apache.commons.lang3.StringUtils;
 
+import eu.ggnet.dwoss.core.widget.AccessableAction;
+import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.saft.Failure;
 import eu.ggnet.dwoss.core.widget.saft.ReplyUtil;
 import eu.ggnet.dwoss.receipt.ee.UnitDestroyer;
-import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.saft.Reply;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.api.Reply;
-import eu.ggnet.dwoss.core.widget.AccessableAction;
-import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.saft.core.ui.AlertType;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.DELETE_UNIQUE_UNIT;
@@ -59,7 +60,7 @@ public class DeleteUnitAction extends AccessableAction {
                         Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "SopoNr " + r + " wirklich gelöschen ?"))
                                 .opt()
                                 .map(s -> ReplyUtil.wrap(() -> Dl.remote().lookup(UnitDestroyer.class).verifyScarpOrDeleteAble(r)))
-                                .filter(Ui.failure()::handle)
+                                .filter(Failure::handle)
                                 .map(Reply::getPayload)
                                 .ifPresent(u -> {
                                     Dl.remote().lookup(UnitDestroyer.class).delete(u, "Löschung aus UI", Dl.local().lookup(Guardian.class).getUsername());

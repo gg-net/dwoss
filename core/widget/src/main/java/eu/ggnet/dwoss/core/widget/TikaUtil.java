@@ -22,7 +22,7 @@ import java.io.IOException;
 import org.apache.tika.Tika;
 
 import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.saft.api.Reply;
+import eu.ggnet.dwoss.core.widget.saft.Reply;
 
 /**
  * Util to check for a file type.

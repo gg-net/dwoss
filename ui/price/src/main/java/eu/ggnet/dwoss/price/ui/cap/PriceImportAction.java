@@ -24,8 +24,9 @@ import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.saft.Failure;
 import eu.ggnet.dwoss.price.ee.Importer;
-import eu.ggnet.saft.api.Reply;
+import eu.ggnet.dwoss.core.widget.saft.Reply;
 import eu.ggnet.saft.core.Ui;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_PRICEMANGMENT;
@@ -51,7 +52,7 @@ public class PriceImportAction extends AccessableAction {
                                 .opt()
                                 .filter(b -> b == OK)
                                 .map(b -> TikaUtil.isExcel(f))
-                                .filter(Ui.failure()::handle)
+                                .filter(Failure::handle)
                                 .map(Reply::getPayload)
                                 .ifPresent(f2 -> {
                                     try {

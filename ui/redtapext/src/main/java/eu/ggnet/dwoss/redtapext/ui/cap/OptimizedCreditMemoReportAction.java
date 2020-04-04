@@ -23,10 +23,11 @@ import javax.swing.AbstractAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.core.widget.saft.ReplyUtil;
 import eu.ggnet.dwoss.core.widget.DateRangeChooserView;
-import eu.ggnet.dwoss.redtapext.ee.reporting.CreditMemoReporter;
 import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.saft.Failure;
+import eu.ggnet.dwoss.core.widget.saft.ReplyUtil;
+import eu.ggnet.dwoss.redtapext.ee.reporting.CreditMemoReporter;
 import eu.ggnet.saft.core.Ui;
 
 import static javax.swing.Action.NAME;
@@ -46,7 +47,7 @@ public class OptimizedCreditMemoReportAction extends AbstractAction {
             Ui.build().fx().eval(() -> new DateRangeChooserView())
                     .opt()
                     .map(r -> ReplyUtil.wrap(() -> Ui.osOpen(Dl.remote().lookup(CreditMemoReporter.class).toOptimizedXls(r.startAsDate(), r.endAsDate()).toTemporaryFile())))
-                    .filter(Ui.failure()::handle);
+                    .filter(Failure::handle);
             L.debug("Done generating OptimizedCreditMemoReport.");
         });
     }

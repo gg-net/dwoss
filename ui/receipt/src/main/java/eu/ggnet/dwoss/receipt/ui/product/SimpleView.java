@@ -30,13 +30,14 @@ import org.apache.commons.lang3.StringUtils;
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.saft.Failure;
 import eu.ggnet.dwoss.core.widget.saft.ReplyUtil;
 import eu.ggnet.dwoss.core.widget.swing.*;
 import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.entity.*;
 import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
-import eu.ggnet.saft.api.Reply;
+import eu.ggnet.dwoss.core.widget.saft.Reply;
 import eu.ggnet.saft.core.Ui;
 
 public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
@@ -649,7 +650,7 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
             return; // Found an equal, so nothing to do
         }
         Reply<ProductSeries> reply = ReplyUtil.wrap(() -> productProcessor.create(getBrand(), getGroup(), seriesName));
-        if ( !Ui.failure().handle(reply) ) return;
+        if ( !Failure.handle(reply) ) return;
         ProductSeries series = reply.getPayload();
         JOptionPane.showMessageDialog(this, "Serie " + series.getName() + " wurde hinzugefügt.\nAktualisiere Lokale Liste.");
         parent.setEnabled(false);

@@ -23,14 +23,13 @@ import javafx.scene.control.TextInputDialog;
 import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.core.common.Css;
+import eu.ggnet.dwoss.core.widget.*;
+import eu.ggnet.dwoss.core.widget.saft.Failure;
 import eu.ggnet.dwoss.core.widget.saft.ReplyUtil;
-import eu.ggnet.dwoss.core.widget.HtmlPane;
 import eu.ggnet.dwoss.price.ee.Exporter;
 import eu.ggnet.dwoss.price.ee.engine.support.PriceEngineResultFormater;
-import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.saft.Reply;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.api.Reply;
-import eu.ggnet.dwoss.core.widget.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_ONE_PRICE;
 import static javafx.stage.Modality.WINDOW_MODAL;
@@ -56,7 +55,7 @@ public class GenerateOnePriceAction extends AccessableAction {
                     .opt()
                     .filter(s -> !StringUtils.isBlank(s))
                     .map(r -> ReplyUtil.wrap(() -> Dl.remote().lookup(Exporter.class).onePrice(r)))
-                    .filter(Ui.failure()::handle)
+                    .filter(Failure::handle)
                     .map(Reply::getPayload)
                     .ifPresent(p -> Ui.build().modality(WINDOW_MODAL).title("SopoNr")
                     .fx()

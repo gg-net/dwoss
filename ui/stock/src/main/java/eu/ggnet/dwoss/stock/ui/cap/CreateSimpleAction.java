@@ -21,19 +21,18 @@ import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
+import eu.ggnet.dwoss.core.widget.AccessableAction;
+import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.saft.Failure;
 import eu.ggnet.dwoss.core.widget.saft.ReplyUtil;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.StockTransactionProcessor;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
 import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
-import eu.ggnet.dwoss.stock.ui.transactions.CreateQuestionModel;
-import eu.ggnet.dwoss.stock.ui.transactions.CreateQuestionView;
-import eu.ggnet.dwoss.stock.ui.transactions.CreateSelectionController;
-import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.stock.ui.transactions.*;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.dwoss.core.widget.AccessableAction;
-import eu.ggnet.dwoss.core.widget.auth.Guardian;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_TRANSACTION_FOR_SINGLE_UNIT;
 
@@ -60,7 +59,7 @@ public class CreateSimpleAction extends AccessableAction {
                                 .opt()
                                 .map(v -> ReplyUtil.wrap(() -> Dl.remote().lookup(StockTransactionProcessor.class)
                                 .perpareTransfer(v.stockUnits, v.destination.getId(), Dl.local().lookup(Guardian.class).getUsername(), v.comment))
-                                ).filter(Ui.failure()::handle)
+                                ).filter(Failure::handle)
                                 .ifPresent(t -> Ui.build().alert("Umfuhr angelegt"));
                     });
         });
