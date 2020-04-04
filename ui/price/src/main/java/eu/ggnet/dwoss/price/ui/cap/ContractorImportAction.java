@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.price.ui.cap;
 
+import eu.ggnet.dwoss.core.widget.ConfirmationDialog;
+
 import java.awt.event.ActionEvent;
 
 import eu.ggnet.dwoss.core.common.FileJacket;

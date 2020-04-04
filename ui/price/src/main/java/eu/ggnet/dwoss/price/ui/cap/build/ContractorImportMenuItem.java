@@ -24,7 +24,7 @@ import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.TikaUtil;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.price.ee.imex.ContractorPricePartNoImporter;
-import eu.ggnet.dwoss.price.ui.cap.ConfirmationDialog;
+import eu.ggnet.dwoss.core.widget.ConfirmationDialog;
 import eu.ggnet.dwoss.price.ui.cap.ImportResultView;
 import eu.ggnet.saft.core.Ui;
 

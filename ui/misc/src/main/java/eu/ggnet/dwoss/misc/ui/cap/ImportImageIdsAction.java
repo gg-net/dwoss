@@ -17,22 +17,15 @@
 package eu.ggnet.dwoss.misc.ui.cap;
 
 import java.awt.event.ActionEvent;
-import java.io.File;
-import java.util.Optional;
+import java.util.function.Consumer;
 
-import javafx.scene.control.Alert;
-
-import eu.ggnet.dwoss.core.widget.TikaUtil;
-import eu.ggnet.dwoss.misc.ee.ImageIdHandler;
 import eu.ggnet.dwoss.core.common.FileJacket;
-import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.*;
+import eu.ggnet.dwoss.misc.ee.ImageIdHandler;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.api.Reply;
-import eu.ggnet.dwoss.core.widget.AccessableAction;
 
+import static eu.ggnet.dwoss.core.widget.UserInfoCompletionException.wrap;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_IMAGE_IDS;
-import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
-import static javafx.scene.control.ButtonType.OK;
 
 /**
  *
@@ -47,18 +40,19 @@ public class ImportImageIdsAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.exec(() -> {
-            Optional<File> inFile = Ui.fileChooser().open().opt();
-            if ( !inFile.isPresent() ) return;
-            Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "ImageIds aus der Datei:" + inFile.get().getPath() + " importieren ?"))
-                    .opt()
-                    .filter(b -> b == OK)
-                    .map(b -> TikaUtil.isExcel(inFile.get()))
-                    .filter(Ui.failure()::handle)
-                    .map(Reply::getPayload)
-                    .map(f -> Ui.progress().call(() -> Dl.remote().lookup(ImageIdHandler.class).importMissing(new FileJacket("in", ".xls", f))))
-                    .filter(Ui.failure()::handle)
-                    .isPresent();
-        });
+        Ui.fileChooser().open().cf()
+                .thenCompose(f -> Ui.build().dialog().eval(() -> new ConfirmationDialog<>("ImageId Import", "ImageIds aus der Datei: " + f.getPath() + " importieren ?", f)).cf())
+                .thenApply(f -> TikaUtil.verifyExcel(f))
+                .thenAccept(f -> progress(wrap(() -> Dl.remote().lookup(ImageIdHandler.class).importMissing(new FileJacket("in", ".xls", f)))))
+                .handle(Ui.handler());
+    }
+
+    private <T> Consumer<T> progress(Runnable c) {
+        return (T t) -> {
+            Ui.progress().call(() -> {
+                c.run();
+                return null;
+            });
+        };
     }
 }

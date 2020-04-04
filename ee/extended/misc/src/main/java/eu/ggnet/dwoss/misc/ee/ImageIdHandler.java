@@ -18,9 +18,9 @@ package eu.ggnet.dwoss.misc.ee;
 
 import javax.ejb.Remote;
 
-import eu.ggnet.dwoss.core.common.values.SalesChannel;
 import eu.ggnet.dwoss.core.common.FileJacket;
-import eu.ggnet.saft.api.Reply;
+import eu.ggnet.dwoss.core.common.UserInfoException;
+import eu.ggnet.dwoss.core.common.values.SalesChannel;
 
 /**
  *
@@ -44,5 +44,11 @@ public interface ImageIdHandler {
      */
     FileJacket exportMissing(SalesChannel salesChannel);
 
-    Reply<Void> importMissing(FileJacket inFile);
+    /**
+     * Import missing image ids.
+     *
+     * @throws UserInfoException if something in the import fails.
+     * @param inFile an Excel-97 (xls) file.
+     */
+    void importMissing(FileJacket inFile) throws UserInfoException;
 }

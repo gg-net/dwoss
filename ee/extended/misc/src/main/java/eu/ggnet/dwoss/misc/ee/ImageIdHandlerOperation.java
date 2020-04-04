@@ -27,6 +27,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.core.common.FileJacket;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.common.values.SalesChannel;
 import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
 import eu.ggnet.dwoss.core.system.progress.SubMonitor;
@@ -37,10 +39,8 @@ import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.lucidcalc.*;
 import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcReader;
-import eu.ggnet.saft.api.Reply;
 
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.BOLD;
 import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.CENTER;
@@ -75,7 +75,7 @@ public class ImageIdHandlerOperation implements ImageIdHandler {
             this.name = name;
             this.imageId = imageId;
         }
-        
+
         @Override
         public String toString() {
             return ToStringBuilder.reflectionToString(this);
@@ -96,7 +96,7 @@ public class ImageIdHandlerOperation implements ImageIdHandler {
     private MonitorFactory monitorFactory;
 
     @Override
-    public Reply<Void> importMissing(FileJacket inFile) {
+    public void importMissing(FileJacket inFile) throws UserInfoException {
         final SubMonitor m = monitorFactory.newSubMonitor("Image Ids importieren", 100);
         m.message("Reading File");
         m.start();
@@ -128,8 +128,7 @@ public class ImageIdHandlerOperation implements ImageIdHandler {
             }
         }
         m.finish();
-        if ( !errors.isEmpty() ) return Reply.failure(errors.toString());
-        return Reply.success(null);
+        if ( !errors.isEmpty() ) throw new UserInfoException("Fehler beim Import der ImageIds", errors);
     }
 
     /**
