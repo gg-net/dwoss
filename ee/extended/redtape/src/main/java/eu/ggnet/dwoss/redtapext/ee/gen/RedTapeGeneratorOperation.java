@@ -26,11 +26,12 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.core.common.values.PositionType;
+import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
+import eu.ggnet.dwoss.core.system.progress.SubMonitor;
+import eu.ggnet.dwoss.core.system.util.ValidationUtil;
 import eu.ggnet.dwoss.customer.api.CustomerMetaData;
 import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
-import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
-import eu.ggnet.dwoss.core.system.progress.SubMonitor;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.state.CustomerDocument;
@@ -40,8 +41,6 @@ import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.*;
 import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
-import eu.ggnet.dwoss.core.system.util.ValidationUtil;
-import eu.ggnet.saft.api.Reply;
 import eu.ggnet.statemachine.StateTransition;
 
 import static eu.ggnet.dwoss.core.common.values.CustomerFlag.SYSTEM_CUSTOMER;
@@ -203,12 +202,7 @@ public class RedTapeGeneratorOperation {
                 RedTapeStateTransition transition = (RedTapeStateTransition)transitions.get(R.nextInt(transitions.size()));
                 if ( transition.getHints().contains(RedTapeStateTransition.Hint.CREATES_ANNULATION_INVOICE)
                         || transition.getHints().contains(RedTapeStateTransition.Hint.CREATES_CREDIT_MEMO) ) break;
-                Reply<Document> reply = redTapeWorker.stateChange(cd, transition, "JUnit"); // Never fails.
-                if ( reply.hasSucceded() ) doc = reply.getPayload();
-                else {
-                    LOG.error("Fail on startChange {}", reply.getSummary());
-                    break;
-                }
+                doc = redTapeWorker.stateChange(cd, transition, "JUnit"); // Never fails.
             }
             dossiers.add(doc.getDossier());
             m.worked(1, doc.getDossier().getIdentifier());

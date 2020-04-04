@@ -21,13 +21,12 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Consumer;
 
+import eu.ggnet.dwoss.core.system.util.ValidationUtil;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent.Root;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.dto.AddressLabelDto;
-import eu.ggnet.dwoss.core.system.util.ValidationUtil;
-import eu.ggnet.saft.api.Reply;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.UiParent;
 
@@ -265,11 +264,10 @@ public class CustomerConnectorFascade {
 
     private static CustomerCommand optionalStore(CustomerCommand cc) {
         if ( !cc.simpleStore ) return cc;
-        Reply<Customer> reply = Dl.remote().lookup(CustomerAgent.class).store(cc.simpleCustomer);
-        if ( !Ui.failure().handle(reply) ) return null; // TODO: Switch to Exception
+        Customer c = Dl.remote().lookup(CustomerAgent.class).store(cc.simpleCustomer);
         return cc.enhance
-                ? CustomerCommand.enhance(reply.getPayload())
-                : CustomerCommand.select(reply.getPayload());
+                ? CustomerCommand.enhance(c)
+                : CustomerCommand.select(c);
     }
 
     private static CompletionStage<Customer> optionalEnhancedEditorAndStore(UiParent p, CustomerCommand cc) {

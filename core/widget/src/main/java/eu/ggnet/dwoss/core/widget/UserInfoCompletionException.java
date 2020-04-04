@@ -17,7 +17,6 @@
 package eu.ggnet.dwoss.core.widget;
 
 import java.util.concurrent.CompletionException;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 import eu.ggnet.dwoss.core.common.UserInfoException;
@@ -76,16 +75,16 @@ public class UserInfoCompletionException extends CompletionException {
      * @return a consumer possibly thorwing an {@link UserInfoException} wrapped into {@link UserInfoCompletionException}.
      * @throws UserInfoCompletionException
      */
-    public static <T> Consumer<T> wrap(UserInfoExceptionConsumer<T> uic) {
-        return (T t) -> {
-            try {
-                uic.accept(t);
-            } catch (UserInfoException ex) {
-                throw new UserInfoCompletionException(ex);
-            }
-        };
-    }
-
+    //TODO: If this method exists, the compiler gets confused in the lambda usage. with the function. But.... do I even need that.
+//    public static <T> Consumer<T> wrap(UserInfoExceptionConsumer<T> uic) {
+//        return (T t) -> {
+//            try {
+//                uic.accept(t);
+//            } catch (UserInfoException ex) {
+//                throw new UserInfoCompletionException(ex);
+//            }
+//        };
+//    }
     /**
      * Wrapper for a Function with an {@link UserInfoException}.
      *

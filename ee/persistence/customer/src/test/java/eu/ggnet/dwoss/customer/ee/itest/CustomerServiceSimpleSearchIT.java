@@ -44,9 +44,9 @@ public class CustomerServiceSimpleSearchIT extends ArquillianProjectArchive {
         c1.setLandlinePhone("040 1232123");
         SimpleCustomer c2 = makeSimpleCustomer(null, "Frau", "Marria", "Mustermann", "Grosse Tüten", "Dunkle Allee 7", "12345", "Musterhausen");
         c2.setMobilePhone("+49 172 12312131");
-        SimpleCustomer c3 =  makeSimpleCustomer("Schlagstock Ltd.", "Herr", "Michael", "Wankelmeier", "Bloß freundlich sein !!!", "Adamsweg 3", "00666", "Eisenhüttenstadt");
+        SimpleCustomer c3 = makeSimpleCustomer("Schlagstock Ltd.", "Herr", "Michael", "Wankelmeier", "Bloß freundlich sein !!!", "Adamsweg 3", "00666", "Eisenhüttenstadt");
         c3.setEmail("rolf@rofl.de");
-        SimpleCustomer c4 =  makeSimpleCustomer(null, "Frau", "Lisa", "Lüstling", null, "Freie Straße 2", "98745", "Heimwehrhausen");
+        SimpleCustomer c4 = makeSimpleCustomer(null, "Frau", "Lisa", "Lüstling", null, "Freie Straße 2", "98745", "Heimwehrhausen");
         c4.setEmail("lisa@xxx.com");
 
         // --------

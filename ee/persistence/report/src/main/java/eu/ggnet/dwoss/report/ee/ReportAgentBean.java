@@ -28,9 +28,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.system.autolog.AutoLogger;
+import eu.ggnet.dwoss.core.system.persistence.AbstractAgentBean;
 import eu.ggnet.dwoss.report.ee.api.MarginCalculator;
 import eu.ggnet.dwoss.report.ee.assist.ReportUtil.PrepareReportPartition;
 import eu.ggnet.dwoss.report.ee.assist.Reports;
@@ -39,8 +41,6 @@ import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ee.entity.Report.YearSplit;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine;
-import eu.ggnet.dwoss.core.system.persistence.AbstractAgentBean;
-import eu.ggnet.saft.api.Reply;
 
 import static eu.ggnet.dwoss.core.common.values.PositionType.*;
 import static eu.ggnet.dwoss.report.ee.ViewReportResult.Type.*;
@@ -139,15 +139,14 @@ public class ReportAgentBean extends AbstractAgentBean implements ReportAgent {
      * See {@link ReportAgent#updateReportName(eu.ggnet.dwoss.report.entity.Report.OptimisticKey, java.lang.String) }.
      */
     @Override
-    public Reply<String> updateReportName(Report.OptimisticKey key, String name) {
-        // TODO: Build a better result with error messages.
-        if ( key == null ) return Reply.failure("Key is null");
-        if ( name == null ) return Reply.failure("Name is null");
+    public String updateReportName(Report.OptimisticKey key, String name) throws UserInfoException {
+        Objects.requireNonNull(key, "key must not be null");
+        Objects.requireNonNull(name, "name must not be null");
         Report find = reportEm.find(Report.class, key.id);
-        if ( find == null ) return Reply.failure("No Report found with id " + key.id);
-        if ( find.getOptLock() != key.optLock ) return Reply.failure("OptLock missmatsch. Bitte Fenster schließen und neu öffnen");
+        if ( find == null ) throw new IllegalStateException("No Report found with id " + key.id);
+        if ( find.getOptLock() != key.optLock ) throw new UserInfoException("OptLock missmatsch. Bitte Fenster schließen und neu öffnen");
         find.setName(name);
-        return Reply.success(name);
+        return name;
     }
 
     @Override

@@ -22,14 +22,13 @@ import java.util.List;
 import javax.ejb.Remote;
 import javax.enterprise.event.Observes;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.core.common.values.Warranty;
 import eu.ggnet.dwoss.customer.api.AddressChange;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.state.CustomerDocument;
 import eu.ggnet.dwoss.redtapext.ee.workflow.RedTapeCreateDossierWorkflow;
-import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.saft.api.Reply;
 import eu.ggnet.statemachine.StateTransition;
 
 /**
@@ -125,9 +124,9 @@ public interface RedTapeWorker {
      * @param cdoc       the Document and Customer to take the change.
      * @param transition the transition to do.
      * @param arranger   the arranger
-     * @return a Reply with the Document in the new state or a failure.
+     * @return the Document in the new state
      */
-    Reply<Document> stateChange(CustomerDocument cdoc, StateTransition<CustomerDocument> transition, String arranger);
+    Document stateChange(CustomerDocument cdoc, StateTransition<CustomerDocument> transition, String arranger);
 
     /**
      * Update changes from a Document by looking up the original from the database.

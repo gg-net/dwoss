@@ -18,20 +18,17 @@ package eu.ggnet.dwoss.redtapext.ui.cao.stateaction;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;
-import java.util.Optional;
 
 import javax.swing.JOptionPane;
 
+import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.state.CustomerDocument;
 import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.ShippingCostHelper;
-import eu.ggnet.dwoss.core.widget.Dl;
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.api.Reply;
-import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.statemachine.StateTransition;
-
 
 /**
  *
@@ -62,16 +59,12 @@ public class ModifyShippingCostStateAction extends DefaultStateTransitionAction 
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Optional.of(Dl.remote().lookup(RedTapeWorker.class).stateChange(cdoc, transition, Dl.local().lookup(Guardian.class).getUsername()))
-                .filter(Ui.failure()::handle)
-                .map(Reply::getPayload).ifPresent(document -> {
-            int confirmDialog = JOptionPane.showConfirmDialog(parent, createWindowText(),
-                    "Automatische Versandkostenkalkulation", JOptionPane.YES_NO_CANCEL_OPTION);
-            if ( confirmDialog == JOptionPane.YES_OPTION ) ShippingCostHelper.modifyOrAddShippingCost(document, cdoc.getShippingCondition());
+        Document document = Dl.remote().lookup(RedTapeWorker.class).stateChange(cdoc, transition, Dl.local().lookup(Guardian.class).getUsername());
+        int confirmDialog = JOptionPane.showConfirmDialog(parent, createWindowText(),
+                "Automatische Versandkostenkalkulation", JOptionPane.YES_NO_CANCEL_OPTION);
+        if ( confirmDialog == JOptionPane.YES_OPTION ) ShippingCostHelper.modifyOrAddShippingCost(document, cdoc.getShippingCondition());
 
-            if ( confirmDialog != JOptionPane.CANCEL_OPTION )
-                controller.reloadSelectionOnStateChange(Dl.remote().lookup(RedTapeWorker.class).update(document, null, Dl.local().lookup(Guardian.class).getUsername()).getDossier());
-        });
-
+        if ( confirmDialog != JOptionPane.CANCEL_OPTION )
+            controller.reloadSelectionOnStateChange(Dl.remote().lookup(RedTapeWorker.class).update(document, null, Dl.local().lookup(Guardian.class).getUsername()).getDossier());
     }
 }

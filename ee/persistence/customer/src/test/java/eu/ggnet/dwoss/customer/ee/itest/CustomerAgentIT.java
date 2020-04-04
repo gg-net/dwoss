@@ -37,7 +37,6 @@ import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
 import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.customer.ee.itest.support.Utils;
-import eu.ggnet.saft.api.Reply;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -140,10 +139,8 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
 
     @Test
     public void testStoreSimpleCustomer() {
-        Reply<Customer> reply = agent.store(CustomerGenerator.makeSimpleConsumerCustomer().toSimple().get());
-        assertThat(reply.hasSucceded()).as("Reply not successful: " + reply.getSummary()).isTrue();
-        reply = agent.store(CustomerGenerator.makeSimpleBussinesCustomer().toSimple().get());
-        assertThat(reply.hasSucceded()).as("Reply not successful: " + reply.getSummary()).isTrue();
+        agent.store(CustomerGenerator.makeSimpleConsumerCustomer().toSimple().get());
+        agent.store(CustomerGenerator.makeSimpleBussinesCustomer().toSimple().get());
 
         assertThat(agent.count(Customer.class)).as("There should only be two customers in the db").isEqualTo(2);
 

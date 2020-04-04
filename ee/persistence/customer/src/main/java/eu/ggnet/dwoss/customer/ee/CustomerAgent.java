@@ -21,13 +21,12 @@ import java.util.*;
 
 import javax.ejb.Remote;
 
+import eu.ggnet.dwoss.core.system.persistence.RemoteAgent;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
 import eu.ggnet.dwoss.customer.ee.entity.dto.AddressLabelDto;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
-import eu.ggnet.dwoss.core.system.persistence.RemoteAgent;
-import eu.ggnet.saft.api.Reply;
 
 /**
  *
@@ -103,8 +102,9 @@ public interface CustomerAgent extends RemoteAgent {
      *
      * @param simpleCustomer the simpleCustomer
      * @return returns a reply with the stored customer or empty with failure.
+     * @throws IllegalArgumentException if customer is invalid.
      */
-    Reply<Customer> store(SimpleCustomer simpleCustomer);
+    Customer store(SimpleCustomer simpleCustomer) throws IllegalArgumentException;
 
     /**
      * Stores the addresslabels on the customer, all addresslabels must be from one customer.

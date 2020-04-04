@@ -37,7 +37,6 @@ import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.stash.*;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
-import eu.ggnet.saft.api.Reply;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -241,7 +240,7 @@ public class CustomerAgentStub implements CustomerAgent {
     }
 
     @Override
-    public Reply<Customer> store(SimpleCustomer simpleCustomer) {
+    public Customer store(SimpleCustomer simpleCustomer) {
         L.info("Input form Stubs: " + simpleCustomer.toString());
 
         //convert the SimpleCustomer to a Customer
@@ -297,8 +296,8 @@ public class CustomerAgentStub implements CustomerAgent {
         c.getAddressLabels().add(al);
         c.setSource(simpleCustomer.getSource());
 
-        if ( !c.isValid() ) return Reply.failure(c.getViolationMessage());
-        return Reply.success(c);
+        if ( !c.isValid() ) throw new IllegalArgumentException("Storefelhler: " + c.getViolationMessage());
+        return c;
     }
 
     @Override

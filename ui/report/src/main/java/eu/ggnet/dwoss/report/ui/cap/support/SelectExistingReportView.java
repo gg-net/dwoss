@@ -34,15 +34,16 @@ import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.*;
 
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.report.ee.ReportAgent;
 import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ee.entity.Report.OptimisticKey;
 import eu.ggnet.dwoss.report.ui.main.ReportListCell;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.ResultProducer;
 import eu.ggnet.saft.core.ui.Title;
 
+import static eu.ggnet.dwoss.core.widget.UserInfoCompletionException.wrap;
 import static java.time.ZoneId.systemDefault;
 import static javafx.scene.control.ButtonBar.ButtonData.OK_DONE;
 
@@ -68,7 +69,7 @@ public class SelectExistingReportView extends BorderPane implements Consumer<Lis
         public String toString() {
             return "EditResult{" + "key=" + key + ", text=" + text + '}';
         }
-        
+
     }
 
     private final static class UpdateResult {
@@ -86,7 +87,7 @@ public class SelectExistingReportView extends BorderPane implements Consumer<Lis
         public String toString() {
             return "UpdateResult{" + "successful=" + successful + ", text=" + text + '}';
         }
-                
+
     }
 
     private final ListView<Report> reportListView;
@@ -192,16 +193,14 @@ public class SelectExistingReportView extends BorderPane implements Consumer<Lis
 
         dialog.setResultConverter((type) -> type.getButtonData() == OK_DONE ? new EditResult(selectedReport.toKey(), textField.getText()) : null);
 
-        Ui.exec(() -> {
-            Ui.build().parent(this).dialog().eval(() -> dialog)
-                    .opt()
-                    .map(r -> Dl.remote().lookup(ReportAgent.class).updateReportName(r.key, r.text))
-                    .filter(Ui.failure().parent(this)::handle)
-                    .ifPresent(r -> {
-                        reportListView.getSelectionModel().getSelectedItem().setName(r.getPayload());
-                        reportListView.refresh();
-                    });
-        });
+        Ui.build().parent(this).dialog().eval(() -> dialog)
+                .cf()
+                .thenApply(wrap(er -> Dl.remote().lookup(ReportAgent.class).updateReportName(er.key, er.text)))
+                .thenAccept(r -> {
+                    reportListView.getSelectionModel().getSelectedItem().setName(r);
+                    reportListView.refresh();
+                })
+                .handle(Ui.handler());
 
     }
 

@@ -16,9 +16,6 @@
  */
 package eu.ggnet.dwoss.report.ee;
 
-import eu.ggnet.dwoss.core.common.values.DocumentType;
-import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
-
 import java.io.Serializable;
 import java.util.*;
 
@@ -26,12 +23,13 @@ import javax.ejb.Remote;
 
 import org.apache.commons.lang3.StringUtils;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.system.persistence.RemoteAgent;
 import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine;
-import eu.ggnet.dwoss.core.system.persistence.RemoteAgent;
-import eu.ggnet.saft.api.Reply;
-
 
 /**
  *
@@ -51,7 +49,7 @@ public interface ReportAgent extends RemoteAgent {
         public String getRefurbishId() {
             return refurbishId;
         }
-        
+
         public boolean isEmpty() {
             return StringUtils.isBlank(refurbishId);
         }
@@ -60,7 +58,7 @@ public interface ReportAgent extends RemoteAgent {
         public String toString() {
             return "SearchParameter{" + "refurbishId=" + refurbishId + '}';
         }
-        
+
     }
 
     public List<SimpleReportLine> findSimple(SearchParameter search, int firstResult, int maxResults);
@@ -112,11 +110,12 @@ public interface ReportAgent extends RemoteAgent {
      * Updates the comment of a Report
      * If no instance could be found no changes will be made.
      *
-     * @param key  the optimistic locking key
-     * @param name string to be set as new comment for the Report
-     * @return a reply, which on success has the name as payload.
+     * @param key  the optimistic locking key, must not be null
+     * @param name string to be set as new comment for the Report, must not be null.
+     * @return the updated name
+     * @throws eu.ggnet.dwoss.core.common.UserInfoException if the opt lock has a mismatch.
      */
-    Reply<String> updateReportName(Report.OptimisticKey key, String name);
+    String updateReportName(Report.OptimisticKey key, String name) throws UserInfoException;
 
     /**
      * Returns a ReportResult build from an existing Report.

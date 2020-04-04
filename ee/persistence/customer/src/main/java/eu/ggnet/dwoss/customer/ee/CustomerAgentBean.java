@@ -42,7 +42,6 @@ import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.stash.*;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.saft.api.Reply;
 
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -101,7 +100,7 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
     }
 
     @Override
-    public Reply<Customer> store(SimpleCustomer simpleCustomer) {
+    public Customer store(SimpleCustomer simpleCustomer) {
         L.info("store({})", simpleCustomer);
         boolean exists = (simpleCustomer.getId() > 0);
         boolean bussines = !Utils.isBlank(simpleCustomer.getCompanyName());
@@ -149,10 +148,10 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
         update(customer, cont.getCommunications(), Type.MOBILE, simpleCustomer.getMobilePhone());
 
         customer.setSource(simpleCustomer.getSource());
-        if ( !customer.isValid() ) return Reply.failure(customer.getViolationMessage());
-
+        if ( !customer.isValid() )
+            throw new IllegalArgumentException("Store of invalid Customer(id=" + customer.getId() + ") " + customer.getViolationMessage());
         if ( !exists ) em.persist(customer);
-        return Reply.success(customer);
+        return customer;
     }
 
     @Override

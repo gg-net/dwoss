@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao.jasper;
 
-import eu.ggnet.dwoss.core.widget.Dl;
-
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.util.Optional;
@@ -26,6 +24,8 @@ import javax.swing.AbstractAction;
 
 import org.apache.commons.lang3.StringUtils;
 
+import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.customer.api.CustomerMetaData;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
@@ -36,9 +36,8 @@ import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.state.CustomerDocument;
 import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateTransition;
 import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
-import eu.ggnet.saft.api.Reply;
-import eu.ggnet.saft.core.*;
-import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.statemachine.StateTransition;
 
 /**
@@ -111,10 +110,8 @@ public class DocumentViewAction extends AbstractAction {
             RedTapeStateTransition redTapeStateTransition = (RedTapeStateTransition)stateTransition;
             for (RedTapeStateTransition.Hint hint : redTapeStateTransition.getHints()) {
                 if ( hint == RedTapeStateTransition.Hint.SENDED_INFORMATION ) {
-                    this.document = Optional.of(Dl.remote().lookup(RedTapeWorker.class)
-                            .stateChange(customerDocument, redTapeStateTransition, Dl.local().lookup(Guardian.class).getUsername()))
-                            .filter(Ui.failure()::handle)
-                            .map(Reply::getPayload).orElse(document);
+                    this.document = Dl.remote().lookup(RedTapeWorker.class)
+                            .stateChange(customerDocument, redTapeStateTransition, Dl.local().lookup(Guardian.class).getUsername());
                 }
             }
         }

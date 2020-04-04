@@ -3,13 +3,12 @@ package tryout.stub;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.common.values.Warranty;
 import eu.ggnet.dwoss.customer.api.AddressChange;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.state.CustomerDocument;
-import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.saft.api.Reply;
 import eu.ggnet.statemachine.StateTransition;
 
 /**
@@ -54,7 +53,7 @@ public class RedTapeWorkerStub implements RedTapeWorker {
     }
 
     @Override
-    public Reply<Document> stateChange(CustomerDocument cdoc, StateTransition<CustomerDocument> transition, String arranger) {
+    public Document stateChange(CustomerDocument cdoc, StateTransition<CustomerDocument> transition, String arranger) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

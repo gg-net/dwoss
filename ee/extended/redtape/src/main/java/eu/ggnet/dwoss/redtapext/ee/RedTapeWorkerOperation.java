@@ -16,12 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ee;
 
-import eu.ggnet.dwoss.core.common.values.CustomerFlag;
-import eu.ggnet.dwoss.core.common.values.Warranty;
-import eu.ggnet.dwoss.core.common.values.PositionType;
-import eu.ggnet.dwoss.core.common.values.DocumentType;
-import eu.ggnet.dwoss.core.common.values.AddressType;
-
 import java.util.*;
 
 import javax.ejb.Stateless;
@@ -31,10 +25,12 @@ import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
+import eu.ggnet.dwoss.core.common.values.*;
+import eu.ggnet.dwoss.customer.api.AddressChange;
 import eu.ggnet.dwoss.customer.ee.AddressServiceBean;
 import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.customer.api.AddressChange;
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.eao.DocumentEao;
 import eu.ggnet.dwoss.redtape.ee.eao.DossierEao;
@@ -52,8 +48,6 @@ import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.*;
 import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
-import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.saft.api.Reply;
 import eu.ggnet.statemachine.StateTransition;
 
 import static eu.ggnet.dwoss.core.common.values.DocumentType.*;
@@ -289,19 +283,15 @@ public class RedTapeWorkerOperation implements RedTapeWorker {
      * @return the Document in the new state.
      */
     @Override
-    public Reply<Document> stateChange(CustomerDocument cdoc, StateTransition<CustomerDocument> transition, String arranger) {
-        try {
-            EnumSet<CustomerFlag> customerFlags = EnumSet.noneOf(CustomerFlag.class);
-            customerFlags.addAll(cdoc.getCustomerFlags());
-            L.info("stateChange with {} on {}", transition.getName(), cdoc);
-            stateMachine.stateChange(cdoc, transition);
-            // INFO: This is a stupid solution.
-            if ( !customerFlags.equals(cdoc.getCustomerFlags()) )
-                customerService.updateCustomerFlags(cdoc.getDocument().getDossier().getCustomerId(), cdoc.getCustomerFlags());
-            return Reply.success(internalUpdate(cdoc.getDocument(), null, arranger));
-        } catch (RuntimeException re) {
-            return Reply.failure(re.getMessage());
-        }
+    public Document stateChange(CustomerDocument cdoc, StateTransition<CustomerDocument> transition, String arranger) {
+        EnumSet<CustomerFlag> customerFlags = EnumSet.noneOf(CustomerFlag.class);
+        customerFlags.addAll(cdoc.getCustomerFlags());
+        L.info("stateChange with {} on {}", transition.getName(), cdoc);
+        stateMachine.stateChange(cdoc, transition);
+        // INFO: This is a stupid solution.
+        if ( !customerFlags.equals(cdoc.getCustomerFlags()) )
+            customerService.updateCustomerFlags(cdoc.getDocument().getDossier().getCustomerId(), cdoc.getCustomerFlags());
+        return internalUpdate(cdoc.getDocument(), null, arranger);
     }
 
     // TODO: Rename to represent the forced detached
@@ -417,13 +407,13 @@ public class RedTapeWorkerOperation implements RedTapeWorker {
      * @param username
      * @return the updated dossier
      * @throws eu.ggnet.dwoss.core.common.UserInfoException if the dossiers crucial document is not an order,
-     *                                               the dosser is closed or in legacy state, there are no unit type positions
+     *                                                      the dosser is closed or in legacy state, there are no unit type positions
      */
     @Override
     public Dossier updateWarranty(long disserId, Warranty warranty, String username) throws UserInfoException {
         Dossier dos = redTapeEm.find(Dossier.class, disserId);
         if ( dos == null ) return null;
-        if ( dos.isClosed()) throw new UserInfoException("Geschlossene sind nicht für Garantieänderungen zugelassen.");
+        if ( dos.isClosed() ) throw new UserInfoException("Geschlossene sind nicht für Garantieänderungen zugelassen.");
         if ( dos.getCrucialDocument().getType() != ORDER ) throw new UserInfoException("Nur Bestellungen sind für Garantieänderungen zugelassen.");
         if ( dos.getCrucialDocument().getPositions(PositionType.UNIT).isEmpty() )
             throw new UserInfoException("Vorgänge ohne Geräte sind nich für Garantieänderungen zugelassen.");
