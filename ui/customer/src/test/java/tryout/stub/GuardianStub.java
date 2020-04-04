@@ -11,7 +11,7 @@ import eu.ggnet.dwoss.core.widget.auth.AuthenticationException;
 import eu.ggnet.dwoss.core.widget.auth.UserChangeListener;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.core.widget.auth.Accessable;
-import eu.ggnet.saft.api.Authorisation;
+import eu.ggnet.dwoss.rights.api.Authorisation;
 
 /**
  *

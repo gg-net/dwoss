@@ -23,7 +23,7 @@ import javax.swing.AbstractAction;
 import eu.ggnet.dwoss.core.widget.HtmlPane;
 import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.api.Authorisation;
+import eu.ggnet.dwoss.rights.api.Authorisation;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
 
 /**

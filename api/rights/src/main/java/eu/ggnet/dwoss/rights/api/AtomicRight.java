@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.rights.api;
 
-import eu.ggnet.saft.api.Authorisation;
-
 /**
  * Enum Implementation of Authorisations.
  *

@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;
-import eu.ggnet.saft.api.Authorisation;
+import eu.ggnet.dwoss.rights.api.Authorisation;
 
 /**
  * An Implementation which handles the AccessDependent and Rights Storage, but without an actual Authentication.

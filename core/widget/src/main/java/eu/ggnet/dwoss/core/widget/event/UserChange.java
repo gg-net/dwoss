@@ -21,7 +21,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import eu.ggnet.saft.api.Authorisation;
+import eu.ggnet.dwoss.rights.api.Authorisation;
 
 /**
  * User Change Event.

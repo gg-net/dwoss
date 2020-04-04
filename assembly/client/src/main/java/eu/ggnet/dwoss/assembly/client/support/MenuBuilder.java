@@ -31,7 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.assembly.client.support.MenuBuilder;
-import eu.ggnet.saft.api.Authorisation;
+import eu.ggnet.dwoss.rights.api.Authorisation;
 import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.auth.Accessable;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;

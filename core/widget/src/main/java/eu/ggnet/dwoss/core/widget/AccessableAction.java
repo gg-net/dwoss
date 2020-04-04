@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.core.widget;
 import javax.swing.AbstractAction;
 
 import eu.ggnet.dwoss.core.widget.auth.Accessable;
-import eu.ggnet.saft.api.Authorisation;
+import eu.ggnet.dwoss.rights.api.Authorisation;
 
 /**
  * This class Implements {@link Accessable} and the {@link Authorisation} which is returned {@link Accessable#getNeededRight() } will be setted in the

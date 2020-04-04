@@ -14,29 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.core.widget.auth;
-
-import eu.ggnet.dwoss.rights.api.Authorisation;
+package eu.ggnet.dwoss.rights.api;
 
 /**
- * This interface can be implement to make a Class accessible with a Specific {@link Authorisation}.
+ * Tagging Interface for every kind of Authorisation implementation.
  * <p>
- * @author Bastian Venz
+ * @author oliver.guenther
  */
-public interface Accessable {
+public interface Authorisation {
 
-    /**
-     * This method implements the Logic which represent that the Object should be enabled.
-     * <p>
-     * @param enable should the implementing class enabled?
-     */
-    void setEnabled(boolean enable);
-
-    /**
-     * This is method returns the {@link Authorisation} which is needed to enable the implemented Class.
-     * <p>
-     * @return the {@link Authorisation} which is needed to enable the implemented Class.
-     */
-    Authorisation getNeededRight();
+    String toName();
 
 }

@@ -22,7 +22,7 @@ import eu.ggnet.dwoss.misc.ui.cap.OpenSalesChannelManagerAction;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.model.SalesChannelLine;
 import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.saft.api.Authorisation;
+import eu.ggnet.dwoss.rights.api.Authorisation;
 import eu.ggnet.saft.core.*;
 
 import static eu.ggnet.dwoss.core.common.values.SalesChannel.CUSTOMER;

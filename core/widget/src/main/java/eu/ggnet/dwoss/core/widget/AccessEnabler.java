@@ -21,7 +21,7 @@ import java.lang.reflect.Method;
 import java.util.Objects;
 
 import eu.ggnet.dwoss.core.widget.auth.Accessable;
-import eu.ggnet.saft.api.Authorisation;
+import eu.ggnet.dwoss.rights.api.Authorisation;
 
 /**
  * A Helper wrapper, that checks if a supplied object has a method setEnabled(boolean).

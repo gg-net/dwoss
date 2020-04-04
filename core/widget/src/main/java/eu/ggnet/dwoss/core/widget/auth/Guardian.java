@@ -20,7 +20,7 @@ import java.util.Set;
 
 import javax.swing.Action;
 
-import eu.ggnet.saft.api.Authorisation;
+import eu.ggnet.dwoss.rights.api.Authorisation;
 
 /**
  * Simple Authentication Interface.
