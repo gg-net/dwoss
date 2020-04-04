@@ -16,18 +16,14 @@
  */
 package eu.ggnet.dwoss.receipt.ee;
 
-import eu.ggnet.dwoss.spec.ee.entity.ProductModel;
-import eu.ggnet.dwoss.spec.ee.entity.ProductFamily;
-import eu.ggnet.dwoss.spec.ee.entity.ProductSeries;
-import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
-
 import javax.ejb.Remote;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.spec.ee.entity.*;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Cpu;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Gpu;
-import eu.ggnet.saft.api.Reply;
 
 /**
  *
@@ -108,12 +104,13 @@ public interface ProductProcessor {
      * @param group      the group
      * @param seriesName the series.
      * @return the persisted and detache entity
+     * @throws UserInfoException if the supplied data is not correct.
      */
-    Reply<ProductSeries> create(final TradeName brand, final ProductGroup group, final String seriesName);
+    ProductSeries create(final TradeName brand, final ProductGroup group, final String seriesName) throws UserInfoException;
 
     /**
      * Creates a new ProductSpec and the relating Product and SopoProduct.
-     *
+     * <p>
      * The process has multiple steps:
      * <ol>
      * <li>Merge the ProductModel and set it in the Spec</li>
@@ -128,7 +125,7 @@ public interface ProductProcessor {
      *
      * @param spec  the spec to persist, must not be null
      * @param model the model for the spec, must not be null or new
-     * @param gtin the value of gtin
+     * @param gtin  the value of gtin
      * @throws IllegalArgumentException if Cpu or Gpu in a Desktop are new.
      *
      * @return the eu.ggnet.dwoss.spec.entity.ProductSpec
@@ -166,7 +163,7 @@ public interface ProductProcessor {
 
     /**
      * Updates an existing ProductSpec and the relating Product and SopoProduct.
-     *
+     * <p>
      * The process has multiple steps:
      * <ol>
      * <li>Validate and throw IllegalArgumentException:
@@ -184,7 +181,7 @@ public interface ProductProcessor {
      * <li> If PartNo change propagate to all matching SopoUnits</li>
      * </ol>
      *
-     * @param spec  the spec to be updated, must not be null
+     * @param spec the spec to be updated, must not be null
      * @param gtin the value of gtin
      * @throws IllegalArgumentException if spec.productId == null
      * @return the eu.ggnet.dwoss.spec.entity.ProductSpec

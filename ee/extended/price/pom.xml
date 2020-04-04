@@ -15,6 +15,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.inferred</groupId>
+            <artifactId>freebuilder</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-uniqueunit-ee</artifactId>
             <version>${project.version}</version>

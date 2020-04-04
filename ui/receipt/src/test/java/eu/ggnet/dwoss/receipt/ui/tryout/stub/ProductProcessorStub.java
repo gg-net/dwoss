@@ -32,7 +32,6 @@ import eu.ggnet.dwoss.spec.ee.entity.Desktop.Os;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec.Extra;
 import eu.ggnet.dwoss.spec.ee.entity.*;
 import eu.ggnet.dwoss.spec.ee.entity.piece.*;
-import eu.ggnet.saft.api.Reply;
 
 import static eu.ggnet.dwoss.core.common.values.ProductGroup.*;
 import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.ACER;
@@ -430,9 +429,9 @@ public class ProductProcessorStub implements ProductProcessor {
     }
 
     @Override
-    public Reply<ProductSeries> create(TradeName brand, ProductGroup group, String seriesName) {
+    public ProductSeries create(TradeName brand, ProductGroup group, String seriesName) {
         ProductSeries series = soc.newProductSeries(brand, group, SpecPu.DEFAULT_NAME);
         serieses.add(series);
-        return Reply.success(series);
+        return series;
     }
 }

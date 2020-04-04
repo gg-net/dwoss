@@ -16,24 +16,6 @@
  */
 package eu.ggnet.dwoss.receipt.ee;
 
-import eu.ggnet.dwoss.spec.ee.eao.GpuEao;
-import eu.ggnet.dwoss.spec.ee.entity.piece.Display;
-import eu.ggnet.dwoss.spec.ee.eao.DisplayEao;
-import eu.ggnet.dwoss.spec.ee.entity.DisplayAble;
-import eu.ggnet.dwoss.spec.ee.entity.piece.Gpu;
-import eu.ggnet.dwoss.spec.ee.entity.ProductFamily;
-import eu.ggnet.dwoss.spec.ee.eao.CpuEao;
-import eu.ggnet.dwoss.spec.ee.entity.Desktop;
-import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
-import eu.ggnet.dwoss.spec.ee.entity.piece.Cpu;
-import eu.ggnet.dwoss.spec.ee.entity.ProductModel;
-import eu.ggnet.dwoss.spec.ee.eao.ProductSeriesEao;
-import eu.ggnet.dwoss.spec.ee.eao.ProductModelEao;
-import eu.ggnet.dwoss.spec.ee.entity.DesktopBundle;
-import eu.ggnet.dwoss.spec.ee.eao.ProductSpecEao;
-import eu.ggnet.dwoss.spec.ee.entity.ProductSeries;
-import eu.ggnet.dwoss.spec.ee.eao.ProductFamilyEao;
-
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -41,17 +23,20 @@ import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.spec.ee.assist.SpecPu;
 import eu.ggnet.dwoss.spec.ee.assist.Specs;
+import eu.ggnet.dwoss.spec.ee.eao.*;
 import eu.ggnet.dwoss.spec.ee.emo.DisplayEmo;
 import eu.ggnet.dwoss.spec.ee.emo.ProductModelEmo;
+import eu.ggnet.dwoss.spec.ee.entity.*;
+import eu.ggnet.dwoss.spec.ee.entity.piece.*;
 import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
-import eu.ggnet.saft.api.Reply;
 
 /**
  * This Logic is used in Reciept to handle all modifications to ProductSpec,Product and SopoProduct.
@@ -412,15 +397,15 @@ public class ProductProcessorOperation implements ProductProcessor {
     }
 
     @Override
-    public Reply<ProductSeries> create(TradeName brand, ProductGroup group, String seriesName) {
+    public ProductSeries create(TradeName brand, ProductGroup group, String seriesName) throws UserInfoException {
         EntityManager em = specEm;
         // 1. check if there exits a model anytwhere with the same name. -> throw Exception
         ProductSeriesEao seriesEoa = new ProductSeriesEao(em);
         ProductSeries series = seriesEoa.find(seriesName);
-        if ( series != null ) Reply.failure("There exits a series " + series + " but we want to create it");
+        if ( series != null ) throw new UserInfoException("There exits a series " + series + " but we want to create it");
         // 2. Create Family
         series = new ProductSeries(brand, group, seriesName);
         em.persist(series);
-        return Reply.success(series);
+        return series;
     }
 }

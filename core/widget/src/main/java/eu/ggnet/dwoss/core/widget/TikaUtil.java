@@ -21,6 +21,7 @@ import java.io.IOException;
 
 import org.apache.tika.Tika;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.saft.api.Reply;
 
 /**
@@ -35,6 +36,8 @@ public class TikaUtil {
     public static String OPENOFFICE_SPREADSHEET_MIME_TYPE = "application/vnd.oasis.opendocument.spreadsheet";
 
     private static final Tika TIKA = new Tika();
+
+    private static final String HEAD = "Fehler in der Exceldateiprüfung";
 
     /**
      * Returns a reply representing the contents of the file
@@ -68,6 +71,32 @@ public class TikaUtil {
         } catch (IOException ex) {
             return Reply.failure(ex.getClass().getName() + " bei Dateiprüfung " + ex.getLocalizedMessage());
         }
+    }
+
+    /**
+     * Verifys, that the supplied file is an Excel-97 file.
+     *
+     * @param file the file to verify
+     * @return the the supplied file, for future usage.
+     * @throws UserInfoCompletionException if file not accessable or not an Excel-97 file.
+     */
+    public static File verifyExcel(File file) throws UserInfoCompletionException {
+
+        if ( file == null ) throw new UserInfoCompletionException(new UserInfoException(HEAD, "Keine Datei angegeben (file == null)"));
+        if ( !file.canRead() )
+            throw new UserInfoCompletionException(new UserInfoException(HEAD, "Kann " + file.getName() + " nicht lesen. Keine Berechtigung ?"));
+        try {
+            if ( !new Tika().detect(file).equals(EXCEL_MIME_TYPE) ) throw new UserInfoCompletionException(new UserInfoException(HEAD,
+                        file.getName() + " ist keine Excel-97 (xls) Datei.\n"
+                        + "Umbennenen hilft nicht das eine Excel XML (xlsx) Datei eine Excel-97 Datei wird!"));
+            return file;
+        } catch (IOException ex) {
+            throw new UserInfoCompletionException(new UserInfoException(HEAD,
+                    "Fehler bei der Verarbeitung von " + file.getName() + ".\n"
+                    + ex.getClass().getName() + "\n"
+                    + ex.getLocalizedMessage()));
+        }
+
     }
 
 }

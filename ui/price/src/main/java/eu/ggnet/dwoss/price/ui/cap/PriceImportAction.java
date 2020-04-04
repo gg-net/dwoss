@@ -20,15 +20,13 @@ import java.awt.event.ActionEvent;
 
 import javafx.scene.control.Alert;
 
-import eu.ggnet.dwoss.core.widget.saft.ReplyUtil;
-import eu.ggnet.dwoss.core.widget.TikaUtil;
-import eu.ggnet.dwoss.price.ee.Importer;
 import eu.ggnet.dwoss.core.common.FileJacket;
-import eu.ggnet.dwoss.core.widget.Dl;
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.api.Reply;
-import eu.ggnet.dwoss.core.widget.AccessableAction;
+import eu.ggnet.dwoss.core.common.UserInfoException;
+import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.dwoss.price.ee.Importer;
+import eu.ggnet.saft.api.Reply;
+import eu.ggnet.saft.core.Ui;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_PRICEMANGMENT;
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
@@ -55,8 +53,13 @@ public class PriceImportAction extends AccessableAction {
                                 .map(b -> TikaUtil.isExcel(f))
                                 .filter(Ui.failure()::handle)
                                 .map(Reply::getPayload)
-                                .map(ff -> ReplyUtil.wrap(() -> Dl.remote().lookup(Importer.class).fromXls(new FileJacket("in", ".xls", ff), Dl.local().lookup(Guardian.class).getUsername())))
-                                .filter(Ui.failure()::handle);
+                                .ifPresent(f2 -> {
+                                    try {
+                                        Dl.remote().lookup(Importer.class).fromXls(new FileJacket("in", ".xls", f2), Dl.local().lookup(Guardian.class).getUsername());
+                                    } catch (UserInfoException ex) {
+                                        Ui.handle(ex);
+                                    }
+                                });
                     });
         });
     }

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,14 +23,13 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import eu.ggnet.dwoss.price.ee.engine.PriceEngineResult;
-import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
-import eu.ggnet.dwoss.core.system.progress.SubMonitor;
 import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.common.UserInfoException;
+import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
+import eu.ggnet.dwoss.core.system.progress.SubMonitor;
+import eu.ggnet.dwoss.price.ee.engine.PriceEngineResult;
 import eu.ggnet.lucidcalc.LucidCalcReader;
 import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcReader;
-import eu.ggnet.saft.api.Reply;
 
 /**
  * The ImportLogic for PriceManagement Files
@@ -53,7 +52,7 @@ public class ImporterOperation implements Importer {
         this.core = core;
         this.monitorFactory = monitorFactory;
     }
-    
+
     /**
      * Imports the Pricemanagement from an XLS file with a defined form.
      * The Form is as follows
@@ -66,13 +65,12 @@ public class ImporterOperation implements Importer {
      * <li>Column 10 (K) = Warranty Id, Type:Integer</li>
      * </ul>
      *
-     * @param jacket  the file in a jacket
+     * @param jacket   the file in a jacket
      * @param arranger
-     * @return a Reply of FileJacket
      * @throws UserInfoException
      */
     @Override
-    public Reply<File> fromXls(FileJacket jacket, String arranger) throws UserInfoException {
+    public void fromXls(FileJacket jacket, String arranger) throws UserInfoException {
         final SubMonitor m = monitorFactory.newSubMonitor("Import from Xls", 10);
         m.start();
         File f = jacket.toTemporaryFile();
@@ -91,7 +89,6 @@ public class ImporterOperation implements Importer {
             throw new UserInfoException(reader.getErrors());
         }
         core.store(imports, "ImportPriceManagementOperation.fromXls()", arranger, m);
-        return Reply.success(f);
     }
 
     /**

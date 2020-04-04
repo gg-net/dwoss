@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,14 +16,11 @@
  */
 package eu.ggnet.dwoss.price.ee;
 
-import java.io.File;
-
 import javax.ejb.Remote;
 
-import eu.ggnet.dwoss.price.ee.engine.PriceEngineResult;
 import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.saft.api.Reply;
+import eu.ggnet.dwoss.price.ee.engine.PriceEngineResult;
 
 @Remote
 public interface Importer {
@@ -40,12 +37,11 @@ public interface Importer {
      * <li>Column 10 (K) = Warranty Id, Type:Integer</li>
      * </ul>
      *
-     * @param jacket  the file in a jacket
+     * @param jacket   the file in a jacket
      * @param arranger
-     * @return return a Reply of File
      * @throws UserInfoException
      */
-    Reply<File> fromXls(FileJacket jacket, String arranger) throws UserInfoException;
+    void fromXls(FileJacket jacket, String arranger) throws UserInfoException;
 
     /**
      * Uses the Engine in the Background, and imports all Prices direct.

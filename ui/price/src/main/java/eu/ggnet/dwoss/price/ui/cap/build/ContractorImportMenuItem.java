@@ -16,25 +16,17 @@
  */
 package eu.ggnet.dwoss.price.ui.cap.build;
 
-import eu.ggnet.dwoss.core.widget.Dl;
-
-import java.io.File;
-
-import javafx.scene.control.Alert;
 import javafx.scene.control.MenuItem;
 
 import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.TikaUtil;
-import eu.ggnet.dwoss.core.widget.swing.DetailDialog;
-import eu.ggnet.dwoss.mandator.spi.CachedMandators;
-import eu.ggnet.dwoss.price.ee.imex.ContractorPricePartNoImporter;
-import eu.ggnet.saft.api.Reply;
-import eu.ggnet.saft.core.*;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
-
-import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
-import static javafx.scene.control.ButtonType.OK;
+import eu.ggnet.dwoss.price.ee.imex.ContractorPricePartNoImporter;
+import eu.ggnet.dwoss.price.ui.cap.ConfirmationDialog;
+import eu.ggnet.dwoss.price.ui.cap.ImportResultView;
+import eu.ggnet.saft.core.Ui;
 
 /**
  *
@@ -49,31 +41,27 @@ public class ContractorImportMenuItem extends MenuItem {
     public ContractorImportMenuItem init(TradeName contractor) {
         setText("Import fehlende " + contractor.getDescription() + " Daten (Lieferant" + (contractor.isManufacturer() ? "+Hersteller" : "") + ")");
         setOnAction(e -> {
-            Ui.exec(() -> {
-                Ui.fileChooser()
-                        .open()
-                        .opt().ifPresent(r -> {
-                            Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "Fehlende " + contractor.getDescription() + " Daten aus der Datei:" + r.getPath() + " importieren ?"))
-                                    .opt()
-                                    .filter(b -> b == OK)
-                                    .map(b -> TikaUtil.isExcel(r))
-                                    .filter(Ui.failure()::handle)
-                                    .map(Reply::getPayload)
-                                    .map((File f) -> {
-                                        if ( contractor.isManufacturer() ) {
-                                            return Ui.progress().call(()
-                                                    -> Dl.remote().lookup(ContractorPricePartNoImporter.class).fromManufacturerXls(contractor, new FileJacket("in", ".xls", f), Dl.local().lookup(Guardian.class).getUsername()));
-                                        }
-                                        return Ui.progress().call(()
-                                                -> Dl.remote().lookup(ContractorPricePartNoImporter.class).fromContractorXls(contractor, new FileJacket("in", ".xls", f), Dl.local().lookup(Guardian.class).getUsername()));
-                                    })
-                                    .ifPresent(re -> DetailDialog.show(UiCore.getMainFrame(), re.hasSucceded() ? "Import erfolgreich" : "Import fehlerhaft",
-                                    "Import " + contractor.getName() + " Daten (Lieferant" + (contractor.isManufacturer() ? "+Hersteller" : "") + ")" + (re.hasSucceded() ? " " : " fehlerhaft ") + "abgeschlossen",
-                                    re.getSummary(), re.getDetailDescription(), Dl.local().lookup(CachedMandators.class).loadMandator().bugMail()));
-                        });
-            });
+            Ui.fileChooser().open().cf()
+                    .thenCompose(f -> Ui.build().dialog().eval(() -> new ConfirmationDialog<>("Import durchführen ?", "Fehlende " + contractor.getDescription() + " Daten aus der Datei:" + f.getPath() + " importieren ?", f)).cf())
+                    .thenApply(f -> TikaUtil.verifyExcel(f))
+                    .thenApply(f -> {
+                        if ( contractor.isManufacturer() )
+                            return Ui.progress().call(() -> importer().fromManufacturerXls(contractor, new FileJacket("in", ".xls", f), user()));
+                        else
+                            return Ui.progress().call(() -> importer().fromContractorXls(contractor, new FileJacket("in", ".xls", f), user()));
+                    })
+                    .thenAccept(ir -> Ui.build().fx().show(() -> ir, () -> new ImportResultView()))
+                    .handle(Ui.handler());
         });
         return this;
+    }
+
+    private ContractorPricePartNoImporter importer() {
+        return Dl.remote().lookup(ContractorPricePartNoImporter.class);
+    }
+
+    private String user() {
+        return Dl.local().lookup(Guardian.class).getUsername();
     }
 
 }

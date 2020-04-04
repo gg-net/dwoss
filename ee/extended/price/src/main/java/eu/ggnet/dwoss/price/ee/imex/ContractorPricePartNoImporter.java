@@ -18,10 +18,8 @@ package eu.ggnet.dwoss.price.ee.imex;
 
 import javax.ejb.Remote;
 
-import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.common.FileJacket;
-import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.saft.api.Reply;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 
 /**
  * Importer for Contractor and Manufacturer Prices and PartNo.
@@ -41,10 +39,9 @@ public interface ContractorPricePartNoImporter {
      * @param contractorManufacturer a contractor which is also a manufacturer.
      * @param inFile                 the in file
      * @param arranger               the arranger
-     * @return a aggregated import result.
-     * @throws UserInfoException reporting all errors after the import.
+     * @return Result of the import operation
      */
-    Reply<Void> fromManufacturerXls(TradeName contractorManufacturer, FileJacket inFile, String arranger) throws UserInfoException;
+    ImportResult fromManufacturerXls(TradeName contractorManufacturer, FileJacket inFile, String arranger);
 
     /**
      * Imports the Contractor Reference Prices and Additional PartNos.
@@ -60,7 +57,7 @@ public interface ContractorPricePartNoImporter {
      * @param contractor the contractor for the import
      * @param inFile     the inFile
      * @param arranger   the Arranger
-     * @return a reply.
+     * @return Result of the import operation
      */
-    Reply<Void> fromContractorXls(TradeName contractor, FileJacket inFile, String arranger);
+    ImportResult fromContractorXls(TradeName contractor, FileJacket inFile, String arranger);
 }

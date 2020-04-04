@@ -30,11 +30,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.common.values.AcerRules;
-import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.common.values.tradename.PartNoSupport;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
 import eu.ggnet.dwoss.core.system.progress.SubMonitor;
+import eu.ggnet.dwoss.core.system.util.TwoDigits;
 import eu.ggnet.dwoss.report.ee.assist.Reports;
 import eu.ggnet.dwoss.report.ee.eao.ReportLineEao;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
@@ -43,11 +45,8 @@ import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.format.ProductFormater;
-import eu.ggnet.dwoss.core.common.FileJacket;
-import eu.ggnet.dwoss.core.system.util.TwoDigits;
 import eu.ggnet.lucidcalc.LucidCalcReader;
 import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcReader;
-import eu.ggnet.saft.api.Reply;
 
 import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.OTTO;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.CONTRACTOR_REFERENCE;
@@ -77,7 +76,6 @@ public class ContractorPricePartNoImporterOperation implements ContractorPricePa
             this.partNo = partNo;
             this.costPrice = costPrice;
         }
-        
 
     }
 
@@ -101,7 +99,7 @@ public class ContractorPricePartNoImporterOperation implements ContractorPricePa
             this.referencePrice = referencePrice;
             this.contractorPartNo = contractorPartNo;
         }
-        
+
         public double getReferencePrice() {
             if ( referencePrice == null ) return 0;
             return referencePrice;
@@ -145,6 +143,10 @@ public class ContractorPricePartNoImporterOperation implements ContractorPricePa
             return !(StringUtils.isBlank(manufacturerPartNo) && StringUtils.isBlank(gtin));
         }
 
+        public String line() {
+            return manufacturerPartNo + ", " + gtin + ", " + name + ", " + referencePrice + ", " + contractorPartNo;
+        }
+
     }
 
     private final static Logger L = LoggerFactory.getLogger(ContractorPricePartNoImporterOperation.class);
@@ -161,9 +163,9 @@ public class ContractorPricePartNoImporterOperation implements ContractorPricePa
     private MonitorFactory monitorFactory;
 
     @Override
-    public Reply<Void> fromManufacturerXls(TradeName contractorManufacturer, FileJacket inFile, String arranger) {
-        if ( !contractorManufacturer.isManufacturer() ) throw new RuntimeException(contractorManufacturer + " is not a Manufacturer");
-        final SubMonitor m = monitorFactory.newSubMonitor(contractorManufacturer.getName() + " Costpreise importieren", 100);
+    public ImportResult fromManufacturerXls(TradeName contractorManufacturer, FileJacket inFile, String arranger) {
+        if ( !contractorManufacturer.isManufacturer() ) throw new IllegalArgumentException(contractorManufacturer + " is not a Manufacturer");
+        final SubMonitor m = monitorFactory.newSubMonitor(contractorManufacturer.getDescription() + " Costpreise importieren", 100);
         m.start().message("Reading File");
         ProductEao productEao = new ProductEao(uuEm);
         LucidCalcReader reader = new JExcelLucidCalcReader();
@@ -205,16 +207,13 @@ public class ContractorPricePartNoImporterOperation implements ContractorPricePa
         }
         m.finish();
 
-        String summary = "Zeilen, mit gefunden (db)Artikeln: " + databaseLines + " \n"
-                + "Neue Preise hinterlegt: " + newPrices + "\n"
-                + "Preise aktualisiert: " + updatedPrices;
-        StringBuilder details = new StringBuilder();
-        for (Object error : errors) {
-            details.append(error.toString()).append("\n");
-        }
-        m.finish();
-        if ( newPrices + updatedPrices == 0 ) return Reply.failure(summary, details.toString());
-        else return Reply.success(null, summary, details.toString());
+        return new ImportResult.Builder()
+                .amountImported(newPrices + updatedPrices)
+                .summary("Zeilen, mit gefunden (db)Artikeln: " + databaseLines + " \n"
+                        + "Neue Preise hinterlegt: " + newPrices + "\n"
+                        + "Preise aktualisiert: " + updatedPrices).
+                addAllErrors(errors)
+                .build();
     }
 
     // Manufacturer PartNo | EAN | Name | Contractor Reference Price | ContractorPartNo <br />
@@ -226,7 +225,7 @@ public class ContractorPricePartNoImporterOperation implements ContractorPricePa
      * @return
      */
     @Override
-    public Reply<Void> fromContractorXls(TradeName contractor, FileJacket inFile, String arranger) {
+    public ImportResult fromContractorXls(TradeName contractor, FileJacket inFile, String arranger) {
         final SubMonitor m = monitorFactory.newSubMonitor(contractor + " Preise und Artikelnummern importieren", 100);
         m.start();
         m.message("Reading File");
@@ -237,7 +236,7 @@ public class ContractorPricePartNoImporterOperation implements ContractorPricePa
         List<ContractorImport> imports = reader.read(inFile.toTemporaryFile(), ContractorImport.class);
 
         List<String> errors = reader.getErrors();
-        List<String> info = new ArrayList<>();
+        List<String> infos = new ArrayList<>();
 
         List<ReportLine> missingContractorPartNo = reportLineEao.findMissingContractorPartNo(contractor); // here for size, needed down below
         m.worked(5);
@@ -294,14 +293,14 @@ public class ContractorPricePartNoImporterOperation implements ContractorPricePa
                 if ( p.hasPrice(CONTRACTOR_REFERENCE) ) updatedPrices++;
                 else newPrices++;
                 p.setPrice(CONTRACTOR_REFERENCE, ci.getReferencePrice(), "Import by " + arranger);
-                info.add(ProductFormater.toDetailedName(p) + " added/updated contractor reference price from " + oldPrice + " to " + ci.getReferencePrice());
+                infos.add(ProductFormater.toDetailedName(p) + " added/updated contractor reference price from " + oldPrice + " to " + ci.getReferencePrice());
             } else {
-                errors.add(ci + " hat keinen Preis");
+                errors.add(ci.line() + " hat keinen Preis");
             }
             if ( ci.hasValidContractorPartNo(contractor) ) { // If partNo is valid, set it.
                 String contractorPartNo = ci.toNormalizeContractorPart(contractor);
                 if ( !contractorPartNo.equals(p.getAdditionalPartNo(contractor)) ) {
-                    info.add(ProductFormater.toDetailedName(p) + " added/updated contractor partno from " + p.getAdditionalPartNo(contractor) + " to " + contractorPartNo);
+                    infos.add(ProductFormater.toDetailedName(p) + " added/updated contractor partno from " + p.getAdditionalPartNo(contractor) + " to " + contractorPartNo);
                     p.setAdditionalPartNo(contractor, contractorPartNo);
                     updatedContractorPartNo++;
                 }
@@ -342,30 +341,25 @@ public class ContractorPricePartNoImporterOperation implements ContractorPricePa
             if ( StringUtils.isBlank(msg) ) {
                 errors.add(head + ", no updateable values found in product.");
             } else {
-                info.add(head + " updated " + msg);
+                infos.add(head + " updated " + msg);
             }
         }
-
-        String summary = "Zeilen, mit gefunden (db)Artikeln: " + databaseLines + " (Entweder über PartNo oder Gtin)\n"
-                + "GTIN/EAN aktuallisiert: " + updatedGtin + "\n"
-                + "Neue Preise hinterlegt: " + newPrices + "\n"
-                + "Preise aktualisiert: " + updatedPrices + "\n"
-                + "Lieferantenartikelnummer aktualisiert: " + updatedContractorPartNo + "\n"
-                + "Report-Fehlende GTIN/Preise/Artikelnummern Zeilen: " + missingContractorPartNo.size() + "\n"
-                + "Report-GTIN/EAN aktuallisiert: " + updatedReportLineGtin + "\n"
-                + "Report-Preise aktualisiert: " + updatedReportLineReferencePrice + "\n"
-                + "Report-Lieferantenartikelnummer aktualisiert: " + updatedReportLinePartNo;
-        StringBuilder details = new StringBuilder();
-        if ( !info.isEmpty() ) {
-            details.append("Infos\n-----\n");
-            info.forEach((i) -> details.append(i).append("\n"));
-        }
-        details.append("-----------------\nFehler/Nicht importierbar\n-----------------\n");
-        errors.forEach((error) -> details.append(error).append("\n"));
         m.finish();
 
-        if ( updatedGtin + newPrices + updatedPrices + updatedContractorPartNo == 0 ) return Reply.failure(summary, details.toString());
-        else return Reply.success(null, summary, details.toString());
+        return new ImportResult.Builder()
+                .amountImported(updatedGtin + newPrices + updatedPrices + updatedContractorPartNo)
+                .summary("Zeilen, mit gefunden (db)Artikeln: " + databaseLines + " (Entweder über PartNo oder Gtin)\n"
+                        + "GTIN/EAN aktuallisiert: " + updatedGtin + "\n"
+                        + "Neue Preise hinterlegt: " + newPrices + "\n"
+                        + "Preise aktualisiert: " + updatedPrices + "\n"
+                        + "Lieferantenartikelnummer aktualisiert: " + updatedContractorPartNo + "\n"
+                        + "Report-Fehlende GTIN/Preise/Artikelnummern Zeilen: " + missingContractorPartNo.size() + "\n"
+                        + "Report-GTIN/EAN aktuallisiert: " + updatedReportLineGtin + "\n"
+                        + "Report-Preise aktualisiert: " + updatedReportLineReferencePrice + "\n"
+                        + "Report-Lieferantenartikelnummer aktualisiert: " + updatedReportLinePartNo)
+                .addAllInfos(infos)
+                .addAllErrors(errors)
+                .build();
     }
 
 }
