@@ -191,7 +191,7 @@ public class DocumentSupporterOperation implements DocumentSupporter {
             email.setCharset("UTF-8");
 
             email.addTo(customerMailAddress);
-            email.setSubject(document.getType().description + " | " + document.getDossier().getIdentifier());
+            email.setSubject(doctype + " | " + document.getDossier().getIdentifier());
             email.setMsg(text + mandator.defaultMailSignature());
             email.attach(
                     new ByteArrayDataSource(JasperExportManager.exportReportToPdf(jasper(document, jtype)), "application/pdf"),

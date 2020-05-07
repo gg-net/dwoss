@@ -25,7 +25,7 @@ public enum PaymentMethod {
     /**
      * Advance Payment - Vorkasse.
      */
-    ADVANCE_PAYMENT("Vorkasse", "Zahlungsbedingungen: Vorauskasse oder EC/Barzahlung bei Abholung.", "Rechnungsbetrag bereits dankend erhalten."),
+    ADVANCE_PAYMENT("Vorkasse", "Zahlungsbedingungen: Vorauskasse.", "Rechnungsbetrag bereits dankend erhalten."),
     /**
      * Direct Debit - Lastschrift.
      */

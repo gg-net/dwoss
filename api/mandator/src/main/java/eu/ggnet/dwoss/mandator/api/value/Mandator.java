@@ -74,9 +74,9 @@ public abstract class Mandator implements Serializable {
         email.addBcc(company().email());
         email.setFrom(company().email(), company().emailName());
         email.setAuthentication(smtpConfiguration().smtpAuthenticationUser, smtpConfiguration().smtpAuthenticationPass);
-        email.setStartTLSEnabled(false);
+        email.setStartTLSEnabled(smtpConfiguration().useStartTls);
         email.setSSLCheckServerIdentity(false);
-        email.setSSLOnConnect(false);
+        email.setSSLOnConnect(smtpConfiguration().useSsl);
         email.setCharset(smtpConfiguration().charset);
         return email;
     }

@@ -36,6 +36,8 @@ public class SmtpConfiguration implements Serializable {
 
     public final boolean useStartTls;
 
+    public final boolean useSsl;
+    
     public String toHtml() {
         return "<p>"
                 + "Host:&nbsp;" + hostname + "<br />"
@@ -45,12 +47,13 @@ public class SmtpConfiguration implements Serializable {
                 + "StartTls:&nbsp;" + useStartTls + "</p>";
     }
 
-    public SmtpConfiguration(String hostname, String smtpAuthenticationUser, String smtpAuthenticationPass, String charset, boolean useStartTls) {
+    public SmtpConfiguration(String hostname, String smtpAuthenticationUser, String smtpAuthenticationPass, String charset, boolean useStartTls, boolean useSsl) {
         this.hostname = Objects.requireNonNull(hostname, "new SmtpConfiguration with hostname=null called, not allowed");;
         this.smtpAuthenticationUser = Objects.requireNonNull(smtpAuthenticationUser, "new SmtpConfiguration with smtpAuthenticationUser=null called, not allowed");;
         this.smtpAuthenticationPass = Objects.requireNonNull(smtpAuthenticationPass, "new SmtpConfiguration with smtpAuthenticationPass=null called, not allowed");;
         this.charset = Objects.requireNonNull(charset, "new SmtpConfiguration with charset=null called, not allowed");;
         this.useStartTls = useStartTls;
+        this.useSsl = useSsl;
     }
 
 }

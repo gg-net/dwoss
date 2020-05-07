@@ -70,7 +70,7 @@ public class DocumentViewAction extends AbstractAction {
                 name = "Lieferschein";
                 break;
             case DEFAULT:
-                name = document.getType().getName() + "svorschau";
+                name = document.getType().description + "svorschau";
                 break;
         }
         putValue(NAME, name);

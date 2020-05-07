@@ -27,15 +27,15 @@ import org.apache.commons.mail.MultiPartEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.common.values.SalesChannel;
+import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
+import eu.ggnet.dwoss.core.system.progress.SubMonitor;
 import eu.ggnet.dwoss.customer.api.ResellerListCustomer;
 import eu.ggnet.dwoss.customer.api.ResellerListService;
 import eu.ggnet.dwoss.mail.demand.ResellerListSendSubscriptionConfiguration;
 import eu.ggnet.dwoss.mail.demand.SmtpConfiguration;
 import eu.ggnet.dwoss.misc.api.SalesListingService;
-import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
-import eu.ggnet.dwoss.core.system.progress.SubMonitor;
-import eu.ggnet.dwoss.core.common.FileJacket;
 
 /**
  *
@@ -80,9 +80,9 @@ public class MailSalesListingServiceBean implements MailSalesListingService {
             email.setHostName(smtpConfiguration.hostname);
             email.setFrom(sendConfiguration.fromAddress, sendConfiguration.fromName);
             email.setAuthentication(smtpConfiguration.smtpAuthenticationUser, smtpConfiguration.smtpAuthenticationPass);
-            email.setStartTLSEnabled(false);
+            email.setStartTLSEnabled(smtpConfiguration.useStartTls);
             email.setSSLCheckServerIdentity(false);
-            email.setSSLOnConnect(false);
+            email.setSSLOnConnect(smtpConfiguration.useSsl);
             email.setCharset(smtpConfiguration.charset);
 
             email.addTo(sendConfiguration.toAddress);
