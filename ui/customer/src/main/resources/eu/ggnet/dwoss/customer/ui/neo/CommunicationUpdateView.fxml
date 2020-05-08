@@ -9,8 +9,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.TextFlow?>
 
-<BorderPane minHeight="120.0" minWidth="300.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.CommunicationUpdateController">
+<BorderPane minHeight="120.0" minWidth="300.0" prefHeight="200.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.CommunicationUpdateController">
     <top>
         <Label text="Kommunikation" BorderPane.alignment="CENTER">
             <font>
@@ -30,19 +31,15 @@
                 <VBox spacing="3.0" HBox.hgrow="ALWAYS">
                     <children>
                         <ChoiceBox fx:id="communicationTypeBox" maxWidth="1.7976931348623157E308" minWidth="150.0" />
-                        <TextField fx:id="identifer" maxWidth="1.7976931348623157E308" minWidth="150.0" />                      
-                        <Label fx:id="warning" text="!" textFill="RED" visible="false">
-                            <font>
-                                <Font size="14.0" />
-                            </font>
-                        </Label>
+                        <TextField fx:id="identifer" maxWidth="1.7976931348623157E308" minWidth="150.0" />
+                  <TextFlow fx:id="warning" maxHeight="1.7976931348623157E308" prefHeight="300.0" />
                     </children>
                 </VBox>
             </children>
         </HBox>
     </center>
     <bottom>
-        <HBox alignment="TOP_RIGHT" spacing="5.0">
+        <HBox alignment="TOP_RIGHT" prefWidth="345.0" spacing="5.0">
             <children>                
                 <Button fx:id="saveButton" mnemonicParsing="false" onAction="#handleSaveButtonAction" text="Speichern" />
                 <Button fx:id="closeButton" mnemonicParsing="false" onAction="#handleCloseButtonAction" text="Abbruch" />

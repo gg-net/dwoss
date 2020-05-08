@@ -25,7 +25,8 @@ import java.util.function.Consumer;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
-import javafx.beans.value.ObservableValue;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -38,13 +39,13 @@ import javafx.util.StringConverter;
 
 import org.apache.commons.lang3.StringUtils;
 
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.*;
 
@@ -290,37 +291,47 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         countryComboBox.setCellFactory((p) -> new CountryListCell());
         countryComboBox.getSelectionModel().selectFirst();
 
-        //button behavior
-        //enable the save and "saveAndEnhanceUI" button only on filled TextFields
-        saveAndCloseButton.disableProperty().bind(
-                cityTextField.textProperty().isEmpty()
-                        .or(lastNameTextField.textProperty().isEmpty())
-                        .or(streetTextField.textProperty().isEmpty())
-                        .or(zipcodeTextField.textProperty().isEmpty())
-                        .or((landLineTextField.textProperty().isEmpty()
-                             .and(mobileTextField.textProperty().isEmpty())
-                             .and(emailTextField.textProperty().isEmpty()))
-                        ));
-
-        saveAndEnhanceUIButton.disableProperty().bind(cityTextField.textProperty().isEmpty()
+//button behavior
+//enable the save and "saveAndEnhanceUI" button only on filled TextFields
+        BooleanBinding bind = cityTextField.textProperty().isEmpty()
                 .or(lastNameTextField.textProperty().isEmpty())
                 .or(streetTextField.textProperty().isEmpty())
-                .or(zipcodeTextField.textProperty().isEmpty())
-                .or((landLineTextField.textProperty().isEmpty()
-                     .and(mobileTextField.textProperty().isEmpty())
-                     .and(emailTextField.textProperty().isEmpty()))
-                ));
+                .or(zipcodeTextField.textProperty().isEmpty().or(Bindings.createBooleanBinding(() -> !zipcodeTextField.getText().matches("\\d*"), zipcodeTextField.textProperty())))
+                .or((landLineTextField.textProperty().isEmpty().or(Bindings.createBooleanBinding(() -> !landLineTextField.getText().matches(Communication.PHONE_PATTERN), landLineTextField.textProperty()))
+                     .and(mobileTextField.textProperty().isEmpty().or(Bindings.createBooleanBinding(() -> !mobileTextField.getText().matches(Communication.PHONE_PATTERN), mobileTextField.textProperty())))
+                     .and(emailTextField.textProperty().isEmpty().or(Bindings.createBooleanBinding(() -> !emailTextField.getText().matches(Communication.EMAIL_PATTERN), emailTextField.textProperty()))))
+                );
+
+        saveAndCloseButton.disableProperty().bind(bind);
+        saveAndEnhanceUIButton.disableProperty().bind(bind);
 
         // force the zipcode field to be numeric only, becuase the ledger get saved as an int
-        zipcodeTextField.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            if ( !newValue.matches("\\d*") ) {
-                new Alert(javafx.scene.control.Alert.AlertType.WARNING, "Nur Zahlen für die PLZ verwenden").showAndWait();
+        zipcodeTextField.textProperty().addListener((ob, o, n) -> {
+            if ( !n.matches("\\d*") ) {
+                Ui.build(zipcodeTextField).alert("Nur Zahlen für die PLZ verwenden");
+            }
+        });
+
+        landLineTextField.focusedProperty().addListener((ob, o, n) -> {
+            if ( !n && landLineTextField.getText() != null && !landLineTextField.getText().isBlank() && !landLineTextField.getText().matches(Communication.PHONE_PATTERN) ) {
+                Ui.build(landLineTextField).alert().message(CommunicationUpdateController.WRONG_PHONE).show(AlertType.ERROR);
+            }
+        });
+
+        mobileTextField.focusedProperty().addListener((ob, o, n) -> {
+            if ( !n && mobileTextField.getText() != null && !mobileTextField.getText().isBlank() && !mobileTextField.getText().matches(Communication.PHONE_PATTERN) ) {
+                Ui.build(mobileTextField).alert().message(CommunicationUpdateController.WRONG_PHONE).show(AlertType.ERROR);
+            }
+        });
+
+        emailTextField.focusedProperty().addListener((ob, o, n) -> {
+            if ( !n && emailTextField.getText() != null && !emailTextField.getText().isBlank() && !emailTextField.getText().matches(Communication.EMAIL_PATTERN) ) {
+                Ui.build(emailTextField).alert().message(CommunicationUpdateController.WRONG_EMAIL).show(AlertType.ERROR);
             }
         });
 
     }
 
-    @Override
     public void accept(Customer c) {
         if ( c == null ) return;
         if ( !c.isSimple() ) {

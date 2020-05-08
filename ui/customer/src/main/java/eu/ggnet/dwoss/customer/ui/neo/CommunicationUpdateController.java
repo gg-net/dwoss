@@ -25,6 +25,8 @@ import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.*;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -33,6 +35,8 @@ import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.*;
 
+import static javafx.scene.text.FontPosture.ITALIC;
+
 /**
  * Controller class for the editor view of a Communication. Allows the user to
  * change all values of the Communication.
@@ -40,6 +44,15 @@ import eu.ggnet.saft.core.ui.*;
  * @author jens.papenhagen
  */
 public class CommunicationUpdateController implements Initializable, FxController, Consumer<Communication>, ResultProducer<Communication> {
+    
+    public final static String WRONG_PHONE = "Rufnummernformat nicht zulässig.\n"
+                        + "Beispiele: +49 1234 123456-12\n"
+                        + "  0049 123 12345\n"
+                        + "  040 987153";
+    
+    public final static String WRONG_EMAIL = "E-Mailformat nicht zulässig.\n"
+                        + "Format: aaaaaa@bbbbb.ccc\n"
+                        + "z.b. max@beispiel.de";
 
     @FXML
     private ChoiceBox<Type> communicationTypeBox;
@@ -48,7 +61,7 @@ public class CommunicationUpdateController implements Initializable, FxControlle
     private TextField identifer;
 
     @FXML
-    private Label warning;
+    private TextFlow warning;
 
     private Communication communication;
 
@@ -81,7 +94,9 @@ public class CommunicationUpdateController implements Initializable, FxControlle
                     && !identifer.getText().matches(Communication.EMAIL_PATTERN) ) {
 
                 warning.setVisible(true);
-                warning.setText("Bitte die E-Mail überprüfen.");
+                Text t = new Text(WRONG_EMAIL);
+                t.setFill(Color.RED);
+                warning.getChildren().add(t);
                 return;
             }
             //check the phone pattern, display Warning (!)
@@ -90,7 +105,10 @@ public class CommunicationUpdateController implements Initializable, FxControlle
                   || communicationTypeBox.getSelectionModel().getSelectedItem().equals(Communication.Type.FAX))
                     && !identifer.getText().matches(Communication.PHONE_PATTERN) ) {
                 warning.setVisible(true);
-                warning.setText("Bitte nur Zahlen eingeben.");
+                Text t = new Text(WRONG_PHONE);
+                t.setFont(Font.font("Verdana", ITALIC, 12));
+                t.setFill(Color.RED);                
+                warning.getChildren().add(t);
                 return;
             }
 
