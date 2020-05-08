@@ -16,18 +16,13 @@
  */
 package eu.ggnet.dwoss.mandator.sample.impl;
 
-import eu.ggnet.dwoss.core.common.values.PaymentCondition;
-import eu.ggnet.dwoss.core.common.values.ShippingCondition;
-import eu.ggnet.dwoss.core.common.values.PaymentMethod;
-import eu.ggnet.dwoss.core.common.values.DocumentType;
-import eu.ggnet.dwoss.core.common.values.SalesChannel;
-
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.*;
 
 import javax.enterprise.inject.Produces;
 
+import eu.ggnet.dwoss.core.common.values.*;
 import eu.ggnet.dwoss.core.system.ImageFinder;
 import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.mandator.api.value.partial.DocumentIdentifierGeneratorConfiguration.PrefixType;
@@ -52,7 +47,7 @@ public class Sample {
                 .logo(new UrlLocation(loadLogo()))
                 .build();
 
-        SmtpConfiguration smtpConfiguration = new SmtpConfiguration("example.de", "user", "password", "UTF-8", true);
+        SmtpConfiguration smtpConfiguration = new SmtpConfiguration("example.de", "user", "password", "UTF-8", true,false);
 
         DocumentIntermix documentIntermix = new DocumentIntermix(null);
         documentIntermix.setFooter("Geschäftsführer: Mr. Tester | USt. ID: XXXXXXXXXXX | HRB: 0000\n"

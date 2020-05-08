@@ -54,7 +54,7 @@ public class MandatorHtmlTryout {
                     .logo(new UrlLocation(new URL("http://noimage")))
                     .build(); // Logo missing
 
-            SmtpConfiguration smtpConfiguration = new SmtpConfiguration("example.de", "user", "password", "UTF-8", true);
+            SmtpConfiguration smtpConfiguration = new SmtpConfiguration("example.de", "user", "password", "UTF-8", false,true);
 
             DocumentIntermix documentIntermix = new DocumentIntermix(null);
             documentIntermix.setFooter("Geschäftsführer: Mr. Tester | USt. ID: XXXXXXXXXXX | HRB: 0000\n"

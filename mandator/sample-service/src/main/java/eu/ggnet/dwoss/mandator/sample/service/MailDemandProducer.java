@@ -33,6 +33,6 @@ public class MailDemandProducer {
 
     @Produces
     public final static SmtpConfiguration SMTP_CONFIGURATION
-            = new SmtpConfiguration("localhost", "user", "user", "UTF-8", false);
+            = new SmtpConfiguration("localhost", "user", "user", "UTF-8", false,false);
 
 }
