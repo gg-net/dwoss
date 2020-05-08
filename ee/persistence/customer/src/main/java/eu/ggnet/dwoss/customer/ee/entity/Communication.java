@@ -58,7 +58,7 @@ public class Communication extends BaseEntity implements Serializable {
      * Represents some of the common ways to communicate nowadays.
      */
     public enum Type {
-        // TODO: Reanable the Phonepattern if DWOSS-255 is fixed
+        // TODO: Reanable the Phonepattern if Database is cleared.
         PHONE(/*PHONE_PATTERN*/), MOBILE(PHONE_PATTERN), FAX(PHONE_PATTERN),
         ICQ, SKYPE, EMAIL(EMAIL_PATTERN), FACEBOOK;
 

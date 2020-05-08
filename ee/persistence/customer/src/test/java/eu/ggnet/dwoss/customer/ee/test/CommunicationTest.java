@@ -16,6 +16,9 @@
  */
 package eu.ggnet.dwoss.customer.ee.test;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Test;
 
 import eu.ggnet.dwoss.customer.ee.entity.Communication;
@@ -67,28 +70,23 @@ public class CommunicationTest {
         assertThat(makeInvalidCommunication.getViolationMessage()).as("Communication with nonvalid email").isNotBlank();
     }
 
-//    @Test not tested as the validation pattern has been deactivated
-    public void testNonValidPhonenumber() {
-        Communication makeInvalidCommunication = makeValidCommunication();
-        makeInvalidCommunication.setType(PHONE);
-        makeInvalidCommunication.setIdentifier("0123586Buchstaben");
-        assertThat(makeInvalidCommunication.getViolationMessage()).as("Communication with nonvalid phonenumber").isNotBlank();
+    @Test
+    public void phoneNumberPatternValidation() {
+        for (String n : validPhoneNumbers()) {
+            assertThat(n).as("Value " + n + " should match Communication.PHONE_PATTERN").matches(Communication.PHONE_PATTERN);
+        }
+
+        for (String n : invalidPhoneNumbers()) {
+            assertThat(n).as("Value " + n + " should not match Communication.PHONE_PATTERN").doesNotMatch(Communication.PHONE_PATTERN);
+        }
     }
 
-//    @Test not tested as the validation pattern has been deactivated
-    public void phoneNumbers() {
-        String phonePattern = Communication.PHONE_PATTERN;
-        assertThat(phonePattern).as("phonePattern").isNotBlank();
-        assertThat("012 345").matches(phonePattern);
-        assertThat("  012 345").doesNotMatch(phonePattern);
-        assertThat("  012 345  ").doesNotMatch(phonePattern);
-        assertThat("012 345   ").doesNotMatch(phonePattern);
-        assertThat("0123 12345").matches(phonePattern);
+    private List<String> validPhoneNumbers() {
+        return Arrays.asList("+49 (123) 12345", "0049 123 12345", "0123 12345", "012 345");
+    }
 
-        assertThat("0049 123 12345").matches(phonePattern);
-        assertThat("+49 (123) 12345").matches(phonePattern);
-
-        assertThat("+49 (123) 12345").matches(phonePattern);
+    private List<String> invalidPhoneNumbers() {
+        return Arrays.asList("  012 345", "  012 345  ", "123 12345", "++233 21", "+43 0100 321321", "31231a1321");
     }
 
 }
