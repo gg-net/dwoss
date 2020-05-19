@@ -83,7 +83,8 @@ public class DocumentRendererTryout {
     }
 
     public static void main(String[] args) throws UserInfoException {
-        showSwing();
+        // showSwing();
+        makeStaticDocument();
     }
 
 }

@@ -24,6 +24,8 @@ import javax.enterprise.inject.Produces;
 
 import eu.ggnet.dwoss.core.common.values.*;
 import eu.ggnet.dwoss.core.system.ImageFinder;
+import eu.ggnet.dwoss.mandator.api.DocumentViewType;
+import eu.ggnet.dwoss.mandator.api.FreeDocumentTemplateParameter;
 import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.mandator.api.value.partial.DocumentIdentifierGeneratorConfiguration.PrefixType;
 import eu.ggnet.dwoss.mandator.api.value.partial.*;
@@ -47,10 +49,33 @@ public class Sample {
                 .logo(new UrlLocation(loadLogo()))
                 .build();
 
-        SmtpConfiguration smtpConfiguration = new SmtpConfiguration("example.de", "user", "password", "UTF-8", true,false);
+        SmtpConfiguration smtpConfiguration = new SmtpConfiguration("example.de", "user", "password", "UTF-8", true, false);
 
         DocumentIntermix documentIntermix = new DocumentIntermix(null);
-        documentIntermix.setFooter("Geschäftsführer: Mr. Tester | USt. ID: XXXXXXXXXXX | HRB: 0000\n"
+        documentIntermix.add(FreeDocumentTemplateParameter.TERMS1, "AA bbbbbb ccc ddddddddddd eeeeeeeeeeeeeeeeeeee fff gggggg hhhh.<br />"
+                + " aaa bbbb cccccc ddd eee fffffffffffff ggggggggg hhhhh iiiiiiii.");
+
+        documentIntermix.add(FreeDocumentTemplateParameter.TERMS1, DocumentViewType.RESERVATION, "aa bbbbbb ccc ddddddddddd eeeeeeeeeeeeeeeeeeee fff gggggg hhhh.<br />"
+                + "<b>aaa bbbbbbb ccc eeeeeeeeeeee fff dddd ggggg hhhhhhhhhhhhh.<br />aaaaaaaaaa bbbbbbbb ccccc ddddddddddddddd eeeeeee ende</b>");
+
+        documentIntermix.add(FreeDocumentTemplateParameter.TERMS2, DocumentViewType.RESERVATION, "aaaaa cccccccc ddd, dddd eeee ffffffffffff eeee 48 aaaaaaa bbbb cccccccccc ddddddddddd eeeeeeee ffffff,"
+                + " aaaaaa bbbb. cccccccccc ddddddddd eeeeee fffff gggggggggggggg eeeeee. "
+                + "aaaaaaaa-bbbbbb cccccc ddddddddd eee fffffffffff gggggggggggggggggg eeeeeeeeeee aaaaaa (aaaaaaaaaaaaaaaaa: bbbbb ccc dddddddddddd 6 eeeeee).<br />"
+                + "aaa bbbbbbbbbbbbbb ccc dddddddddddddddd eeeeeee 1 ende.");
+
+        documentIntermix.add(FreeDocumentTemplateParameter.TERMS1, DocumentType.ORDER, "aa bbbbbb ddd eeeeeeeeeee ffffffffffffffffffff ggg eeeeee aaaa. "
+                + "<br />aaa bbbbbbbbbbbb eeeee cccccccccccccccc ddddddddd eee 24 aaaaaaa bbbb cccc ddd eee ffffffff aaa. ccccccccc ddddddd. "
+                + "aaaaaa bbbb cccccc ddd eeeeeeee fff eeeeeeeee (aaaaaaaaaaa aaaaaaaaaaaaaaaa) cccccccccccccc ddd eeeeee yyyy xxx aaaaaaaa bbbbbbbbbbbbbbbb."
+                + "vvvvvvvv-bbbbbb cccccc nnnnnnnnn mmm aaaaaaaaaaa ssssssssssssssssss ddddddddddd ffffff (ggggggggggggggggg: hhhhh jjj kkkkkkkkkkkk 6 llllll).<br />"
+                + "qqq wwwwwwwwwwwwww eee rrrrrrrrrrrrrrrr ttttttt 1  ende");
+
+        documentIntermix.add(FreeDocumentTemplateParameter.TERMS1, DocumentType.INVOICE, "uu iiiiii ooo ppppppppppp aaaaaaaaaaaaaaaaaaaa sss dddddd ffff.<br />"
+                + "ggg hhhhhhhhhhhh jjjjj kkkkkkkkkkkkkkkk lllllllll xxx 24 ccccccc vvvv bbbb nnn mmm aaaaaaaa sss. "
+                + "aaaaaaaaa sssssss. dddddd ffff gggggg hhh jjjjjjjj kkk kkkkkkkkk (lllllllllll yyyyyyyyyyyyyyyy) xxxxxxxxxxxxxx ccc vvvvvv bbbb nnn mmmmmmmm qqqqqqqqqqqqqqqq. "
+                + "(wwwwwwwwwwwwwwwww: eeeee rrr tttttttttttt 6 zzzzzz).<br />"
+                + "uuu iiiiiiiiiiiiii ooo pppppppppppppppp aaaaaaa 1 ende");
+
+        documentIntermix.setFooter("aaaaaaaaaaaaaaa: ssssssssss | dddddddddddddddddddd | HRB: 0000\n"
                 + "Tel: 1-800-555-0199 | eMail: test@example.de\n"
                 + "www.example.de | www.example.de\n"
                 + "Bankverbindung: Awesome Bank | Bankleitzal:133 713 37 | Kontonummer: 133713371\n"
