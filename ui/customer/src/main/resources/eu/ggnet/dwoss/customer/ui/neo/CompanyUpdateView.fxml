@@ -13,103 +13,103 @@
 <?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="650.0" minWidth="500.0" prefHeight="680.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.CompanyUpdateController">
- <center>
-      <VBox spacing="2.0" BorderPane.alignment="CENTER">
-         <children>
-            <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="120.0" minWidth="200.0">
-               <children>
-                  <VBox maxHeight="1.7976931348623157E308" minHeight="100.0" minWidth="100.0" spacing="7.0">
-                     <children>
-                        <Region minHeight="25.0" minWidth="100.0" />
-                        <Label text="Name:" />
-                        <Label text="Konto:" />
-                        <Label text="FiBu Konto:" />
-                     </children>
-                  </VBox>
-                  <VBox maxHeight="1.7976931348623157E308" minHeight="100.0" minWidth="100.0" spacing="3.0" HBox.hgrow="ALWAYS">
-                     <children>
-                        <Label text="Firmen Editor">
-                           <font>
-                              <Font name="System Bold" size="16.0" />
-                           </font>
-                        </Label>
-                        <TextField fx:id="companyNameTextField" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="400.0" VBox.vgrow="ALWAYS" />
-                        <TextField fx:id="ledgerTextField" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="400.0" VBox.vgrow="ALWAYS" />
-                        <TextField fx:id="taxIdTextField" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="400.0" VBox.vgrow="ALWAYS" />
-                     </children>
-                  </VBox>
-               </children>
-            </HBox>
-            <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="150.0" minWidth="150.0" spacing="2.0">
-               <children>
-                  <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="120.0" minWidth="400.0" spacing="2.0" HBox.hgrow="ALWAYS">
-                     <children>
-                        <Label text="Adresse" />
-                        <ListView fx:id="addressListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="120.0" minWidth="400.0" VBox.vgrow="ALWAYS" />
-                     </children>
-                  </VBox>
-                  <VBox prefHeight="200.0" prefWidth="100.0" spacing="3.0">
-                     <children>
-                        <Region minHeight="15.0" minWidth="100.0" />
-                        <Button fx:id="editAddressButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickEditAddressButton" text="Ändern" />
-                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickAddAddressButton" text="Hinzufügen" />
-                        <Button fx:id="deleteAddressButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickDeleteAddressButton" text="Löschen" />
-                     </children>
-                  </VBox>
-               </children>
-            </HBox>
-            <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="200.0" minWidth="400.0" spacing="2.0">
-               <children>
-                  <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="200.0" minWidth="400.0" spacing="2.0" HBox.hgrow="ALWAYS">
-                     <children>
-                        <Label text="Kommunikationswege" />
-                        <TableView fx:id="communicationTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="120.0" minWidth="400.0" VBox.vgrow="ALWAYS">
-            </TableView>
-                     </children>
-                  </VBox>
-                  <VBox prefHeight="200.0" prefWidth="100.0" spacing="3.0">
-                     <children>
-                        <Region minHeight="15.0" minWidth="100.0" />
-                        <Button fx:id="editCommunicationButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickEditCommunicationButton" text="Ändern" />
-                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickAddCommunicationButton" text="Hinzufügen" />
-                        <Button fx:id="deleteCommunicationButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickDeleteCommunicationButton" text="Löschen" />
-                     </children>
-                  </VBox>
-               </children>
-            </HBox>
-            <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="150.0" minWidth="400.0" spacing="2.0">
-               <children>
-                  <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
-                     <children>
-                        <Label text="Kontakte" />
-                        <ListView fx:id="contactListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="120.0" minWidth="400.0" VBox.vgrow="ALWAYS" />
-                     </children>
-                  </VBox>
-                  <VBox prefHeight="200.0" prefWidth="100.0" spacing="3.0">
-                     <children>
-                        <Region minHeight="15.0" minWidth="100.0" />
-                        <Button fx:id="editContactButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickEditContactButton" text="Ändern" />
-                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickAddContactButton" text="Hinzufügen" />
-                        <Button fx:id="deleteContactButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickDeleteContactButton" text="Löschen" />
-                     </children>
-                  </VBox>
-               </children>
-            </HBox>
-         </children>
-      </VBox>
-   </center>
-   <bottom>
-      <HBox alignment="BOTTOM_RIGHT" fillHeight="false" minHeight="30.0" spacing="5.0" BorderPane.alignment="BOTTOM_RIGHT">
-         <children>
-            <Button fx:id="saveButton" mnemonicParsing="false" onAction="#clickSaveButton" text="Speichern" wrapText="true" />
-            <Button minWidth="75.0" mnemonicParsing="false" onAction="#clickCancelButton" text="Abbrechen" />
-         </children>
-         <padding>
-            <Insets left="5.0" top="5.0" />
-         </padding>
-      </HBox>
-   </bottom>
-   <padding>
-      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-   </padding>
+    <center>
+        <VBox spacing="2.0" BorderPane.alignment="CENTER">
+            <children>
+                <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="120.0" minWidth="200.0">
+                    <children>
+                        <VBox maxHeight="1.7976931348623157E308" minHeight="100.0" minWidth="100.0" spacing="7.0">
+                            <children>
+                                <Region minHeight="25.0" minWidth="100.0" />
+                                <Label text="Name:" />
+                                <Label text="Fibu Debit.Konto:" />
+                                <Label text="Ust. Id:" />
+                            </children>
+                        </VBox>
+                        <VBox maxHeight="1.7976931348623157E308" minHeight="100.0" minWidth="100.0" spacing="3.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Label text="Firmen Editor">
+                                    <font>
+                                        <Font name="System Bold" size="16.0" />
+                                    </font>
+                                </Label>
+                                <TextField fx:id="companyNameTextField" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="400.0" VBox.vgrow="ALWAYS" />
+                                <TextField fx:id="ledgerTextField" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="400.0" VBox.vgrow="ALWAYS" />
+                                <TextField fx:id="taxIdTextField" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="400.0" VBox.vgrow="ALWAYS" />
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+                <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="150.0" minWidth="150.0" spacing="2.0">
+                    <children>
+                        <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="120.0" minWidth="400.0" spacing="2.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Label text="Adresse" />
+                                <ListView fx:id="addressListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="120.0" minWidth="400.0" VBox.vgrow="ALWAYS" />
+                            </children>
+                        </VBox>
+                        <VBox prefHeight="200.0" prefWidth="100.0" spacing="3.0">
+                            <children>
+                                <Region minHeight="15.0" minWidth="100.0" />
+                                <Button fx:id="editAddressButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickEditAddressButton" text="Ändern" />
+                                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickAddAddressButton" text="Hinzufügen" />
+                                <Button fx:id="deleteAddressButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickDeleteAddressButton" text="Löschen" />
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+                <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="200.0" minWidth="400.0" spacing="2.0">
+                    <children>
+                        <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="200.0" minWidth="400.0" spacing="2.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Label text="Kommunikationswege" />
+                                <TableView fx:id="communicationTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="120.0" minWidth="400.0" VBox.vgrow="ALWAYS">
+                                </TableView>
+                            </children>
+                        </VBox>
+                        <VBox prefHeight="200.0" prefWidth="100.0" spacing="3.0">
+                            <children>
+                                <Region minHeight="15.0" minWidth="100.0" />
+                                <Button fx:id="editCommunicationButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickEditCommunicationButton" text="Ändern" />
+                                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickAddCommunicationButton" text="Hinzufügen" />
+                                <Button fx:id="deleteCommunicationButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickDeleteCommunicationButton" text="Löschen" />
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+                <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="150.0" minWidth="400.0" spacing="2.0">
+                    <children>
+                        <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                            <children>
+                                <Label text="Kontakte" />
+                                <ListView fx:id="contactListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="120.0" minWidth="400.0" VBox.vgrow="ALWAYS" />
+                            </children>
+                        </VBox>
+                        <VBox prefHeight="200.0" prefWidth="100.0" spacing="3.0">
+                            <children>
+                                <Region minHeight="15.0" minWidth="100.0" />
+                                <Button fx:id="editContactButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickEditContactButton" text="Ändern" />
+                                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickAddContactButton" text="Hinzufügen" />
+                                <Button fx:id="deleteContactButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickDeleteContactButton" text="Löschen" />
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </center>
+    <bottom>
+        <HBox alignment="BOTTOM_RIGHT" fillHeight="false" minHeight="30.0" spacing="5.0" BorderPane.alignment="BOTTOM_RIGHT">
+            <children>
+                <Button fx:id="saveButton" mnemonicParsing="false" onAction="#clickSaveButton" text="Speichern" wrapText="true" />
+                <Button minWidth="75.0" mnemonicParsing="false" onAction="#clickCancelButton" text="Abbrechen" />
+            </children>
+            <padding>
+                <Insets left="5.0" top="5.0" />
+            </padding>
+        </HBox>
+    </bottom>
+    <padding>
+        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+    </padding>
 </BorderPane>
