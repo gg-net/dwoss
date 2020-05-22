@@ -25,9 +25,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.common.values.DocumentType;
-import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.core.system.progress.IMonitor;
 import eu.ggnet.dwoss.core.system.progress.SubMonitor;
+import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.redtape.ee.sage.xml.Row;
@@ -67,23 +67,23 @@ public class SageExporterEngine {
     public OutputStream getOutput() {
         return output;
     }
-    
+
     public final void setOutput(OutputStream output) {
         this.output = Objects.requireNonNull(output);
     }
-    
+
     public Map<Document, UiCustomer> getCustomerInvoices() {
         return customerInvoices;
     }
-    
+
     public final void setCustomerInvoices(Map<Document, UiCustomer> customerInvoices) {
         this.customerInvoices = Objects.requireNonNull(customerInvoices);
     }
-    
+
     public SageExporterConfig getConfig() {
         return config;
     }
-    
+
     public final void setConfig(SageExporterConfig config) {
         this.config = Objects.requireNonNull(config);
     }
@@ -122,32 +122,32 @@ public class SageExporterEngine {
             r.setStCode(config.stCode(doc));
 
             r.setKonto(config.getDefaultDebitorLedger());
-            if ( !config.isCustomerLedgersDisabled() && customer.getLedger() > 0 ) r.setKonto(customer.getLedger());
+            if ( !config.isCustomerLedgersDisabled() && customer.ledger > 0 ) r.setKonto(customer.ledger);
 
             Map<Integer, Row> bookingRates = new HashMap<>();
             for (Position position : doc.getPositions().values()) {
                 if ( !position.getBookingAccount().isPresent() ) {
-                    L.warn("Export contains Position without BookingAccount. Kid={},Dossier={},Pos={}", customer.getId(), doc.getDossier().getIdentifier(), position);
+                    L.warn("Export contains Position without BookingAccount. Kid={},Dossier={},Pos={}", customer.id, doc.getDossier().getIdentifier(), position);
                     continue;
                 }
                 Row row;
-                if ( !bookingRates.containsKey(position.getBookingAccount().get().getValue()) ) {
-                    bookingRates.put(position.getBookingAccount().get().getValue(), new Row(r));
-                    row = bookingRates.get(position.getBookingAccount().get().getValue());
+                if ( !bookingRates.containsKey(position.getBookingAccount().get().value) ) {
+                    bookingRates.put(position.getBookingAccount().get().value, new Row(r));
+                    row = bookingRates.get(position.getBookingAccount().get().value);
                     row.setNettoSumme(row.getNettoSumme() + (position.getAmount() * position.getPrice()));
                     row.setBruttoSumme(row.getBruttoSumme() + (position.getAmount() * position.toAfterTaxPrice()));
                     row.setBetrag((position.getAmount() * position.getPrice()), (position.getAmount() * position.toAfterTaxPrice()));
                     row.setStProz(position.getTax() * 100);
                     row.setStNumeric(position.getTax() * 100);
                     if ( doc.getType() == DocumentType.CREDIT_MEMO ) {
-                        row.setKonto(position.getBookingAccount().get().getValue());
+                        row.setKonto(position.getBookingAccount().get().value);
                         row.setGKonto(config.getDefaultDebitorLedger());
                     } else {
-                        row.setGKonto(position.getBookingAccount().get().getValue());
+                        row.setGKonto(position.getBookingAccount().get().value);
                     }
                     rowData.add(row);
                 } else {
-                    row = bookingRates.get(position.getBookingAccount().get().getValue());
+                    row = bookingRates.get(position.getBookingAccount().get().value);
                     if ( row.getStNumeric() != (position.getTax() * 100) )
                         throw new RuntimeException("Document enthält Positionen mit unterschiedlicher UmSt. Rechnung: " + doc.getIdentifier() + ", aktuelle UmSt.: " + row.getStProz() + ", abweichung in Position: " + position.getName() + " mit UmSt. von " + (position.getTax() * 100));
                     row.setNettoSumme(row.getNettoSumme() + (position.getAmount() * position.getPrice()));
@@ -159,73 +159,4 @@ public class SageExporterEngine {
         return rowData;
     }
 
-    /**
-     * Will be removed
-     *
-     * @param monitor
-     * @param defaultLedger
-     * @param disableCustomerLedgers
-     * @return
-     * @deprecated use {@link SageExporterEngine#generateGSRowData(eu.ggnet.saft.api.progress.IMonitor)
-     */
-    @Deprecated
-    public RowData generateGSRowDataOld(IMonitor monitor, int defaultLedger, boolean disableCustomerLedgers) {
-        SubMonitor m = SubMonitor.convert(monitor);
-        RowData rowData = new RowData();
-        for (Document doc : customerInvoices.keySet()) {
-            Row r = new Row();
-            m.worked(1, "processing Invioce " + doc.getIdentifier());
-            UiCustomer customer = customerInvoices.get(doc);
-            r.setBeleg("AR/K" + doc.getDossier().getCustomerId() + doc.getDossier().getIdentifier().replace("_", "") + "/" + doc.getIdentifier().substring(0, 4));
-            r.setBuerfDatum(doc.getActual());
-            r.setDatum(doc.getActual());
-            r.setFaDatum(doc.getActual());
-            r.setReDatum(doc.getActual());
-            String buchungsText = customer.getCompany();
-            if ( buchungsText == null || buchungsText.trim().equals("") ) {
-                buchungsText = customer.getLastName();
-            }
-            if ( buchungsText == null || buchungsText.trim().equals("") ) {
-                buchungsText = "Kundenummer=" + customer.getId();
-            }
-            buchungsText = buchungsText.replaceAll("-", "_");
-            buchungsText += " - " + doc.getIdentifier();
-            r.setBuchtext(buchungsText);
-            r.setWawiBeleg("K" + customer.getId() + "/" + doc.getIdentifier());
-            r.setStCode("01");
-
-            r.setKonto(defaultLedger);
-            if ( !disableCustomerLedgers && customer.getLedger() > 0 ) r.setKonto(customer.getLedger());
-
-            Map<Integer, Row> bookingRates = new HashMap<>();
-            for (Position position : doc.getPositions().values()) {
-                if ( !position.getBookingAccount().isPresent() ) continue;
-                Row row;
-                if ( !bookingRates.containsKey(position.getBookingAccount().get().getValue()) ) {
-                    bookingRates.put(position.getBookingAccount().get().getValue(), new Row(r));
-                    row = bookingRates.get(position.getBookingAccount().get().getValue());
-                    row.setNettoSumme(row.getNettoSumme() + (position.getAmount() * position.getPrice()));
-                    row.setBruttoSumme(row.getBruttoSumme() + (position.getAmount() * position.toAfterTaxPrice()));
-                    row.setBetrag((position.getAmount() * position.getPrice()), (position.getAmount() * position.toAfterTaxPrice()));
-                    row.setStProz(position.getTax() * 100);
-                    row.setStNumeric(position.getTax() * 100);
-                    if ( doc.getType() == DocumentType.CREDIT_MEMO ) {
-                        row.setKonto(position.getBookingAccount().get().getValue());
-                        row.setGKonto(defaultLedger);
-                    } else {
-                        row.setGKonto(position.getBookingAccount().get().getValue());
-                    }
-                    rowData.add(row);
-                } else {
-                    row = bookingRates.get(position.getBookingAccount().get().getValue());
-                    if ( row.getStNumeric() != (position.getTax() * 100) )
-                        throw new RuntimeException("Document enthält Positionen mit unterschiedlicher UmSt. Rechnung: " + doc.getIdentifier() + ", aktuelle UmSt.: " + row.getStProz() + ", abweichung in Position: " + position.getName() + " mit UmSt. von " + (position.getTax() * 100));
-                    row.setNettoSumme(row.getNettoSumme() + (position.getAmount() * position.getPrice()));
-                    row.setBruttoSumme(row.getBruttoSumme() + (position.getAmount() * position.toAfterTaxPrice()));
-                    row.setBetrag(row.getNettoSumme(), row.getBruttoSumme());
-                }
-            }
-        }
-        return rowData;
-    }
 }
