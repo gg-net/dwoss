@@ -17,7 +17,6 @@
 package eu.ggnet.dwoss.redtapext.ui.cao.common;
 
 import java.io.IOException;
-import java.net.URL;
 import java.text.DecimalFormat;
 
 import javafx.beans.property.*;
@@ -43,14 +42,6 @@ import static javafx.scene.text.TextAlignment.RIGHT;
  * @author oliver.guenther
  */
 public class PositionListCell extends ListCell<Position> {
-
-    static URL loadLeftArrow() {
-        return PositionListCell.class.getResource("left_arrow.png");
-    }
-
-    static URL loadDownArrow() {
-        return PositionListCell.class.getResource("down_arrow.png");
-    }
 
     private static final DecimalFormat CUR = new DecimalFormat("#,##0.00 €");
 
@@ -108,8 +99,8 @@ public class PositionListCell extends ListCell<Position> {
         head.fontSmoothingTypeProperty().bind(FONT_SMOOTHING_TYPE_PROPERTY);
         head.wrappingWidthProperty().bind(listView.widthProperty().subtract(BORDER + SHOW_HIDE_IMAGE).subtract(refurbishIdLengthProperty));
         try {
-            show = new Image(loadLeftArrow().openStream(), 20, 20, true, true);
-            hide = new Image(loadDownArrow().openStream(), 20, 20, true, true);
+            show = new Image(CommonRes.leftArrow().openStream(), 20, 20, true, true);
+            hide = new Image(CommonRes.downArrow().openStream(), 20, 20, true, true);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }

@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cap;
 
-import java.net.URL;
-
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
@@ -25,22 +23,18 @@ import javafx.scene.image.ImageView;
 import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
 import eu.ggnet.saft.core.Ui;
 
-
 /**
  * Button to start RedTape form the Toolbar.
- * 
+ *
  * @author pascal.perau
  */
 public class RedTapeToolbarButton extends Button {
 
     public RedTapeToolbarButton() {
-        super(null, new ImageView(loadLargeIcon().toExternalForm()));
+        super(null, new ImageView(CapRes.largeIcon().toExternalForm()));
         Tooltip tip = new Tooltip("Öffnet das Kunden und Auftragsmanagement");
         Tooltip.install(this, tip);
         setOnAction(e -> Ui.build().swing().show(() -> RedTapeController.build().getView()));
     }
 
-    static URL loadLargeIcon() {
-        return RedTapeToolbarButton.class.getResource("RedTapeActionIcon_Large.png");
-    }
 }

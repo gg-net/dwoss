@@ -16,14 +16,11 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cap;
 
-import java.net.URL;
-
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 
 import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
 import eu.ggnet.saft.core.Ui;
-
 
 /**
  *
@@ -32,12 +29,8 @@ import eu.ggnet.saft.core.Ui;
 public class RedTapeMenuItem extends MenuItem {
 
     public RedTapeMenuItem() {
-        super("Kunden und Aufträge verwalten",new ImageView(loadSmallIcon().toExternalForm()));
+        super("Kunden und Aufträge verwalten", new ImageView(CapRes.smallIcon().toExternalForm()));
         setOnAction(e -> Ui.build().swing().show(() -> RedTapeController.build().getView()));
-    }
-
-    static URL loadSmallIcon() {
-        return RedTapeMenuItem.class.getResource("RedTapeActionIcon_Small.png");
     }
 
 }
