@@ -17,7 +17,6 @@
 package eu.ggnet.dwoss.misc.ui.cap;
 
 import java.awt.event.ActionEvent;
-import java.util.function.Consumer;
 
 import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.widget.*;
@@ -43,16 +42,7 @@ public class ImportImageIdsAction extends AccessableAction {
         Ui.fileChooser().open().cf()
                 .thenCompose(f -> Ui.build().dialog().eval(() -> new ConfirmationDialog<>("ImageId Import", "ImageIds aus der Datei: " + f.getPath() + " importieren ?", f)).cf())
                 .thenApply(f -> TikaUtil.verifyExcel(f))
-                .thenAccept(f -> progress(wrap(() -> Dl.remote().lookup(ImageIdHandler.class).importMissing(new FileJacket("in", ".xls", f)))))
+                .thenAccept(f -> Ui.progress().wrap(wrap(() -> Dl.remote().lookup(ImageIdHandler.class).importMissing(new FileJacket("in", ".xls", f)))).run())
                 .handle(Ui.handler());
-    }
-
-    private <T> Consumer<T> progress(Runnable c) {
-        return (T t) -> {
-            Ui.progress().call(() -> {
-                c.run();
-                return null;
-            });
-        };
     }
 }
