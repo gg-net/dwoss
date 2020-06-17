@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,20 +16,20 @@
  */
 package eu.ggnet.dwoss.stock.ui;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.DateFormat;
-import java.util.*;
+import java.util.SortedSet;
 
 import javax.swing.*;
 
-import org.apache.commons.lang3.SystemUtils;
-
 import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
 import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
+import eu.ggnet.saft.core.Ui;
 
-public class CommissioningManagerView extends javax.swing.JDialog {
+public class CommissioningManagerView extends javax.swing.JPanel {
 
     private class StockTransactionRenderer extends JLabel implements ListCellRenderer {
 
@@ -115,11 +115,8 @@ public class CommissioningManagerView extends javax.swing.JDialog {
     private CommissioningManagerController controller;
 
     /** Creates new form StockTransactionManagerHandelStatusDialog */
-    public CommissioningManagerView(Window parent) {
-        super(parent);
-        setModalityType(ModalityType.APPLICATION_MODAL);
+    public CommissioningManagerView() {
         initComponents();
-        if ( parent != null ) setLocationRelativeTo(parent);
         transactionList.setCellRenderer(new StockTransactionRenderer());
         unitsList.setCellRenderer(new StockUnitRenderer());
     }
@@ -201,9 +198,6 @@ public class CommissioningManagerView extends javax.swing.JDialog {
         jScrollPane4 = new javax.swing.JScrollPane();
         statusTextPane = new javax.swing.JTextPane();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Kommissionsmanager");
-
         unitIdLabel.setText("UnitId:");
 
         unitIdTextField.addActionListener(new java.awt.event.ActionListener() {
@@ -261,8 +255,8 @@ public class CommissioningManagerView extends javax.swing.JDialog {
         statusTextPane.setContentType("text/html"); // NOI18N
         jScrollPane4.setViewportView(statusTextPane);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
@@ -318,7 +312,6 @@ public class CommissioningManagerView extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void unitIdTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_unitIdTextFieldActionPerformed
@@ -326,7 +319,7 @@ public class CommissioningManagerView extends javax.swing.JDialog {
     }//GEN-LAST:event_unitIdTextFieldActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        this.setVisible(false);
+        Ui.closeWindowOf(this);
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void done1ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_done1ButtonActionPerformed
@@ -340,20 +333,20 @@ public class CommissioningManagerView extends javax.swing.JDialog {
     private void confirmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmButtonActionPerformed
         if ( controller == null ) return;
         boolean successful = controller.executeTransmutation();
-        if ( successful ) this.setVisible(false);
+        if ( successful ) Ui.closeWindowOf(this);
     }//GEN-LAST:event_confirmButtonActionPerformed
 
     private void detailButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_detailButtonActionPerformed
-        StringBuilder sb = new StringBuilder("Noch nicht erfasst: ").append(SystemUtils.LINE_SEPARATOR).append(SystemUtils.LINE_SEPARATOR);
+        StringBuilder sb = new StringBuilder("Noch nicht erfasst: ").append(System.lineSeparator()).append(System.lineSeparator());
         SortedSet<String> missing = model.getMissingRefurbishedIds();
         if ( missing.isEmpty() ) {
             sb.append("Alle Gerät sind erfasst.");
         } else {
             for (String line : missing) {
-                sb.append(" - ").append(line).append(SystemUtils.LINE_SEPARATOR);
+                sb.append(" - ").append(line).append(System.lineSeparator());
             }
         }
-        JOptionPane.showMessageDialog(this, sb.toString());
+        Ui.build().alert(sb.toString());
     }//GEN-LAST:event_detailButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

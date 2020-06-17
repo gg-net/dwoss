@@ -16,15 +16,12 @@
  */
 package eu.ggnet.dwoss.stock.ui.cap;
 
-import eu.ggnet.dwoss.stock.ui.CommissioningManagerModel;
-import eu.ggnet.dwoss.stock.ui.CommissioningManagerView;
-import eu.ggnet.dwoss.stock.ui.CommissioningManagerController;
-
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.dwoss.stock.ui.*;
+import eu.ggnet.saft.core.Ui;
 
 /**
  *
@@ -38,13 +35,16 @@ public class OpenCommissioningManager extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        CommissioningManagerModel model = new CommissioningManagerModel();
-        CommissioningManagerView view = new CommissioningManagerView(UiCore.getMainFrame());
-        CommissioningManagerController controller = new CommissioningManagerController();
-        view.setModel(model);
-        view.setController(controller);
-        controller.setModel(model);
-        controller.setView(view);
-        view.setVisible(true);
+        Ui.build().title("Kommissionsmanager").swing().show(() -> {
+            CommissioningManagerModel model = new CommissioningManagerModel();
+            CommissioningManagerView view = new CommissioningManagerView();
+            CommissioningManagerController controller = new CommissioningManagerController();
+            view.setModel(model);
+            view.setController(controller);
+            controller.setModel(model);
+            controller.setView(view);
+            return view;
+        });
+
     }
 }

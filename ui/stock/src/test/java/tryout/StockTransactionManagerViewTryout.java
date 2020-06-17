@@ -20,6 +20,7 @@ import javax.swing.UIManager;
 
 import eu.ggnet.dwoss.stock.ui.StockTransactionManagerModel;
 import eu.ggnet.dwoss.stock.ui.StockTransactionManagerView;
+import eu.ggnet.saft.core.UiCore;
 
 /**
  *
@@ -30,10 +31,13 @@ public class StockTransactionManagerViewTryout {
     public static void main(String args[]) throws Exception {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
-        StockTransactionManagerView view = new StockTransactionManagerView(null);
-        StockTransactionManagerModel model = new StockTransactionManagerModel();
-        view.setModel(model);
-        view.setVisible(true);
-        System.exit(0);
+        UiCore.startSwing(() -> {
+
+            StockTransactionManagerView view = new StockTransactionManagerView();
+            StockTransactionManagerModel model = new StockTransactionManagerModel();
+            view.setModel(model);
+            return view;
+        });
+
     }
 }

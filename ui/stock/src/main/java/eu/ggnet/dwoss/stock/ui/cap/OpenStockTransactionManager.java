@@ -16,15 +16,12 @@
  */
 package eu.ggnet.dwoss.stock.ui.cap;
 
-import eu.ggnet.dwoss.stock.ui.StockTransactionManagerController;
-import eu.ggnet.dwoss.stock.ui.StockTransactionManagerView;
-import eu.ggnet.dwoss.stock.ui.StockTransactionManagerModel;
-
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.dwoss.stock.ui.*;
+import eu.ggnet.saft.core.Ui;
 
 /**
  *
@@ -38,14 +35,16 @@ public class OpenStockTransactionManager extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        StockTransactionManagerView view = new StockTransactionManagerView(UiCore.getMainFrame());
-        StockTransactionManagerModel model = new StockTransactionManagerModel();
-        StockTransactionManagerController controller = new StockTransactionManagerController();
-        view.setModel(model);
-        view.setController(controller);
-        controller.setModel(model);
-        controller.setView(view);
-        controller.reload();
-        view.setVisible(true);
+        Ui.build().title("Transaktionsmanager").swing().show(() -> {
+            StockTransactionManagerView view = new StockTransactionManagerView();
+            StockTransactionManagerModel model = new StockTransactionManagerModel();
+            StockTransactionManagerController controller = new StockTransactionManagerController();
+            view.setModel(model);
+            view.setController(controller);
+            controller.setModel(model);
+            controller.setView(view);
+            controller.reload();
+            return view;
+        });
     }
 }

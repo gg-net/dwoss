@@ -22,12 +22,14 @@ import java.util.concurrent.ExecutionException;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 
+import javafx.stage.Modality;
+
+import eu.ggnet.dwoss.core.common.UserInfoException;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.rights.ee.op.Authentication;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.StockTransactionProcessor;
 import eu.ggnet.dwoss.stock.ee.entity.*;
-import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 
 /**
@@ -56,8 +58,6 @@ public class CommissioningManagerController {
         this(Dl.remote().lookup(StockAgent.class), Dl.remote().lookup(StockTransactionProcessor.class), Dl.remote().lookup(Authentication.class));
     }
 
-    
-    
     public void setModel(CommissioningManagerModel model) {
         this.model = model;
     }
@@ -66,8 +66,6 @@ public class CommissioningManagerController {
         this.view = view;
     }
 
-    
-    
     public boolean executeTransmutation() {
         if ( !model.isCompleteAble() ) return false;
         if ( model.getStockTransactions().get(0).getStatus().getType() == StockTransactionStatusType.PREPARED ) {
@@ -81,31 +79,34 @@ public class CommissioningManagerController {
     }
 
     void authenticateUserOne() {
-        UserPassViewCask authDialog = new UserPassViewCask(view);
-        authDialog.setVisible(true);
-        if ( !authDialog.isOk() ) return;
-        try {
-            authentication.login(authDialog.getUsername(), authDialog.getPassword());
-            model.setParticipantOneName(authDialog.getUsername());
-            model.setParticipantOneAuthenticated(true);
-            view.done1Button.setEnabled(false);
-        } catch (UserInfoException ex) {
-            showError("Username oder Passwort falsch : " + ex.getMessage());
-        }
+        Ui.build(this.view).modality(Modality.APPLICATION_MODAL).swing().eval(() -> new UserPassViewCask()).cf()
+                .thenAccept((UserPassViewCask d) -> {
+                    try {
+                        authentication.login(d.getUsername(), d.getPassword());
+                        model.setParticipantOneName(d.getUsername());
+                        model.setParticipantOneAuthenticated(true);
+                        view.done1Button.setEnabled(false);
+                    } catch (UserInfoException ex) {
+                        showError("Username oder Passwort falsch : " + ex.getMessage());
+                    }
+                })
+                .handle(Ui.handler());
+
     }
 
     void authenticateUserTwo() {
-        UserPassViewCask authDialog = new UserPassViewCask(view);
-        authDialog.setVisible(true);
-        if ( !authDialog.isOk() ) return;
-        try {
-            authentication.login(authDialog.getUsername(), authDialog.getPassword());
-            model.setParticipantTwoName(authDialog.getUsername());
-            model.setParticipantTwoAuthenticated(true);
-            view.done2Button.setEnabled(false);
-        } catch (UserInfoException ex) {
-            showError("Username oder Passwort falsch : " + ex.getMessage());
-        }
+        Ui.build(this.view).modality(Modality.APPLICATION_MODAL).swing().eval(() -> new UserPassViewCask()).cf()
+                .thenAccept((UserPassViewCask d) -> {
+                    try {
+                        authentication.login(d.getUsername(), d.getPassword());
+                        model.setParticipantTwoName(d.getUsername());
+                        model.setParticipantTwoAuthenticated(true);
+                        view.done2Button.setEnabled(false);
+                    } catch (UserInfoException ex) {
+                        showError("Username oder Passwort falsch : " + ex.getMessage());
+                    }
+                })
+                .handle(Ui.handler());
     }
 
     public void addUnit(final String refurbishId) {

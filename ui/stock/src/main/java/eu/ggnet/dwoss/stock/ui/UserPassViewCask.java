@@ -16,20 +16,14 @@
  */
 package eu.ggnet.dwoss.stock.ui;
 
-public class UserPassViewCask extends javax.swing.JDialog {
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.ResultProducer;
+
+public class UserPassViewCask extends javax.swing.JPanel implements ResultProducer<UserPassViewCask> {
 
     boolean ok = false;
 
-    public UserPassViewCask(java.awt.Window parent) {
-        super(parent);
-        setModalityType(ModalityType.APPLICATION_MODAL);
-        initComponents();
-        if ( parent != null ) setLocationRelativeTo(parent);
-    }
-
-    /** Creates new form UserPassViewCask */
-    public UserPassViewCask(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    public UserPassViewCask() {
         initComponents();
     }
 
@@ -60,9 +54,6 @@ public class UserPassViewCask extends javax.swing.JDialog {
         passwordField = new javax.swing.JPasswordField();
         cancelButton = new javax.swing.JButton();
         okButton = new javax.swing.JButton();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Authentikation");
 
         usernameLabel.setLabelFor(usernameTextField);
         usernameLabel.setText("Username:");
@@ -96,8 +87,8 @@ public class UserPassViewCask extends javax.swing.JDialog {
             }
         });
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
@@ -135,21 +126,20 @@ public class UserPassViewCask extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        this.setVisible(false);
+        Ui.closeWindowOf(this);
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         ok = true;
-        this.setVisible(false);
+        Ui.closeWindowOf(this);
     }//GEN-LAST:event_okButtonActionPerformed
 
     private void passwordFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordFieldActionPerformed
         ok = true;
-        this.setVisible(false);
+        Ui.closeWindowOf(this);
     }//GEN-LAST:event_passwordFieldActionPerformed
 
     private void usernameTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameTextFieldActionPerformed
@@ -164,4 +154,10 @@ public class UserPassViewCask extends javax.swing.JDialog {
     private javax.swing.JLabel usernameLabel;
     private javax.swing.JTextField usernameTextField;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public UserPassViewCask getResult() {
+        if ( ok ) return this;
+        return null;
+    }
 }

@@ -17,22 +17,26 @@
 package eu.ggnet.dwoss.stock.ui;
 
 import java.awt.Component;
-import java.awt.Window;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.text.DateFormat;
 
 import javax.swing.*;
 
-import eu.ggnet.dwoss.stock.ee.entity.*;
-import eu.ggnet.dwoss.stock.ui.cap.RemoveUnitFromTransactionAction;
 import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.dwoss.stock.ee.entity.*;
+import eu.ggnet.dwoss.stock.ui.cap.RemoveUnitFromTransactionAction;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.ClosedListener;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_TRANSACTION_TO_CANCLE;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_TRANSACTION_TO_REMOVE_UNIT;
 
-public class StockTransactionManagerView extends javax.swing.JDialog {
+public class StockTransactionManagerView extends javax.swing.JPanel implements ClosedListener {
+
+    @Override
+    public void closed() {
+        controller.cancelLoader();
+    }
 
     public class StockTransactionRenderer extends JLabel implements ListCellRenderer {
 
@@ -74,9 +78,7 @@ public class StockTransactionManagerView extends javax.swing.JDialog {
     private StockTransactionManagerModel model;
 
     /** Creates new form StockTransactionManagerView */
-    public StockTransactionManagerView(Window parent) {
-        super(parent);
-        setModalityType(ModalityType.APPLICATION_MODAL);
+    public StockTransactionManagerView() {
         initComponents();
 
         typeComboBox.setModel(new DefaultComboBoxModel(StockTransactionType.values()));
@@ -89,17 +91,10 @@ public class StockTransactionManagerView extends javax.swing.JDialog {
             accessCos.add(removeUnitFromTransactionButton, UPDATE_TRANSACTION_TO_REMOVE_UNIT);
         }
 
-        if ( parent != null ) setLocationRelativeTo(parent);
     }
 
     public void setController(final StockTransactionManagerController controller) {
         this.controller = controller;
-        this.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                controller.cancelLoader();
-            }
-        });
     }
 
     public void setModel(StockTransactionManagerModel model) {
@@ -133,9 +128,6 @@ public class StockTransactionManagerView extends javax.swing.JDialog {
         statusLabel = new javax.swing.JLabel();
         statusComboBox = new javax.swing.JComboBox();
         removeUnitFromTransactionButton = new javax.swing.JButton();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Transaktions Manager");
 
         transactionList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -191,8 +183,8 @@ public class StockTransactionManagerView extends javax.swing.JDialog {
             }
         });
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
@@ -239,11 +231,11 @@ public class StockTransactionManagerView extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        pack();
+   
     }// </editor-fold>//GEN-END:initComponents
 
     private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
-        this.setVisible(false);
+        Ui.closeWindowOf(this);
     }//GEN-LAST:event_closeButtonActionPerformed
 
     private void typeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_typeComboBoxActionPerformed
