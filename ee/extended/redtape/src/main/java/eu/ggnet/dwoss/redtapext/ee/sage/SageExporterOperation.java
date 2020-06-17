@@ -28,18 +28,18 @@ import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.system.autolog.AutoLogger;
+import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
+import eu.ggnet.dwoss.core.system.progress.SubMonitor;
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
-import eu.ggnet.dwoss.core.system.progress.SubMonitor;
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.eao.DocumentEao;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.sage.SageExporterConfig;
 import eu.ggnet.dwoss.redtape.ee.sage.SageExporterEngine;
-import eu.ggnet.dwoss.core.common.FileJacket;
 
 import static eu.ggnet.dwoss.core.common.values.DocumentType.*;
 
@@ -102,7 +102,7 @@ public class SageExporterOperation implements SageExporter {
             SageExporterEngine exporter = new SageExporterEngine(out, customerInvoices, config);
             exporter.execute(m);
             m.finish();
-            return new FileJacket("Buchungsaetze DW " + mandator.company().name() + " von " + DATE_FORMAT.format(start) + " bis " + DATE_FORMAT.format(end), ".xml", out.toByteArray());
+            return new FileJacket("Buchungsaetze DW " + mandator.company().emailName() + " von " + DATE_FORMAT.format(start) + " bis " + DATE_FORMAT.format(end), ".xml", out.toByteArray());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
