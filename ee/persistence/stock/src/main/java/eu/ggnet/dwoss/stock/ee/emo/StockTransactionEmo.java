@@ -26,14 +26,14 @@ import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
+import eu.ggnet.dwoss.core.system.persistence.DefaultEao;
+import eu.ggnet.dwoss.core.system.progress.IMonitor;
 import eu.ggnet.dwoss.core.system.progress.SubMonitor;
+import eu.ggnet.dwoss.core.system.util.ValidationUtil;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.eao.StockTransactionEao;
 import eu.ggnet.dwoss.stock.ee.entity.*;
-import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.dwoss.core.system.persistence.DefaultEao;
-import eu.ggnet.dwoss.core.system.util.ValidationUtil;
-import eu.ggnet.dwoss.core.system.progress.IMonitor;
 
 @Stateless
 public class StockTransactionEmo {
@@ -77,7 +77,7 @@ public class StockTransactionEmo {
      * @param t              a merged parameter view.
      * @param partialMonitor an optional monitor
      * @return a map containing uniqueUnitIds and comments for their history.
-     * @throws UserInfoException
+     * @throws UserInfoException stock does not exist, unit not in a stock or unit not on source.
      */
     public SortedMap<Integer, String> prepare(Transfer t, IMonitor partialMonitor) throws UserInfoException {
         SubMonitor m = SubMonitor.convert(partialMonitor, "Preparing Transfer Transaciton", (t.stockUnitIds().size() * 2) + 15);

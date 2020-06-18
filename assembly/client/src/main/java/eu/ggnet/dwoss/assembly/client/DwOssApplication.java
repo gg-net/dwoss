@@ -57,11 +57,9 @@ import eu.ggnet.dwoss.assembly.remote.cdi.FxmlLoaderInitializer;
 import eu.ggnet.dwoss.assembly.remote.exception.*;
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.widget.Dl;
-import eu.ggnet.dwoss.core.widget.Ops;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.core.widget.dl.RemoteLookup;
 import eu.ggnet.dwoss.mandator.spi.CachedMandators;
-import eu.ggnet.dwoss.stock.ui.cap.ConsumerFactoryOfStockTransactions;
 import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.core.ui.*;
 
@@ -342,7 +340,7 @@ public class DwOssApplication extends Application {
          mainPane.getChildren().add(mainView);
          */
         // Old Ops usage, RedTape Ui Contextmenu
-        Ops.registerActionFactory(new ConsumerFactoryOfStockTransactions());
+        // Ops.registerActionFactory(new ConsumerFactoryOfStockTransactions());
     }
 
     /**

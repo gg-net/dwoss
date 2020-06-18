@@ -16,12 +16,14 @@
  */
 package eu.ggnet.dwoss.stock.ee;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import eu.ggnet.dwoss.stock.api.*;
+import eu.ggnet.dwoss.stock.ee.eao.StockEao;
 import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
 import eu.ggnet.dwoss.stock.ee.entity.*;
 import eu.ggnet.dwoss.stock.ee.format.StockUnitFormater;
@@ -37,6 +39,9 @@ public class StockApiLocalBean implements StockApiLocal {
     @Inject
     private StockUnitEao eao;
 
+    @Inject
+    private StockEao stockEao;
+
     @Override
     public String findByUniqueUnitIdAsHtml(long uniqueUnitId) {
         StockUnit stockUnit = eao.findByUniqueUnitId((int)uniqueUnitId);
@@ -46,10 +51,10 @@ public class StockApiLocalBean implements StockApiLocal {
 
     @Override
     public SimpleStockUnit findByUniqueUnitId(long uniqueUnitId) {
-        return toSimple(eao.findByUniqueUnitId((int)uniqueUnitId));
+        return toSimple(eao.findByUniqueUnitId((int)uniqueUnitId), stockEao.findAll());
     }
 
-    static SimpleStockUnit toSimple(StockUnit su) {
+    static SimpleStockUnit toSimple(StockUnit su, List<Stock> stocks) {
         if ( su == null ) return null;
         SimpleStockUnit.Builder ssub = new SimpleStockUnit.Builder()
                 .id(su.getId())
@@ -67,6 +72,10 @@ public class StockApiLocalBean implements StockApiLocal {
                     .source(Optional.ofNullable(st.getSource()).map(Stock::toPicoStock))
                     .destination(Optional.ofNullable(st.getDestination()).map(Stock::toPicoStock))
                     .build());
+
+        }
+        if ( su.isInStock() && !su.isInTransaction() ) {
+            ssub.addAllPossibleDestinations(stocks.stream().filter(s -> s.getId() != su.getStock().getId()).map(Stock::toPicoStock));
         }
         return ssub.build();
     }

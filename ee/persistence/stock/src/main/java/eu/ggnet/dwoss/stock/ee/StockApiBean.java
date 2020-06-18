@@ -22,10 +22,14 @@ import java.util.stream.Collectors;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import eu.ggnet.dwoss.stock.api.PicoStock;
-import eu.ggnet.dwoss.stock.api.StockApi;
+import eu.ggnet.dwoss.core.common.UserInfoException;
+import eu.ggnet.dwoss.stock.api.*;
 import eu.ggnet.dwoss.stock.ee.eao.StockEao;
+import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
+import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
+
+import static eu.ggnet.dwoss.stock.ee.StockApiLocalBean.toSimple;
 
 /*
  * Implementation of the remote stock api.
@@ -36,11 +40,28 @@ import eu.ggnet.dwoss.stock.ee.entity.Stock;
 public class StockApiBean implements StockApi {
 
     @Inject
+    private StockTransactionProcessorOperation stp;
+
+    @Inject
     private StockEao stockEao;
+
+    @Inject
+    private StockUnitEao stockUnitEao;
 
     @Override
     public List<PicoStock> findAllStocks() {
         return stockEao.findAll().stream().map(Stock::toPicoStock).collect(Collectors.toList());
+    }
+
+    @Override
+    public void perpareTransferByUniqueUnitIds(List<Long> uniqueUnitIds, int destinationStockId, String arranger, String comment) throws UserInfoException {
+        List<StockUnit> stockUnits = stockUnitEao.findByUniqueUnitIds(uniqueUnitIds.stream().map(Long::intValue).collect(Collectors.toList()));
+        stp.perpareTransfer(stockUnits, destinationStockId, arranger, comment);
+    }
+
+    @Override
+    public SimpleStockUnit findByUniqueUnitId(long uniqueUnitId) {
+        return toSimple(stockUnitEao.findByUniqueUnitId((int)uniqueUnitId), stockEao.findAll());
     }
 
 }

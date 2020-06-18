@@ -17,6 +17,7 @@
 package eu.ggnet.dwoss.stock.api;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Optional;
 
 import org.inferred.freebuilder.FreeBuilder;
@@ -73,5 +74,12 @@ public interface SimpleStockUnit extends Serializable {
      * @return the optional stock transaction.
      */
     Optional<SimpleStockTransaction> stockTransaction();
+
+    /**
+     * Returns a list of possible destinations
+     *
+     * @return
+     */
+    List<PicoStock> possibleDestinations();
 
 }

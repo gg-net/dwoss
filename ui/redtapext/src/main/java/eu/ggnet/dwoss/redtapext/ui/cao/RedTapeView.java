@@ -21,7 +21,7 @@ import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.net.URL;
-import java.util.*;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.GroupLayout.Alignment;
@@ -35,34 +35,22 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.input.MouseButton;
-import javafx.scene.layout.BorderPane;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.HtmlPane;
 import eu.ggnet.dwoss.customer.api.*;
 import eu.ggnet.dwoss.customer.spi.CustomerUiModifier;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.redtapext.ee.state.*;
-import eu.ggnet.dwoss.redtapext.ui.cao.common.*;
-import eu.ggnet.dwoss.redtapext.ui.cao.document.position.PositionViewCask;
+import eu.ggnet.dwoss.redtapext.ui.cao.common.DocumentStringRenderer;
+import eu.ggnet.dwoss.redtapext.ui.cao.common.UiCustomerRenderer;
 import eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableView;
-import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.*;
-import eu.ggnet.dwoss.core.widget.FxOps;
-import eu.ggnet.dwoss.core.widget.Ops;
-import eu.ggnet.dwoss.core.widget.auth.Guardian;
-import eu.ggnet.dwoss.core.widget.ops.SelectionEnhancer;
-import eu.ggnet.dwoss.core.widget.ops.Selector;
-
-import static eu.ggnet.dwoss.core.common.values.PositionType.UNIT;
 
 /**
  * The main UI for using RedTape components.
@@ -73,13 +61,11 @@ import static eu.ggnet.dwoss.core.common.values.PositionType.UNIT;
 @Title("Kunden und Aufträge")
 @StoreLocation
 @Once
-public class RedTapeView extends JPanel implements ClosedListener {
+public class RedTapeView extends JPanel {
 
     private final Logger L = LoggerFactory.getLogger(RedTapeView.class);
 
     DossierTableView dossierTableView;
-
-    private Selector<Position> selector;
 
     private final PropertyChangeListener redTapeViewListener = new PropertyChangeListener() {
         @Override
@@ -139,35 +125,7 @@ public class RedTapeView extends JPanel implements ClosedListener {
     private void initFxComponents() {
         final JFXPanel jfxp = new JFXPanel();
         positionFxPanel.add(jfxp, BorderLayout.CENTER);
-
-        Platform.runLater(() -> {
-
-            SelectionEnhancer<Position> selectionEnhancer = (selected) -> {
-                if ( selected != null && selected.getType() == UNIT ) return Arrays.asList(new PicoUnit(selected.getUniqueUnitId(), selected.getName()));
-                return Collections.EMPTY_LIST;
-            };
-            selector = Ops.seletor(Position.class, selectionEnhancer);
-
-            BorderPane pane = new BorderPane();
-            Scene scene = new Scene(pane, javafx.scene.paint.Color.ALICEBLUE);
-            final ListView<Position> positionsFxList = new ListView<>();
-            MultipleSelectionModel<Position> selectionModel = positionsFxList.getSelectionModel();
-            selectionModel.setSelectionMode(SelectionMode.SINGLE);
-            selectionModel.selectedItemProperty().addListener((ob, o, n) -> {
-                selector.selected(n);
-            });
-            positionsFxList.setCellFactory(new PositionListCell.Factory());
-            positionsFxList.setItems(positions);
-            positionsFxList.setContextMenu(FxOps.contextMenuOf(selectionModel, selectionEnhancer, Dl.local().lookup(Guardian.class)));
-            positionsFxList.setOnMouseClicked(e -> {
-                if ( !positionsFxList.getSelectionModel().isEmpty() && e.getClickCount() == 2 && e.getButton() == MouseButton.PRIMARY ) {
-                    Ui.build(this).fx().show(() -> positionsFxList.getSelectionModel().getSelectedItem(), () -> new PositionViewCask());
-                }
-            });
-
-            pane.setCenter(positionsFxList);
-            jfxp.setScene(scene);
-        });
+        Platform.runLater(() -> RedTapeFxUtil.positionFxList(jfxp, positions));
     }
 
     /**
@@ -644,10 +602,5 @@ public class RedTapeView extends JPanel implements ClosedListener {
     JTextField searchCommandField;
     JList searchResultList;
     // End of variables declaration//GEN-END:variables
-
-    @Override
-    public void closed() {
-        selector.clear();
-    }
 
 }

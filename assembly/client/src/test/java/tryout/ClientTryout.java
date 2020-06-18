@@ -19,18 +19,18 @@ package tryout;
 import java.util.*;
 
 import eu.ggnet.dwoss.assembly.client.DwOssMain;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.widget.AbstractGuardian;
+import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.auth.AuthenticationException;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.dl.RemoteLookup;
 import eu.ggnet.dwoss.mandator.api.Mandators;
 import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.mandator.sample.impl.Sample;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;
-import eu.ggnet.dwoss.stock.api.PicoStock;
-import eu.ggnet.dwoss.stock.api.StockApi;
-import eu.ggnet.dwoss.core.widget.Dl;
-import eu.ggnet.dwoss.core.widget.dl.RemoteLookup;
-import eu.ggnet.dwoss.core.widget.auth.AuthenticationException;
-import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.dwoss.stock.api.*;
 
 /**
  *
@@ -73,6 +73,16 @@ public class ClientTryout {
             @Override
             public List<PicoStock> findAllStocks() {
                 return Arrays.asList(new PicoStock(1, "Hamburg"), new PicoStock(2, "Bremen"));
+            }
+
+            @Override
+            public void perpareTransferByUniqueUnitIds(List<Long> uniqueUnitIds, int destinationStockId, String arranger, String comment) throws UserInfoException {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public SimpleStockUnit findByUniqueUnitId(long uniqueUnitId) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         });
 

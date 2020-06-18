@@ -22,7 +22,6 @@ import java.util.List;
 import org.openide.util.lookup.ServiceProvider;
 
 import eu.ggnet.dwoss.core.widget.ops.ActionFactory;
-import eu.ggnet.dwoss.core.widget.ops.DescriptiveConsumerFactory;
 
 /**
  * ActionFactory for Stock.
@@ -40,11 +39,6 @@ public class StockActionFactory implements ActionFactory {
                 new MetaAction("Lager/Logistik", new RemoveUnitFromTransactionAction()),
                 new MetaAction("Lager/Logistik", new OpenStockTransactionManager()),
                 new MetaAction("Lager/Logistik", new OpenCommissioningManager()));
-    }
-
-    @Override
-    public List<DescriptiveConsumerFactory<?>> createDependentActionFactories() {
-        return Arrays.asList(new ConsumerFactoryOfStockTransactions());
     }
 
 }
