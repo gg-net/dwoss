@@ -36,7 +36,6 @@ import javafx.scene.control.*;
 import org.slf4j.Logger;
 
 import eu.ggnet.dwoss.assembly.client.support.MenuBuilder;
-import eu.ggnet.dwoss.assembly.client.support.MenuBuilder;
 import eu.ggnet.dwoss.assembly.client.support.RightsToolbarManager;
 import eu.ggnet.dwoss.assembly.client.support.login.LoggedInTimeoutManager;
 import eu.ggnet.dwoss.assembly.client.support.monitor.*;
@@ -250,7 +249,7 @@ public class DwOssClientController {
 
         // -- Artikelstamm
         Menu artikelstamm_imageIds = new Menu("Bilder Ids");
-        artikelstamm_imageIds.getItems().addAll(m.items(ExportImageIdsForCustomerMenuItem.class, ExportImageIdsAction.class, ImportImageIdsAction.class));
+        artikelstamm_imageIds.getItems().addAll(m.items(NextImageIdAction.class, ExportImageIdsForCustomerMenuItem.class, ExportImageIdsAction.class, ImportImageIdsAction.class));
 
         Menu artikelstamm = new Menu("Artikelstamm");
         artikelstamm.getItems().addAll(m.items(
