@@ -89,7 +89,7 @@ public class DocumentUpdateViewTryout {
         Address address = new Address("Max Mustermann\nMusterstrass 11\n22222 Musterstadt");
         doc.setInvoiceAddress(address);
         doc.setShippingAddress(address);
-        doc.setTaxType(GENERAL_SALES_TAX_DE_SINCE_2007);
+        doc.setTaxType(GENERAL_SALES_TAX_DE_CORONA_16_PERCENT);
         doc.append(Position.builder()
                 .type(UNIT)
                 .amount(1)
@@ -159,7 +159,7 @@ public class DocumentUpdateViewTryout {
                 return new PostLedger(
                         PostLedger.add()
                                 .positionTypes(UNIT)
-                                .taxTypes(GENERAL_SALES_TAX_DE_SINCE_2007)
+                                .taxTypes(GENERAL_SALES_TAX_DE_CORONA_16_PERCENT)
                                 .primaryLedger(L_1000_STD_UNIT),
                         PostLedger.add()
                                 .positionTypes(UNIT)
@@ -171,18 +171,18 @@ public class DocumentUpdateViewTryout {
                                 .primaryLedger(3000, "Reverse Charge"),
                         PostLedger.add()
                                 .positionTypes(SERVICE)
-                                .taxTypes(GENERAL_SALES_TAX_DE_SINCE_2007)
+                                .taxTypes(GENERAL_SALES_TAX_DE_CORONA_16_PERCENT)
                                 .primaryLedger(2002, "Dienstleistung Store")
                                 .alternativeLedger(L_1000_STD_UNIT)
                                 .alternativeLedger(L_1002_VERSANDKOSTEN)
                                 .alternativeLedger(L_1001_HW_SW_STORE),
                         PostLedger.add()
                                 .positionTypes(PRODUCT_BATCH)
-                                .taxTypes(GENERAL_SALES_TAX_DE_SINCE_2007)
+                                .taxTypes(GENERAL_SALES_TAX_DE_CORONA_16_PERCENT)
                                 .primaryLedger(L_1001_HW_SW_STORE),
                         PostLedger.add()
                                 .positionTypes(SHIPPING_COST)
-                                .taxTypes(GENERAL_SALES_TAX_DE_SINCE_2007)
+                                .taxTypes(GENERAL_SALES_TAX_DE_CORONA_16_PERCENT)
                                 .primaryLedger(L_1002_VERSANDKOSTEN)
                 );
             }

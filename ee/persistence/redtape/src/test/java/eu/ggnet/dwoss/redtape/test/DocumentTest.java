@@ -108,7 +108,7 @@ public class DocumentTest {
         //change Tax Type
         doc2.setTaxType(TaxType.UNTAXED);
         assertFalse(doc1.equalsContent(doc2));
-        doc2.setTaxType(TaxType.GENERAL_SALES_TAX_DE_SINCE_2007);
+        doc2.setTaxType(TaxType.GENERAL_SALES_TAX_DE_CORONA_16_PERCENT);
         assertTrue(doc1.equalsContent(doc2));
 
         //change addresses

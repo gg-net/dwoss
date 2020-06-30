@@ -68,7 +68,7 @@ public class CustomerAndGsOfficeProvider {
     public final static PostLedger NEW_POST_LEDGER = new PostLedger(
             PostLedger.add()
                     .positionTypes(UNIT)
-                    .taxTypes(GENERAL_SALES_TAX_DE_SINCE_2007)
+                    .taxTypes(GENERAL_SALES_TAX_DE_CORONA_16_PERCENT)
                     .primaryLedger(1000, "Standard Gerät")
                     .alternativeLedger(1001, "Nicht Standard Geräte"),
             PostLedger.add()
@@ -81,16 +81,16 @@ public class CustomerAndGsOfficeProvider {
                     .primaryLedger(3000, "Reverse Charge"),
             PostLedger.add()
                     .positionTypes(SERVICE)
-                    .taxTypes(GENERAL_SALES_TAX_DE_SINCE_2007)
+                    .taxTypes(GENERAL_SALES_TAX_DE_CORONA_16_PERCENT)
                     .primaryLedger(4000, "Service")
                     .alternativeLedger(4001, "VIP Service"),
             PostLedger.add()
                     .positionTypes(PRODUCT_BATCH)
-                    .taxTypes(GENERAL_SALES_TAX_DE_SINCE_2007)
+                    .taxTypes(GENERAL_SALES_TAX_DE_CORONA_16_PERCENT)
                     .primaryLedger(5000, "ProductBatch"),
             PostLedger.add()
                     .positionTypes(SHIPPING_COST)
-                    .taxTypes(GENERAL_SALES_TAX_DE_SINCE_2007)
+                    .taxTypes(GENERAL_SALES_TAX_DE_CORONA_16_PERCENT)
                     .primaryLedger(6000, "Versand"));
 
     // Rewired the system customers.

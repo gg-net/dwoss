@@ -163,7 +163,7 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
         </dependency>
-                <dependency>
+        <dependency>
             <groupId>de.huxhorn.lilith</groupId>
             <artifactId>de.huxhorn.lilith.logback.encoder.classic</artifactId>
         </dependency>

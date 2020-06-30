@@ -33,9 +33,9 @@ import eu.ggnet.dwoss.redtape.ee.entity.util.DocumentEquals;
 import eu.ggnet.dwoss.redtape.ee.format.DocumentFormater;
 
 import static eu.ggnet.dwoss.core.common.values.PositionType.COMMENT;
-import static eu.ggnet.dwoss.core.common.values.TaxType.GENERAL_SALES_TAX_DE_SINCE_2007;
 import static eu.ggnet.dwoss.redtape.ee.entity.util.DocumentEquals.Property.*;
 import static javax.persistence.CascadeType.*;
+import static eu.ggnet.dwoss.core.common.values.TaxType.GENERAL_SALES_TAX_DE_CORONA_16_PERCENT;
 
 /**
  * Represents a Document, like the paper in a real dossier.
@@ -371,7 +371,7 @@ public class Document extends BaseEntity implements Serializable, Comparable<Doc
 
     public Document() {
         actual = new Date();
-        taxType = GENERAL_SALES_TAX_DE_SINCE_2007;
+        taxType = GENERAL_SALES_TAX_DE_CORONA_16_PERCENT;
     }
 
     /**

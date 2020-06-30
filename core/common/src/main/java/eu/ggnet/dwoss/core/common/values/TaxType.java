@@ -24,7 +24,7 @@ package eu.ggnet.dwoss.core.common.values;
  */
 public enum TaxType {
 
-    GENERAL_SALES_TAX_DE_SINCE_2007(0.19,
+    GENERAL_SALES_TAX_DE_19_PERCENT(0.19,
             "19% Mwst",
             "Standard Umsatzsteuer (Mehrwertsteuer) in Deutschland seit 2007",
             null,
@@ -38,7 +38,12 @@ public enum TaxType {
             "Reverse Charge",
             "0% Umsatzsteuer bei Verkauf von Endgeräten mit Funkanbindungen und einem Rechnungswert von mid. 5000,-€",
             "Steuerschuldnerschaft des Leistungsempfängers gemäß § 13b Abs. 2 Nr. 10 UStG (Reverse-Charge-Verfahren)",
-            "36");
+            "36"),
+    GENERAL_SALES_TAX_DE_CORONA_16_PERCENT(0.16,
+            "16% Mwst",
+            "Reduzierte Umsatzsteuer (Mehrwertsteuer) in Deutschland Q3/Q4 2020 wegen SARS-Corv-2",
+            null,
+            "01");
 
     /**
      * Tax value, must never Change.

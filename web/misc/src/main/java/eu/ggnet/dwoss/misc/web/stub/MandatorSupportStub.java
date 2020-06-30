@@ -72,7 +72,7 @@ public class MandatorSupportStub {
     public static PostLedger pl = new PostLedger(
             PostLedger.add()
                     .positionTypes(UNIT)
-                    .taxTypes(GENERAL_SALES_TAX_DE_SINCE_2007)
+                    .taxTypes(GENERAL_SALES_TAX_DE_CORONA_16_PERCENT)
                     .primaryLedger(L_8401_SONDERPOSTEN_UNIT),
             PostLedger.add()
                     .positionTypes(UNIT)
@@ -84,7 +84,7 @@ public class MandatorSupportStub {
                     .primaryLedger(8337, "Reverse Charge"),
             PostLedger.add()
                     .positionTypes(SERVICE)
-                    .taxTypes(GENERAL_SALES_TAX_DE_SINCE_2007)
+                    .taxTypes(GENERAL_SALES_TAX_DE_CORONA_16_PERCENT)
                     .primaryLedger(8414, "Dienstleistung Store")
                     .alternativeLedger(L_8401_SONDERPOSTEN_UNIT)
                     .alternativeLedger(L_8403_DL_TECHNIK)
@@ -93,12 +93,12 @@ public class MandatorSupportStub {
                     .alternativeLedger(L_8415_HW_SW_STORE),
             PostLedger.add()
                     .positionTypes(PRODUCT_BATCH)
-                    .taxTypes(GENERAL_SALES_TAX_DE_SINCE_2007)
+                    .taxTypes(GENERAL_SALES_TAX_DE_CORONA_16_PERCENT)
                     .primaryLedger(L_8415_HW_SW_STORE)
                     .alternativeLedger(L_8418_ACER_TWO_YEAR_POST_LEDGER),
             PostLedger.add()
                     .positionTypes(SHIPPING_COST)
-                    .taxTypes(GENERAL_SALES_TAX_DE_SINCE_2007)
+                    .taxTypes(GENERAL_SALES_TAX_DE_CORONA_16_PERCENT)
                     .primaryLedger(L_8406_VERSANDKOSTEN)
     );
 

@@ -57,7 +57,7 @@ public class RedTapeCloserOperationOfWarrantyIT extends ArquillianProjectArchive
                             .refurbishedId(p.getRefurbishedId())
                             .bookingAccount(new Ledger(1000, "DemoLedger"))
                             .type(PRODUCT_BATCH)
-                            .tax(TaxType.GENERAL_SALES_TAX_DE_SINCE_2007.getTax())
+                            .tax(TaxType.GENERAL_SALES_TAX_DE_CORONA_16_PERCENT.getTax())
                             .uniqueUnitId(p.getUniqueUnitId())
                             .uniqueUnitProductId(eao.findByPartNo(WARRANTY_PART_NO).getId())
                             .name("Warranty Position")

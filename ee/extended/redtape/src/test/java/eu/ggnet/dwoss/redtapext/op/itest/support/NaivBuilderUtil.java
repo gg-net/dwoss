@@ -29,7 +29,7 @@ public class NaivBuilderUtil {
 
     private final static Ledger SHIPPING_LEDGER = new Ledger(1003, "ShippingCosts in Tests");
 
-    private static TaxType taxType = TaxType.GENERAL_SALES_TAX_DE_SINCE_2007;
+    private static TaxType taxType = TaxType.GENERAL_SALES_TAX_DE_CORONA_16_PERCENT;
 
     public static void overwriteTax(TaxType taxType) {
         NaivBuilderUtil.taxType = taxType;
