@@ -16,6 +16,11 @@
  */
 package eu.ggnet.dwoss.assembly.client;
 
+import eu.ggnet.dwoss.assembly.client.support.exception.DwFinalExceptionConsumer;
+import eu.ggnet.dwoss.assembly.client.support.exception.UnhandledExceptionCatcher;
+import eu.ggnet.dwoss.assembly.client.support.exception.ConstraintViolationConsumer;
+import eu.ggnet.dwoss.assembly.client.support.exception.UserInfoExceptionConsumer;
+
 import java.awt.Window;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -54,7 +59,6 @@ import eu.ggnet.dwoss.assembly.client.support.executor.ExecutorManager;
 import eu.ggnet.dwoss.assembly.client.support.login.*;
 import eu.ggnet.dwoss.assembly.client.support.monitor.MonitorManager;
 import eu.ggnet.dwoss.assembly.remote.cdi.FxmlLoaderInitializer;
-import eu.ggnet.dwoss.assembly.remote.exception.*;
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;

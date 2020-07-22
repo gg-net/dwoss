@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.assembly.remote;
+package tryout;
 
 import java.util.List;
 import java.util.Properties;
@@ -26,52 +26,39 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wildfly.security.auth.client.*;
 
-import eu.ggnet.dwoss.assembly.remote.lookup.WildflyLookup;
 import eu.ggnet.dwoss.discovery.Discovery;
-import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.mandator.api.Mandators;
-import eu.ggnet.dwoss.remote.spi.EjbConnectionConfiguration;
 
 /**
  *
  * @author olive
  */
-public class TestWildfly {
+public class TryoutWildflyConnection {
 
-    public static Logger L = LoggerFactory.getLogger(TestWildfly.class);
+    public static Logger L = LoggerFactory.getLogger(TryoutWildflyConnection.class);
 
     public static void main(String[] args) throws Exception {
-
-        EjbConnectionConfiguration c = new EjbConnectionConfiguration.Builder()
-                .host("localhost")
-                .port(8080)
-                .username("admin")
-                .password("admin")
-                .app("dwoss-server")
-                .build();
-
-       // tryEjbJndi(c2);
-        tryRemoteLookupImplementation(c);
+        tryEjbJndi("localhost", 8080, "dwoss-server", "admin", "admin");
     }
 
-    public static void tryEjbJndi(EjbConnectionConfiguration config) throws Exception {
+    public static void tryEjbJndi(String host, int port, String app, String username, String password) throws Exception {
 
-        AuthenticationConfiguration ejbConfig = AuthenticationConfiguration.empty().useName(config.username()).usePassword(config.password());
-        AuthenticationContext authContext = AuthenticationContext.empty().with(MatchRule.ALL.matchHost(config.host()), ejbConfig);
-        
+        AuthenticationConfiguration ejbConfig = AuthenticationConfiguration.empty().useName(username).usePassword(password);
+        AuthenticationContext authContext = AuthenticationContext.empty().with(MatchRule.ALL.matchHost(host), ejbConfig);
+
         AuthenticationContext.getContextManager().setGlobalDefault(authContext);
 
         Properties properties = new Properties();
         properties.put(Context.INITIAL_CONTEXT_FACTORY, "org.wildfly.naming.client.WildFlyInitialContextFactory");
-        properties.put(Context.PROVIDER_URL, "remote+http://" + config.host() + ":" + config.port());
+        properties.put(Context.PROVIDER_URL, "remote+http://" + host + ":" + port);
 
         Callable<List<String>> nameDiscovery = () -> {
 
             // create an InitialContext
             InitialContext c = new InitialContext(properties);
 
-            final String APP = config.app();
+            final String APP = app;
             Object instance = null;
             String discoveryName = "ejb:/" + APP + "//" + Discovery.NAME;
             L.debug("Trying lookup of {} ", discoveryName);
@@ -96,7 +83,7 @@ public class TestWildfly {
             // create an InitialContext
             InitialContext c = new InitialContext(properties);
 
-            final String APP = config.app();
+            final String APP = app;
             Mandators instance = null;
             String name = "ejb:/" + APP + "//MandatorsBean!eu.ggnet.dwoss.mandator.ee.Mandators";
             L.debug("Trying lookup of {} ", name);
@@ -122,7 +109,7 @@ public class TestWildfly {
         System.out.println(mandator);
         System.out.println(mandator.documentIntermix().toMultiLine());
 
-//        
+//
 //        final Properties env = new Properties();
 //        env.put(Context.URL_PKG_PREFIXES, "org.jboss.ejb.client.naming");
 //        InitialContext remoteContext = new InitialContext(env);
@@ -132,21 +119,6 @@ public class TestWildfly {
 //
 //        System.out.println(mandator);
 //        System.out.println(mandator.getDocumentIntermix().toMultiLine());
-    }
-
-    public static void tryRemoteLookupImplementation(EjbConnectionConfiguration c) {
-        WildflyLookup l = new WildflyLookup(c);
-
-        Mandators supporter = l.lookup(Mandators.class);
-        Mandator mandator = supporter.loadMandator();
-
-        System.out.println(mandator);
-        System.out.println(mandator.documentIntermix().toMultiLine());
-
-        DefaultCustomerSalesdata sd = supporter.loadSalesdata();
-
-        System.out.println(sd);
-
     }
 
 }

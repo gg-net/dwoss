@@ -20,9 +20,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.dwoss.misc.ee.ImageIdHandler;
-import eu.ggnet.dwoss.core.common.values.SalesChannel;
 import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.misc.ee.ImageIdHandler;
 import eu.ggnet.saft.core.Ui;
 
 /**
@@ -31,21 +30,14 @@ import eu.ggnet.saft.core.Ui;
  */
 public class ExportImageIdsAction extends AbstractAction {
 
-    private final SalesChannel saleschannel;
-
-    public ExportImageIdsAction(SalesChannel saleschannel) {
-        super("Bilder Ids" + (saleschannel == null ? "" : " für " + saleschannel.getName()) + " exportieren");
-        this.saleschannel = saleschannel;
-    }
-
     public ExportImageIdsAction() {
-        this(null);
+        super("Bilder Ids exportieren");
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.osOpen(Ui.progress().title("Bilder Ids").call(() -> Dl.remote().lookup(ImageIdHandler.class).exportMissing(saleschannel).toTemporaryFile()));
+            Ui.osOpen(Ui.progress().title("Bilder Ids").call(() -> Dl.remote().lookup(ImageIdHandler.class).exportMissing(null).toTemporaryFile()));
         });
     }
 }

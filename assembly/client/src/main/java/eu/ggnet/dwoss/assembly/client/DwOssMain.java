@@ -23,7 +23,7 @@ import javafx.application.Application;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.assembly.client.support.ContainerConfiguration;
-import eu.ggnet.dwoss.assembly.remote.MainCdi;
+import eu.ggnet.dwoss.assembly.remote.cdi.MainCdi;
 import eu.ggnet.dwoss.core.system.GlobalConfig;
 import eu.ggnet.dwoss.core.system.autolog.LoggerProducer;
 import eu.ggnet.dwoss.customer.ui.CustomerTaskService;

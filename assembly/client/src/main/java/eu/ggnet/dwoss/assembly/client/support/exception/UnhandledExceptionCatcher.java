@@ -14,26 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.search.ui.cap;
+package eu.ggnet.dwoss.assembly.client.support.exception;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.AWTEvent;
+import java.awt.EventQueue;
 
-import org.openide.util.lookup.ServiceProvider;
+import eu.ggnet.saft.core.Ui;
 
-import eu.ggnet.dwoss.core.widget.ops.ActionFactory;
-
-/**
- *
- * @author oliver.guenther
- */
-@ServiceProvider(service = ActionFactory.class)
-public class SearchActionFactory implements ActionFactory {
+public class UnhandledExceptionCatcher extends EventQueue {
 
     @Override
-    public List<MetaAction> createMetaActions() {
-        List<MetaAction> actions = new ArrayList<>();
-        actions.add(new MetaAction("Kunden und Aufträge", new OpenSearchAction()));
-        return actions;
+    protected void dispatchEvent(AWTEvent newEvent) {
+        try {
+            super.dispatchEvent(newEvent);
+        } catch (Exception e) {
+            Ui.handle(e);
+        }
     }
 }

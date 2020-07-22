@@ -26,8 +26,8 @@ import org.slf4j.LoggerFactory;
 import org.wildfly.security.auth.client.*;
 
 import eu.ggnet.dwoss.core.common.IsStateful;
-import eu.ggnet.dwoss.discovery.Discovery;
 import eu.ggnet.dwoss.core.widget.dl.RemoteLookup;
+import eu.ggnet.dwoss.discovery.Discovery;
 
 import static java.util.Objects.requireNonNull;
 
@@ -147,20 +147,6 @@ public class WildflyLookup implements RemoteLookup {
         init();
     }
 
-//    private Context context() {
-//        // TODO: Experiment, with new and reused context.
-//        if ( _context != null ) return _context;
-//        final Properties properties = new Properties();
-//        properties.put(Context.URL_PKG_PREFIXES, "org.jboss.ejb.client.naming");
-//
-//        try {
-//            _context = new InitialContext(properties);
-//            L.debug("New Context for " + this.getClass().getName() + " created");
-//            return _context;
-//        } catch (NamingException ex) {
-//            throw new RuntimeException("Error on Context init", ex);
-//        }
-//    }
     @Override
     public <T> boolean contains(Class<T> clazz) {
         initOnce();

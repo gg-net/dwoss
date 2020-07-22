@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.assembly.remote.exception;
+package eu.ggnet.dwoss.assembly.client.support.exception;
 
 import java.awt.Window;
 import java.util.Arrays;
