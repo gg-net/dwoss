@@ -112,7 +112,7 @@ public class WildflyLookup implements RemoteLookup {
             // create an InitialContext
             Properties properties = new Properties();
             properties.put(Context.INITIAL_CONTEXT_FACTORY, "org.wildfly.naming.client.WildFlyInitialContextFactory");
-            properties.put(Context.PROVIDER_URL, "remote+http://" + CONFIG.host() + ":" + CONFIG.port());
+            properties.put(Context.PROVIDER_URL, CONFIG.protocol() + "://" + CONFIG.host() + ":" + CONFIG.port());
             _context = new InitialContext(properties);
 
             final String APP = CONFIG.app();

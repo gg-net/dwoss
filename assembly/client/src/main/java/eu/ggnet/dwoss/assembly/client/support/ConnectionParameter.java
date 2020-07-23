@@ -29,11 +29,14 @@ import com.beust.jcommander.Parameters;
 @Parameters(separators = "=")
 public class ConnectionParameter {
 
+    @Parameter(names = "--protocol", description = "Protocol to connect to the Wildfly server, either remote+https or remote+http")
+    private String protocol = "remote+https";
+
     @Parameter(names = "--host", description = "Hostname of the Wildfly server", required = true)
     private String host;
 
     @Parameter(names = "--port", description = "Port of the Wildfly server")
-    private int port = 8080;
+    private int port = 443;
 
     @Parameter(names = "--app", description = "Applikation name on the Wildfly server, normally the name of the deployed war", required = true)
     private String app;
@@ -98,6 +101,10 @@ public class ConnectionParameter {
         return pass;
     }
 
+    public String protocol() {
+        return protocol;
+    }
+
     /**
      * If true, no remote connection should be enabled at all.
      * This is a special hidden parameter only usefull in tryouts. If set to
@@ -117,7 +124,7 @@ public class ConnectionParameter {
     }
 
     public String toUrl() {
-        return "http://" + host + ":" + port + "/" + app;
+        return protocol + "://" + host + ":" + port + "/" + app;
     }
 
 }

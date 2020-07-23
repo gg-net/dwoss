@@ -7,7 +7,7 @@
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
             <property name="hibernate.hbm2ddl.auto" value="create"/>
-            <property name="hibernate.search.default.directory_provider" value="ram"/>
+            <property name="hibernate.search.default.directory_provider" value="local-heap"/>
             <property name="hibernate.search.default.indexmanager" value="near-real-time"/>
             <property name="hibernate.search.default.worker.execution" value="sync"/>
             <property name="hibernate.search.default.worker.thread_pool.size" value="1"/>
