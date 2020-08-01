@@ -29,14 +29,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.search.annotations.*;
 
 import eu.ggnet.dwoss.core.common.values.CustomerFlag;
-import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
+import eu.ggnet.dwoss.core.system.persistence.*;
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.stash.ContactStash;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
-import eu.ggnet.dwoss.core.system.persistence.EagerAble;
-import eu.ggnet.dwoss.core.system.persistence.AbstractBidirectionalListWrapper;
 
 import static eu.ggnet.dwoss.core.common.values.AddressType.INVOICE;
 import static eu.ggnet.dwoss.core.common.values.AddressType.SHIPPING;

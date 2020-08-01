@@ -14,16 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.assembly.client;
-
 /**
- *
- * @author oliver.guenther
+ * Tryout for cdi and fxml loader, remove after saft upgrade.
  */
-public class DwOssMainWithSampleConfig {
-
-    public static void main(String[] args) {
-        DwOssMain.main(new String[]{"--protocol=remote+http", "--host=localhost", "--port=8080", "--app=dwoss-server-sample", "--user=admin", "--pass=admin"});
-    }
-
-}
+package eu.ggnet.dwoss.assembly.remote.cdi;

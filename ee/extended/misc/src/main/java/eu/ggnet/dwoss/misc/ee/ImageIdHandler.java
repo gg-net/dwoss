@@ -39,7 +39,7 @@ public interface ImageIdHandler {
      * <li>Only Products, which have Unit in stock.</li>
      * </ul>
      * <p/>
-     * @param salesChannel
+     * @param salesChannel may be null.
      * @return
      */
     FileJacket exportMissing(SalesChannel salesChannel);

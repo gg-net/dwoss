@@ -40,7 +40,6 @@
         <module>rights</module>
         <module>stock</module>
         <module>uniqueunit</module>
-        <module>login</module>
         <module>misc</module>
         <module>price</module>
         <module>receipt</module>

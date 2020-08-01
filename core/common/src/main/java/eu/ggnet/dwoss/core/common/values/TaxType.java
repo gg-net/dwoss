@@ -43,7 +43,7 @@ public enum TaxType {
             "16% Mwst",
             "Reduzierte Umsatzsteuer (Mehrwertsteuer) in Deutschland Q3/Q4 2020 wegen SARS-Corv-2",
             null,
-            "01");
+            "37");
 
     /**
      * Tax value, must never Change.

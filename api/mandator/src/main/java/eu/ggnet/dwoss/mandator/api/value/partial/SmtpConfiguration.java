@@ -37,12 +37,12 @@ public class SmtpConfiguration implements Serializable {
     public final boolean useStartTls;
 
     public final boolean useSsl;
-    
+
     public String toHtml() {
         return "<p>"
                 + "Host:&nbsp;" + hostname + "<br />"
                 + "User:&nbsp;" + smtpAuthenticationUser + "<br />"
-                + "Pass:&nbsp;" + smtpAuthenticationPass + "<br />"
+                + "Pass:&nbsp;xxxxxxxx<br />"
                 + "Charset:&nbsp;" + charset + "<br />"
                 + "StartTls:&nbsp;" + useStartTls + "</p>";
     }

@@ -14,24 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.assembly.remote.provides;
+package eu.ggnet.dwoss.assembly.client.support;
 
 import java.util.stream.Collectors;
 
 import org.openide.util.lookup.ServiceProvider;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.widget.AbstractGuardian;
+import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.auth.AuthenticationException;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.dl.LocalSingleton;
 import eu.ggnet.dwoss.rights.ee.RightsAgent;
 import eu.ggnet.dwoss.rights.ee.entity.Operator;
 import eu.ggnet.dwoss.rights.ee.op.Authentication;
-import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.dwoss.core.widget.Dl;
-import eu.ggnet.dwoss.core.widget.dl.LocalSingleton;
-import eu.ggnet.dwoss.core.widget.auth.AuthenticationException;
-import eu.ggnet.dwoss.core.widget.auth.Guardian;
 
 /**
- * Implementation of an IAuthenticator using the GG-Net Imap Server
+ * Implementation of an IAuthenticator.
  */
 @ServiceProvider(service = Guardian.class)
 public class LookupAuthenticationGuardian extends AbstractGuardian implements Guardian, LocalSingleton {
