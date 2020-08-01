@@ -16,6 +16,7 @@
  */
 package eu.ggnet.dwoss.core.system.autolog;
 
+import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
 
@@ -24,23 +25,28 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Produces default Loggers of slf4j based on the injection point class.
- * 
+ *
  * @author oliver.guenther
  */
+@Dependent
 public class LoggerProducer {
 
     public final static Logger L = LoggerFactory.getLogger(LoggerProducer.class);
 
     /**
      * Producer Method, autowired via CDI
-     * 
+     *
      * @param ip the injection point
      * @return a correct logger instance
      */
     @Produces
-    public static Logger createLogger(InjectionPoint ip) {
-        L.debug("createLogger(ip={})", ip);
-        return LoggerFactory.getLogger(ip.getBean().getBeanClass());
+    public Logger createLogger(InjectionPoint ip) {
+        if ( ip != null && ip.getBean() != null && ip.getBean().getBeanClass() != null )
+            return LoggerFactory.getLogger(ip.getBean().getBeanClass());
+        if ( ip != null && ip.getMember() != null && ip.getMember().getDeclaringClass() != null )
+            return LoggerFactory.getLogger(ip.getMember().getDeclaringClass());
+        L.warn("createLogger(ip={}) neither getBean nor getMenber returned something, falling back to global logger", ip);
+        return LoggerFactory.getLogger("global");
     }
 
 }
