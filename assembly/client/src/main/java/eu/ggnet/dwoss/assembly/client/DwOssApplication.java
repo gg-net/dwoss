@@ -16,11 +16,6 @@
  */
 package eu.ggnet.dwoss.assembly.client;
 
-import eu.ggnet.dwoss.assembly.client.support.exception.DwFinalExceptionConsumer;
-import eu.ggnet.dwoss.assembly.client.support.exception.UnhandledExceptionCatcher;
-import eu.ggnet.dwoss.assembly.client.support.exception.ConstraintViolationConsumer;
-import eu.ggnet.dwoss.assembly.client.support.exception.UserInfoExceptionConsumer;
-
 import java.awt.Window;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -55,6 +50,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.assembly.client.support.*;
+import eu.ggnet.dwoss.assembly.client.support.exception.*;
 import eu.ggnet.dwoss.assembly.client.support.executor.ExecutorManager;
 import eu.ggnet.dwoss.assembly.client.support.login.*;
 import eu.ggnet.dwoss.assembly.client.support.monitor.MonitorManager;
@@ -244,7 +240,8 @@ public class DwOssApplication extends Application {
                     // Restart the timer. Instance will not be null at that time.
                     instance.select(LoggedInTimeoutManager.class).get().startTime();
                 })
-                .onCancel(() -> UiCore.shutdown()).build()
+                // This is a very special case, because many things are happening in background, this is the only simple way out. UiCore.shutdown() does not work here.
+                .onCancel(() -> System.exit(0)).build()
         );
 
         return loginController;
