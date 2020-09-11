@@ -16,12 +16,6 @@
  */
 package eu.ggnet.dwoss.customer.ee;
 
-import eu.ggnet.dwoss.customer.ee.entity.Contact;
-import eu.ggnet.dwoss.customer.ee.entity.Address;
-import eu.ggnet.dwoss.customer.ee.entity.Company;
-import eu.ggnet.dwoss.customer.ee.entity.Communication;
-import eu.ggnet.dwoss.customer.ee.entity.Customer;
-
 import java.awt.Color;
 import java.util.*;
 import java.util.function.Function;
@@ -29,11 +23,12 @@ import java.util.function.Function;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import eu.ggnet.dwoss.core.common.FileJacket;
+import eu.ggnet.dwoss.core.common.values.CustomerFlag;
 import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
+import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.ExternalSystem;
-import eu.ggnet.dwoss.core.common.values.CustomerFlag;
-import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.lucidcalc.CFormat.FontStyle;
 import eu.ggnet.lucidcalc.*;
 import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcWriter;
@@ -79,8 +74,7 @@ public class CustomerExporterOperation implements CustomerExporter {
         table.setHeadlineFormat(new CFormat(BOLD_ITALIC, Color.BLACK, Color.YELLOW, CENTER, new CBorder(BLACK)));
         table.add(new STableColumn("DW Kid"));
         table.add(new STableColumn("Lexware Id", 12));
-        table.add(new STableColumn("Sage Id"));
-        table.add(new STableColumn("Fibu Konto", 12));
+        table.add(new STableColumn("Sage Fibu Konto"));
         table.add(new STableColumn("Firma", 35));
         table.add(new STableColumn("UST Id", 15));
         table.add(new STableColumn("Vorname", 15));
@@ -115,8 +109,7 @@ public class CustomerExporterOperation implements CustomerExporter {
             rows.add(new Object[]{
                 c.getId(),
                 c.getAdditionalCustomerIds().get(ExternalSystem.LEXWARE),
-                c.getAdditionalCustomerIds().get(ExternalSystem.SAGE),
-                applyCompanies(c, cc -> Integer.toString(cc.getLedger())),
+                c.getAdditionalCustomerIds().get(ExternalSystem.SAGE_FIBU_DEBITOR_LEDGER),
                 applyCompanies(c, Company::getName),
                 applyCompanies(c, Company::getTaxId),
                 applyContacts(c, Contact::getFirstName),

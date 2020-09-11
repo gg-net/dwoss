@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="650.0" minWidth="500.0" prefHeight="680.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.CompanyUpdateController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="650.0" minWidth="500.0" prefHeight="680.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.CompanyUpdateController">
     <center>
         <VBox spacing="2.0" BorderPane.alignment="CENTER">
             <children>
@@ -22,7 +22,6 @@
                             <children>
                                 <Region minHeight="25.0" minWidth="100.0" />
                                 <Label text="Name:" />
-                                <Label text="Fibu Debit.Konto:" />
                                 <Label text="Ust. Id:" />
                             </children>
                         </VBox>
@@ -34,7 +33,6 @@
                                     </font>
                                 </Label>
                                 <TextField fx:id="companyNameTextField" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="400.0" VBox.vgrow="ALWAYS" />
-                                <TextField fx:id="ledgerTextField" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="400.0" VBox.vgrow="ALWAYS" />
                                 <TextField fx:id="taxIdTextField" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="400.0" VBox.vgrow="ALWAYS" />
                             </children>
                         </VBox>

@@ -27,6 +27,7 @@ import javax.validation.constraints.Null;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.search.annotations.*;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.common.values.CustomerFlag;
 import eu.ggnet.dwoss.core.system.persistence.*;
@@ -90,7 +91,17 @@ public class Customer extends BaseEntity implements Serializable, EagerAble, Con
     }
 
     public enum ExternalSystem {
-        SAGE, LEXWARE
+        SAGE_FIBU_DEBITOR_LEDGER("Sage Fibu Debitorenkonto"), LEXWARE("Lexware Kundenid");
+
+        private final String description;
+
+        private ExternalSystem(String description) {
+            this.description = description;
+        }
+
+        public String description() {
+            return description;
+        }
     }
 
     @Id
@@ -769,7 +780,18 @@ public class Customer extends BaseEntity implements Serializable, EagerAble, Con
                 preferedCompany().map(Company::getName).orElse(null),
                 toName(),
                 getDefaultEmailCommunication().map(Communication::getIdentifier).orElse(null),
-                preferedCompany().map(Company::getLedger).orElse(0));
+                toFibuLedger());
+    }
+
+    private int toFibuLedger() {
+        if ( !getAdditionalCustomerIds().containsKey(ExternalSystem.SAGE_FIBU_DEBITOR_LEDGER) ) return 0;
+        String value = getAdditionalCustomerIds().get(ExternalSystem.SAGE_FIBU_DEBITOR_LEDGER);
+        try {
+            return Integer.valueOf(value);
+        } catch (NumberFormatException e) {
+            LoggerFactory.getLogger(UiCustomer.class).warn("Customer(id={}, {}={} is not numeric", id, ExternalSystem.SAGE_FIBU_DEBITOR_LEDGER, value);
+            return 0;
+        }
     }
 
     @Override

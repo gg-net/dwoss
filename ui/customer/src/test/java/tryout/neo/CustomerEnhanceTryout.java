@@ -78,7 +78,7 @@ public class CustomerEnhanceTryout {
             customer.setKeyAccounter("Herr Meier");
             customer.getFlags().add(CustomerFlag.ITC_CUSTOMER);
             customer.getFlags().add(CustomerFlag.CS_UPDATE_CANDIDATE);
-            customer.getAdditionalCustomerIds().put(ExternalSystem.SAGE, "testsage");
+            customer.getAdditionalCustomerIds().put(ExternalSystem.SAGE_FIBU_DEBITOR_LEDGER, "testsage");
 
             if ( customer.getViolationMessage() != null ) {
                 Ui.exec(() -> {
@@ -111,7 +111,7 @@ public class CustomerEnhanceTryout {
             customer.setSource(Source.ONEADO);
             customer.getFlags().add(CustomerFlag.ITC_CUSTOMER);
             customer.getFlags().add(CustomerFlag.CS_UPDATE_CANDIDATE);
-            customer.getAdditionalCustomerIds().put(ExternalSystem.SAGE, "testsage");
+            customer.getAdditionalCustomerIds().put(ExternalSystem.SAGE_FIBU_DEBITOR_LEDGER, "testsage");
 
             if ( customer.getViolationMessage() != null ) {
                 Ui.exec(() -> {

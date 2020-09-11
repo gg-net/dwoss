@@ -76,7 +76,7 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
     }
 
     @Test
-    public void testSearchWithCustomerFields() throws Exception {
+    public void searchWithFieldFirstName() throws Exception {
 
         utx.begin();
         em.joinTransaction();
@@ -92,6 +92,26 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
         customerFields.add(SearchField.FIRSTNAME);
 
         assertThat(agent.search(firstName, customerFields, 0, 50).size()).as("can not find the City of Customer").isEqualTo(1);
+    }
+
+    @Test
+    public void searchWithFieldKid() throws Exception {
+
+        utx.begin();
+        em.joinTransaction();
+        Customer customer = CustomerGenerator.makeSimpleConsumerCustomer();
+
+        em.persist(customer);
+        em.flush();
+        long id = customer.getId();
+        utx.commit();
+
+        assertThat(eao.findAll().size()).as("found more than one Customer").isEqualTo(1);
+
+        Set<SearchField> customerFields = new HashSet<>();
+        customerFields.add(SearchField.ID);
+
+        assertThat(agent.search(Long.toString(id), customerFields, 0, 50).size()).as("can not find the Customer with id " + id).isEqualTo(1);
     }
 
     @Test

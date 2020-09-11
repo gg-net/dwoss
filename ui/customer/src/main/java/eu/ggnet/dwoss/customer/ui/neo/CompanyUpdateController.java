@@ -19,7 +19,6 @@ package eu.ggnet.dwoss.customer.ui.neo;
 import java.net.URL;
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javafx.application.Platform;
@@ -32,7 +31,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.util.converter.IntegerStringConverter;
 
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.*;
@@ -56,9 +54,6 @@ public class CompanyUpdateController implements Initializable, FxController, Con
 
     @FXML
     private TextField taxIdTextField;
-
-    @FXML
-    private TextField ledgerTextField;
 
     @FXML
     private ListView<Contact> contactListView;
@@ -374,7 +369,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
 
                         //add full name
                         text.append(item.toFullName());
-                        
+
                         //add communication types to the line
                         if ( !item.getCommunications().isEmpty() ) {
                             text.append(" | ");
@@ -387,24 +382,11 @@ public class CompanyUpdateController implements Initializable, FxController, Con
             return cell;
         });
 
-        // force the ledger field to be numeric only, becuase the ledger get saved as an int
-        ledgerTextField.textFormatterProperty().set(
-                new TextFormatter<>(new IntegerStringConverter(), 0,
-                        change -> {
-                            String newText = change.getControlNewText();
-                            if ( Pattern.compile("-?((\\d*))").matcher(newText).matches() ) {
-                                return change;
-                            } else {
-                                return null;
-                            }
-                        })
-        );
-
     }
 
     @Override
     public void accept(Company company) {
-        setCompany(Objects.requireNonNull(company,"company must not be null"));
+        setCompany(Objects.requireNonNull(company, "company must not be null"));
     }
 
     @Override
@@ -422,7 +404,6 @@ public class CompanyUpdateController implements Initializable, FxController, Con
         this.company = comp;
         companyNameTextField.setText(comp.getName());
         taxIdTextField.setText(comp.getTaxId());
-        ledgerTextField.setText(comp.getLedger() + "");
 
         addressList.setAll(comp.getAddresses());
         communicationsList.setAll(comp.getCommunications());
@@ -437,7 +418,6 @@ public class CompanyUpdateController implements Initializable, FxController, Con
 
         company.setName(companyNameTextField.getText());
         company.setTaxId(taxIdTextField.getText());
-        company.setLedger(Integer.parseInt(ledgerTextField.getText()));
 
     }
 

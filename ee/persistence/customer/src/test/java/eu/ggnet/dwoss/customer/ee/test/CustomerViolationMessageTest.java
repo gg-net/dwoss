@@ -16,14 +16,12 @@
  */
 package eu.ggnet.dwoss.customer.ee.test;
 
-import eu.ggnet.dwoss.core.common.values.AddressType;
-
 import org.junit.Test;
 
+import eu.ggnet.dwoss.core.common.values.AddressType;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.*;
-import eu.ggnet.dwoss.customer.ee.entity.AddressLabel;
 
 import static eu.ggnet.dwoss.customer.ee.make.StaticCustomerMaker.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,7 +41,7 @@ public class CustomerViolationMessageTest {
         businessCustomer = makeValidBusinessCustomer();
         businessCustomer.getContacts().add(makeValidContact());
         assertThat(businessCustomer.getViolationMessage()).as("BusinessCustomer with a Contact is invalid").isNotNull();
-        
+
         businessCustomer = makeValidBusinessCustomer();
         businessCustomer.getAddressLabels().clear();
         assertThat(businessCustomer.getViolationMessage()).as("BusinessCustomer without AddressLabels is invalid").isNotNull();
@@ -65,7 +63,7 @@ public class CustomerViolationMessageTest {
         assertThat(businessCustomer.getViolationMessage()).as("BusinessCustomer with invalid Communication is invalid").isNotNull();
 
         businessCustomer = makeValidBusinessCustomer();
-        Company invalidCompany = new Company("", 0, "3486");
+        Company invalidCompany = new Company("", "3486");
         assertThat(invalidCompany.getViolationMessage()).as("Invalid Company is invalid").isNotNull();
         businessCustomer.getCompanies().add(invalidCompany);
         assertThat(businessCustomer.getViolationMessage()).as("BusinessCustomer with invalid Company is invalid").isNotNull();

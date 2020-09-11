@@ -43,7 +43,7 @@ public class UiCustomer implements Serializable {
     public final String email;
 
     /**
-     * Ledger of the FiBu, if 0 not used.
+     * Customer.additionalCustomerIds(SAGE_FIBU_DEBITOR_LEDGER), 0 if not used.
      */
     public int ledger;
 

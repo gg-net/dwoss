@@ -30,11 +30,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.common.values.CustomerFlag;
+import eu.ggnet.dwoss.core.system.persistence.AbstractEao;
 import eu.ggnet.dwoss.customer.ee.assist.Customers;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
-import eu.ggnet.dwoss.core.system.persistence.AbstractEao;
 
 import com.querydsl.core.NonUniqueResultException;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -217,33 +217,7 @@ public class CustomerEao extends AbstractEao<Customer> {
      * @return the result of the search
      */
     public List<Customer> find(String search, Set<SearchField> searchField) {
-        if ( StringUtils.isBlank(search) ) {
-            return new ArrayList<>();
-        }
-        //fill the searchField
-        if ( searchField == null || searchField.isEmpty() ) {
-            searchField = new HashSet<>(Arrays.asList(SearchField.values()));
-        }
-        search = search.trim();
-        List<Customer> result = new ArrayList<>();
-
-        findCustomerIfSearchIsId(search).ifPresent(e -> result.add(e));
-
-        result.addAll(buildSearchQuery(search, searchField).getResultList());
-
-        return result;
-    }
-
-    private void findOneCustomer(String search, List<Customer> result) {
-        try {
-            Long kid = Long.valueOf(search);
-            Customer find = em.find(Customer.class, kid);
-            if ( find != null ) {
-                result.add(find);
-            }
-        } catch (NumberFormatException numberFormatException) {
-            // If not a number, ignore.
-        }
+        return find(search, searchField, 0, -1);
     }
 
     /**
@@ -252,7 +226,7 @@ public class CustomerEao extends AbstractEao<Customer> {
      *
      * @param start       the starting result
      * @param searchField pre filter
-     * @param limit       the ending result
+     * @param limit       the ending result, if zero or negative, no limit is expected.
      * @param search      the search parameter
      * @return the result of the search
      */
@@ -271,13 +245,16 @@ public class CustomerEao extends AbstractEao<Customer> {
         if ( start == 0 ) {
             findCustomerIfSearchIsId(search).ifPresent(e -> result.add(e));
         }
-        List resultList = buildSearchQuery(search, searchField)
-                .setFirstResult(start)
-                .setMaxResults(limit)
-                .getResultList();
 
+        // If only the id is given, no lucene search is needed.
+        if ( searchField.equals(EnumSet.of(SearchField.ID)) ) return result;
+
+        FullTextQuery query = buildSearchQuery(search, searchField);
+        if ( start >= 0 && limit > 0 ) {
+            query = query.setFirstResult(start).setMaxResults(limit);
+        }
+        List resultList = query.getResultList();
         result.addAll(resultList);
-
         return result;
     }
 
@@ -293,6 +270,11 @@ public class CustomerEao extends AbstractEao<Customer> {
         search = search.trim();
         //fill the searchField if it does not contain any fields
         if ( searchField == null || searchField.isEmpty() ) searchField = new HashSet<>(Arrays.asList(SearchField.values()));
+
+        // Shortcut if only the kid is searched.
+        if ( searchField.equals(EnumSet.of(SearchField.ID)) ) {
+            return findCustomerIfSearchIsId(search).isPresent() ? 1 : 0;
+        }
 
         return buildSearchQuery(search, searchField).getResultSize();
     }
@@ -385,6 +367,7 @@ public class CustomerEao extends AbstractEao<Customer> {
 
             query = onField.matching(search.toLowerCase()).createQuery();
         }
+        L.debug("buildSearchQuery(search={},searchFields={}) query={}", search, searchField, query);
         return ftem.createFullTextQuery(query, Customer.class);
     }
 
