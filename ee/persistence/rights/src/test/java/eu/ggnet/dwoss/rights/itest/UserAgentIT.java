@@ -50,13 +50,13 @@ public class UserAgentIT extends ArquillianProjectArchive {
     private final static String NAME = "Test User";
 
     private final static String UPDATED_NAME = "User Test";
-    
-    private static final byte[] PASSWORD = {1,0,1,0};
-    
-    private static final byte[] UPDATED_PASSWORD = {0,1,0,1};
-    
+
+    private static final byte[] PASSWORD = {1, 0, 1, 0};
+
+    private static final byte[] UPDATED_PASSWORD = {0, 1, 0, 1};
+
     private static final int QUICK_LOGIN_KEY = 0;
-    
+
     private static final int UPDATED_QUICK_LOGIN_KEY = 1;
 
     private final static AtomicRight R = AtomicRight.CHANGE_TAX;
@@ -94,5 +94,19 @@ public class UserAgentIT extends ArquillianProjectArchive {
         assertThat(agent.count(Operator.class)).as("One existing User").isEqualTo(1);
         Operator found = agent.findByName(NAME);
         assertThat(found).as("User exists").isNotNull();
+    }
+
+    @Test
+    public void testUpdateUsername() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        Operator user = new Operator(NAME);
+        em.persist(user);
+        utx.commit();
+
+        agent.updateUsername(user.getId(), UPDATED_NAME);
+
+        Operator found = agent.findByName(UPDATED_NAME);
+        assertThat(found).as("User exists with new username").isNotNull();
     }
 }

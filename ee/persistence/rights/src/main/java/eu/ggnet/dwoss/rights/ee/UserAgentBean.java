@@ -59,11 +59,20 @@ public class UserAgentBean extends AbstractAgentBean implements UserAgent {
         em.persist(new Operator(username));
     }
 
+    @AutoLogger
     @Override
-    public void updateUsername(long userId, String username) throws EntityNotFoundException, NullPointerException, IllegalArgumentException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void updateUsername(long userId, String username) throws IllegalArgumentException, NullPointerException {
+        Operator user = em.find(Operator.class, userId);
+        if(user == null){
+            throw new IllegalArgumentException("No User found with userId = + " + userId + ".");
+        }
+        Objects.requireNonNull(username, "Submitted username is null.");
+        if(username.isBlank()){
+            throw new IllegalArgumentException("Submitted username is blank.");
+        }
+        user.setUsername(username);
     }
-
+    
     @Override
     public void updatePassword(long userId, byte[] password) throws EntityNotFoundException, NullPointerException, IllegalArgumentException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
