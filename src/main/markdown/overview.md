@@ -136,8 +136,8 @@ There are three modes of dependence between modules.
 2. _Required_: A module "A" requires a module "B" if it declares the public api or spi of "B" as a dependency (in the maven pom.xml) and will
    fail at runtime if no implementation is available. (TODO: How to test this via unittesting)
 
-3. _Bound_ (do not use anymore): A module "A" binds a module "B" if it violates the rules of component dependencies such as "A" depends and
-    uses classes defined in "B".ee. This is forbidden in future implementations and is only described as there are still such dependencies in place.
+3. _Bound_ (do not use anymore): A module is declared as bound if it violates the rules of component dependencies such as module "A" depends and
+    uses classes defined in module "B".ee. This is forbidden in future implementations and is only described as there are still such dependencies in place.
     Also all the mandator implementations violate this restriction.
 
 The Core Components
@@ -160,6 +160,13 @@ GroupId: eu.ggnet.dwoss
 ArtifactId: dwoss-xreactor-"group"
 
 Most of the projects are grouped by the their component "layer" (e.g.: dwoss-xreactor-api)
+
+X-Reactor Component Submodules and Projects
+-------------------------------------------
+
+RedTape - creation of documents, e.g. dossiers, reports
+Mandator - master data of the operating business
+Mandator-Sample - sample master data, used for tryout cases
 
 Typical Packages, Classes and Methods with their Nature
 -------------------------------------------------------
@@ -264,6 +271,8 @@ Things we know but haven't written down yet.
  - Wildfly Remote needs ApplicationRealm User https://www.schoenberg-solutions.de/roller/arndtsBlog/entry/remote-zugriff-wildfly-10-teil4
  - persistence.xml -> <property name="hibernate.id.new_generator_mappings" value="false" /> , since 5.x hibernate uses other default key generator.
    This returns to old behavior
+
+
 
 
 

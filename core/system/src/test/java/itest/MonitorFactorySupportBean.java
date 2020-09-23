@@ -16,13 +16,13 @@
  */
 package itest;
 
-import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
-import eu.ggnet.dwoss.core.system.progress.SubMonitor;
-
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import org.slf4j.LoggerFactory;
+
+import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
+import eu.ggnet.dwoss.core.system.progress.SubMonitor;
 
 /**
  *

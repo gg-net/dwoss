@@ -16,50 +16,53 @@
  */
 package eu.ggnet.dwoss.core.system.progress;
 
-
 import org.slf4j.Logger;
 
+/**
+ * Client-sided object to allow progress monitoring.
+ * 
+ * @see IMonitor
+ * @see HiddenMonitor
+ * @see MonitorFactory
+ *
+ * @author oliver.guenther
+ */
 public final class SubMonitor implements IMonitor {
 
     /**
-     * <p>
-     * Converts an unknown (possibly null) IProgressMonitor into a SubMonitor. It is
-     * not necessary to call done() on the result, but the caller is responsible for calling
-     * done() on the argument. Calls beginTask on the argument.</p>
-     *
-     * <p>
+     * Converts an unknown (possibly null) {@link IMonitor} into a {@link SubMonitor}. It is
+     * not necessary to call {@link #finish()} on the result, but the caller is responsible for calling
+     * finish() on the argument. Calls {@link #start()} on the argument.
+     * <p/>
      * This method should generally be called at the beginning of a method that accepts
-     * an IProgressMonitor in order to convert the IProgressMonitor into a SubMonitor.</p>
+     * an IMonitor in order to convert the IProgressMonitor into a SubMonitor.
      *
-     * @param monitor monitor to convert to a SubMonitor instance or null. Treats null
-     *                as a new instance of <code>NullProgressMonitor</code>.
-     * @return a SubMonitor instance that adapts the argument
+     * @param monitor IMonitor to convert into a SubMonitor instance. Treats null
+     *                as a new instance of {@link NullMonitor}
+     * @return SubMonitor - a SubMonitor instance that adapts the argument
      */
     public static SubMonitor convert(IMonitor monitor) {
         if ( monitor == null ) {
             monitor = new NullMonitor();
-        }
-        if ( monitor instanceof SubMonitor ) {
+        } else if ( monitor instanceof SubMonitor ) {
             return (SubMonitor)monitor;
         }
         return new SubMonitor(monitor);
     }
 
     /**
-     * <p>
-     * Converts an unknown (possibly null) IProgressMonitor into a SubMonitor allocated
-     * with the given number of ticks. It is not necessary to call done() on the result,
-     * but the caller is responsible for calling done() on the argument. Calls beginTask
-     * on the argument.</p>
-     *
-     * <p>
+     * Converts an unknown (possibly null) [{@link IMonitor} into a {@link SubMonitor} allocated
+     * with the given number of ticks. It is not necessary to call {@link #finish()} on the result,
+     * but the caller is responsible for calling finish() on the argument. Calls {@link #start()}
+     * on the argument.
+     * <p/>
      * This method should generally be called at the beginning of a method that accepts
-     * an IProgressMonitor in order to convert the IProgressMonitor into a SubMonitor.</p>
+     * an IProgressMonitor in order to convert the IProgressMonitor into a SubMonitor.
      *
-     * @param monitor       monitor to convert to a SubMonitor instance or null. Treats null
-     *                      as a new instance of <code>NullProgressMonitor</code>.
+     * @param monitor       IMonitor to convert into a SubMonitor instance. Treats null
+     *                      as a new instance of {@link NullMonitor}
      * @param workRemaining number of ticks that will be available in the resulting monitor
-     * @return a SubMonitor instance that adapts the argument
+     * @return SubMonitor - a SubMonitor instance that adapts the argument
      */
     public static SubMonitor convert(IMonitor monitor, int workRemaining) {
         SubMonitor result = convert(monitor);
@@ -68,21 +71,19 @@ public final class SubMonitor implements IMonitor {
     }
 
     /**
-     * <p>
-     * Converts an unknown (possibly null) IProgressMonitor into a SubMonitor allocated
+     * Converts an unknown (possibly null) {@link IMonitor} into a {@link SubMonitor} allocated
      * with the given number of ticks. It is not necessary to call done() on the result,
      * but the caller is responsible for calling done() on the argument. Calls beginTask
-     * on the argument.</p>
-     *
-     * <p>
+     * on the argument.
+     * <p/>
      * This method should generally be called at the beginning of a method that accepts
-     * an IProgressMonitor in order to convert the IProgressMonitor into a SubMonitor.</p>
+     * an IMonitor in order to convert the IMonitor into a SubMonitor.
      *
-     * @param monitor to convert into a SubMonitor instance or null. If given a null argument,
-     *                the resulting SubMonitor will not report its progress anywhere.
-     * @param title   user readable name to pass to monitor.beginTask. Never null.
-     * @param work    calls {@link SubMonitor#setWorkRemaining(int) }
-     * @return a new SubMonitor instance that is a child of the given monitor
+     * @param monitor IMonitor to convert into a SubMonitor instance. Treats null
+     *                as a new instance of {@link NullMonitor}
+     * @param title   user readable name, ever null
+     * @param work    sets remaining work of the monitor
+     * @return SubMonitor - a new SubMonitor instance that adapts the argument
      */
     public static SubMonitor convert(IMonitor monitor, String title, int work) {
         SubMonitor result = convert(monitor, work);
@@ -146,20 +147,18 @@ public final class SubMonitor implements IMonitor {
     }
 
     /**
-     * <p>
      * Sets the work remaining for this SubMonitor instance. This is the total number
      * of ticks that may be reported by all subsequent calls to message(int), newChild(int), etc.
      * This may be called many times for the same SubMonitor instance. When this method
      * is called, the remaining space on the progress monitor is redistributed into the given
-     * number of ticks.</p>
-     *
-     * <p>
+     * number of ticks.
+     * <p/>
      * It doesn't matter how much progress has already been reported with this SubMonitor
      * instance. If you call setWorkRemaining(100), you will be able to report 100 more ticks of
-     * work before the progress meter reaches 100%.</p>
+     * work before the progress meter reaches 100%.
      *
      * @param workRemaining total number of remaining ticks
-     * @return the receiver
+     * @return IMonitor - the receiver
      */
     public IMonitor setWorkRemaining(int workRemaining) {
         this.workRemaining = workRemaining;
@@ -185,6 +184,12 @@ public final class SubMonitor implements IMonitor {
         return this;
     }
 
+    /**
+     * Creates a new {@link SubMonitor} as child of the calling SubMonitor. This allows to split a the progress of a task between multiple SubMonitors.
+     *
+     * @param work percentage of the overall progress that the child is responsible for
+     * @return SubMonitor - a new SubMonitor as child of the calling SubMonitor
+     */
     public SubMonitor newChild(final int work) {
 
         return SubMonitor.convert(new IMonitor() {

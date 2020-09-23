@@ -26,10 +26,14 @@ import javax.ejb.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
- * A Factory for ProgressMonitors to be used in a EJB environment.
+ * Factory for progress monitors to be used in an EJB environment.
  * <p/>
+ * The factory is also the hub for the entire monitoring implementation as it stores a {@link HiddenMonitor} whenever a {@link SubMonitor}
+ * is created. Progress monitoring is implemented in a pull strategy, where client-sided SubMonitors request data from server-sided HiddenMonitors.
+ *
+ * @see IMonitor
+ *
  * @author oliver.guenther
  */
 @Singleton
@@ -42,21 +46,24 @@ public class MonitorFactory {
     private final Map<Integer, Integer> lastProgress = new ConcurrentHashMap<>();
 
     /**
-     * Creates a new intermediate Submonitor.
-     * <p>
-     * @param title
-     * @return a new Submonitor.
+     * Creates a new intermediate SubMonitor with the submitted title and a remainig work of 100.
+     *
+     * @param title title/description for the SubMonitor
+     * @return SubMonitor - a new Submonitor
+     * @see #newSubMonitor(java.lang.String, int) 
      */
     public SubMonitor newSubMonitor(String title) {
         return newSubMonitor(title, 100);
     }
 
     /**
-     * Creates a new Submonitor, with initial work remaing.
-     * <p>
-     * @param title
-     * @param workRemaining
-     * @return a new Submonitor.
+     * Creates and stores a new {@link HiddenMonitor} with the submitted title.
+     * <p/>
+     * Wraps that monitor in a new {@link SubMonitor} with that title and a remaining work of the submitted int. The SubMonitor is then returned.
+     *
+     * @param title         title for the monitor
+     * @param workRemaining percentage of the overall task, that this SubMonitor is responsible for
+     * @return SubMonitor -  a new Submonitor
      */
     public SubMonitor newSubMonitor(String title, int workRemaining) {
         L.debug("creating Submonitor {}", title);
@@ -68,8 +75,8 @@ public class MonitorFactory {
 
     /**
      * Returns true if some task/operation with progress is running and not yet finished.
-     * <p/>
-     * @return true if some task/operation with progress is running and not yet finished.
+     *
+     * @return boolean - true, if some task/operation with progress is running and not yet finished
      */
     public boolean hasProgress() {
         for (HiddenMonitor m : monitors.values()) {
@@ -79,9 +86,9 @@ public class MonitorFactory {
     }
 
     /**
-     * Returns the keys for all hidden monitors which are not yet finished.
-     * <p/>
-     * @return the keys for all hidden monitors which are not yet finished.
+     * Returns the keys for all {@link HiddenMonitor}<code>s</code> which are not yet finished.
+     *
+     * @return SortedSet&lt;Integer&gt; - the keys for all HiddenMonitors which are not yet finished
      */
     public SortedSet<Integer> getActiveProgressKeys() {
         SortedSet<Integer> result = new TreeSet<>();
@@ -92,16 +99,19 @@ public class MonitorFactory {
     }
 
     /**
-     * Returns a snapshot of the selected Monitor.
-     * <p/>
-     * @param key the key
-     * @return a snapshot of the selected Monitor.
+     * Returns a snapshot of the selected {@link HiddenMonitor}.
+     *
+     * @param key key of the monitor
+     * @return HiddenMonitor - a snapshot of the selected monitor
      */
     public HiddenMonitor getMonitor(int key) {
         return monitors.get(key);
     }
 
-    @Schedule(second = "0", minute = "*/5", hour = "*", dayOfMonth = "*", month = "*", year = "*", info = "Cleanup of Montiors", persistent = false)
+    /**
+     * Cleans the set of {@link HiddenMonitor}<code>s</code> at the factory by removing finished and stale monitors.
+     */
+    @Schedule(second = "0", minute = "*/5", hour = "*", dayOfMonth = "*", month = "*", year = "*", info = "Cleanup of Monitors", persistent = false)
     private void cleanUp() {
         L.debug("cleanUp called by Timer @ {}", new Date());
         for (Integer key : new HashSet<>(monitors.keySet())) {

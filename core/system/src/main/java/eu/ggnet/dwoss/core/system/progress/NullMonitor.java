@@ -16,49 +16,92 @@
  */
 package eu.ggnet.dwoss.core.system.progress;
 
-
 import javax.enterprise.inject.Alternative;
 
 /**
+ * Implementation of {@link IMonitor} to prevent null pointers.
+ * <p/>
+ * Overriden methods implement no further actions and only allow usage of an "empty" monitor for testing purposes.
+ *
+ * @see SubMonitor#convert(IMonitor)
  *
  * @author oliver.guenther
  */
 @Alternative
 public class NullMonitor implements IMonitor {
 
+    /**
+     * Returns this {@link NullMonitor}.
+     *
+     * @return IMonitor - this object
+     */
     @Override
     public IMonitor start() {
         return this;
     }
 
+    /**
+     * Returns this {@link NullMonitor}.
+     *
+     * @return IMonitor - this object
+     */
     @Override
     public IMonitor finish() {
         return this;
     }
 
+    /**
+     * Returns this {@link NullMonitor}.
+     *
+     * @return IMonitor - this object
+     */
     @Override
     public IMonitor title(String name) {
         return this;
     }
 
+    /**
+     * Returns this {@link NullMonitor}.
+     *
+     * @return IMonitor - this object
+     */
     @Override
     public IMonitor worked(int workunits) {
         return this;
     }
 
+    /**
+     * Returns this {@link NullMonitor}.
+     *
+     * @return IMonitor - this object
+     */
     @Override
     public IMonitor message(String subMessage) {
         return this;
     }
 
+    /**
+     * Returns this {@link NullMonitor}.
+     *
+     * @return IMonitor - this object
+     */
     @Override
     public IMonitor worked(int workunits, String subMessage) {
         return this;
     }
 
+    /**
+     * Returns 0 (zero).
+     * 
+     * @return int - 0 (zero)
+     */
     @Override
     public int getAbsolutRemainingTicks() {
         return 0;
     }
 
 }
+
+
+
+

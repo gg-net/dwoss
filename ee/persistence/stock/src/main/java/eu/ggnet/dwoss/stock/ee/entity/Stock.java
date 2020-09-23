@@ -29,8 +29,8 @@ import eu.ggnet.dwoss.stock.api.PicoStock;
 import static eu.ggnet.dwoss.core.common.values.SalesChannel.UNKNOWN;
 
 /**
- * Represents a physical stock.
- * <p>
+ * Represents a physical stock, i.e. a location that is used as a stock.
+ *
  * @has n - 1 Stock.ID
  */
 @Entity
@@ -158,7 +158,7 @@ public class Stock implements Serializable {
         hash = 41 * hash + this.id;
         return hash;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if ( this == obj ) return true;
@@ -174,5 +174,6 @@ public class Stock implements Serializable {
     public String toString() {
         return "Stock{" + "id=" + id + ", optLock=" + optLock + ", name=" + name + ", primaryChannel=" + primaryChannel + '}';
     }
-    
+
 }
+

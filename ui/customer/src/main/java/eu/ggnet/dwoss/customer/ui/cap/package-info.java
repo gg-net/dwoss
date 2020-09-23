@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * Default package for Actionfactorys, menu actions, Ui, that are wrapped in the main window.
+ * Default package for ActionFactorys and actions that are fired by UI compoments that are wrapped in the main window, e.g. menus or buttons.
  */
 package eu.ggnet.dwoss.customer.ui.cap;
+

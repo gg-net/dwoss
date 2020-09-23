@@ -15,6 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * Menu and actions of stock ui.
+ * Default package for ActionFactorys and actions that are fired by UI compoments that are wrapped in the main window, e.g. menus or buttons.
  */
 package eu.ggnet.dwoss.stock.ui.cap;
+
+

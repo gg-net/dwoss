@@ -17,65 +17,70 @@
 package eu.ggnet.dwoss.core.system.progress;
 
 /**
- * Wrapper for progross with a minimal api
- * Documentation may follow if in heavy usage
+ * Interface to monitor the progress of running tasks at a client system.
+ *
+ * @see SubMonitor
+ * @see HiddenMonitor
+ * @see NullMonitor
+ * @see MonitorFactory
+ *
  *
  * @author oliver.guenther
  */
 public interface IMonitor {
 
     /**
-     * Starts the process of monitor.
-     * <p>
-     * @return itself.
+     * Starts the process of the monitor and returns itself.
+     *
+     * @return IMonitor - the monitor itself
      */
     IMonitor start();
 
     /**
-     * Name of monitor.
-     * <p/>
-     * @param name
-     * @return itself.
+     * Gives a name/description to the monitor and returns itself.
+     *
+     * @param name title for the monitor
+     * @return IMonitor - the monitor itself
      */
     IMonitor title(String name);
 
     /**
-     * Amount of tasks, which are done.
-     * <p/>
-     * @param workunits
-     * @return itself.
+     * Sets the amount of tasks, which are done and returns itself afterwards.
+     *
+     * @param workunits amount of tasks to work
+     * @return IMonitor - the monitor itself
      */
     IMonitor worked(int workunits);
 
     /**
-     * Name of tasks, which are done.
-     * <p/>
-     * @param subMessage
-     * @return itself.
+     * Sets the naame of tasks, which are done and returns itself afterwards.
+     *
+     * @param subMessage name of tasks to work
+     * @return IMonitor - the monitor itself
      */
     IMonitor message(String subMessage);
 
     /**
-     * Amount and name of the tasks, which are done.
-     * <p/>
-     * @param workunits
-     * @param subMessage
-     * @return itself.
+     * Sets the amount and name of the tasks, which are done and returns itself afterwards.
+     *
+     * @param workunits  amount of tasks to work
+     * @param subMessage name of tasks to work
+     * @return IMonitor - the monitor itself
      */
     IMonitor worked(int workunits, String subMessage);
 
     /**
-     * Monitor at end.
-     * <p>
-     * @return itself.
+     * Stops the process of the monitor and returns itself.
+     *
+     * @return IMonitor - the monitor itself
      */
     IMonitor finish();
 
     /**
      * Returns the remaining ticks for internal work. This method must return an absolut or relative value of how many ticks are avaiable.
-     * It must be ensured, that these ticks are only becoming less, not more. (Or the resultig presentation will be useless)
+     * It must be ensured, that these ticks are only becoming less, not more (or the resulting presentation will be useless).
      *
-     * @return the remaining ticks for internal work
+     * @return int - the remaining ticks for internal work
      */
     int getAbsolutRemainingTicks();
 }

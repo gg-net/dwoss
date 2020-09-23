@@ -19,6 +19,11 @@ package eu.ggnet.dwoss.core.system.progress;
 import java.io.Serializable;
 
 /**
+ * Server-sided object to allow progress monitoring.
+ *
+ * @see IMonitor
+ * @see SubMonitor
+ * @see MonitorFactory
  *
  * @author oliver.guenther
  */
@@ -49,9 +54,9 @@ public class HiddenMonitor implements IMonitor, Serializable {
     }
 
     /**
-     * Returns true if this monitor has not changed the last 5 min.
-     * <p/>
-     * @return true if this monitor has not changed the last 5 min.
+     * Checks if this monitor has changed in the last 5 minutes and returns true if no change is detected.
+     *
+     * @return boolean - true, if this monitor has not changed during the last 5 minutes
      */
     public boolean isStale() {
         return (System.currentTimeMillis() - lastChange > (1000 * 60 * 5));

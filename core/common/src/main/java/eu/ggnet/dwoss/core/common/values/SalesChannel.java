@@ -17,7 +17,9 @@
 package eu.ggnet.dwoss.core.common.values;
 
 /**
- * Represents a sales channel
+ * Represents a sales channel.
+ * <p>
+ * Products are assigned to one specific sales channel and customers can only buy products from a sales channel when they are granted access to that channel.
  */
 public enum SalesChannel {
 
@@ -46,3 +48,6 @@ public enum SalesChannel {
     }
 
 }
+
+
+

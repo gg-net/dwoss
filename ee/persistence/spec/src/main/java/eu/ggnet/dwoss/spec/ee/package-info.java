@@ -16,6 +16,8 @@
  *
  */
 /**
- * ProductSpecification.
+ * Contains classes to provide detailed informations about product specifications.
  */
 package eu.ggnet.dwoss.spec.ee;
+
+
