@@ -25,8 +25,6 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.ee.GroupAgent;
@@ -36,14 +34,8 @@ import eu.ggnet.dwoss.rights.itest.support.ArquillianProjectArchive;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- *
- * @author mirko.schulze
- */
 @RunWith(Arquillian.class)
 public class GroupAgentIT extends ArquillianProjectArchive {
-
-    private final static Logger L = LoggerFactory.getLogger(GroupAgentIT.class);
 
     @Inject
     @Rights
@@ -130,16 +122,13 @@ public class GroupAgentIT extends ArquillianProjectArchive {
         utx.begin();
         em.joinTransaction();
         Persona group = new Persona(NAME);
-        L.info("1: size of Groups rights = {}", group.getPersonaRights().size());
         group.add(R);
-        L.info("2: size of Groups rights = {}", group.getPersonaRights().size());
         em.persist(group);
         utx.commit();
 
         agent.removeRight(group.getId(), R);
 
         Persona found = agent.findByName(NAME);
-        L.info("3: size of Groups rights = {}", found.getPersonaRights().size());
         assertThat(found).as("Group exists").isNotNull();
         assertThat(found.getPersonaRights()).as("Existing Group has no rights").isEmpty();
     }
