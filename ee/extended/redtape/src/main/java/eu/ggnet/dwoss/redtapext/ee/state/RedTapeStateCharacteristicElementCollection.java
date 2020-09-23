@@ -16,21 +16,16 @@
  */
 package eu.ggnet.dwoss.redtapext.ee.state;
 
-import java.util.Collection;
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
+import eu.ggnet.dwoss.core.common.values.*;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Condition;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
-import eu.ggnet.dwoss.core.common.values.DocumentType;
-import eu.ggnet.dwoss.core.common.values.PaymentMethod;
-import eu.ggnet.dwoss.core.common.values.CustomerFlag;
-
 import eu.ggnet.statemachine.StateCharacteristic;
 
 /**
+ * Specified collection for {@link RedTapeStateCharacteristic}.
  *
  * @author oliver.guenther
  */

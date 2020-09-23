@@ -17,9 +17,9 @@
 package eu.ggnet.statemachine;
 
 /**
+ * Interface to improve the readability of the graph from the {@link StateMachine}.
  *
  * @author oliver.guenther
- * @param <T>
  */
 public interface StateFormater<T> {
 
@@ -28,3 +28,5 @@ public interface StateFormater<T> {
     String toToolTipHtml(State<T> state);
 
 }
+
+

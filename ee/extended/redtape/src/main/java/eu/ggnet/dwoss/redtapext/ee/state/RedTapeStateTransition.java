@@ -23,6 +23,7 @@ import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.statemachine.StateTransition;
 
 /**
+ * Secified {@link StateTransition} for RedTape.
  *
  * @author oliver.guenther
  */

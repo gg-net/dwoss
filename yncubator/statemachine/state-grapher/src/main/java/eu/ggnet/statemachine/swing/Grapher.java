@@ -34,31 +34,31 @@ import edu.uci.ics.jung.visualization.renderers.*;
 
 /**
  * Class for displaing Ui Informations.
- * <p/>
+ * 
  * @author oliver.guenther
  */
 public class Grapher {
 
     /**
      * Show an exact subgraph of the suplied states.
-     * <p/>
+     * 
      * @param <T>          type of state machine
      * @param stateMachine the state machine
      * @param states       the states to display
      */
-    public <T> void showExact(final StateMachine<T> stateMachine, State<T>... states) {
+    public static <T> void showExact(final StateMachine<T> stateMachine, State<T>... states) {
         showExact(stateMachine, null, states);
     }
 
     /**
      * Show an exact subgraph of the suplied states.
-     * <p/>
+     * 
      * @param <T>          type of state machine
      * @param stateMachine the state machine
      * @param formater     an optional formater
      * @param states       the states to display
      */
-    public <T> void showExact(final StateMachine<T> stateMachine, final StateFormater<T> formater, State<T>... states) {
+    public static <T> void showExact(final StateMachine<T> stateMachine, final StateFormater<T> formater, State<T>... states) {
         StateMachine small = new StateMachine(stateMachine);
         Set<State<T>> subStates = new HashSet<>(Arrays.asList(states));
         for (Link<T> link : stateMachine.getLinks()) {
@@ -71,24 +71,24 @@ public class Grapher {
 
     /**
      * Show a greedy subgraph of the suplied states.
-     * <p/>
+     * 
      * @param <T>          type of state machine
      * @param stateMachine the state machine
      * @param states       the states and all directly connected to display
      */
-    public <T> void showGreedy(final StateMachine<T> stateMachine, State<T>... states) {
+    public static <T> void showGreedy(final StateMachine<T> stateMachine, State<T>... states) {
         showGreedy(stateMachine, null, states);
     }
 
     /**
      * Show a greedy subgraph of the suplied states.
-     * <p/>
+     * 
      * @param <T>          type of state machine
      * @param stateMachine the state machine
      * @param formater     an optional formater
      * @param states       the states and all directly connected to display
      */
-    public <T> void showGreedy(final StateMachine<T> stateMachine, final StateFormater<T> formater, State<T>... states) {
+    public static <T> void showGreedy(final StateMachine<T> stateMachine, final StateFormater<T> formater, State<T>... states) {
         StateMachine small = new StateMachine(stateMachine);
         Set<State<T>> subStates = new HashSet<>(Arrays.asList(states));
         for (Link<T> link : stateMachine.getLinks()) {
@@ -101,7 +101,7 @@ public class Grapher {
 
     /**
      * Show the full StateMachine with a special formater.
-     * <p/>
+     * 
      * @param <T>          type of state machine
      * @param stateMachine the statemachine to show
      */
@@ -111,7 +111,7 @@ public class Grapher {
 
     /**
      * Show the full StateMachine with a special formater.
-     * <p/>
+     * 
      * @param <T>          type of state machine
      * @param stateMachine the statemachine to show
      * @param formater     an optional formater
@@ -177,3 +177,5 @@ public class Grapher {
         frame.setVisible(true);
     }
 }
+
+

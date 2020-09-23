@@ -17,7 +17,7 @@
 package eu.ggnet.statemachine;
 
 /**
- * A Factory for the {@link StateMachine} to create {@link StateCharacteristic} from an original Object.
+ * A factory for the {@link StateMachine} to create {@link StateCharacteristic}<code>s</code> from original Objects.
  *
  * @author oliver.guenther
  */
@@ -32,3 +32,4 @@ public interface StateCharacteristicFactory<T> {
      */
     StateCharacteristic<T> characterize(T t);
 }
+

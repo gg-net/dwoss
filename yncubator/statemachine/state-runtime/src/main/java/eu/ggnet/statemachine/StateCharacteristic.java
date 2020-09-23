@@ -19,8 +19,8 @@ package eu.ggnet.statemachine;
 import java.io.Serializable;
 
 /**
- * A Tagginginterface for StateCharacteristic, the {@link StateMachine} uses equals and hashCode. The implementation of this Interface is used to represent
- * {@link State}s. A good practice is a Delegate.
+ * A tagging interface for characteristics of {@link State}<code>s</code> for the {@link StateMachine} that uses equals and hashCode.
+ * The implementation of this interface is used to represent {@link State}<code>s</code>. A good practice is a delegate.
  * <p/>
  * Let's assume a class Box:
  * <pre>
@@ -36,8 +36,8 @@ import java.io.Serializable;
  * }
  * </code>
  * </pre>
- * And let's assume, the chracteristics is the property closed and the class uses some other kind of equals and hashCode. (Or the Developer was to lazy
- * to implement)
+ * And let's assume, the chracteristics is the property closed and the class uses some other kind of equals and hashCode
+ * (or the Developer was to lazy to implement).
  * <p/>
  * A Delegate Example:
  * <pre>

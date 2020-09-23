@@ -16,23 +16,20 @@
  */
 package eu.ggnet.dwoss.redtapext.ee.state;
 
-import eu.ggnet.dwoss.core.common.values.CustomerFlag;
-import eu.ggnet.dwoss.core.common.values.ShippingCondition;
-import eu.ggnet.dwoss.core.common.values.PaymentMethod;
-
 import java.io.Serializable;
 import java.util.*;
 
+import eu.ggnet.dwoss.core.common.values.*;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 
 /**
- * Basic input Object for the RedTapeStateCharacteristikFactory, uses some filters.
+ * Basic input Object for the {@link RedTapeStateCharacteristikFactory}, uses some filters.
  * Only the following CustomerFlags are used:
- * <ul>
- * <li>{@link CustomerFlag#CONFIRMS_DOSSIER</li>
+ * <ul><li>{@link CustomerFlag#CONFIRMS_DOSSIER}</li>
  * <li>{@link CustomerFlag#CONFIRMED_CASH_ON_DELIVERY}</li>
- * <li>{@link CustomerFlag#SYSTEM_CUSTOMER</li>
- * <p>
+ * <li>{@link CustomerFlag#SYSTEM_CUSTOMER}</li></ul>
+ * 
+ * 
  * @author oliver.guenther
  */
 // TODO: Freebuilder me please.
@@ -102,3 +99,5 @@ public class CustomerDocument implements Serializable {
         return "CustomerDocument with " + new RedTapeStateCharacteristic(document.getType(), document.getDossier().getPaymentMethod(), document.getConditions(), document.getDirective(), customerFlags, document.getDossier().isDispatch()).toString();
     }
 }
+
+

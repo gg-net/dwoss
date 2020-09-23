@@ -20,10 +20,11 @@ import java.io.Serializable;
 import java.util.*;
 
 /**
- * Represents a State.
- *
- * A State is equal to another State, if all StateCharacteristics are equal.
- * A good practice is to have only on instance of a State.
+ * Represents a state of the state machine.
+ * <p/>
+ * A State is equal to another State, if all {@link StateCharacteristic}<code>s</code> are equal.
+ * <p/>
+ * A good practice is to have only one instance of a State.
  *
  * @author oliver.guenther
  */
@@ -63,6 +64,7 @@ public final class State<T> implements Serializable {
         this.type = type;
     }
 
+    //<editor-fold desc="Getter" defaultstate="collapsed">
     public String getName() {
         return name;
     }
@@ -74,6 +76,7 @@ public final class State<T> implements Serializable {
     public Set<StateCharacteristic<T>> getCharacteristics() {
         return characteristics;
     }
+    //</editor-fold>
 
     @Override
     public int hashCode() {
@@ -102,3 +105,7 @@ public final class State<T> implements Serializable {
         return "State{" + "name=" + name + ", type=" + type + ", characteristics=" + characteristics + '}';
     }
 }
+
+
+
+

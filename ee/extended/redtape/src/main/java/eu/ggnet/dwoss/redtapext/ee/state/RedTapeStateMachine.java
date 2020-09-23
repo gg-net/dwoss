@@ -16,16 +16,18 @@
  */
 package eu.ggnet.dwoss.redtapext.ee.state;
 
-import eu.ggnet.statemachine.StateMachine;
 import eu.ggnet.statemachine.State;
+import eu.ggnet.statemachine.StateMachine;
 
 import static eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateTransitions.*;
 import static eu.ggnet.dwoss.redtapext.ee.state.RedTapeStates.*;
 
 /**
- * The RedTape State Machine.
- * Run this class to see a graph of all possible States and Transitions for RedTape.
+ * The RedTape StateMachine.
  * <p/>
+ * This class contains all possible states a document can be in and all possible transistions.
+ * 
+ * @see StateMachine
  * @author oliver.guenther
  */
 public class RedTapeStateMachine extends StateMachine<CustomerDocument> {
@@ -426,21 +428,4 @@ public class RedTapeStateMachine extends StateMachine<CustomerDocument> {
         super(new RedTapeStateCharacteristicFactory());
     }
 
-    public static void main(String[] args) {
-
-//        Dossier dos = new Dossier();
-//        dos.setDispatch(false);
-//        Document doc = new Document();
-//        doc.setType(Document.Type.ORDER);
-//        dos.setPaymentMethod(PaymentMethod.ADVANCE_PAYMENT);
-//        doc.setDirective(Document.Directive.WAIT_FOR_MONEY);
-//        doc.add(Document.Condition.CREATED);
-//        doc.setDossier(dos);
-//
-//        CustomerDocument cd = new CustomerDocument(new HashSet<>(), doc, ShippingCondition.DEFAULT, PaymentMethod.DIRECT_DEBIT);
-        RedTapeStateMachine om = new RedTapeStateMachine();
-//        Grapher.showExact(om,new RedTapeStateFormater() ,om.IV);
-//
-//        System.out.println(om.getState(cd));
-    }
 }

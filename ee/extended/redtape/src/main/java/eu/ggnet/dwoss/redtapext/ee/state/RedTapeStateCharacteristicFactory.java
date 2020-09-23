@@ -20,6 +20,7 @@ import eu.ggnet.statemachine.StateCharacteristic;
 import eu.ggnet.statemachine.StateCharacteristicFactory;
 
 /**
+ * Specified implementation of the {@link StateCharacteristicFactory} for RedTape.
  *
  * @author oliver.guenther
  */

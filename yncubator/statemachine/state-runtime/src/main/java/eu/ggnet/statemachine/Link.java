@@ -20,7 +20,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * Represents a Link between two States and a Transition.
+ * Represents a link between two {@link State}<code>s</code> and a {@link StateTransition}.
  *
  * @author oliver.guenther
  */
@@ -88,3 +88,4 @@ public class Link<T> implements Serializable {
         return "Link{" + "source=" + source + ", transition=" + transition + ", destination=" + destination + '}';
     }
 }
+

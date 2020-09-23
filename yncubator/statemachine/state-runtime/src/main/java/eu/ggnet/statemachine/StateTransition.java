@@ -21,7 +21,7 @@ import java.util.Objects;
 
 
 /**
- * This is a Transition, which changes an Instance.
+ * Transition from one {@link State} to another, which changes an Instance.
  *
  * @author oliver.guenther
  */

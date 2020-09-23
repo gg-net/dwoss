@@ -16,27 +16,22 @@
  */
 package eu.ggnet.dwoss.redtapext.ee.state;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
+import eu.ggnet.dwoss.core.common.values.*;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Condition;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
 import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateTransition.Hint;
+import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.statemachine.State.Type;
 
-import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.dwoss.core.common.values.DocumentType;
-import eu.ggnet.dwoss.core.common.values.PaymentMethod;
-import eu.ggnet.dwoss.core.common.values.CustomerFlag;
-
-import static java.util.EnumSet.*;
+import static java.util.EnumSet.noneOf;
+import static java.util.EnumSet.of;
 
 /**
- * Transition for RedTape.
- * This list all the possible business options for crossing form stat a to stat b
- * <p>
- * <p>
+ * Transitions for RedTape.
+ * This list all the possible business options for crossing form stat a to stat b.
+ * <p/>
  * Stats can be set or added:
  * Dossier -- Rekord/Akte
  * Directive -- Weisungen

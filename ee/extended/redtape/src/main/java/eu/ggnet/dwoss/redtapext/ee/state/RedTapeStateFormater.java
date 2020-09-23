@@ -16,13 +16,11 @@
  */
 package eu.ggnet.dwoss.redtapext.ee.state;
 
-import eu.ggnet.statemachine.State;
-import eu.ggnet.statemachine.StateCharacteristic;
-import eu.ggnet.statemachine.StateFormater;
+import eu.ggnet.statemachine.*;
 
 /**
  * A Formatter for an aggregated View of all Characteristics of a State.
- * <p/>
+ * 
  * @author oliver.guenther
  */
 public class RedTapeStateFormater implements StateFormater<CustomerDocument> {
