@@ -200,7 +200,7 @@ public class SimpleCustomerViolationMessageTest {
         assertThat(simpleBusinessCustomer.getViolationMessage()).as("Addition of two AddressLabels to a BusinessCustomer always results invalid").isNotNull();
 
         simpleBusinessCustomer = makeValidSimpleBusiness();
-        Company invalidCompany = new Company("", 0, "634855");
+        Company invalidCompany = new Company("", "634855");
         assertThat(invalidCompany.getViolationMessage()).as("Company without a Name is invalid").isNotNull();
         simpleBusinessCustomer.getCompanies().add(invalidCompany);
         assertThat(simpleBusinessCustomer.getViolationMessage()).as("Adding an invalid Company to a SimpleBusinessCustomer results invalid").isNotNull();

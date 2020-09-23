@@ -28,8 +28,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.search.annotations.*;
 
 import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
-import eu.ggnet.dwoss.customer.ee.entity.stash.*;
 import eu.ggnet.dwoss.core.system.persistence.EagerAble;
+import eu.ggnet.dwoss.customer.ee.entity.stash.*;
 
 import static javax.persistence.CascadeType.ALL;
 
@@ -58,11 +58,6 @@ public class Company extends BaseEntity implements Serializable, AddressStash, C
     @NotNull
     @Field
     private String name;
-
-    /**
-     * The finance ledger of this company.
-     */
-    private int ledger;
 
     @Size(max = 255)
     private String taxId;
@@ -103,9 +98,8 @@ public class Company extends BaseEntity implements Serializable, AddressStash, C
         this.id = id;
     }
 
-    public Company(String name, int ledger, String taxId) {
+    public Company(String name, String taxId) {
         this.name = name;
-        this.ledger = ledger;
         this.taxId = taxId;
     }
 
@@ -113,48 +107,40 @@ public class Company extends BaseEntity implements Serializable, AddressStash, C
     public String getName() {
         return name;
     }
-    
+
     public void setName(String name) {
         this.name = name;
     }
-    
-    public int getLedger() {
-        return ledger;
-    }
-    
-    public void setLedger(int ledger) {
-        this.ledger = ledger;
-    }
-    
+
     public String getTaxId() {
         return taxId;
     }
-    
+
     public void setTaxId(String taxId) {
         this.taxId = taxId;
     }
-    
+
     @Override
     public long getId() {
         return id;
     }
-    
+
     @Override
     public List<Contact> getContacts() {
         return contacts;
     }
-    
+
     @Override
     public List<Address> getAddresses() {
         return addresses;
     }
-    
+
     @Override
     public List<Communication> getCommunications() {
         return communications;
-    }    
+    }
     //</editor-fold>
-    
+
     /**
      * Html representation of the class.
      *
@@ -163,11 +149,7 @@ public class Company extends BaseEntity implements Serializable, AddressStash, C
     public String toHtml() {
         StringBuilder sb = new StringBuilder();
         sb.append(name);
-        if ( taxId != null || ledger > 0 ) sb.append("<br />");
-        if ( taxId != null ) sb.append("TaxId: ").append(taxId);
-        if ( taxId != null && ledger > 0 ) sb.append(", ");
-        if ( ledger > 0 ) sb.append("FiBu-Konto: ").append(ledger);
-        if ( taxId != null || ledger > 0 ) sb.append("<br />");
+        if ( taxId != null ) sb.append("<br /> TaxId: <br />").append(taxId);
         if ( !contacts.isEmpty() ) {
             sb.append("Kontakt(e):<ul>");
             for (Contact contact : contacts) {
@@ -212,7 +194,7 @@ public class Company extends BaseEntity implements Serializable, AddressStash, C
             return "One Address: " + addresses.stream().filter(a -> a.getViolationMessage() != null).map(a -> a.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
         if ( contacts.stream().anyMatch(a -> a.getViolationMessage() != null) )
             return "Contacts: " + contacts.stream().filter(a -> a.getViolationMessage() != null).map(a -> a.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
-        if(contacts.stream().flatMap(c -> c.getAddresses().stream()).count() > 0)
+        if ( contacts.stream().flatMap(c -> c.getAddresses().stream()).count() > 0 )
             return "Contacts on a Company can not have adresses assigned to them.";
         if ( communications.stream().anyMatch(a -> a.getViolationMessage() != null) )
             return "Communications: " + communications.stream().filter(a -> a.getViolationMessage() != null).map(a -> a.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
@@ -262,7 +244,7 @@ public class Company extends BaseEntity implements Serializable, AddressStash, C
 
     @Override
     public String toString() {
-        return "Company{" + "id=" + id + ", name=" + name + ", ledger=" + ledger + ", taxId=" + taxId + '}';
+        return "Company{" + "id=" + id + ", name=" + name + ", taxId=" + taxId + '}';
     }
-   
+
 }

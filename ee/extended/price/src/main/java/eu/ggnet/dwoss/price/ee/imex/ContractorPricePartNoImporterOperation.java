@@ -288,14 +288,16 @@ public class ContractorPricePartNoImporterOperation implements ContractorPricePa
                 p.setGtin(Long.parseLong(ci.gtin));
                 updatedGtin++;
             }
-            if ( ci.getReferencePrice() > 0.01 && !TwoDigits.equals(p.getPrice(CONTRACTOR_REFERENCE), ci.getReferencePrice()) ) { // If price is valid and not equal, set it.
+            if ( ci.getReferencePrice() < 0.01 ) {
+                errors.add(ci.line() + " : Importzeile hat keinen Preis (importline.getReferencePrice() < 0.01)");
+            } else if ( TwoDigits.equals(p.getPrice(CONTRACTOR_REFERENCE), ci.getReferencePrice()) ) {
+                errors.add(ci.line() + " : Preis der Importzeile ist schon in der Datenbank (TwoDigits.equals(p.getPrice(CONTRACTOR_REFERENCE), ci.getReferencePrice())) Produkt(id=" + p.getId() + ",price(CONTRACTOR_REFERENCE)=" + p.getPrice(CONTRACTOR_REFERENCE) + ")");
+            } else {
                 double oldPrice = p.getPrice(CONTRACTOR_REFERENCE);
                 if ( p.hasPrice(CONTRACTOR_REFERENCE) ) updatedPrices++;
                 else newPrices++;
                 p.setPrice(CONTRACTOR_REFERENCE, ci.getReferencePrice(), "Import by " + arranger);
                 infos.add(ProductFormater.toDetailedName(p) + " added/updated contractor reference price from " + oldPrice + " to " + ci.getReferencePrice());
-            } else {
-                errors.add(ci.line() + " hat keinen Preis");
             }
             if ( ci.hasValidContractorPartNo(contractor) ) { // If partNo is valid, set it.
                 String contractorPartNo = ci.toNormalizeContractorPart(contractor);
@@ -303,6 +305,8 @@ public class ContractorPricePartNoImporterOperation implements ContractorPricePa
                     infos.add(ProductFormater.toDetailedName(p) + " added/updated contractor partno from " + p.getAdditionalPartNo(contractor) + " to " + contractorPartNo);
                     p.setAdditionalPartNo(contractor, contractorPartNo);
                     updatedContractorPartNo++;
+                } else {
+                    errors.add(ProductFormater.toDetailedName(p) + " contractor partno " + p.getAdditionalPartNo(contractor) + " ist bereits hinterlegt");
                 }
             } else {
                 errors.add(ci.violationMessagesOfContractorPartNo(contractor));

@@ -41,6 +41,8 @@ import javafx.scene.layout.*;
 import javafx.util.StringConverter;
 
 import eu.ggnet.dwoss.core.common.values.CustomerFlag;
+import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.ExternalSystem;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
@@ -48,10 +50,8 @@ import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ui.neo.SelectDefaultEmailCommunicationView.Selection;
 import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.*;
-import eu.ggnet.dwoss.core.widget.auth.Guardian;
 
 import static eu.ggnet.dwoss.core.common.values.CustomerFlag.SYSTEM_CUSTOMER;
 import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.EMAIL;
@@ -241,19 +241,18 @@ public class CustomerEnhanceController implements Initializable, FxController, C
                         setGraphic(null);
                         setText("");
                     } else {
-                        HBox flagbox = new HBox();
-                        Label flagLabel = new Label(item.type.name() + ":");
-                        flagLabel.setPrefWidth(65.0);
+                        HBox box = new HBox();
+                        Label flagLabel = new Label(item.type.description() + ":");
                         flagLabel.setStyle("-fx-font-weight: bold");
 
                         Label customerIdLabel = new Label();
                         customerIdLabel.textProperty().bind(item.valueProperty);
 
-                        flagbox.getChildren().addAll(flagLabel, customerIdLabel);
-                        flagbox.setSpacing(2.0);
+                        box.getChildren().addAll(flagLabel, customerIdLabel);
+                        box.setSpacing(2.0);
 
                         setText(null);
-                        setGraphic(flagbox);
+                        setGraphic(box);
 
                     }
                 }
@@ -271,14 +270,14 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         });
 
         deletedditionalCustomerIdButton.setOnAction((event) -> {
-            Ui.build(deletedditionalCustomerIdButton).dialog().eval(() -> {
-                Alert alert = new Alert(AlertType.CONFIRMATION);
-                alert.setTitle("Externe Kundennummer löschen");
-                alert.setHeaderText("Bestätigen der Löschung einer Kundennummer");
-                alert.setContentText("Wollen sie die Kundennummer wirklich löschen?");
-                return alert;
-            })
-                    .cf()
+            Ui.build(deletedditionalCustomerIdButton).dialog()
+                    .eval(() -> {
+                        Alert alert = new Alert(AlertType.CONFIRMATION);
+                        alert.setTitle("Externe Kundennummer löschen");
+                        alert.setHeaderText("Bestätigen der Löschung einer Kundennummer");
+                        alert.setContentText("Wollen sie die Kundennummer wirklich löschen?");
+                        return alert;
+                    }).cf()
                     .thenAcceptAsync(b -> {
                         if ( b == ButtonType.OK ) additionalCustomerIds.remove(additionalCustomerIdsListView.getSelectionModel().getSelectedItem());
                     }, Platform::runLater)
@@ -663,7 +662,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             customerId.setPromptText("Kundennummer");
             customerId.setText(selectionModel == null ? "" : selectionModel.getSelectedItem().valueProperty.get());
 
-            ChoiceBox externalSystemChoiceBox;
+            ChoiceBox<ExternalSystem> externalSystemChoiceBox;
             if ( selectionModel != null ) {
                 externalSystemChoiceBox = new ChoiceBox(FXCollections.observableArrayList(Arrays.asList(selectionModel.getSelectedItem().type)));
                 externalSystemChoiceBox.getSelectionModel().select(0);
@@ -679,6 +678,22 @@ public class CustomerEnhanceController implements Initializable, FxController, C
                                 .contains(externalSystem))
                         .collect(Collectors.toCollection(FXCollections::observableArrayList)));
             }
+            externalSystemChoiceBox.setConverter(new StringConverter<ExternalSystem>() {
+                @Override
+                public String toString(ExternalSystem es) {
+                    return es.description();
+                }
+
+                @Override
+                public ExternalSystem fromString(String desc) {
+                    if ( desc == null ) return null;
+                    for (ExternalSystem es : ExternalSystem.values()) {
+                        if ( es.description().equals(desc) ) return es;
+                    }
+                    throw new IllegalArgumentException("No Instance of ExternalSystem for description " + desc);
+                }
+            });
+
             GridPane grid = new GridPane();
             grid.setHgap(10);
             grid.setVgap(10);

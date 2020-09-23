@@ -280,7 +280,7 @@ public class CustomerGenerator {
 
         if ( assure.useResellerListEmailCommunication() || R.nextDouble() >= 0.7 ) customer.setResellerListEmailCommunication(email);
 
-        Company company = new Company(GEN.makeCompanyName(), 1000 + R.nextInt(800), "DE " + RandomStringUtils.randomNumeric(8));
+        Company company = new Company(GEN.makeCompanyName(), "DE " + RandomStringUtils.randomNumeric(8));
         company.getContacts().add(contact);
         Address address = makeAddress();
         company.getAddresses().add(address);
@@ -340,7 +340,6 @@ public class CustomerGenerator {
      * @return a generated {@link Company}.
      */
     private static Company makeCompany(Company company) {
-        company.setLedger(R.nextInt(1000) + 1);
         company.setName(GEN.makeCompanyName());
         Contact contact = makeFullContact();
         contact.getAddresses().clear();

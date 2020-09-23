@@ -1,10 +1,5 @@
 package eu.ggnet.dwoss.customer.ee.itest;
 
-import eu.ggnet.dwoss.search.api.ShortSearchResult;
-import eu.ggnet.dwoss.search.api.GlobalKey;
-import eu.ggnet.dwoss.search.api.SearchProvider;
-import eu.ggnet.dwoss.search.api.SearchRequest;
-
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -18,6 +13,7 @@ import org.junit.runner.RunWith;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
+import eu.ggnet.dwoss.search.api.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -52,7 +48,7 @@ public class CustomerSearchIT extends ArquillianProjectArchive {
         agent.store(c3);
         agent.store(c4);
 
-        /* //this methode calling on 
+        /* //this methode calling on
         List<Customer> find = eao.find("schlag*");
 
         assertThat(find).as("Result of search").hasSize(1);

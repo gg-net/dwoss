@@ -16,22 +16,18 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo;
 
-import eu.ggnet.saft.core.ui.Title;
-import eu.ggnet.saft.core.ui.ResultProducer;
-import eu.ggnet.saft.core.ui.FxController;
-
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.regex.Pattern;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
-import javafx.util.converter.IntegerStringConverter;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 
-import eu.ggnet.dwoss.customer.ee.entity.*;
+import eu.ggnet.dwoss.customer.ee.entity.Company;
 import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.*;
 
 /**
  * Controller class for the editor view of a Company. Allows the user to
@@ -47,9 +43,6 @@ public class CompanyAddController implements Initializable, FxController, Result
 
     @FXML
     private TextField companyNameTextField;
-
-    @FXML
-    private TextField ledgerTextField;
 
     @FXML
     private TextField taxIdTextField;
@@ -87,19 +80,6 @@ public class CompanyAddController implements Initializable, FxController, Result
         //enable the save and "saveAndClose" button only on filled TextFields
         saveButton.disableProperty().bind(companyNameTextField.textProperty().isEmpty());
 
-        // force the ledger field to be numeric only, becuase the ledger get saved as an int
-        ledgerTextField.textFormatterProperty().set(
-                new TextFormatter<>(new IntegerStringConverter(), 0,
-                        change -> {
-                            String newText = change.getControlNewText();
-                            if ( Pattern.compile("-?((\\d*))").matcher(newText).matches() ) {
-                                return change;
-                            } else {
-                                return null;
-                            }
-                        })
-        );
-
     }
 
     @Override
@@ -117,7 +97,6 @@ public class CompanyAddController implements Initializable, FxController, Result
         Company c = new Company();
         c.setName(companyNameTextField.getText());
         c.setTaxId(taxIdTextField.getText());
-        c.setLedger(Integer.parseInt(ledgerTextField.getText()));
 
         return c;
     }
