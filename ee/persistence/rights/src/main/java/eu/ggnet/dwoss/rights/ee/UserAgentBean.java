@@ -106,12 +106,28 @@ public class UserAgentBean extends AbstractAgentBean implements UserAgent {
 
     @Override
     public void addRight(long userId, AtomicRight right) throws IllegalArgumentException, NullPointerException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Operator user = em.find(Operator.class, userId);
+        if ( user == null ) {
+            throw new IllegalArgumentException("No User found with userId = " + userId + ".");
+        }
+        Objects.requireNonNull(right, "Right must not be null.");
+        if ( user.getRights().contains(right) ) {
+            throw new IllegalArgumentException("Submitted Right " + right + " is already granted to User " + user.getUsername() + ".");
+        }
+        user.add(right);
     }
 
     @Override
     public void removeRight(long userId, AtomicRight right) throws IllegalArgumentException, NullPointerException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Operator user = em.find(Operator.class, userId);
+        if ( user == null ) {
+            throw new IllegalArgumentException("No User found with groupId = " + userId + ".");
+        }
+        Objects.requireNonNull(right, "Right must not be null.");
+        if ( !user.getRights().contains(right) ) {
+            throw new IllegalArgumentException("Submitted Right " + right + " was not granted to User " + user.getUsername() + " at all.");
+        }
+        user.getRights().remove(right);
     }
 
     @Override

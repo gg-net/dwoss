@@ -154,4 +154,33 @@ public class UserAgentIT extends ArquillianProjectArchive {
         
         assertThat(agent.count(Operator.class)).as("No Users exist").isZero();
     }
+    
+    @Test
+    public void testAddRight() throws Exception{
+        utx.begin();
+        em.joinTransaction();
+        Operator user = new Operator(NAME);
+        em.persist(user);
+        utx.commit();
+
+        agent.addRight(user.getId(), R);
+
+        Operator found = agent.findByName(NAME);
+        assertThat(found.getRights()).as("Existing User has one right").containsExactly(R);
+    }
+    
+    @Test
+    public void testRemoveRight() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        Operator group = new Operator(NAME);
+        group.add(R);
+        em.persist(group);
+        utx.commit();
+
+        agent.removeRight(group.getId(), R);
+
+        Operator found = agent.findByName(NAME);
+        assertThat(found.getRights()).as("Existing User has no rights").isEmpty();
+    }
 }
