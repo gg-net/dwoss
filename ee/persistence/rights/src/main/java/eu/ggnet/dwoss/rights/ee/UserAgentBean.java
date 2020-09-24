@@ -149,7 +149,18 @@ public class UserAgentBean extends AbstractAgentBean implements UserAgent {
 
     @Override
     public void removeGroup(long userId, long groupId) throws IllegalArgumentException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Operator user = em.find(Operator.class, userId);
+        if ( user == null){
+            throw new IllegalArgumentException("No User found with userId " + userId + ".");
+        }
+        Persona group = em.find(Persona.class, groupId);
+        if(group == null){
+            throw new IllegalArgumentException("No Group found with groupId " + groupId + ".");
+        }
+        if(!user.getPersonas().contains(group)){
+            throw new IllegalArgumentException("Submitted Group " + group.getName() + " wasn't associated with User " + user.getUsername() + " at all.");
+        }
+        user.getPersonas().remove(group);
     }
 
     @AutoLogger

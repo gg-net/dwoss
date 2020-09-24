@@ -204,4 +204,23 @@ public class UserAgentIT extends ArquillianProjectArchive {
         Operator found = agent.findByName(NAME);
         assertThat(found.getPersonas()).as("Existing User has one Group").hasSize(1);
     }
+    
+    @Test
+    public void testRemoveGroup() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        Operator user = new Operator(NAME);
+        Persona group = new Persona(GROUP_NAME);
+        user.getPersonas().add(group);
+        em.persist(user);
+        em.persist(group);
+        utx.commit();
+        
+        assertThat(user.getPersonas()).as("Existing User has one Group").hasSize(1);
+
+        agent.removeGroup(user.getId(), group.getId());
+
+        Operator found = agent.findByName(NAME);
+        assertThat(found.getPersonas()).as("Existing User has no Groups").isEmpty();
+    }
 }
