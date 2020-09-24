@@ -124,4 +124,19 @@ public class UserAgentIT extends ArquillianProjectArchive {
         Operator found = agent.findByName(NAME);
         assertThat(found.getPassword()).as("Existing User has new password").isEqualTo(UPDATED_PASSWORD);
     }
+    
+    @Test
+    public void testUpdateQuickLoginKey() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        Operator user = new Operator(NAME);
+        user.setQuickLoginKey(QUICK_LOGIN_KEY);
+        em.persist(user);
+        utx.commit();
+
+        agent.updateQuickLoginKey(user.getId(), UPDATED_QUICK_LOGIN_KEY);
+
+        Operator found = agent.findByName(NAME);
+        assertThat(found.getQuickLoginKey()).as("Existing User has new quickLoginKey").isEqualTo(UPDATED_QUICK_LOGIN_KEY);
+    }
 }

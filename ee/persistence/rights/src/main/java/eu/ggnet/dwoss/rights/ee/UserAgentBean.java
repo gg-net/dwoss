@@ -86,8 +86,13 @@ public class UserAgentBean extends AbstractAgentBean implements UserAgent {
     }
 
     @Override
-    public void updateQuickLoginkey(long userId, int quickLoginKey) throws IllegalArgumentException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void updateQuickLoginKey(long userId, int quickLoginKey) throws IllegalArgumentException, NullPointerException {
+        Operator user = em.find(Operator.class, userId);
+        if(user == null){
+            throw new IllegalArgumentException("No User found with userId = + " + userId + ".");
+        }
+        Objects.requireNonNull(quickLoginKey, "Submitted quickLoginKey is null.");
+        user.setQuickLoginKey(quickLoginKey);
     }
 
     @Override
