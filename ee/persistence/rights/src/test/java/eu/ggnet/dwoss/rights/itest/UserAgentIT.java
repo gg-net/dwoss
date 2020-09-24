@@ -139,4 +139,19 @@ public class UserAgentIT extends ArquillianProjectArchive {
         Operator found = agent.findByName(NAME);
         assertThat(found.getQuickLoginKey()).as("Existing User has new quickLoginKey").isEqualTo(UPDATED_QUICK_LOGIN_KEY);
     }
+    
+    @Test
+    public void testDelete() throws Exception{
+        utx.begin();
+        em.joinTransaction();
+        Operator user = new Operator(NAME);
+        em.persist(user);
+        utx.commit();
+        
+        assertThat(agent.count(Operator.class)).as("One User exists").isEqualTo(1);
+        
+        agent.delete(user.getId());
+        
+        assertThat(agent.count(Operator.class)).as("No Users exist").isZero();
+    }
 }
