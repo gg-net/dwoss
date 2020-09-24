@@ -22,7 +22,6 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityNotFoundException;
 
 import eu.ggnet.dwoss.core.system.autolog.AutoLogger;
 import eu.ggnet.dwoss.core.system.persistence.AbstractAgentBean;
@@ -74,37 +73,45 @@ public class UserAgentBean extends AbstractAgentBean implements UserAgent {
     }
     
     @Override
-    public void updatePassword(long userId, byte[] password) throws EntityNotFoundException, NullPointerException, IllegalArgumentException {
+    public void updatePassword(long userId, byte[] password) throws IllegalArgumentException, NullPointerException {
+        Operator user = em.find(Operator.class, userId);
+        if(user == null){
+            throw new IllegalArgumentException("No User found with userId = + " + userId + ".");
+        }
+        Objects.requireNonNull(password, "Submitted password is null.");
+        if(password.length == 0){
+            throw new IllegalArgumentException("Submitted password is empty.");
+        }
+        user.setPassword(password);
+    }
+
+    @Override
+    public void updateQuickLoginkey(long userId, int quickLoginKey) throws IllegalArgumentException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void updateQuickLoginkey(long userId, int quickLoginKey) throws EntityNotFoundException, IllegalArgumentException {
+    public void delete(long userId) throws IllegalArgumentException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void delete(long userId) throws EntityNotFoundException, IllegalStateException {
+    public void addRight(long userId, AtomicRight right) throws IllegalArgumentException, NullPointerException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void addRight(long userId, AtomicRight right) throws EntityNotFoundException, NullPointerException, IllegalArgumentException {
+    public void removeRight(long userId, AtomicRight right) throws IllegalArgumentException, NullPointerException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void removeRight(long userId, AtomicRight right) throws EntityNotFoundException, NullPointerException, IllegalArgumentException {
+    public void addGroup(long userId, long groupId) throws IllegalArgumentException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void addGroup(long userId, long groupId) throws EntityNotFoundException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void removeGroup(long userId, long groupId) throws EntityNotFoundException {
+    public void removeGroup(long userId, long groupId) throws IllegalArgumentException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

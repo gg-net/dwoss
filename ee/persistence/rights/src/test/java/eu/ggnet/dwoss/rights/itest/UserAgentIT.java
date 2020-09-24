@@ -109,4 +109,19 @@ public class UserAgentIT extends ArquillianProjectArchive {
         Operator found = agent.findByName(UPDATED_NAME);
         assertThat(found).as("User exists with new username").isNotNull();
     }
+    
+    @Test
+    public void testUpdatePassword() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        Operator user = new Operator(NAME);
+        user.setPassword(PASSWORD);
+        em.persist(user);
+        utx.commit();
+
+        agent.updatePassword(user.getId(), UPDATED_PASSWORD);
+
+        Operator found = agent.findByName(NAME);
+        assertThat(found.getPassword()).as("Existing User has new password").isEqualTo(UPDATED_PASSWORD);
+    }
 }
