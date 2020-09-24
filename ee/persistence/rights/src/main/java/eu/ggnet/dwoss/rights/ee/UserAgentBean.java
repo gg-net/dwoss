@@ -29,6 +29,7 @@ import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.ee.assist.Rights;
 import eu.ggnet.dwoss.rights.ee.eao.OperatorEao;
 import eu.ggnet.dwoss.rights.ee.entity.Operator;
+import eu.ggnet.dwoss.rights.ee.entity.Persona;
 
 /**
  * Implementation of {@link UserAgent}.
@@ -63,7 +64,7 @@ public class UserAgentBean extends AbstractAgentBean implements UserAgent {
     public void updateUsername(long userId, String username) throws IllegalArgumentException, NullPointerException {
         Operator user = em.find(Operator.class, userId);
         if(user == null){
-            throw new IllegalArgumentException("No User found with userId = + " + userId + ".");
+            throw new IllegalArgumentException("No User found with userId = " + userId + ".");
         }
         Objects.requireNonNull(username, "Submitted username is null.");
         if(username.isBlank()){
@@ -76,7 +77,7 @@ public class UserAgentBean extends AbstractAgentBean implements UserAgent {
     public void updatePassword(long userId, byte[] password) throws IllegalArgumentException, NullPointerException {
         Operator user = em.find(Operator.class, userId);
         if(user == null){
-            throw new IllegalArgumentException("No User found with userId = + " + userId + ".");
+            throw new IllegalArgumentException("No User found with userId = " + userId + ".");
         }
         Objects.requireNonNull(password, "Submitted password is null.");
         if(password.length == 0){
@@ -89,7 +90,7 @@ public class UserAgentBean extends AbstractAgentBean implements UserAgent {
     public void updateQuickLoginKey(long userId, int quickLoginKey) throws IllegalArgumentException, NullPointerException {
         Operator user = em.find(Operator.class, userId);
         if(user == null){
-            throw new IllegalArgumentException("No User found with userId = + " + userId + ".");
+            throw new IllegalArgumentException("No User found with userId = " + userId + ".");
         }
         Objects.requireNonNull(quickLoginKey, "Submitted quickLoginKey is null.");
         user.setQuickLoginKey(quickLoginKey);
@@ -121,7 +122,7 @@ public class UserAgentBean extends AbstractAgentBean implements UserAgent {
     public void removeRight(long userId, AtomicRight right) throws IllegalArgumentException, NullPointerException {
         Operator user = em.find(Operator.class, userId);
         if ( user == null ) {
-            throw new IllegalArgumentException("No User found with groupId = " + userId + ".");
+            throw new IllegalArgumentException("No User found with userId = " + userId + ".");
         }
         Objects.requireNonNull(right, "Right must not be null.");
         if ( !user.getRights().contains(right) ) {
@@ -132,7 +133,18 @@ public class UserAgentBean extends AbstractAgentBean implements UserAgent {
 
     @Override
     public void addGroup(long userId, long groupId) throws IllegalArgumentException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Operator user = em.find(Operator.class, userId);
+        if ( user == null){
+            throw new IllegalArgumentException("No User found with userId " + userId + ".");
+        }
+        Persona group = em.find(Persona.class, groupId);
+        if(group == null){
+            throw new IllegalArgumentException("No Group found with groupId " + groupId + ".");
+        }
+        if(user.getPersonas().contains(group)){
+            throw new IllegalArgumentException("Submitted Group " + group.getName() + " is already associated with User " + user.getUsername() + ".");
+        }
+        user.getPersonas().add(group);
     }
 
     @Override

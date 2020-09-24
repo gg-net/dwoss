@@ -30,6 +30,7 @@ import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.ee.UserAgent;
 import eu.ggnet.dwoss.rights.ee.assist.Rights;
 import eu.ggnet.dwoss.rights.ee.entity.Operator;
+import eu.ggnet.dwoss.rights.ee.entity.Persona;
 import eu.ggnet.dwoss.rights.itest.support.ArquillianProjectArchive;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -50,10 +51,12 @@ public class UserAgentIT extends ArquillianProjectArchive {
     private final static String NAME = "Test User";
 
     private final static String UPDATED_NAME = "User Test";
+    
+    private static final String GROUP_NAME = "Test Group";
 
-    private static final byte[] PASSWORD = {1, 0, 1, 0};
+    private static final byte[] PASSWORD = {16, 1, 19, 19};
 
-    private static final byte[] UPDATED_PASSWORD = {0, 1, 0, 1};
+    private static final byte[] UPDATED_PASSWORD = {23, 15, 18, 3};
 
     private static final int QUICK_LOGIN_KEY = 0;
 
@@ -166,21 +169,39 @@ public class UserAgentIT extends ArquillianProjectArchive {
         agent.addRight(user.getId(), R);
 
         Operator found = agent.findByName(NAME);
-        assertThat(found.getRights()).as("Existing User has one right").containsExactly(R);
+        assertThat(found.getRights()).as("Existing User has one Right").containsExactly(R);
     }
     
     @Test
     public void testRemoveRight() throws Exception {
         utx.begin();
         em.joinTransaction();
-        Operator group = new Operator(NAME);
-        group.add(R);
-        em.persist(group);
+        Operator user = new Operator(NAME);
+        user.add(R);
+        em.persist(user);
         utx.commit();
 
-        agent.removeRight(group.getId(), R);
+        agent.removeRight(user.getId(), R);
 
         Operator found = agent.findByName(NAME);
-        assertThat(found.getRights()).as("Existing User has no rights").isEmpty();
+        assertThat(found.getRights()).as("Existing User has no Rights").isEmpty();
+    }
+    
+    @Test
+    public void testAddGroup() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        Operator user = new Operator(NAME);
+        Persona group = new Persona(GROUP_NAME);
+        em.persist(user);
+        em.persist(group);
+        utx.commit();
+        
+        assertThat(user.getPersonas()).as("Existing User has no Groups").isEmpty();
+
+        agent.addGroup(user.getId(), group.getId());
+
+        Operator found = agent.findByName(NAME);
+        assertThat(found.getPersonas()).as("Existing User has one Group").hasSize(1);
     }
 }
