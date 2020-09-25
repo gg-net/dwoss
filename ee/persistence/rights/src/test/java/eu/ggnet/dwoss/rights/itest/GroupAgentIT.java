@@ -22,8 +22,8 @@ import javax.persistence.EntityManager;
 import javax.transaction.UserTransaction;
 
 import org.jboss.arquillian.junit.Arquillian;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.*;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.rights.api.AtomicRight;
@@ -33,6 +33,7 @@ import eu.ggnet.dwoss.rights.ee.entity.Persona;
 import eu.ggnet.dwoss.rights.itest.support.ArquillianProjectArchive;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.isA;
 
 @RunWith(Arquillian.class)
 public class GroupAgentIT extends ArquillianProjectArchive {
@@ -50,6 +51,8 @@ public class GroupAgentIT extends ArquillianProjectArchive {
     private final static String NAME = "Test Group";
 
     private final static String UPDATED_NAME = "Group Test";
+
+    private static final String BLANK = "";
 
     private final static AtomicRight R = AtomicRight.CHANGE_TAX;
 
@@ -79,6 +82,9 @@ public class GroupAgentIT extends ArquillianProjectArchive {
         utx.commit();
     }
 
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+
     @Test
     public void testCreate() throws Exception {
         agent.create(NAME);
@@ -86,6 +92,30 @@ public class GroupAgentIT extends ArquillianProjectArchive {
         assertThat(agent.count(Persona.class)).as("One existing Group").isEqualTo(1);
         Persona found = agent.findByName(NAME);
         assertThat(found).as("Group exists").isNotNull();
+    }
+
+    @Test
+    public void testCreateNameIsBlank() throws Exception {
+        expectedException.expectCause(isA(IllegalArgumentException.class));
+
+        agent.create(BLANK);
+    }
+
+    @Test
+    public void testCreateNameIsNull() throws Exception {
+        expectedException.expectCause(isA(NullPointerException.class));
+
+        agent.create(null);
+
+    }
+
+    @Test
+    public void testCreateNameIsDuplicate() throws Exception {
+        agent.create(NAME);
+
+        expectedException.expectCause(isA(IllegalArgumentException.class));
+
+        agent.create(NAME);
     }
 
     @Test
@@ -103,6 +133,58 @@ public class GroupAgentIT extends ArquillianProjectArchive {
     }
 
     @Test
+    public void testUpdateNameGroupIdNotFound() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        Persona group = new Persona(NAME);
+        em.persist(group);
+        utx.commit();
+
+        expectedException.expectCause(isA(IllegalArgumentException.class));
+
+        agent.updateName(group.getId() + 1, UPDATED_NAME);
+    }
+
+    @Test
+    public void testUpdateNameNameIsBlank() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        Persona group = new Persona(NAME);
+        em.persist(group);
+        utx.commit();
+
+        expectedException.expectCause(isA(IllegalArgumentException.class));
+
+        agent.updateName(group.getId(), BLANK);
+    }
+
+    @Test
+    public void testUpdateNameNameIsNull() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        Persona group = new Persona(NAME);
+        em.persist(group);
+        utx.commit();
+
+        expectedException.expectCause(isA(NullPointerException.class));
+
+        agent.updateName(group.getId(), null);
+    }
+
+    @Test
+    public void testUpdateNameNameIsDuplicate() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        Persona group = new Persona(NAME);
+        em.persist(group);
+        utx.commit();
+
+        expectedException.expectCause(isA(IllegalArgumentException.class));
+
+        agent.updateName(group.getId(), NAME);
+    }
+
+    @Test
     public void testAddRight() throws Exception {
         utx.begin();
         em.joinTransaction();
@@ -115,6 +197,46 @@ public class GroupAgentIT extends ArquillianProjectArchive {
         Persona found = agent.findByName(NAME);
         assertThat(found).as("Group exists").isNotNull();
         assertThat(found.getPersonaRights()).as("Existing Group has one right").containsExactly(R);
+    }
+
+    @Test
+    public void testAddRightGroupIdNotFound() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        Persona group = new Persona(NAME);
+        em.persist(group);
+        utx.commit();
+        
+        expectedException.expectCause(isA(IllegalArgumentException.class));
+        
+        agent.addRight(group.getId() + 1, R);
+    }
+
+    @Test
+    public void testAddRightGroupHasRight() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        Persona group = new Persona(NAME);
+        group.add(R);
+        em.persist(group);
+        utx.commit();
+        
+        expectedException.expectCause(isA(IllegalArgumentException.class));
+        
+        agent.addRight(group.getId(), R);
+    }
+
+    @Test
+    public void testAddRightRightIsNull() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        Persona group = new Persona(NAME);
+        em.persist(group);
+        utx.commit();
+        
+        expectedException.expectCause(isA(NullPointerException.class));
+        
+        agent.addRight(group.getId(), null);
     }
 
     @Test
@@ -134,6 +256,45 @@ public class GroupAgentIT extends ArquillianProjectArchive {
     }
 
     @Test
+    public void testRemoveRightGroupIdNotFound() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        Persona group = new Persona(NAME);
+        em.persist(group);
+        utx.commit();
+        
+        expectedException.expectCause(isA(IllegalArgumentException.class));
+        
+        agent.removeRight(group.getId() + 1, R);
+    }
+
+    @Test
+    public void testRemoveRightGroupDoesNotHaveRight() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        Persona group = new Persona(NAME);
+        em.persist(group);
+        utx.commit();
+        
+        expectedException.expectCause(isA(IllegalArgumentException.class));
+        
+        agent.removeRight(group.getId(), R);
+    }
+
+    @Test
+    public void testRemoveRightRightIsNull() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        Persona group = new Persona(NAME);
+        em.persist(group);
+        utx.commit();
+        
+        expectedException.expectCause(isA(NullPointerException.class));
+        
+        agent.removeRight(group.getId(), null);
+    }
+
+    @Test
     public void testDelete() throws Exception {
         utx.begin();
         em.joinTransaction();
@@ -146,5 +307,18 @@ public class GroupAgentIT extends ArquillianProjectArchive {
         agent.delete(group.getId());
 
         assertThat(agent.count(Persona.class)).as("No Groups exist").isZero();
+    }
+
+    @Test
+    public void testDeleteGroupIdNotFound() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        Persona group = new Persona(NAME);
+        em.persist(group);
+        utx.commit();
+        
+        expectedException.expectCause(isA(IllegalArgumentException.class));
+        
+        agent.delete(group.getId() + 1);
     }
 }
