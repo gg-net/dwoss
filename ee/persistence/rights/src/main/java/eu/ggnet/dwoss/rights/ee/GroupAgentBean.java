@@ -51,7 +51,7 @@ public class GroupAgentBean extends AbstractAgentBean implements GroupAgent {
 
     @AutoLogger
     @Override
-    public void create(String name) {
+    public void create(String name)throws IllegalArgumentException, NullPointerException {
         Objects.requireNonNull(name, "Submitted name is null.");
         if ( name.isBlank() ) {
             throw new IllegalArgumentException("Submitted name is blank.");
@@ -64,12 +64,12 @@ public class GroupAgentBean extends AbstractAgentBean implements GroupAgent {
 
     @AutoLogger
     @Override
-    public void updateName(long groupId, String name) {
+    public void updateName(long groupId, String name)throws IllegalArgumentException, NullPointerException {
+        Objects.requireNonNull(name, "Submitted name is null.");
         Persona group = em.find(Persona.class, groupId);
         if ( group == null ) {
-            throw new IllegalArgumentException("No Group found with groupId = " + groupId);
+            throw new IllegalArgumentException("No Group found with groupId = " + groupId + ".");
         }
-        Objects.requireNonNull(name, "Submitted name is null.");
         if ( name.isBlank() ) {
             throw new IllegalArgumentException("Submitted name is blank.");
         }
@@ -81,22 +81,22 @@ public class GroupAgentBean extends AbstractAgentBean implements GroupAgent {
 
     @AutoLogger
     @Override
-    public void delete(long groupId) {
+    public void delete(long groupId)throws IllegalArgumentException {
         Persona group = em.find(Persona.class, groupId);
         if ( group == null ) {
-            throw new IllegalArgumentException("No Group found with groupId = " + groupId);
+            throw new IllegalArgumentException("No Group found with groupId = " + groupId + ".");
         }
         em.remove(group);
     }
 
     @AutoLogger
     @Override
-    public void addRight(long groupId, AtomicRight right) {
+    public void addRight(long groupId, AtomicRight right)throws IllegalArgumentException, NullPointerException {
+        Objects.requireNonNull(right, "Right must not be null.");
         Persona group = em.find(Persona.class, groupId);
         if ( group == null ) {
-            throw new IllegalArgumentException("No Group found with groupId = " + groupId);
+            throw new IllegalArgumentException("No Group found with groupId = " + groupId + ".");
         }
-        Objects.requireNonNull(right, "Right must not be null.");
         if ( group.getPersonaRights().contains(right) ) {
             throw new IllegalArgumentException("Submitted Right " + right + " is already granted to Group " + group.getName() + ".");
         }
@@ -105,12 +105,12 @@ public class GroupAgentBean extends AbstractAgentBean implements GroupAgent {
 
     @AutoLogger
     @Override
-    public void removeRight(long groupId, AtomicRight right) {
+    public void removeRight(long groupId, AtomicRight right)throws IllegalArgumentException, NullPointerException {
+        Objects.requireNonNull(right, "Right must not be null.");
         Persona group = em.find(Persona.class, groupId);
         if ( group == null ) {
-            throw new IllegalArgumentException("No Group found with groupId = " + groupId);
+            throw new IllegalArgumentException("No Group found with groupId = " + groupId + ".");
         }
-        Objects.requireNonNull(right, "Right must not be null.");
         if ( !group.getPersonaRights().contains(right) ) {
             throw new IllegalArgumentException("Submitted Right " + right + " was not granted to Group " + group.getName() + " at all.");
         }
@@ -119,7 +119,7 @@ public class GroupAgentBean extends AbstractAgentBean implements GroupAgent {
 
     @AutoLogger
     @Override
-    public Persona findByName(String name) {
+    public Persona findByName(String name)throws IllegalArgumentException, NullPointerException {
         Objects.requireNonNull(name, "Submitted name is null.");
         if ( name.isBlank() ) {
             throw new IllegalArgumentException("Submitted name is blank.");

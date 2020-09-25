@@ -49,7 +49,7 @@ public interface UserAgent extends RemoteAgent {
      * @param username new username for the User, must not be null or blank.
      * @throws IllegalArgumentException <ol><li>if no User with the submitted userId exists</li>
      * <li>if the submitted username is blank.</li></ol>
-     * @throws NullPointerException if the submitted username is null.
+     * @throws NullPointerException     if the submitted username is null.
      */
     public void updateUsername(long userId, String username) throws IllegalArgumentException, NullPointerException;
 
@@ -60,7 +60,7 @@ public interface UserAgent extends RemoteAgent {
      * @param password new password for the User, must not be null or empty.
      * @throws IllegalArgumentException <ol><li>if no User with the submitted userId exists.</li>
      * <li>if the submitted password is empty.</li></ol>
-     * @throws NullPointerException if the submitted password is null.
+     * @throws NullPointerException     if the submitted password is null.
      */
     public void updatePassword(long userId, byte[] password) throws IllegalArgumentException, NullPointerException;
     //???vorgaben beim password?
@@ -72,16 +72,8 @@ public interface UserAgent extends RemoteAgent {
      * @param quickLoginKey new quickLoginKey for the User.
      * @throws IllegalArgumentException if no User with the submitted userId exists.
      */
-    public void updateQuickLoginkey(long userId, int quickLoginKey) throws IllegalArgumentException;
+    public void updateQuickLoginKey(long userId, int quickLoginKey) throws IllegalArgumentException;
     //??? beschränkungen beim key?
-
-    /**
-     * Deletes the {@link User} with the submitted long.
-     *
-     * @param userId id of the User to be deleted, must exist in the database.
-     * @throws IllegalArgumentException if no User with the submitted userId exists.
-     */
-    public void delete(long userId) throws IllegalArgumentException;
 
     /**
      * Adds the submitted {@link AtomicRight} to the {@link User} with the sumitted userId.
@@ -90,7 +82,7 @@ public interface UserAgent extends RemoteAgent {
      * @param right  Right to be added, must not be null.
      * @throws IllegalArgumentException <ol><li>if no User with the submitted userId exists.</li>
      * <li>if the submitted Right is already granted to the User.</li></ol>
-     * @throws NullPointerException if the submitted Right is null.
+     * @throws NullPointerException     if the submitted Right is null.
      */
     public void addRight(long userId, AtomicRight right) throws IllegalArgumentException, NullPointerException;
 
@@ -101,7 +93,7 @@ public interface UserAgent extends RemoteAgent {
      * @param right  Right to be removed must not be null.
      * @throws IllegalArgumentException <ol><li>if no User with the submitted userId exists.</li>
      * <li>if the submitted Right wasn't granted to the User at all.</li></ol>
-     * @throws NullPointerException if the submitted Right is null.
+     * @throws NullPointerException     if the submitted Right is null.
      */
     public void removeRight(long userId, AtomicRight right) throws IllegalArgumentException, NullPointerException;
 
@@ -128,6 +120,14 @@ public interface UserAgent extends RemoteAgent {
     public void removeGroup(long userId, long groupId) throws IllegalArgumentException;
     
     /**
+     * Deletes the {@link User} with the submitted long.
+     *
+     * @param userId id of the User to be deleted, must exist in the database.
+     * @throws IllegalArgumentException if no User with the submitted userId exists.
+     */
+    public void delete(long userId) throws IllegalArgumentException;
+
+    /**
      * Searches for the {@link User} with the submitted name.
      * <p/>
      * Currently only used for testing purposes.
@@ -141,4 +141,3 @@ public interface UserAgent extends RemoteAgent {
     //XXX return User or throw?
 
 }
-

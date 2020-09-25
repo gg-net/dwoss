@@ -51,7 +51,7 @@ public class UserAgentBean extends AbstractAgentBean implements UserAgent {
 
     @AutoLogger
     @Override
-    public void create(String username) {
+    public void create(String username) throws IllegalArgumentException, NullPointerException {
         Objects.requireNonNull(username, "Submitted username is null.");
         if ( username.isBlank() ) {
             throw new IllegalArgumentException("Submitted username is blank.");
@@ -63,48 +63,41 @@ public class UserAgentBean extends AbstractAgentBean implements UserAgent {
     @Override
     public void updateUsername(long userId, String username) throws IllegalArgumentException, NullPointerException {
         Operator user = em.find(Operator.class, userId);
-        if(user == null){
+        if ( user == null ) {
             throw new IllegalArgumentException("No User found with userId = " + userId + ".");
         }
         Objects.requireNonNull(username, "Submitted username is null.");
-        if(username.isBlank()){
+        if ( username.isBlank() ) {
             throw new IllegalArgumentException("Submitted username is blank.");
         }
         user.setUsername(username);
     }
-    
+
+    @AutoLogger
     @Override
     public void updatePassword(long userId, byte[] password) throws IllegalArgumentException, NullPointerException {
         Operator user = em.find(Operator.class, userId);
-        if(user == null){
+        if ( user == null ) {
             throw new IllegalArgumentException("No User found with userId = " + userId + ".");
         }
         Objects.requireNonNull(password, "Submitted password is null.");
-        if(password.length == 0){
+        if ( password.length == 0 ) {
             throw new IllegalArgumentException("Submitted password is empty.");
         }
         user.setPassword(password);
     }
 
+    @AutoLogger
     @Override
-    public void updateQuickLoginKey(long userId, int quickLoginKey) throws IllegalArgumentException, NullPointerException {
-        Operator user = em.find(Operator.class, userId);
-        if(user == null){
-            throw new IllegalArgumentException("No User found with userId = " + userId + ".");
-        }
-        Objects.requireNonNull(quickLoginKey, "Submitted quickLoginKey is null.");
-        user.setQuickLoginKey(quickLoginKey);
-    }
-
-    @Override
-    public void delete(long userId) throws IllegalArgumentException {
+    public void updateQuickLoginKey(long userId, int quickLoginKey) throws IllegalArgumentException {
         Operator user = em.find(Operator.class, userId);
         if ( user == null ) {
             throw new IllegalArgumentException("No User found with userId = " + userId + ".");
         }
-        em.remove(user);
+        user.setQuickLoginKey(quickLoginKey);
     }
 
+    @AutoLogger
     @Override
     public void addRight(long userId, AtomicRight right) throws IllegalArgumentException, NullPointerException {
         Operator user = em.find(Operator.class, userId);
@@ -118,6 +111,7 @@ public class UserAgentBean extends AbstractAgentBean implements UserAgent {
         user.add(right);
     }
 
+    @AutoLogger
     @Override
     public void removeRight(long userId, AtomicRight right) throws IllegalArgumentException, NullPointerException {
         Operator user = em.find(Operator.class, userId);
@@ -131,36 +125,48 @@ public class UserAgentBean extends AbstractAgentBean implements UserAgent {
         user.getRights().remove(right);
     }
 
+    @AutoLogger
     @Override
     public void addGroup(long userId, long groupId) throws IllegalArgumentException {
         Operator user = em.find(Operator.class, userId);
-        if ( user == null){
+        if ( user == null ) {
             throw new IllegalArgumentException("No User found with userId " + userId + ".");
         }
         Persona group = em.find(Persona.class, groupId);
-        if(group == null){
+        if ( group == null ) {
             throw new IllegalArgumentException("No Group found with groupId " + groupId + ".");
         }
-        if(user.getPersonas().contains(group)){
+        if ( user.getPersonas().contains(group) ) {
             throw new IllegalArgumentException("Submitted Group " + group.getName() + " is already associated with User " + user.getUsername() + ".");
         }
         user.getPersonas().add(group);
     }
 
+    @AutoLogger
     @Override
     public void removeGroup(long userId, long groupId) throws IllegalArgumentException {
         Operator user = em.find(Operator.class, userId);
-        if ( user == null){
+        if ( user == null ) {
             throw new IllegalArgumentException("No User found with userId " + userId + ".");
         }
         Persona group = em.find(Persona.class, groupId);
-        if(group == null){
+        if ( group == null ) {
             throw new IllegalArgumentException("No Group found with groupId " + groupId + ".");
         }
-        if(!user.getPersonas().contains(group)){
+        if ( !user.getPersonas().contains(group) ) {
             throw new IllegalArgumentException("Submitted Group " + group.getName() + " wasn't associated with User " + user.getUsername() + " at all.");
         }
         user.getPersonas().remove(group);
+    }
+    
+    @AutoLogger
+    @Override
+    public void delete(long userId) throws IllegalArgumentException {
+        Operator user = em.find(Operator.class, userId);
+        if ( user == null ) {
+            throw new IllegalArgumentException("No User found with userId = " + userId + ".");
+        }
+        em.remove(user);
     }
 
     @AutoLogger

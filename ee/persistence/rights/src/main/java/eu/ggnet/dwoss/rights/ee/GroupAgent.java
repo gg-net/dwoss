@@ -57,7 +57,7 @@ public interface GroupAgent extends RemoteAgent {
     /**
      * Deletes the {@link Group} with the submitted groupId.
      *
-     * @param groupId id of the group to be deleted, must exist in the database.
+     * @param groupId id of the Group to be deleted, must exist in the database.
      * @throws IllegalArgumentException if no Group with the submitted groupId exists.
      */
     public void delete(long groupId) throws IllegalArgumentException;
@@ -95,5 +95,6 @@ public interface GroupAgent extends RemoteAgent {
      * @throws NullPointerException     if the submitted name is null.
      */
     public Persona findByName(String name) throws IllegalArgumentException, NullPointerException;
+    //XXX return Persona or throw
 
 }
