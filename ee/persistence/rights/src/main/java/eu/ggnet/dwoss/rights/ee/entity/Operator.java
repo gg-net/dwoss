@@ -170,7 +170,8 @@ public class Operator extends BaseEntity implements Serializable, EagerAble {
      * @return defensive copy return of persona
      */
     public List<Persona> getPersonas() {
-        return new ArrayList<>(personas);
+        return personas;
+//        return new ArrayList<>(personas);
     }
 
     /**
