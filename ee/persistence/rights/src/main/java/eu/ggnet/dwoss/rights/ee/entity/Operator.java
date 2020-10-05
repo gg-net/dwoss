@@ -34,8 +34,6 @@ import static javax.persistence.FetchType.EAGER;
  * @author Bastian Venz
  */
 @Entity
-@NamedQuery(name = "Operator.byUsername", query = "Select i from Operator as i where i.username = ?1")
-@NamedQuery(name = "Operator.byUsernameAndPasswordAndSalt", query = "Select i from Operator as i where i.username = ?1 AND i.password = ?2 AND i.salt = ?3")
 @SuppressWarnings("PersistenceUnitPresent")
 public class Operator extends BaseEntity implements Serializable, EagerAble {
 

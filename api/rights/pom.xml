@@ -12,6 +12,11 @@
     <name>DwOss • Rights • Api</name>
     <dependencies>
         <dependency>
+            <groupId>org.inferred</groupId>
+            <artifactId>freebuilder</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>eu.ggnet.saft</groupId>
             <artifactId>saft-api</artifactId>
         </dependency>

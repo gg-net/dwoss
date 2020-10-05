@@ -21,16 +21,15 @@ import java.util.*;
 import javax.ejb.Stateless;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.ee.api.AuthenticationService;
-import eu.ggnet.dwoss.rights.ee.assist.Rights;
 import eu.ggnet.dwoss.rights.ee.entity.Operator;
 import eu.ggnet.dwoss.core.common.UserInfoException;
+import eu.ggnet.dwoss.rights.ee.eao.OperatorEao;
 
 /**
  *
@@ -42,8 +41,7 @@ public class AuthenticationBean implements Authentication {
     private static final Logger L = LoggerFactory.getLogger(AuthenticationBean.class);
 
     @Inject
-    @Rights
-    private EntityManager rightsEm;
+    private OperatorEao userEao;
 
     @Inject
     private Instance<AuthenticationService> service;
@@ -61,9 +59,8 @@ public class AuthenticationBean implements Authentication {
     public eu.ggnet.dwoss.rights.api.Operator login(String username, char[] password) throws UserInfoException {
         L.info("login(user={}, password=xxxxxxx) requested", username);
         //find users by Username
-        List<Operator> result = rightsEm.createNamedQuery("Operator.byUsername", Operator.class).setParameter(1, username).getResultList();
-        if ( result.isEmpty() ) throw new UserInfoException("User " + username + " ist noch nicht angelegt");
-        Operator op = result.get(0);
+        Operator op = userEao.findByUsername(username);
+        if ( op == null ) throw new UserInfoException("User " + username + " ist noch nicht angelegt");
         if ( !service.isAmbiguous() && !service.isUnsatisfied() ) {
             if ( service.get().authenticate(username, password) ) {
                 L.info("login(user={}, password=xxxxxxx) via AuthenticationService successful.", username);

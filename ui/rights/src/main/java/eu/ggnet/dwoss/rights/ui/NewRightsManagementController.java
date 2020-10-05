@@ -33,15 +33,14 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.dwoss.rights.ee.*;
+import eu.ggnet.dwoss.rights.ee.GroupAgent;
+import eu.ggnet.dwoss.rights.ee.UserAgent;
 import eu.ggnet.dwoss.rights.ee.entity.Operator;
 import eu.ggnet.dwoss.rights.ee.entity.Persona;
-import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.ui.FxController;
 import eu.ggnet.saft.core.ui.Title;
-
-import static javafx.scene.control.SelectionMode.MULTIPLE;
 
 /**
  * FXML Controller class for the RightsManagementView.fxml.
@@ -140,6 +139,7 @@ public class NewRightsManagementController implements Initializable, FxControlle
     //TODO refresh
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
         UserAgent userAgent = Dl.remote().lookup(UserAgent.class);
         GroupAgent groupAgent = Dl.remote().lookup(GroupAgent.class);
         //ObservableLists

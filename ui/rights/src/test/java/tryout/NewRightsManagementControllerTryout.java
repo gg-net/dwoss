@@ -20,12 +20,14 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.dl.RemoteLookup;
 import eu.ggnet.dwoss.rights.ee.GroupAgent;
 import eu.ggnet.dwoss.rights.ee.UserAgent;
 import eu.ggnet.dwoss.rights.ui.cap.NewRightsManagementAction;
 import eu.ggnet.saft.core.UiCore;
 
-import tryout.stub.*;
+import tryout.stub.GroupAgentStub;
+import tryout.stub.UserAgentStub;
 
 /**
  *
@@ -34,10 +36,22 @@ import tryout.stub.*;
 public class NewRightsManagementControllerTryout {
 
     public static void main(String[] args) {
+        Dl.local().add(RemoteLookup.class, new RemoteLookup() {
+            @Override
+            public <T> boolean contains(Class<T> clazz) {
+                return false;
+            }
+
+            @Override
+            public <T> T lookup(Class<T> clazz) {
+                return null;
+            }
+        });
         Dl.remote().add(UserAgent.class, new UserAgentStub());
         Dl.remote().add(GroupAgent.class, new GroupAgentStub());
 
         UiCore.startSwing(() -> {
+
             JPanel main = new JPanel();
             main.add(new JButton(new NewRightsManagementAction()));
             return main;
