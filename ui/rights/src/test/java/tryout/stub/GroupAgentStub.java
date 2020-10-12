@@ -33,7 +33,7 @@ public class GroupAgentStub implements GroupAgent {
 
     @Override
     public void create(String name) throws IllegalArgumentException, NullPointerException {
-        L.info("Entering create({})", name);
+        L.debug("Entering create({})", name);
         Objects.requireNonNull(name, "Submitted name is null.");
         if ( name.isBlank() ) {
             throw new IllegalArgumentException("Submitted name is blank.");
@@ -43,12 +43,12 @@ public class GroupAgentStub implements GroupAgent {
         }
         Persona group = new Persona(name);
         UserAgentStub.getGroupsByIds().put(group.getId(), group);
-        L.info("create()): added new Group {}", group);
+        L.debug("create()): added new Group {}", group);
     }
 
     @Override
     public void updateName(long groupId, String name) throws IllegalArgumentException, NullPointerException {
-        L.info("Entering updateName({}, {})", groupId, name);
+        L.debug("Entering updateName({}, {})", groupId, name);
         Objects.requireNonNull(name, "Submitted name is null.");
         if ( name.isBlank() ) {
             throw new IllegalArgumentException("Submitted name is blank.");
@@ -61,23 +61,23 @@ public class GroupAgentStub implements GroupAgent {
             throw new IllegalArgumentException("Submitted name " + name + " is already used.");
         }
         group.setName(name);
-        L.info("updateName(): set name to {}", name);
+        L.debug("updateName(): set name to {}", name);
     }
 
     @Override
     public void delete(long groupId) throws IllegalArgumentException {
-        L.info("Entering delete({})", groupId);
+        L.debug("Entering delete({})", groupId);
         Persona group = UserAgentStub.getGroupsByIds().get(groupId);
         if ( group == null ) {
             throw new IllegalArgumentException("No Group found with groupId = " + groupId + ".");
         }
         UserAgentStub.getGroupsByIds().remove(group.getId());
-        L.info("delete(): deleted Group {}", group);
+        L.debug("delete(): deleted Group {}", group);
     }
 
     @Override
     public void addRight(long groupId, AtomicRight right) throws IllegalArgumentException, NullPointerException {
-        L.info("Entering addRight({}, {})", groupId, right);
+        L.debug("Entering addRight({}, {})", groupId, right);
         Objects.requireNonNull(right, "Right must not be null.");
         Persona group = UserAgentStub.getGroupsByIds().get(groupId);
         if ( group == null ) {
@@ -87,12 +87,12 @@ public class GroupAgentStub implements GroupAgent {
             throw new IllegalArgumentException("Submitted Right " + right + " is already granted to Group " + group.getName() + ".");
         }
         group.add(right);
-        L.info("addRight(): added Right {} to Group {}", right, group);
+        L.debug("addRight(): added Right {} to Group {}", right, group);
     }
 
     @Override
     public void removeRight(long groupId, AtomicRight right) throws IllegalArgumentException, NullPointerException {
-        L.info("Entering removeRight({}, {})", groupId, right);
+        L.debug("Entering removeRight({}, {})", groupId, right);
         Objects.requireNonNull(right, "Right must not be null.");
         Persona group = UserAgentStub.getGroupsByIds().get(groupId);
         if ( group == null ) {
@@ -102,91 +102,91 @@ public class GroupAgentStub implements GroupAgent {
             throw new IllegalArgumentException("Submitted Right " + right + " was not granted to Group " + group.getName() + " at all.");
         }
         group.getPersonaRights().remove(right);
-        L.info("removeRight(): removed Right {} from Group {}", right, group);
+        L.debug("removeRight(): removed Right {} from Group {}", right, group);
     }
 
     @Override
     public Persona findByName(String name) throws IllegalArgumentException, NullPointerException {
-        L.info("Entering findByName({})", name);
+        L.debug("Entering findByName({})", name);
         Objects.requireNonNull(name, "Submitted name is null.");
         if ( name.isBlank() ) {
             throw new IllegalArgumentException("Submitted name is blank.");
         }
         Persona group = UserAgentStub.getGroupsByIds().values().stream().filter(u -> u.getName().equals(name)).findAny().orElseGet(() -> null);
-        L.info("findByName(): returning Group {}", group);
+        L.debug("findByName(): returning Group {}", group);
         return group;
     }
 
     @Override
     public <T> long count(Class<T> entityClass) {
-        L.info("Entering count({})", entityClass);
+        L.debug("Entering count({})", entityClass);
         int count = UserAgentStub.getGroupsByIds().size();
-        L.info("count(): returning {}", count);
+        L.debug("count(): returning {}", count);
         return count;
     }
 
     @Override
     public <T> List<T> findAll(Class<T> entityClass) {
-        L.info("Entering findAll({})", entityClass);
+        L.debug("Entering findAll({})", entityClass);
         List<T> findAll = (List<T>)new ArrayList<>(UserAgentStub.getGroupsByIds().values());
-        L.info("findAll(): returning {}", findAll);
+        L.debug("findAll(): returning {}", findAll);
         return findAll;
     }
 
     @Override
     public <T> List<T> findAll(Class<T> entityClass, int start, int amount) {
-        L.info("Entering findAll({}, {}, {})", entityClass, start, amount);
+        L.debug("Entering findAll({}, {}, {})", entityClass, start, amount);
         List<T> findAll = findAll(entityClass);
-        L.info("findAll(): returning {}", findAll);
+        L.debug("findAll(): returning {}", findAll);
         return findAll;
     }
 
     @Override
     public <T> List<T> findAllEager(Class<T> entityClass) {
-        L.info("Entering findAllEager({})", entityClass);
+        L.debug("Entering findAllEager({})", entityClass);
         List<T> findAll = findAll(entityClass);
-        L.info("findAllEager(): returning {}", findAll);
+        L.debug("findAllEager(): returning {}", findAll);
         return findAll;
     }
 
     @Override
     public <T> List<T> findAllEager(Class<T> entityClass, int start, int amount) {
-        L.info("Entering findAllEager({}, {}, {})", entityClass, start, amount);
+        L.debug("Entering findAllEager({}, {}, {})", entityClass, start, amount);
         List<T> findAll = findAll(entityClass);
-        L.info("findAllEager(): returning {}", findAll);
+        L.debug("findAllEager(): returning {}", findAll);
         return findAll;
     }
 
     @Override
     public <T> T findById(Class<T> entityClass, Object id) {
-        L.info("Entering findById({}, {})", entityClass, id);
+        L.debug("Entering findById({}, {})", entityClass, id);
         Long groupId = (Long)id;
         Persona group = UserAgentStub.getGroupsByIds().get(groupId);
-        L.info("findById(): returning {}", group);
+        L.debug("findById(): returning {}", group);
         return (T)group;
     }
 
     @Override
     public <T> T findById(Class<T> entityClass, Object id, LockModeType lockModeType) {
-        L.info("Entering findById({}, {}, {})", entityClass, id, lockModeType);
+        L.debug("Entering findById({}, {}, {})", entityClass, id, lockModeType);
         T findById = findById(entityClass, id);
-        L.info("findById(): returning {}", findById);
+        L.debug("findById(): returning {}", findById);
         return findById;
     }
 
     @Override
     public <T> T findByIdEager(Class<T> entityClass, Object id) {
-        L.info("Entering findByIdEager({}, {})", entityClass, id);
+        L.debug("Entering findByIdEager({}, {})", entityClass, id);
         T findById = findById(entityClass, id);
-        L.info("findByIdEager(): returning {}", findById);
+        L.debug("findByIdEager(): returning {}", findById);
         return findById;
     }
 
     @Override
     public <T> T findByIdEager(Class<T> entityClass, Object id, LockModeType lockModeType) {
-        L.info("Entering findByIdEager({}, {}, {})", entityClass, id, lockModeType);
+        L.debug("Entering findByIdEager({}, {}, {})", entityClass, id, lockModeType);
         T findById = findById(entityClass, id);
-        L.info("findByIdEager(): returning {}", findById);
+        L.debug("findByIdEager(): returning {}", findById);
         return findById;
     }
 

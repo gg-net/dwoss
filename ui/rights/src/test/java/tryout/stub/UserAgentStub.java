@@ -33,9 +33,9 @@ public class UserAgentStub implements UserAgent {
     
     private static final Logger L = LoggerFactory.getLogger(UserAgentStub.class);
 
-    private static Map<Long, Operator> usersByIds = new HashMap<>();
+    private static final Map<Long, Operator> usersByIds = new HashMap<>();
 
-    private static Map<Long, Persona> groupsByIds = new HashMap<>();
+    private static final Map<Long, Persona> groupsByIds = new HashMap<>();
 
     public static Map<Long, Operator> getUsersByIds() {
         return usersByIds;
@@ -46,38 +46,38 @@ public class UserAgentStub implements UserAgent {
     }
 
     public UserAgentStub() {
-        L.info("Entering UserAgentStub constructor");
+        L.debug("Entering UserAgentStub constructor");
         for (int i = 1; i < 4; i++) {
             Persona group = new Persona(i, 0, "Gruppe " + i, getRandomRights());
             groupsByIds.put(group.getId(), group);
-            L.info("constructor: Added Group {}", group);
+            L.debug("constructor: Added Group {}", group);
         }
-        for (int j = 0; j < 3; j++) {
+        for (int j = 1; j < 4; j++) {
             int till = (int)(Math.random() * 3 - 1);
             List<Persona> groups = new ArrayList<>(groupsByIds.values()).subList(0, till);
             Operator user = new Operator(j, 0, 0, "Benutzer " + j, RandomStringUtils.randomAlphanumeric(6).getBytes(),
                     RandomStringUtils.randomAlphanumeric(5).getBytes(), groups, getRandomRights());
             usersByIds.put(user.getId(), user);
-            L.info("constructor: Added User {}", user);
+            L.debug("constructor: Added User {}", user);
         }
-        L.info("Exiting UserAgentStub construsctor");
+        L.debug("Exiting UserAgentStub construsctor");
     }
 
     @Override
     public void create(String username) throws IllegalArgumentException, NullPointerException {
-        L.info("Entering create({})", username);
+        L.debug("Entering create({})", username);
         Objects.requireNonNull(username, "Submitted username is null.");
         if ( username.isBlank() ) {
             throw new IllegalArgumentException("Submitted username is blank.");
         }
         Operator user = new Operator(username);
         usersByIds.put(user.getId(), user);
-        L.info("create(): added new User {}", user);
+        L.debug("create(): added new User {}", user);
     }
 
     @Override
     public void updateUsername(long userId, String username) throws IllegalArgumentException, NullPointerException {
-        L.info("Entering updateUsername({}, {})", userId, username);
+        L.debug("Entering updateUsername({}, {})", userId, username);
         Operator user = usersByIds.get(userId);
         if ( user == null ) {
             throw new IllegalArgumentException("No User found with userId = " + userId + ".");
@@ -87,12 +87,12 @@ public class UserAgentStub implements UserAgent {
             throw new IllegalArgumentException("Submitted username is blank.");
         }
         user.setUsername(username);
-        L.info("updateUsername(): set username to {}", user.getUsername());
+        L.debug("updateUsername(): set username to {}", user.getUsername());
     }
 
     @Override
     public void updatePassword(long userId, byte[] password) throws IllegalArgumentException, NullPointerException {
-        L.info("Entering updatePassword({}, {})", userId, password);
+        L.debug("Entering updatePassword({}, {})", userId, password);
         Operator user = usersByIds.get(userId);
         if ( user == null ) {
             throw new IllegalArgumentException("No User found with userId = " + userId + ".");
@@ -102,23 +102,23 @@ public class UserAgentStub implements UserAgent {
             throw new IllegalArgumentException("Submitted password is empty.");
         }
         user.setPassword(password);
-        L.info("updatePassword(): set password to {}", user.getPassword());
+        L.debug("updatePassword(): set password to {}", user.getPassword());
     }
 
     @Override
     public void updateQuickLoginKey(long userId, int quickLoginKey) throws IllegalArgumentException {
-        L.info("Entering updateQuickLoginKey({}, {})", userId, quickLoginKey);
+        L.debug("Entering updateQuickLoginKey({}, {})", userId, quickLoginKey);
         Operator user = usersByIds.get(userId);
         if ( user == null ) {
             throw new IllegalArgumentException("No User found with userId = " + userId + ".");
         }
         user.setQuickLoginKey(quickLoginKey);
-        L.info("updateQuickLoginKey(): set quickLoginKey to {}", user.getQuickLoginKey());
+        L.debug("updateQuickLoginKey(): set quickLoginKey to {}", user.getQuickLoginKey());
     }
 
     @Override
     public void addRight(long userId, AtomicRight right) throws IllegalArgumentException, NullPointerException {
-        L.info("Entering addRight({}, {})", userId, right);
+        L.debug("Entering addRight({}, {})", userId, right);
         Operator user = usersByIds.get(userId);
         if ( user == null ) {
             throw new IllegalArgumentException("No User found with userId = " + userId + ".");
@@ -128,12 +128,12 @@ public class UserAgentStub implements UserAgent {
             throw new IllegalArgumentException("Submitted Right " + right + " is already granted to User " + user.getUsername() + ".");
         }
         user.add(right);
-        L.info("addRight(): added Right {} to User {}", right, user);
+        L.debug("addRight(): added Right {} to User {}", right, user);
     }
 
     @Override
     public void removeRight(long userId, AtomicRight right) throws IllegalArgumentException, NullPointerException {
-        L.info("Entering removeRight({}, {})", userId, right);
+        L.debug("Entering removeRight({}, {})", userId, right);
         Operator user = usersByIds.get(userId);
         if ( user == null ) {
             throw new IllegalArgumentException("No User found with userId = " + userId + ".");
@@ -143,12 +143,12 @@ public class UserAgentStub implements UserAgent {
             throw new IllegalArgumentException("Submitted Right " + right + " was not granted to User " + user.getUsername() + " at all.");
         }
         user.getRights().remove(right);
-        L.info("removeRight(): removed Right {} from User {}", right, user);
+        L.debug("removeRight(): removed Right {} from User {}", right, user);
     }
 
     @Override
     public void addGroup(long userId, long groupId) throws IllegalArgumentException {
-        L.info("Entering addGroup({}, {})", userId, groupId);
+        L.debug("Entering addGroup({}, {})", userId, groupId);
         Operator user = usersByIds.get(userId);
         if ( user == null ) {
             throw new IllegalArgumentException("No User found with userId " + userId + ".");
@@ -161,12 +161,12 @@ public class UserAgentStub implements UserAgent {
             throw new IllegalArgumentException("Submitted Group " + group.getName() + " is already associated with User " + user.getUsername() + ".");
         }
         user.getPersonas().add(group);
-        L.info("addGroup(): added Group {} to User {}", group, user);
+        L.debug("addGroup(): added Group {} to User {}", group, user);
     }
 
     @Override
     public void removeGroup(long userId, long groupId) throws IllegalArgumentException {
-        L.info("Entering removeGroup({}, {})", userId, groupId);
+        L.debug("Entering removeGroup({}, {})", userId, groupId);
         Operator user = usersByIds.get(userId);
         if ( user == null ) {
             throw new IllegalArgumentException("No User found with userId " + userId + ".");
@@ -179,112 +179,112 @@ public class UserAgentStub implements UserAgent {
             throw new IllegalArgumentException("Submitted Group " + group.getName() + " wasn't associated with User " + user.getUsername() + " at all.");
         }
         user.getPersonas().remove(group);
-        L.info("removeGroup(): removed Group {} from User {}", group, user);
+        L.debug("removeGroup(): removed Group {} from User {}", group, user);
     }
 
     @Override
     public void delete(long userId) throws IllegalArgumentException {
-        L.info("Entering delete({})", userId);
+        L.debug("Entering delete({})", userId);
         Operator user = usersByIds.get(userId);
         if ( user == null ) {
             throw new IllegalArgumentException("No User found with userId = " + userId + ".");
         }
         usersByIds.remove(user.getId());
-        L.info("delete(): deleted User {}", user);
+        L.debug("delete(): deleted User {}", user);
     }
 
     @Override
     public Operator findByName(String username) throws IllegalArgumentException, NullPointerException {
-        L.info("Entering findByName({})", username);
+        L.debug("Entering findByName({})", username);
         Objects.requireNonNull(username, "Submitted username is null.");
         if ( username.isBlank() ) {
             throw new IllegalArgumentException("Submitted username is blank.");
         }
         Operator user = usersByIds.values().stream().filter(u -> u.getUsername().equals(username)).findAny().orElseGet(() -> null);
-        L.info("findByName(): returning User {}", user);
+        L.debug("findByName(): returning User {}", user);
         return user;
     }
 
     @Override
     public <T> long count(Class<T> entityClass) {
-        L.info("Entering count({})", entityClass);
+        L.debug("Entering count({})", entityClass);
         int count = usersByIds.size();
-        L.info("count(): returning {}", count);
+        L.debug("count(): returning {}", count);
         return count;
     }
 
     @Override
     public <T> List<T> findAll(Class<T> entityClass) {
-        L.info("Entering findAll({})", entityClass);
+        L.debug("Entering findAll({})", entityClass);
         List<T> findAll = (List<T>)new ArrayList<>(usersByIds.values());
-        L.info("findAll(): returning {}", findAll);
+        L.debug("findAll(): returning {}", findAll);
         return findAll;
     }
 
     @Override
     public <T> List<T> findAll(Class<T> entityClass, int start, int amount) {
-        L.info("Entering findAll({}, {}, {})", entityClass, start, amount);
+        L.debug("Entering findAll({}, {}, {})", entityClass, start, amount);
         List<T> findAll = findAll(entityClass);
-        L.info("findAll(): returning {}", findAll);
+        L.debug("findAll(): returning {}", findAll);
         return findAll;
     }
 
     @Override
     public <T> List<T> findAllEager(Class<T> entityClass) {
-        L.info("Entering findAllEager({})", entityClass);
+        L.debug("Entering findAllEager({})", entityClass);
         List<T> findAll = findAll(entityClass);
-        L.info("findAllEager(): returning {}", findAll);
+        L.debug("findAllEager(): returning {}", findAll);
         return findAll;
     }
 
     @Override
     public <T> List<T> findAllEager(Class<T> entityClass, int start, int amount) {
-        L.info("Entering findAllEager({}, {}, {})", entityClass, start, amount);
+        L.debug("Entering findAllEager({}, {}, {})", entityClass, start, amount);
         List<T> findAll = findAll(entityClass);
-        L.info("findAllEager(): returning {}", findAll);
+        L.debug("findAllEager(): returning {}", findAll);
         return findAll;
     }
 
     @Override
     public <T> T findById(Class<T> entityClass, Object id) {
-        L.info("Entering findById({}, {})", entityClass, id);
+        L.debug("Entering findById({}, {})", entityClass, id);
         Long userId = (Long)id;
         Operator user = usersByIds.get(userId);
-        L.info("findById(): returning {}", user);
+        L.debug("findById(): returning {}", user);
         return (T)user;
     }
 
     @Override
     public <T> T findById(Class<T> entityClass, Object id, LockModeType lockModeType) {
-        L.info("Entering findById({}, {}, {})", entityClass, id, lockModeType);
+        L.debug("Entering findById({}, {}, {})", entityClass, id, lockModeType);
         T findById = findById(entityClass, id);
-        L.info("findById(): returning {}", findById);
+        L.debug("findById(): returning {}", findById);
         return findById;
     }
 
     @Override
     public <T> T findByIdEager(Class<T> entityClass, Object id) {
-        L.info("Entering findByIdEager({}, {})", entityClass, id);
+        L.debug("Entering findByIdEager({}, {})", entityClass, id);
         T findById = findById(entityClass, id);
-        L.info("findByIdEager(): returning {}", findById);
+        L.debug("findByIdEager(): returning {}", findById);
         return findById;
     }
 
     @Override
     public <T> T findByIdEager(Class<T> entityClass, Object id, LockModeType lockModeType) {
-        L.info("Entering findByIdEager({}, {}, {})", entityClass, id, lockModeType);
+        L.debug("Entering findByIdEager({}, {}, {})", entityClass, id, lockModeType);
         T findById = findById(entityClass, id);
-        L.info("findByIdEager(): returning {}", findById);
+        L.debug("findByIdEager(): returning {}", findById);
         return findById;
     }
 
     private List<AtomicRight> getRandomRights() {
-        L.info("Entering getRandomRights()");
+        L.debug("Entering getRandomRights()");
         List<AtomicRight> rights = Arrays.asList(AtomicRight.values());
         Collections.shuffle(rights);
         int till = (int)(Math.random() * rights.size() - 1) + 1;
         rights = rights.subList(0, till);
-        L.info("getRandomRights(): returning List of Rights {}", rights);
+        L.debug("getRandomRights(): returning List of Rights {}", rights);
         return rights;
     }
 
