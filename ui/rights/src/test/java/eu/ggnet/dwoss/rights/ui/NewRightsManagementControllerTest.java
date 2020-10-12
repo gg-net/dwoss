@@ -16,18 +16,7 @@
  */
 package eu.ggnet.dwoss.rights.ui;
 
-import java.awt.GraphicsEnvironment;
-import java.io.IOException;
-
-import javafx.embed.swing.JFXPanel;
-import javafx.fxml.FXMLLoader;
-
 import org.junit.Test;
-
-import eu.ggnet.dwoss.core.widget.Dl;
-import eu.ggnet.dwoss.rights.ee.*;
-
-import tryout.stub.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -37,16 +26,5 @@ public class NewRightsManagementControllerTest {
     public void testResource() {
         assertThat(RightsManagmentController.loadFxml()).isNotNull();
     }
-    
-//    @Test
-//    public void testJavaFxFxml() throws IOException {
-//        if ( GraphicsEnvironment.isHeadless() ) return;
-//        new JFXPanel(); // Implizit start of JavaFx.
-//        Dl.remote().add(UserAgent.class, new UserAgentStub());
-//        Dl.remote().add(GroupAgent.class, new GroupAgentStub());
-//        FXMLLoader loader = new FXMLLoader(RightsManagmentController.loadFxml());
-//        loader.load();
-//        assertThat((RightsManagmentController)loader.getController()).isNotNull();
-//    }
 
 }
