@@ -38,6 +38,7 @@ import eu.ggnet.dwoss.rights.ee.entity.Persona;
  */
 @Stateless
 @LocalBean
+@AutoLogger
 public class GroupAgentBean extends AbstractAgentBean implements GroupAgent {
 
     @Inject
@@ -49,20 +50,18 @@ public class GroupAgentBean extends AbstractAgentBean implements GroupAgent {
         return em;
     }
 
-    @AutoLogger
     @Override
     public void create(String name)throws IllegalArgumentException, NullPointerException {
         Objects.requireNonNull(name, "Submitted name is null.");
         if ( name.isBlank() ) {
             throw new IllegalArgumentException("Submitted name is blank.");
         }
-        if ( checkForNameDuplicate(name) ) {
+        if ( isNameAlreadyInUsage(name) ) {
             throw new IllegalArgumentException("Submitted name " + name + " is already used.");
         }
         em.persist(new Persona(name));
     }
 
-    @AutoLogger
     @Override
     public void updateName(long groupId, String name)throws IllegalArgumentException, NullPointerException {
         Objects.requireNonNull(name, "Submitted name is null.");
@@ -73,13 +72,12 @@ public class GroupAgentBean extends AbstractAgentBean implements GroupAgent {
         if ( name.isBlank() ) {
             throw new IllegalArgumentException("Submitted name is blank.");
         }
-        if ( checkForNameDuplicate(name) ) {
+        if ( isNameAlreadyInUsage(name) ) {
             throw new IllegalArgumentException("Submitted name " + name + " is already used.");
         }
         group.setName(name);
     }
 
-    @AutoLogger
     @Override
     public void delete(long groupId)throws IllegalArgumentException {
         Persona group = em.find(Persona.class, groupId);
@@ -89,7 +87,6 @@ public class GroupAgentBean extends AbstractAgentBean implements GroupAgent {
         em.remove(group);
     }
 
-    @AutoLogger
     @Override
     public void addRight(long groupId, AtomicRight right)throws IllegalArgumentException, NullPointerException {
         Objects.requireNonNull(right, "Right must not be null.");
@@ -103,7 +100,6 @@ public class GroupAgentBean extends AbstractAgentBean implements GroupAgent {
         group.add(right);
     }
 
-    @AutoLogger
     @Override
     public void removeRight(long groupId, AtomicRight right)throws IllegalArgumentException, NullPointerException {
         Objects.requireNonNull(right, "Right must not be null.");
@@ -117,7 +113,6 @@ public class GroupAgentBean extends AbstractAgentBean implements GroupAgent {
         group.getPersonaRights().remove(right);
     }
 
-    @AutoLogger
     @Override
     public Persona findByName(String name)throws IllegalArgumentException, NullPointerException {
         Objects.requireNonNull(name, "Submitted name is null.");
@@ -137,8 +132,7 @@ public class GroupAgentBean extends AbstractAgentBean implements GroupAgent {
      * @param name name to check for duplicate.
      * @return boolean - true, if the submitted name is already used.
      */
-    @AutoLogger
-    private boolean checkForNameDuplicate(String name) {
+    private boolean isNameAlreadyInUsage(String name) {
         List<Persona> allGroups = findAll(Persona.class);
         return allGroups.stream().anyMatch(g -> g.getName().equals(name));
     }
