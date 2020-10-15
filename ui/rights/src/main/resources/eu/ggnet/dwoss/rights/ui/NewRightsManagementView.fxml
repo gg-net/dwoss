@@ -13,18 +13,18 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.rights.ui.NewRightsManagementController">
     <children>
-        <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <columnConstraints>
-                <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="200.0" />
-                <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="200.0" />
-                <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="200.0" />
-                <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="200.0" />
-                <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="200.0" />
+                <ColumnConstraints hgrow="ALWAYS" />
+                <ColumnConstraints hgrow="ALWAYS" />
+                <ColumnConstraints hgrow="ALWAYS" />
+                <ColumnConstraints hgrow="ALWAYS" />
+                <ColumnConstraints hgrow="ALWAYS" />
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="260.0" vgrow="ALWAYS" />
+                <RowConstraints vgrow="ALWAYS" />
                 <RowConstraints minHeight="40.0" prefHeight="40.0" vgrow="NEVER" />
-                <RowConstraints minHeight="10.0" prefHeight="260.0" vgrow="ALWAYS" />
+                <RowConstraints vgrow="ALWAYS" />
                 <RowConstraints minHeight="40.0" prefHeight="40.0" vgrow="NEVER" />
             </rowConstraints>
             <children>
@@ -50,10 +50,10 @@
                     <children>
                         <HBox alignment="CENTER" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                             <children>
-                                <Button fx:id="addAllRightsButton" mnemonicParsing="false" text="&#x02C4; &#x02C4;" />
-                                <Button fx:id="addRightButton" mnemonicParsing="false" text="&#x02C4;" />
-                                <Button fx:id="removeRightButton" mnemonicParsing="false" text="&#x02C5;" />
-                                <Button fx:id="removeAllRightsButton" mnemonicParsing="false" text="&#x02C5; &#x02C5;" />
+                                <Button fx:id="addAllRightsButton" mnemonicParsing="false" text="˄ ˄" />
+                                <Button fx:id="addRightButton" mnemonicParsing="false" text="˄" />
+                                <Button fx:id="removeRightButton" mnemonicParsing="false" text="˅" />
+                                <Button fx:id="removeAllRightsButton" mnemonicParsing="false" text="˅ ˅" />
                             </children>
                             <padding>
                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -83,10 +83,10 @@
                     <children>
                         <HBox alignment="CENTER" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                             <children>
-                                <Button fx:id="addAllGroupsButton" mnemonicParsing="false" text="&#x02C4; &#x02C4;" />
-                                <Button fx:id="addGroupButton" mnemonicParsing="false" text="&#x02C4;" />
-                                <Button fx:id="removeGroupButton" mnemonicParsing="false" text="&#x02C5;" />
-                                <Button fx:id="removeAllGroupsButton" mnemonicParsing="false" text="&#x02C5; &#x02C5;" />
+                                <Button fx:id="addAllGroupsButton" mnemonicParsing="false" text="˄ ˄" />
+                                <Button fx:id="addGroupButton" mnemonicParsing="false" text="˄" />
+                                <Button fx:id="removeGroupButton" mnemonicParsing="false" text="˅" />
+                                <Button fx:id="removeAllGroupsButton" mnemonicParsing="false" text="˅ ˅" />
                             </children>
                             <padding>
                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
