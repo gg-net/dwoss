@@ -96,11 +96,6 @@ public class Persona extends BaseEntity implements Serializable, Comparable<Pers
         this.name = name;
     }
 
-    /**
-     * Defensive copy return of persona rights.
-     * <p>
-     * @return defensive copy return of persona rights
-     */
     public List<AtomicRight> getPersonaRights() {
 //        return new ArrayList<>(personaRights);
         return personaRights;
