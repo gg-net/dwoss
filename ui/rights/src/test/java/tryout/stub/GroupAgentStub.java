@@ -38,7 +38,7 @@ public class GroupAgentStub implements GroupAgent {
         if ( name.isBlank() ) {
             throw new IllegalArgumentException("Submitted name is blank.");
         }
-        if ( checkForNameDuplicate(name) ) {
+        if ( isNameAlreadyInUsage(name) ) {
             throw new IllegalArgumentException("Submitted name " + name + " is already used.");
         }
         Persona group = new Persona(name);
@@ -57,7 +57,7 @@ public class GroupAgentStub implements GroupAgent {
         if ( group == null ) {
             throw new IllegalArgumentException("No Group found with groupId = " + groupId + ".");
         }
-        if ( checkForNameDuplicate(name) ) {
+        if ( isNameAlreadyInUsage(name) ) {
             throw new IllegalArgumentException("Submitted name " + name + " is already used.");
         }
         group.setName(name);
@@ -190,7 +190,7 @@ public class GroupAgentStub implements GroupAgent {
         return findById;
     }
 
-    private boolean checkForNameDuplicate(String name) {
+    private boolean isNameAlreadyInUsage(String name) {
         List<Persona> allGroups = findAll(Persona.class);
         return allGroups.stream().anyMatch(g -> g.getName().equals(name));
     }
