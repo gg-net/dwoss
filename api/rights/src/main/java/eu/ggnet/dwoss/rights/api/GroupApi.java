@@ -26,6 +26,10 @@ import javax.ejb.Remote;
  */
 @Remote
 public interface GroupApi {
+    
+    Group findById(long id) throws IllegalArgumentException;
+    
+    Group findByName(String name) throws IllegalArgumentException, NullPointerException;
 
     List<Group> findAll();
 

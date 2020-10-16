@@ -12,6 +12,11 @@
     <name>DwOss • Rights • Api</name>
     <dependencies>
         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-rights-ee</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.inferred</groupId>
             <artifactId>freebuilder</artifactId>
             <optional>true</optional>

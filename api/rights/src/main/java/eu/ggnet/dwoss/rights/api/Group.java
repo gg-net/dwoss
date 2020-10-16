@@ -17,6 +17,7 @@
 package eu.ggnet.dwoss.rights.api;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.inferred.freebuilder.FreeBuilder;
 
@@ -30,12 +31,15 @@ public interface Group {
     class Builder extends Group_Builder {
     };
 
-    long id();
+//    Optional<Long> getId();
+//
+//    Optional<Integer> getOptLock();
+    long getId();
 
-    int optLock();
+    int getOptLock();
 
-    String name();
+    String getName();
 
-    List<AtomicRight> rights();
+    List<AtomicRight> getRights();
 
 }

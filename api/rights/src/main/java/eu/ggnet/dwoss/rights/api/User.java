@@ -31,22 +31,22 @@ public interface User {
     class Builder extends User_Builder {
     };
 
-    long id();
+    long getId();
 
-    int optLock();
+    int getOptLock();
 
-    List<AtomicRight> rights();
+    List<AtomicRight> getRights();
 
-    String username();
+    String getUsername();
 
-    List<Group> groups();
+    List<Group> getGroups();
 
-    default List<AtomicRight> allRights() {
-        EnumSet<AtomicRight> resultRights = EnumSet.noneOf(AtomicRight.class);
-        resultRights.addAll(rights());
-        for (Group persona : groups()) {
-            resultRights.addAll(persona.rights());
+    default List<AtomicRight> getAllRights() {
+        EnumSet<AtomicRight> rights = EnumSet.noneOf(AtomicRight.class);
+        rights.addAll(getRights());
+        for (Group group : getGroups()) {
+            rights.addAll(group.getRights());
         }
-        return new ArrayList<>(resultRights);
+        return new ArrayList<>(rights);
     }
 }

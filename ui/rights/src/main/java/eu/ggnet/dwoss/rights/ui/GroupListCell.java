@@ -14,26 +14,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.rights.api;
+package eu.ggnet.dwoss.rights.ui;
 
-import java.util.List;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.util.Callback;
 
-import javax.ejb.Remote;
+import eu.ggnet.dwoss.rights.api.Group;
 
 /**
  *
- * @author oliver.guenther
+ * @author mirko.schulze
  */
-@Remote
-public interface UserApi {
-
-    int getQuickLoginKey(long id) throws IllegalArgumentException;
+public class GroupListCell extends ListCell<Group>{
     
-    boolean authenticate(String username, byte[] password) throws IllegalArgumentException, NullPointerException;
+    public static class Factory implements Callback<ListView<Group>, ListCell<Group>> {
 
-    User findById(long id) throws IllegalArgumentException;
+        @Override
+        public ListCell<Group> call(ListView<Group> p) {
+            return new GroupListCell();
+        }
+    }
 
-    User findByName(String username) throws IllegalArgumentException, NullPointerException;
-
-    List<User> findAll();
+    @Override
+    protected void updateItem(Group item, boolean empty) {
+        super.updateItem(item, empty);
+        setText("");
+        if ( !empty || item != null ) setText(item.getName());
+    }
+    
 }
