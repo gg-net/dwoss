@@ -16,6 +16,7 @@
  */
 package eu.ggnet.dwoss.rights.api;
 
+import java.io.Serializable;
 import java.util.*;
 
 import org.inferred.freebuilder.FreeBuilder;
@@ -26,18 +27,18 @@ import org.inferred.freebuilder.FreeBuilder;
  * @author oliver.guenther
  */
 @FreeBuilder
-public interface User {
+public interface User extends Serializable {
 
     class Builder extends User_Builder {
     };
 
-    long getId();
+    Optional<Long> getId();
+    
+    String getUsername();
 
-    int getOptLock();
+    Optional<Integer> getOptLock();
 
     List<AtomicRight> getRights();
-
-    String getUsername();
 
     List<Group> getGroups();
 

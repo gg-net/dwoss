@@ -16,6 +16,7 @@
  */
 package eu.ggnet.dwoss.rights.api;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,17 +27,14 @@ import org.inferred.freebuilder.FreeBuilder;
  * @author oliver.guenther
  */
 @FreeBuilder
-public interface Group {
+public interface Group extends Serializable {
 
     class Builder extends Group_Builder {
     };
 
-//    Optional<Long> getId();
-//
-//    Optional<Integer> getOptLock();
-    long getId();
+    Optional<Long> getId();
 
-    int getOptLock();
+    Optional<Integer> getOptLock();
 
     String getName();
 
