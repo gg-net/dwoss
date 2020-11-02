@@ -26,9 +26,7 @@ import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.core.system.util.Utils;
-import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.dwoss.rights.ee.UserAgent;
+import eu.ggnet.dwoss.rights.api.*;
 import eu.ggnet.dwoss.rights.ee.assist.Rights;
 import eu.ggnet.dwoss.rights.ee.entity.Operator;
 import eu.ggnet.dwoss.rights.ee.entity.Persona;
@@ -38,14 +36,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.isA;
 
 @RunWith(Arquillian.class)
-public class UserAgentIT extends ArquillianProjectArchive {
+public class UserApiIT extends ArquillianProjectArchive {
 
     @Inject
     @Rights
     private EntityManager em;
 
     @EJB
-    private UserAgent agent;
+    private UserApi bean;
 
     @Inject
     private UserTransaction utx;
@@ -58,22 +56,10 @@ public class UserAgentIT extends ArquillianProjectArchive {
 
     private static final String GROUP_NAME = "Test Group";
 
-    private static final byte[] PASSWORD = {16, 1, 19, 19};
-
-    private static final byte[] UPDATED_PASSWORD = {23, 15, 18, 3};
-
-    private static final byte[] EMPTY_PASSWORD = {};
-
-    private static final int QUICK_LOGIN_KEY = 0;
-
-    private static final int UPDATED_QUICK_LOGIN_KEY = 1;
-
     private final static AtomicRight R = AtomicRight.CHANGE_TAX;
 
     @After
     public void tearDown() throws Exception {
-        
-//        Utils.clearH2Db(em);
         utx.begin();
         em.joinTransaction();
 
@@ -103,10 +89,10 @@ public class UserAgentIT extends ArquillianProjectArchive {
 
     @Test
     public void testCreate() throws Exception {
-        agent.create(NAME);
+        bean.create(NAME);
 
-        assertThat(agent.count(Operator.class)).as("One existing User").isEqualTo(1);
-        Operator found = agent.findByName(NAME);
+        assertThat(bean.findAll().size()).as("One existing User").isEqualTo(1);
+        User found = bean.findByName(NAME);
         assertThat(found).as("User exists").isNotNull();
     }
 
@@ -114,14 +100,14 @@ public class UserAgentIT extends ArquillianProjectArchive {
     public void testCreateUsernameIsBlank() throws Exception {
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        agent.create(BLANK);
+        bean.create(BLANK);
     }
 
     @Test
     public void testCreateUsernameIsNull() throws Exception {
         expectedException.expectCause(isA(NullPointerException.class));
 
-        agent.create(null);
+        bean.create(null);
     }
 
     @Test
@@ -132,9 +118,9 @@ public class UserAgentIT extends ArquillianProjectArchive {
         em.persist(user);
         utx.commit();
 
-        agent.updateUsername(user.getId(), UPDATED_NAME);
+        bean.updateUsername(user.getId(), UPDATED_NAME);
 
-        Operator found = agent.findByName(UPDATED_NAME);
+        User found = bean.findByName(UPDATED_NAME);
         assertThat(found).as("User exists with new username").isNotNull();
     }
 
@@ -148,7 +134,7 @@ public class UserAgentIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        agent.updateUsername(user.getId() + 1, UPDATED_NAME);
+        bean.updateUsername(user.getId() + 1, UPDATED_NAME);
     }
 
     @Test
@@ -161,7 +147,7 @@ public class UserAgentIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        agent.updateUsername(user.getId(), BLANK);
+        bean.updateUsername(user.getId(), BLANK);
     }
 
     @Test
@@ -174,93 +160,7 @@ public class UserAgentIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(NullPointerException.class));
 
-        agent.updateUsername(user.getId(), null);
-    }
-
-    @Test
-    public void testUpdatePassword() throws Exception {
-        utx.begin();
-        em.joinTransaction();
-        Operator user = new Operator(NAME);
-        user.setPassword(PASSWORD);
-        em.persist(user);
-        utx.commit();
-
-        agent.updatePassword(user.getId(), UPDATED_PASSWORD);
-
-        Operator found = agent.findByName(NAME);
-        assertThat(found.getPassword()).as("Existing User has new password").isEqualTo(UPDATED_PASSWORD);
-    }
-
-    @Test
-    public void testUpdatePasswordUserIdNotFound() throws Exception {
-        utx.begin();
-        em.joinTransaction();
-        Operator user = new Operator(NAME);
-        user.setPassword(PASSWORD);
-        em.persist(user);
-        utx.commit();
-
-        expectedException.expectCause(isA(IllegalArgumentException.class));
-
-        agent.updatePassword(user.getId() + 1, UPDATED_PASSWORD);
-    }
-
-    @Test
-    public void testUpdatePasswordPasswordIsEmpty() throws Exception {
-        utx.begin();
-        em.joinTransaction();
-        Operator user = new Operator(NAME);
-        user.setPassword(PASSWORD);
-        em.persist(user);
-        utx.commit();
-
-        expectedException.expectCause(isA(IllegalArgumentException.class));
-
-        agent.updatePassword(user.getId(), EMPTY_PASSWORD);
-    }
-
-    @Test
-    public void testUpdatePasswordPasswordIsNull() throws Exception {
-        utx.begin();
-        em.joinTransaction();
-        Operator user = new Operator(NAME);
-        user.setPassword(PASSWORD);
-        em.persist(user);
-        utx.commit();
-
-        expectedException.expectCause(isA(NullPointerException.class));
-
-        agent.updatePassword(user.getId(), null);
-    }
-
-    @Test
-    public void testUpdateQuickLoginKey() throws Exception {
-        utx.begin();
-        em.joinTransaction();
-        Operator user = new Operator(NAME);
-        user.setQuickLoginKey(QUICK_LOGIN_KEY);
-        em.persist(user);
-        utx.commit();
-
-        agent.updateQuickLoginKey(user.getId(), UPDATED_QUICK_LOGIN_KEY);
-
-        Operator found = agent.findByName(NAME);
-        assertThat(found.getQuickLoginKey()).as("Existing User has new quickLoginKey").isEqualTo(UPDATED_QUICK_LOGIN_KEY);
-    }
-
-    @Test
-    public void testUpdateQuickLoginKeyUserIdNotFound() throws Exception {
-        utx.begin();
-        em.joinTransaction();
-        Operator user = new Operator(NAME);
-        user.setPassword(PASSWORD);
-        em.persist(user);
-        utx.commit();
-
-        expectedException.expectCause(isA(IllegalArgumentException.class));
-
-        agent.updateQuickLoginKey(user.getId() + 1, UPDATED_QUICK_LOGIN_KEY);
+        bean.updateUsername(user.getId(), null);
     }
 
     @Test
@@ -273,9 +173,9 @@ public class UserAgentIT extends ArquillianProjectArchive {
 
         assertThat(user.getRights()).as("Existing User has no Rights").isEmpty();
 
-        agent.addRight(user.getId(), R);
+        bean.addRight(user.getId(), R);
 
-        Operator found = agent.findByName(NAME);
+        User found = bean.findByName(NAME);
         assertThat(found.getRights()).as("Existing User has one Right").containsExactly(R);
     }
 
@@ -289,7 +189,7 @@ public class UserAgentIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        agent.addRight(user.getId() + 1, R);
+        bean.addRight(user.getId() + 1, R);
     }
 
     @Test
@@ -303,7 +203,7 @@ public class UserAgentIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        agent.addRight(user.getId(), R);
+        bean.addRight(user.getId(), R);
     }
 
     @Test
@@ -316,7 +216,7 @@ public class UserAgentIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(NullPointerException.class));
 
-        agent.addRight(user.getId(), null);
+        bean.addRight(user.getId(), null);
     }
 
     @Test
@@ -330,9 +230,9 @@ public class UserAgentIT extends ArquillianProjectArchive {
 
         assertThat(user.getRights()).as("Existing User has one Right").containsExactly(R);
 
-        agent.removeRight(user.getId(), R);
+        bean.removeRight(user.getId(), R);
 
-        Operator found = agent.findByName(NAME);
+        User found = bean.findByName(NAME);
         assertThat(found.getRights()).as("Existing User has no Rights").isEmpty();
     }
 
@@ -347,7 +247,7 @@ public class UserAgentIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        agent.removeRight(user.getId() + 1, R);
+        bean.removeRight(user.getId() + 1, R);
     }
 
     @Test
@@ -360,7 +260,7 @@ public class UserAgentIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        agent.removeRight(user.getId(), R);
+        bean.removeRight(user.getId(), R);
     }
 
     @Test
@@ -373,7 +273,7 @@ public class UserAgentIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(NullPointerException.class));
 
-        agent.removeRight(user.getId(), null);
+        bean.removeRight(user.getId(), null);
     }
 
     @Test
@@ -388,10 +288,10 @@ public class UserAgentIT extends ArquillianProjectArchive {
 
         assertThat(user.getPersonas()).as("Existing User has no Groups").isEmpty();
 
-        agent.addGroup(user.getId(), group.getId());
+        bean.addGroup(user.getId(), group.getId());
 
-        Operator found = agent.findByName(NAME);
-        assertThat(found.getPersonas()).as("Existing User has one Group").hasSize(1);
+        User found = bean.findByName(NAME);
+        assertThat(found.getGroups()).as("Existing User has one Group").hasSize(1);
     }
 
     @Test
@@ -406,7 +306,7 @@ public class UserAgentIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        agent.addGroup(user.getId() + 1, group.getId());
+        bean.addGroup(user.getId() + 1, group.getId());
     }
 
     @Test
@@ -421,11 +321,11 @@ public class UserAgentIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        agent.addGroup(user.getId(), group.getId() + 1);
+        bean.addGroup(user.getId(), group.getId() + 1);
     }
 
     @Test
-    public void testAddGroupUserHasGroup() throws Exception {
+    public void testAddGroupUserAlreadyHasGroup() throws Exception {
         utx.begin();
         em.joinTransaction();
         Operator user = new Operator(NAME);
@@ -437,7 +337,7 @@ public class UserAgentIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        agent.addGroup(user.getId(), group.getId());
+        bean.addGroup(user.getId(), group.getId());
     }
 
     @Test
@@ -453,10 +353,10 @@ public class UserAgentIT extends ArquillianProjectArchive {
 
         assertThat(user.getPersonas()).as("Existing User has one Group").hasSize(1);
 
-        agent.removeGroup(user.getId(), group.getId());
+        bean.removeGroup(user.getId(), group.getId());
 
-        Operator found = agent.findByName(NAME);
-        assertThat(found.getPersonas()).as("Existing User has no Groups").isEmpty();
+        User found = bean.findByName(NAME);
+        assertThat(found.getGroups()).as("Existing User has no Groups").isEmpty();
     }
 
     @Test
@@ -471,7 +371,7 @@ public class UserAgentIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        agent.removeGroup(user.getId() + 1, group.getId());
+        bean.removeGroup(user.getId() + 1, group.getId());
     }
 
     @Test
@@ -486,11 +386,11 @@ public class UserAgentIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        agent.removeGroup(user.getId(), group.getId() + 1);
+        bean.removeGroup(user.getId(), group.getId() + 1);
     }
 
     @Test
-    public void testRemoveGroupUserHasGroup() throws Exception {
+    public void testRemoveGroupUserDoesNotHaveGroup() throws Exception {
         utx.begin();
         em.joinTransaction();
         Operator user = new Operator(NAME);
@@ -501,7 +401,7 @@ public class UserAgentIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        agent.removeGroup(user.getId(), group.getId());
+        bean.removeGroup(user.getId(), group.getId());
     }
 
     @Test
@@ -512,11 +412,11 @@ public class UserAgentIT extends ArquillianProjectArchive {
         em.persist(user);
         utx.commit();
 
-        assertThat(agent.count(Operator.class)).as("One User exists").isEqualTo(1);
+        assertThat(bean.findAll().size()).as("One User exists").isEqualTo(1);
 
-        agent.delete(user.getId());
+        bean.delete(user.getId());
 
-        assertThat(agent.count(Operator.class)).as("No Users exist").isZero();
+        assertThat(bean.findAll().size()).as("No Users exist").isZero();
     }
 
     @Test
@@ -529,6 +429,6 @@ public class UserAgentIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        agent.delete(user.getId() + 1);
+        bean.delete(user.getId() + 1);
     }
 }

@@ -28,7 +28,7 @@ import eu.ggnet.dwoss.rights.ee.GroupAgent;
 import eu.ggnet.dwoss.rights.ee.entity.Persona;
 
 public class GroupAgentStub implements GroupAgent {
-    
+
     private static final Logger L = LoggerFactory.getLogger(UserAgentStub.class);
 
     @Override
@@ -38,7 +38,7 @@ public class GroupAgentStub implements GroupAgent {
         if ( name.isBlank() ) {
             throw new IllegalArgumentException("Submitted name is blank.");
         }
-        if ( isNameAlreadyInUsage(name) ) {
+        if ( isNameAlreadyByAnotherGroup(-1, name) ) {
             throw new IllegalArgumentException("Submitted name " + name + " is already used.");
         }
         Persona group = new Persona(name);
@@ -57,7 +57,7 @@ public class GroupAgentStub implements GroupAgent {
         if ( group == null ) {
             throw new IllegalArgumentException("No Group found with groupId = " + groupId + ".");
         }
-        if ( isNameAlreadyInUsage(name) ) {
+        if ( isNameAlreadyByAnotherGroup(groupId, name) ) {
             throw new IllegalArgumentException("Submitted name " + name + " is already used.");
         }
         group.setName(name);
@@ -190,7 +190,11 @@ public class GroupAgentStub implements GroupAgent {
         return findById;
     }
 
-    private boolean isNameAlreadyInUsage(String name) {
+    private boolean isNameAlreadyByAnotherGroup(long groupId, String name) {
+        Persona group = findById(Persona.class, groupId);
+        if ( group != null ) {
+            if ( group.getName().equals(name) ) return false;
+        }
         List<Persona> allGroups = findAll(Persona.class);
         return allGroups.stream().anyMatch(g -> g.getName().equals(name));
     }
