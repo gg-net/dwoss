@@ -16,14 +16,6 @@
  */
 package eu.ggnet.dwoss.misc.ee.listings;
 
-import eu.ggnet.dwoss.core.common.values.Warranty;
-import eu.ggnet.dwoss.core.common.values.ProductGroup;
-import eu.ggnet.dwoss.core.common.values.SalesChannel;
-import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
-import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.dwoss.core.system.util.Utils;
-import eu.ggnet.dwoss.core.system.util.TwoDigits;
-
 import java.awt.Color;
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,16 +37,21 @@ import net.sf.jasperreports.engine.util.JRSaver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.core.system.GlobalConfig;
 import eu.ggnet.dwoss.core.common.FileJacket;
+import eu.ggnet.dwoss.core.common.UserInfoException;
+import eu.ggnet.dwoss.core.common.values.*;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.system.GlobalConfig;
 import eu.ggnet.dwoss.core.system.ImageFinder;
-import eu.ggnet.dwoss.customer.api.ResellerListService;
-import eu.ggnet.dwoss.mandator.api.service.FtpConfiguration.UploadCommand;
-import eu.ggnet.dwoss.mandator.api.service.*;
-import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.misc.api.SalesListingService;
 import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
 import eu.ggnet.dwoss.core.system.progress.SubMonitor;
+import eu.ggnet.dwoss.core.system.util.TwoDigits;
+import eu.ggnet.dwoss.core.system.util.Utils;
+import eu.ggnet.dwoss.customer.api.ResellerListService;
+import eu.ggnet.dwoss.mandator.api.service.*;
+import eu.ggnet.dwoss.mandator.api.service.UploadConfiguration.UploadCommand;
+import eu.ggnet.dwoss.mandator.api.value.Mandator;
+import eu.ggnet.dwoss.misc.api.SalesListingService;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
 import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
@@ -65,6 +62,7 @@ import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
 import eu.ggnet.lucidcalc.CFormat.Representation;
 import eu.ggnet.lucidcalc.*;
 
+import static eu.ggnet.dwoss.mandator.api.service.UploadConfiguration.Type.SCP;
 import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.CENTER;
 import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.LEFT;
 import static eu.ggnet.lucidcalc.CFormat.VerticalAlignment.MIDDLE;
@@ -279,7 +277,7 @@ public class SalesListingProducerOperation implements SalesListingProducer, Sale
         switch (config.location) {
             case LOCAL:
                 return jackets;
-            case FTP:
+            case REMOTE:
                 prepareAndUpload(result);
                 break;
         }
@@ -545,12 +543,16 @@ public class SalesListingProducerOperation implements SalesListingProducer, Sale
      * @throws UserInfoException
      */
     private void prepareAndUpload(Map<TradeName, Collection<FileJacket>> files) throws UserInfoException {
-        FtpConfiguration ftpConfig = listingService.get().listingFtpConfiguration(files);
-        try {
-            FtpTransfer.upload(ftpConfig.getConfig(), monitorFactory.newSubMonitor("Bereite FTP tranfer vor"), ftpConfig.getUpdloadCommands().toArray(new UploadCommand[0]));
-        } catch (IOException ex) {
-            throw new UserInfoException("Fileupload konnte nicht durchgeführt werden.", "Fileupload configuration = " + ftpConfig);
+        UploadConfiguration uploadConfig = listingService.get().listingFtpConfiguration(files);
+        L.info("prepareAndUpload() uploadCommands:{}", uploadConfig.getUploadCommands());
+        if ( uploadConfig.getConfig().type == SCP ) {
+            try {
+                new ScpUpload().upload(uploadConfig.getConfig(), monitorFactory.newSubMonitor("Bereite FTP tranfer vor"), uploadConfig.getUploadCommands().toArray(new UploadCommand[0]));
+            } catch (IOException | ClassNotFoundException ex) {
+                throw new UserInfoException("Fileupload konnte nicht durchgeführt werden.", "Fileupload configuration = " + uploadConfig);
+            }
+        } else {
+            throw new IllegalArgumentException("Type " + uploadConfig.getConfig().type + "  not supported");
         }
-        L.info("UploadCommands = {}", ftpConfig.getUpdloadCommands());
     }
 }

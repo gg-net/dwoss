@@ -33,7 +33,7 @@ public class ListingActionConfiguration implements Serializable {
     }
 
     public enum Location {
-        LOCAL, FTP;
+        LOCAL, REMOTE;
     }
 
     public final Type type;

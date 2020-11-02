@@ -23,7 +23,7 @@ import java.util.*;
  *
  * @author pascal.perau
  */
-public class FtpConfiguration {
+public class UploadConfiguration {
 
     public static class UploadCommand {
 
@@ -82,6 +82,10 @@ public class FtpConfiguration {
 
     }
 
+    public enum Type {
+        FTP, SCP;
+    }
+
     public static class ConnectionConfig {
 
         public final String host;
@@ -92,16 +96,30 @@ public class FtpConfiguration {
 
         public final String pass;
 
-        public ConnectionConfig(String host, int port, String user, String pass) {
+        public final Type type;
+
+        public final String hostKey;
+
+        /**
+         *
+         * @param host
+         * @param port
+         * @param user
+         * @param pass
+         * @param hostKey may be null
+         */
+        public ConnectionConfig(String host, int port, String user, String pass, String hostKey, Type type) {
             this.host = Objects.requireNonNull(host, "new ConnectionConfig with host=null called, not allowed");
             this.port = port;
-            this.user = Objects.requireNonNull(user, "new ConnectionConfig with user=null called, not allowed");;
-            this.pass = Objects.requireNonNull(pass, "new ConnectionConfig with pass=null called, not allowed");;
+            this.user = Objects.requireNonNull(user, "new ConnectionConfig with user=null called, not allowed");
+            this.pass = Objects.requireNonNull(pass, "new ConnectionConfig with pass=null called, not allowed");
+            this.hostKey = hostKey;
+            this.type = Objects.requireNonNull(type, "type must not be null");
         }
 
         @Override
         public String toString() {
-            return "ConnectionConfig{" + "host=" + host + ", port=" + port + ", user=" + user + ", pass=" + pass + '}';
+            return "ConnectionConfig{" + "host=" + host + ", port=" + port + ", user=" + user + ", pass=" + pass + ", hostKey=" + hostKey + '}';
         }
 
     }
@@ -110,7 +128,7 @@ public class FtpConfiguration {
 
     private final Set<UploadCommand> updloadCommands;
 
-    public FtpConfiguration(ConnectionConfig config, Set<UploadCommand> updloadCommands) {
+    public UploadConfiguration(ConnectionConfig config, Set<UploadCommand> updloadCommands) {
         this.config = Objects.requireNonNull(config, "new FtpConfiguration with config=null called, not allowed");;
         this.updloadCommands = Objects.requireNonNull(updloadCommands, "new FtpConfiguration with updloadCommands=null called, not allowed");;
     }
@@ -119,13 +137,13 @@ public class FtpConfiguration {
         return config;
     }
 
-    public Set<UploadCommand> getUpdloadCommands() {
+    public Set<UploadCommand> getUploadCommands() {
         return updloadCommands;
     }
 
     @Override
     public String toString() {
-        return "FtpConfiguration{" + "config=" + config + ", updloadCommands=" + updloadCommands + '}';
+        return "UploadConfiguration{" + "config=" + config + ", updloadCommands=" + updloadCommands + '}';
     }
 
 }

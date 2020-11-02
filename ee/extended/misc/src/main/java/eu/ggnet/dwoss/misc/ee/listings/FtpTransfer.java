@@ -26,8 +26,8 @@ import org.apache.commons.net.ftp.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.mandator.api.service.FtpConfiguration.ConnectionConfig;
-import eu.ggnet.dwoss.mandator.api.service.FtpConfiguration.UploadCommand;
+import eu.ggnet.dwoss.mandator.api.service.UploadConfiguration.ConnectionConfig;
+import eu.ggnet.dwoss.mandator.api.service.UploadConfiguration.UploadCommand;
 import eu.ggnet.dwoss.core.system.progress.IMonitor;
 import eu.ggnet.dwoss.core.system.progress.SubMonitor;
 

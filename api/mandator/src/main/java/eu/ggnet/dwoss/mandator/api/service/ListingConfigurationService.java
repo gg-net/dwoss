@@ -33,6 +33,6 @@ public interface ListingConfigurationService {
 
     List<ListingConfiguration> listingConfigurations();
 
-    FtpConfiguration listingFtpConfiguration(Map<TradeName, Collection<FileJacket>> files);
+    UploadConfiguration listingFtpConfiguration(Map<TradeName, Collection<FileJacket>> files);
 
 }

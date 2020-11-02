@@ -57,6 +57,10 @@
             <artifactId>commons-net</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.hierynomus</groupId>
+            <artifactId>sshj</artifactId>
+        </dependency>
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-redtapext-ee</artifactId>
             <version>${project.version}</version>
