@@ -27,7 +27,17 @@ import javax.ejb.Remote;
 @Remote
 public interface GroupApi {
     
-    Group findById(long id) throws IllegalArgumentException;
+    Group create(String name) throws IllegalArgumentException, NullPointerException;
+
+    Group updateName(long groupId, String name) throws IllegalArgumentException, NullPointerException;
+
+    Group addRight(long groupId, AtomicRight right) throws IllegalArgumentException, NullPointerException;
+
+    Group removeRight(long groupId, AtomicRight right) throws IllegalArgumentException, NullPointerException;
+    
+    void delete(long groupId) throws IllegalArgumentException;
+    
+    Group findById(long groupId) throws IllegalArgumentException;
     
     Group findByName(String name) throws IllegalArgumentException, NullPointerException;
 

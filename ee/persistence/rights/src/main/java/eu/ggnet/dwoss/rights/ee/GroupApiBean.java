@@ -16,42 +16,35 @@
  */
 package eu.ggnet.dwoss.rights.ee;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
-import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import eu.ggnet.dwoss.core.system.autolog.AutoLogger;
-import eu.ggnet.dwoss.core.system.persistence.AbstractAgentBean;
-import eu.ggnet.dwoss.rights.api.AtomicRight;
+import eu.ggnet.dwoss.rights.api.*;
 import eu.ggnet.dwoss.rights.ee.assist.Rights;
-import eu.ggnet.dwoss.rights.ee.eao.GroupEao;
 import eu.ggnet.dwoss.rights.ee.entity.Persona;
 
+import com.querydsl.jpa.impl.JPAQuery;
+
+import static eu.ggnet.dwoss.rights.ee.entity.QPersona.persona;
+
 /**
- * Implementation of {@link GroupAgent}.
  *
  * @author mirko.schulze
  */
 @Stateless
-@LocalBean
-//@AutoLogger
-public class GroupAgentBean extends AbstractAgentBean implements GroupAgent {
+@AutoLogger
+public class GroupApiBean implements GroupApi {
 
     @Inject
     @Rights
     private EntityManager em;
 
     @Override
-    protected EntityManager getEntityManager() {
-        return em;
-    }
-
-    @Override
-    public void create(String name) throws IllegalArgumentException, NullPointerException {
+    public Group create(String name) throws IllegalArgumentException, NullPointerException {
         Objects.requireNonNull(name, "Submitted name is null.");
         if ( name.isBlank() ) {
             throw new IllegalArgumentException("Submitted name is blank.");
@@ -60,10 +53,11 @@ public class GroupAgentBean extends AbstractAgentBean implements GroupAgent {
             throw new IllegalArgumentException("Submitted name " + name + " is already used.");
         }
         em.persist(new Persona(name));
+        return findByName(name);
     }
 
     @Override
-    public void updateName(long groupId, String name) throws IllegalArgumentException, NullPointerException {
+    public Group updateName(long groupId, String name) throws IllegalArgumentException, NullPointerException {
         Objects.requireNonNull(name, "Submitted name is null.");
         Persona group = em.find(Persona.class, groupId);
         if ( group == null ) {
@@ -76,6 +70,35 @@ public class GroupAgentBean extends AbstractAgentBean implements GroupAgent {
             throw new IllegalArgumentException("Submitted name " + name + " is already used.");
         }
         group.setName(name);
+        return findById(groupId);
+    }
+
+    @Override
+    public Group addRight(long groupId, AtomicRight right) throws IllegalArgumentException, NullPointerException {
+        Objects.requireNonNull(right, "Right must not be null.");
+        Persona group = em.find(Persona.class, groupId);
+        if ( group == null ) {
+            throw new IllegalArgumentException("No Group found with groupId = " + groupId + ".");
+        }
+        if ( group.getPersonaRights().contains(right) ) {
+            throw new IllegalArgumentException("Submitted Right " + right + " is already granted to Group " + group.getName() + ".");
+        }
+        group.add(right);
+        return findById(groupId);
+    }
+
+    @Override
+    public Group removeRight(long groupId, AtomicRight right) throws IllegalArgumentException, NullPointerException {
+        Objects.requireNonNull(right, "Right must not be null.");
+        Persona group = em.find(Persona.class, groupId);
+        if ( group == null ) {
+            throw new IllegalArgumentException("No Group found with groupId = " + groupId + ".");
+        }
+        if ( !group.getPersonaRights().contains(right) ) {
+            throw new IllegalArgumentException("Submitted Right " + right + " was not granted to Group " + group.getName() + " at all.");
+        }
+        group.getPersonaRights().remove(right);
+        return findById(groupId);
     }
 
     @Override
@@ -88,57 +111,50 @@ public class GroupAgentBean extends AbstractAgentBean implements GroupAgent {
     }
 
     @Override
-    public void addRight(long groupId, AtomicRight right) throws IllegalArgumentException, NullPointerException {
-        Objects.requireNonNull(right, "Right must not be null.");
-        Persona group = em.find(Persona.class, groupId);
-        if ( group == null ) {
-            throw new IllegalArgumentException("No Group found with groupId = " + groupId + ".");
-        }
-        if ( group.getPersonaRights().contains(right) ) {
-            throw new IllegalArgumentException("Submitted Right " + right + " is already granted to Group " + group.getName() + ".");
-        }
-        group.add(right);
+    public Group findById(long groupId) throws IllegalArgumentException {
+        Persona group = new JPAQuery<Persona>(em).from(persona).where(persona.id.eq(groupId)).fetchOne();
+        if ( group == null ) throw new IllegalArgumentException("No Group found with id " + groupId + ".");
+        return new Group.Builder()
+                .setId(Optional.of(group.getId()))
+                .setName(group.getName())
+                .setOptLock(Optional.of(group.getOptLock()))
+                .addAllRights(group.getPersonaRights())
+                .build();
     }
 
     @Override
-    public void removeRight(long groupId, AtomicRight right) throws IllegalArgumentException, NullPointerException {
-        Objects.requireNonNull(right, "Right must not be null.");
-        Persona group = em.find(Persona.class, groupId);
-        if ( group == null ) {
-            throw new IllegalArgumentException("No Group found with groupId = " + groupId + ".");
-        }
-        if ( !group.getPersonaRights().contains(right) ) {
-            throw new IllegalArgumentException("Submitted Right " + right + " was not granted to Group " + group.getName() + " at all.");
-        }
-        group.getPersonaRights().remove(right);
+    public Group findByName(String name) throws IllegalArgumentException, NullPointerException {
+        Objects.requireNonNull(name, "Submitted name is null,");
+        Persona group = new JPAQuery<Persona>(em).from(persona).where(persona.name.eq(name)).fetchOne();
+        if ( group == null ) throw new IllegalArgumentException("No Group found with name " + name + ".");
+        return new Group.Builder()
+                .setId(Optional.of(group.getId()))
+                .setName(group.getName())
+                .setOptLock(Optional.of(group.getOptLock()))
+                .addAllRights(group.getPersonaRights())
+                .build();
     }
 
     @Override
-    public Persona findByName(String name) throws IllegalArgumentException, NullPointerException {
-        Objects.requireNonNull(name, "Submitted name is null.");
-        if ( name.isBlank() ) {
-            throw new IllegalArgumentException("Submitted name is blank.");
-        }
-        Persona group = new GroupEao(em).findByName(name);
-        group.fetchEager();
-        return group;
+    public List<Group> findAll() {
+        List<Persona> personas = new JPAQuery<Persona>(em).from(persona).fetch();
+        List<Group> groups = new ArrayList<>();
+        personas.forEach(g -> {
+            groups.add(new Group.Builder()
+                    .setId(g.getId())
+                    .setName(g.getName())
+                    .setOptLock(g.getOptLock())
+                    .addAllRights(g.getPersonaRights()).build());
+        });
+        return groups;
     }
 
-    /**
-     * Checks if a name is already used by another {@link Group}.
-     * <p/>
-     * Returns true if the name is already used by another Group.
-     *
-     * @param groupId id of the Group which name should be updated.
-     * @param name    name to check for duplicate.
-     * @return boolean - true, if the submitted name is already used by another Group.
-     */
     private boolean isNameAlreadyUsedByAnotherGroup(long groupId, String name) {
-        Persona group = findById(Persona.class, groupId);
+        Persona group = new JPAQuery<Persona>(em).from(persona).where(persona.id.eq(groupId)).fetchOne();
         if ( group != null ) {
             if ( group.getName().equals(name) ) return false;
         }
-        List<Persona> allGroups = findAll(Persona.class);
+        List<Group> allGroups = findAll();
         return allGroups.stream().anyMatch(g -> g.getName().equals(name));
     }
 

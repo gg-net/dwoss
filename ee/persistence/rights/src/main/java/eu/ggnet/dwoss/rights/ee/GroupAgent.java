@@ -86,8 +86,6 @@ public interface GroupAgent extends RemoteAgent {
 
     /**
      * Searches for the {@link Group} with the submitted name.
-     * <p/>
-     * Currently only used for testing purposes.
      *
      * @param name name of the Group, must not be null or blank.
      * @return Group - the found Group or null.
@@ -95,6 +93,5 @@ public interface GroupAgent extends RemoteAgent {
      * @throws NullPointerException     if the submitted name is null.
      */
     public Persona findByName(String name) throws IllegalArgumentException, NullPointerException;
-    //XXX return Persona or throw
 
 }

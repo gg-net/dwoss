@@ -27,11 +27,25 @@ import javax.ejb.Remote;
 @Remote
 public interface UserApi {
 
-    int getQuickLoginKey(long id) throws IllegalArgumentException;
-    
     boolean authenticate(String username, byte[] password) throws IllegalArgumentException, NullPointerException;
 
-    User findById(long id) throws IllegalArgumentException;
+    int getQuickLoginKey(long userId) throws IllegalArgumentException;
+
+    User create(String username) throws IllegalArgumentException, NullPointerException;
+
+    User updateUsername(long userId, String username) throws IllegalArgumentException, NullPointerException;
+    
+    User addRight(long userId, AtomicRight right) throws IllegalArgumentException, NullPointerException;
+
+    User removeRight(long userId, AtomicRight right) throws IllegalArgumentException, NullPointerException;
+
+    User addGroup(long userId, long groupId) throws IllegalArgumentException;
+
+    User removeGroup(long userId, long groupId) throws IllegalArgumentException;
+
+    void delete(long userId) throws IllegalArgumentException;
+
+    User findById(long userId) throws IllegalArgumentException;
 
     User findByName(String username) throws IllegalArgumentException, NullPointerException;
 
