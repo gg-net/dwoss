@@ -21,13 +21,12 @@ import javax.swing.JPanel;
 
 import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.dl.RemoteLookup;
-import eu.ggnet.dwoss.rights.ee.GroupAgent;
-import eu.ggnet.dwoss.rights.ee.UserAgent;
+import eu.ggnet.dwoss.rights.api.GroupApi;
+import eu.ggnet.dwoss.rights.api.UserApi;
 import eu.ggnet.dwoss.rights.ui.cap.NewRightsManagementAction;
 import eu.ggnet.saft.core.UiCore;
 
-import tryout.stub.GroupAgentStub;
-import tryout.stub.UserAgentStub;
+import tryout.stub.*;
 
 /**
  *
@@ -47,8 +46,10 @@ public class NewRightsManagementControllerTryout {
                 return null;
             }
         });
-        Dl.remote().add(UserAgent.class, new UserAgentStub());
-        Dl.remote().add(GroupAgent.class, new GroupAgentStub());
+//        Dl.remote().add(UserAgent.class, new UserAgentStub());
+//        Dl.remote().add(GroupAgent.class, new GroupAgentStub());
+        Dl.remote().add(UserApi.class, new UserApiStub());
+        Dl.remote().add(GroupApi.class, new GroupApiStub());
 
         UiCore.startSwing(() -> {
 

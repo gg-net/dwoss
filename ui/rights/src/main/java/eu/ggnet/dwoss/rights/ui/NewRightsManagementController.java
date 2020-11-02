@@ -20,7 +20,6 @@ import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
 import javafx.application.Platform;
 import javafx.collections.*;
 import javafx.fxml.FXML;
@@ -33,10 +32,6 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.rights.api.*;
-import eu.ggnet.dwoss.rights.ee.GroupAgent;
-import eu.ggnet.dwoss.rights.ee.UserAgent;
-import eu.ggnet.dwoss.rights.ee.entity.Operator;
-import eu.ggnet.dwoss.rights.ee.entity.Persona;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.FxController;
 import eu.ggnet.saft.core.ui.Title;
@@ -47,28 +42,26 @@ import eu.ggnet.saft.core.ui.Title;
  * @author mirko.schulze
  */
 //TODO umlaute berücksichtigen beim sortieren
+//ee entitites raus!
+//mehrere dialog mit je einem konstruktoren
+//createGroup / updateAll?
+//open... trennen
+//rchte ersetzen verbessern
+//completable future
+//"data information" an groups/users
 @Title("Rechte-Verwaltung")
 public class NewRightsManagementController implements Initializable, FxController {
 
     private static final Logger L = LoggerFactory.getLogger(NewRightsManagementController.class);
 
-//    private UiOperator selectedUser;
     private User selectedUser;
 
-//    private UiPersona selectedGroup;
     private Group selectedGroup;
 
     //<editor-fold defaultstate="collapsed" desc="FX Components">
-//    @FXML
-//    private ListView<UiOperator> userListView;
     @FXML
     private ListView<User> userListView;
 
-//    @FXML
-//    private ListView<UiPersona> activeGroupsListView;
-//
-//    @FXML
-//    private ListView<UiPersona> inactiveGroupsListView;
     @FXML
     private ListView<Group> activeGroupsListView;
 
@@ -127,33 +120,20 @@ public class NewRightsManagementController implements Initializable, FxControlle
     private Button closeButton;
     //</editor-fold>
 
-//    private UiOperator getSelectedUserFromUserListView() {
-//        return userListView.getSelectionModel().getSelectedItem();
-//    }
-//
-//    private Long getSelectedUserIdFromUserListView() {
-//        return userListView.getSelectionModel().getSelectedItem().idProperty().get();
-//    }
     private User getSelectedUserFromUserListView() {
         return userListView.getSelectionModel().getSelectedItem();
     }
 
     private Long getSelectedUserIdFromUserListView() {
-        return userListView.getSelectionModel().getSelectedItem().getId();
+        return userListView.getSelectionModel().getSelectedItem().getId().get();
     }
 
-//    private UiPersona getSelectedGroupFromActiveGroupsListViewOrInactiveGroupsListView() {
-//        return activeGroupsListView.getSelectionModel().getSelectedItem() != null
-//                ? activeGroupsListView.getSelectionModel().getSelectedItem()
-//                : inactiveGroupsListView.getSelectionModel().getSelectedItem();
-//    }
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        UserAgent userAgent = Dl.remote().lookup(UserAgent.class);
-        GroupAgent groupAgent = Dl.remote().lookup(GroupAgent.class);
+        UserApi userBean = Dl.remote().lookup(UserApi.class);
+        GroupApi groupBean = Dl.remote().lookup(GroupApi.class);
         //ListViews
         //userListView
-//        userListView.setCellFactory(new OperatorListCell.Factory());
         userListView.setCellFactory(new UserListCell.Factory());
         userListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         userListView.setOnMouseClicked(e -> {
@@ -161,6 +141,8 @@ public class NewRightsManagementController implements Initializable, FxControlle
                 selectedUser = getSelectedUserFromUserListView();
                 if ( e.getClickCount() == 1 ) {
                     refreshUi(false, false);
+                }else{
+                    editUser(selectedUser);
                 }
             }
         });
@@ -177,7 +159,6 @@ public class NewRightsManagementController implements Initializable, FxControlle
             activeRightsListView.getSelectionModel().select(-1);
         });
         //activeGroupsListView
-//        activeGroupsListView.setCellFactory(new PersonaListCell.Factory());
         activeGroupsListView.setCellFactory(new GroupListCell.Factory());
         activeGroupsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         activeGroupsListView.setOnMouseClicked(e -> {
@@ -187,16 +168,12 @@ public class NewRightsManagementController implements Initializable, FxControlle
                 if ( e.getClickCount() == 1 ) {
                     refreshSelectedGroupRightsListView();
                 } else {
-                    new GroupDialog(selectedGroup).showAndWait().ifPresent(g -> {
-                        groupAgent.updateName(selectedGroup.getId(), g.getName());
-                        g.getRights().forEach(r -> groupAgent.addRight(selectedGroup.getId(), r));
-                        refreshUi(false, false);
-                    });
+                    editGroup(selectedGroup);
+                    refreshUi(false, false);
                 }
             }
         });
         //inactiveGroupsListView
-//        inactiveGroupsListView.setCellFactory(new PersonaListCell.Factory());
         inactiveGroupsListView.setCellFactory(new GroupListCell.Factory());
         inactiveGroupsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         inactiveGroupsListView.setOnMouseClicked(e -> {
@@ -206,11 +183,11 @@ public class NewRightsManagementController implements Initializable, FxControlle
                 if ( e.getClickCount() == 1 ) {
                     refreshSelectedGroupRightsListView();
                 } else {
-                    new GroupDialog(selectedGroup).showAndWait().ifPresent(g -> {
-                        groupAgent.updateName(selectedGroup.getId(), g.getName());
-                        g.getRights().forEach(r -> groupAgent.addRight(selectedGroup.getId(), r));
-                        refreshUi(false, false);
-                    });
+                    editGroup(selectedGroup);
+                    selectedGroup = inactiveGroupsListView.getSelectionModel().getSelectedItem();
+                    refreshUi(false, false);
+                    refreshSelectedGroupRightsListView();
+                    inactiveGroupsListView.getSelectionModel().select(selectedGroup);
                 }
             }
         });
@@ -222,27 +199,27 @@ public class NewRightsManagementController implements Initializable, FxControlle
         //addAllRightsButton
         addAllRightsButton.disableProperty().bind(userListView.getSelectionModel().selectedIndexProperty().isEqualTo(-1));
         addAllRightsButton.setOnAction(e -> {
-            inactiveRightsListView.getItems().forEach(r -> userAgent.addRight(getSelectedUserIdFromUserListView(), r));
+            inactiveRightsListView.getItems().forEach(r -> userBean.addRight(getSelectedUserIdFromUserListView(), r));
             refreshUi(false, false);
         });
         //addRightButton
-        addRightButton.disableProperty().bind(inactiveRightsListView.getSelectionModel().selectedIndexProperty().isEqualTo(-1));
+        addRightButton.disableProperty().bind(userListView.getSelectionModel().selectedIndexProperty().isEqualTo(-1));
         addRightButton.setOnAction(e -> {
             inactiveRightsListView.getSelectionModel().getSelectedItems()
-                    .forEach(r -> userAgent.addRight(getSelectedUserIdFromUserListView(), r));
+                    .forEach(r -> userBean.addRight(getSelectedUserIdFromUserListView(), r));
             refreshUi(false, false);
         });
         //removeRightButton
-        removeRightButton.disableProperty().bind(activeRightsListView.getSelectionModel().selectedIndexProperty().isEqualTo(-1));
+        removeRightButton.disableProperty().bind(userListView.getSelectionModel().selectedIndexProperty().isEqualTo(-1));
         removeRightButton.setOnAction(e -> {
             activeRightsListView.getSelectionModel().getSelectedItems()
-                    .forEach(r -> userAgent.removeRight(getSelectedUserIdFromUserListView(), r));
+                    .forEach(r -> userBean.removeRight(getSelectedUserIdFromUserListView(), r));
             refreshUi(false, false);
         });
         //removeAllRightsButton
         removeAllRightsButton.disableProperty().bind(userListView.getSelectionModel().selectedIndexProperty().isEqualTo(-1));
         removeAllRightsButton.setOnAction(e -> {
-            activeRightsListView.getItems().forEach(r -> userAgent.removeRight(getSelectedUserIdFromUserListView(), r));
+            activeRightsListView.getItems().forEach(r -> userBean.removeRight(getSelectedUserIdFromUserListView(), r));
             refreshUi(false, false);
         });
         //addAllGroupsButton
@@ -250,35 +227,32 @@ public class NewRightsManagementController implements Initializable, FxControlle
         addAllGroupsButton.setOnAction(e -> {
             List<Long> inactiveGroupIds = inactiveGroupsListView.getItems()
                     .stream()
-                    //                    .mapToLong(g -> g.idProperty().get())
-                    .mapToLong(g -> g.getId())
+                    .mapToLong(g -> g.getId().get())
                     .boxed()
                     .collect(Collectors.toList());
-            inactiveGroupIds.forEach(id -> userAgent.addGroup(getSelectedUserIdFromUserListView(), id));
+            inactiveGroupIds.forEach(id -> userBean.addGroup(getSelectedUserIdFromUserListView(), id));
             refreshUi(false, false);
         });
         //addGroupButton
-        addGroupButton.disableProperty().bind(inactiveGroupsListView.getSelectionModel().selectedIndexProperty().isEqualTo(-1));
+        addGroupButton.disableProperty().bind(userListView.getSelectionModel().selectedIndexProperty().isEqualTo(-1));
         addGroupButton.setOnAction(e -> {
             List<Long> selectedInactiveGroupIds = inactiveGroupsListView.getSelectionModel().getSelectedItems()
                     .stream()
-                    //                    .mapToLong(g -> g.idProperty().get())
-                    .mapToLong(g -> g.getId())
+                    .mapToLong(g -> g.getId().get())
                     .boxed()
                     .collect(Collectors.toList());
-            selectedInactiveGroupIds.forEach(id -> userAgent.addGroup(getSelectedUserIdFromUserListView(), id));
+            selectedInactiveGroupIds.forEach(id -> userBean.addGroup(getSelectedUserIdFromUserListView(), id));
             refreshUi(false, false);
         });
         //removeGroupButton
-        removeGroupButton.disableProperty().bind(activeGroupsListView.getSelectionModel().selectedIndexProperty().isEqualTo(-1));
+        removeGroupButton.disableProperty().bind(userListView.getSelectionModel().selectedIndexProperty().isEqualTo(-1));
         removeGroupButton.setOnAction(e -> {
             List<Long> selectedActiveGroupIds = activeGroupsListView.getSelectionModel().getSelectedItems()
                     .stream()
-                    //                    .mapToLong(g -> g.idProperty().get())
-                    .mapToLong(g -> g.getId())
+                    .mapToLong(g -> g.getId().get())
                     .boxed()
                     .collect(Collectors.toList());
-            selectedActiveGroupIds.forEach(id -> userAgent.removeGroup(getSelectedUserIdFromUserListView(), id));
+            selectedActiveGroupIds.forEach(id -> userBean.removeGroup(getSelectedUserIdFromUserListView(), id));
             refreshUi(false, false);
         });
         //removeAllGroupsButton
@@ -286,37 +260,29 @@ public class NewRightsManagementController implements Initializable, FxControlle
         removeAllGroupsButton.setOnAction(e -> {
             List<Long> activeGroupIds = activeGroupsListView.getItems()
                     .stream()
-                    //                    .mapToLong(g -> g.idProperty().get())
-                    .mapToLong(g -> g.getId())
+                    .mapToLong(g -> g.getId().get())
                     .boxed()
                     .collect(Collectors.toList());
-            activeGroupIds.forEach(id -> userAgent.removeGroup(getSelectedUserIdFromUserListView(), id));
+            activeGroupIds.forEach(id -> userBean.removeGroup(getSelectedUserIdFromUserListView(), id));
             refreshUi(false, false);
         });
-        //TODO createUser
         //createUserButton
         createUserButton.setOnAction(e -> {
-
+            createUser();
         });
-        //TODO createGroup
         //createGroupButton
         createGroupButton.setOnAction(e -> {
-            new GroupDialog().showAndWait().ifPresent(g -> {
-                groupAgent.create(g.getName());
-                g.getRights().forEach(r -> groupAgent.addRight(selectedGroup.getId(), r));
-                refreshUi(false, false);
-            });
+            createGroup();
         });
         //deleteUserButton
         deleteUserButton.setOnAction(e -> {
             if ( selectedUser != null ) {
                 List<Long> selectedUsersIds = userListView.getSelectionModel().getSelectedItems()
                         .stream()
-                        //                        .mapToLong(u -> u.idProperty().get())
-                        .mapToLong(u -> u.getId())
+                        .mapToLong(u -> u.getId().get())
                         .boxed()
                         .collect(Collectors.toList());
-                selectedUsersIds.forEach(id -> userAgent.delete(id));
+                selectedUsersIds.forEach(id -> userBean.delete(id));
                 selectedUser = null;
                 refreshUi(true, false);
             }
@@ -325,40 +291,38 @@ public class NewRightsManagementController implements Initializable, FxControlle
         deleteGroupButton.setOnAction(e -> {
             if ( selectedGroup != null ) {
                 //Groups that are used by any User must not simply be deleted
-                List<Operator> allUsers = userAgent.findAllEager(Operator.class);
-                Set<Persona> groupsInUsage = new HashSet<>();
-                allUsers.forEach(u -> u.getPersonas().forEach(g -> groupsInUsage.add(g)));
+                List<User> allUsers = userBean.findAll();
+                Set<Group> groupsInUsage = new HashSet<>();
+                allUsers.forEach(u -> u.getGroups().forEach(g -> groupsInUsage.add(g)));
                 List<Long> selectedGroupsIds = activeGroupsListView.getSelectionModel().getSelectedItems()
                         .stream()
-                        //                        .mapToLong(g -> g.idProperty().get())
-                        .mapToLong(g -> g.getId())
+                        .mapToLong(g -> g.getId().get())
                         .boxed()
                         .collect(Collectors.toList());
                 if ( selectedGroupsIds.isEmpty() ) {
                     selectedGroupsIds = inactiveGroupsListView.getSelectionModel().getSelectedItems()
                             .stream()
-                            //                            .mapToLong(g -> g.idProperty().get())
-                            .mapToLong(g -> g.getId())
+                            .mapToLong(g -> g.getId().get())
                             .boxed()
                             .collect(Collectors.toList());
                 }
                 selectedGroupsIds.forEach(id -> {
-                    Persona group = groupAgent.findById(Persona.class, id);
+                    Group group = groupBean.findById(id);
                     if ( groupsInUsage.contains(group) ) {
                         if ( new Alert(Alert.AlertType.CONFIRMATION,
                                 "Gruppe " + group.getName() + " wird noch verwendet.\nWollen Sie dir Gruppe dennoch löschen?")
                                 .showAndWait().get() == ButtonType.OK ) {
                             allUsers.forEach(u -> {
-                                if ( u.getPersonas().contains(groupAgent.findById(Persona.class, group.getId())) ) {
-                                    userAgent.removeGroup(u.getId(), group.getId());
+                                if ( u.getGroups().contains(groupBean.findById(group.getId().get())) ) {
+                                    userBean.removeGroup(u.getId().get(), group.getId().get());
                                 }
                             });
-                            groupAgent.delete(group.getId());
+                            groupBean.delete(group.getId().get());
                             selectedGroup = null;
                             refreshUi(false, true);
                         }
                     } else {
-                        groupAgent.delete(group.getId());
+                        groupBean.delete(group.getId().get());
                         selectedGroup = null;
                         refreshUi(false, true);
                     }
@@ -371,6 +335,69 @@ public class NewRightsManagementController implements Initializable, FxControlle
         });
         //load data
         refreshUi(false, false);
+    }
+    
+    private void createUser(){
+        Ui.build(closeButton)
+                .dialog()
+                .eval(() -> new CreateUserDialog())
+                .cf()
+                .thenAccept(u -> {
+                    UserApi bean = Dl.remote().lookup(UserApi.class);
+                    bean.create(u.getUsername());
+                    User user = bean.findByName(u.getUsername());
+                    u.getGroups().forEach(g -> bean.addGroup(user.getId().get(), g.getId().get()));
+                    u.getRights().forEach(r -> bean.addRight(u.getId().get(), r));
+                })
+                .thenRunAsync(() -> refreshUi(false, false), Platform::runLater)
+                .handle(Ui.handler());
+    }
+
+    private void createGroup() {
+        Ui.build(closeButton)
+                .dialog()
+                .eval(() -> new CreateGroupDialog())
+                .cf()
+                .thenAccept(g -> {
+                    GroupApi bean = Dl.remote().lookup(GroupApi.class);
+                    bean.create(g.getName());
+                    Group group = bean.findByName(g.getName());
+                    g.getRights().forEach(r -> bean.addRight(group.getId().get(), r));
+                })
+                .thenRunAsync(() -> refreshUi(false, false), Platform::runLater)
+                .handle(Ui.handler());
+    }
+    
+    private void editUser(User user){
+        Ui.build(closeButton)
+                .dialog()
+                .eval(() -> new EditUserDialog(user))
+                .cf()
+                .thenAccept(u -> {
+                    UserApi bean = Dl.remote().lookup(UserApi.class);
+                    bean.updateUsername(user.getId().get(), u.getUsername());
+                    user.getGroups().forEach(g -> bean.removeGroup(user.getId().get(), g.getId().get()));
+                    u.getGroups().forEach(g -> bean.addGroup(user.getId().get(), g.getId().get()));
+                    user.getRights().forEach(r -> bean.removeRight(user.getId().get(), r));
+                    u.getRights().forEach(r -> bean.addRight(user.getId().get(), r));
+                })
+                .thenRunAsync(() -> refreshUi(false, false))
+                .handle(Ui.handler());
+    }
+
+    private void editGroup(Group group) {
+        Ui.build(closeButton)
+                .dialog()
+                .eval(() -> new EditGroupDialog(group))
+                .cf()
+                .thenAccept(g -> {
+                    GroupApi bean = Dl.remote().lookup(GroupApi.class);
+                    bean.updateName(group.getId().get(), g.getName());
+                    group.getRights().forEach(r -> bean.removeRight(group.getId().get(), r));
+                    g.getRights().forEach(r -> bean.addRight(group.getId().get(), r));
+                })
+                .thenRunAsync(() -> refreshUi(false, false), Platform::runLater)
+                .handle(Ui.handler());
     }
 
     private void refreshUi(boolean isCalledAfterUserDeletion, boolean isCalledAfterGroupDeletion) {
@@ -385,30 +412,13 @@ public class NewRightsManagementController implements Initializable, FxControlle
     }
 
     private void refreshUserListView(boolean isCalledAfterUserDeletion) {
-        L.debug("refreshUserListView() called");
+        L.info("refreshUserListView() called");
         int index = userListView.getSelectionModel().selectedIndexProperty().get();
-        UserAgent userAgent = Dl.remote().lookup(UserAgent.class);
-        List<Operator> foundUsers = userAgent.findAll(Operator.class);
-//        List<UiOperator> allUsers = new ArrayList<>();
-//        foundUsers.forEach(u -> allUsers.add(new UiOperator(u)));
-        List<User> allUsers = new ArrayList<>();
-        foundUsers.forEach(u -> {
-            List<Group> groups = new ArrayList<>();
-            u.getPersonas().forEach(g -> groups.add(new Group.Builder()
-                    .setId(g.getId())
-                    .setName(g.getName())
-                    .setOptLock(g.getOptLock())
-                    .addAllRights(g.getPersonaRights())
-                    .build()));
-            allUsers.add(new User.Builder()
-                    .setId(u.getId())
-                    .setUsername(u.getUsername())
-                    .setOptLock(u.getOptLock())
-                    .addAllRights(u.getRights())
-                    .addAllGroups(groups)
-                    .build());
-        });
-        userListView.setItems(FXCollections.observableArrayList(allUsers));
+
+        UserApi userBean = Dl.remote().lookup(UserApi.class);
+        List<User> users = userBean.findAll();
+
+        userListView.setItems(FXCollections.observableArrayList(users));
         if ( !isCalledAfterUserDeletion ) {
             if ( selectedUser != null ) {
                 userListView.getSelectionModel().select(index);
@@ -419,15 +429,13 @@ public class NewRightsManagementController implements Initializable, FxControlle
     }
 
     private void refreshRightsListViews(boolean isCalledAfterUserDeletion) {
-        L.debug("refreshRightListViews() called");
-//        UiOperator user = getSelectedUserFromUserListView();
+        L.info("refreshRightListViews() called");
         User user = getSelectedUserFromUserListView();
         if ( selectedUser == null || isCalledAfterUserDeletion ) {
             activeRightsListView.getItems().clear();
             inactiveRightsListView.setItems(FXCollections.observableArrayList(AtomicRight.values()));
         } else {
             List<AtomicRight> activeRights = user.getRights();
-//            Collections.sort(activeRights, (AtomicRight o1, AtomicRight o2) -> o1.toName().compareTo(o2.toName()));
             activeRightsListView.setItems(FXCollections.observableArrayList(activeRights));
             List<AtomicRight> inactiveRights = Arrays.asList(AtomicRight.values())
                     .stream()
@@ -439,49 +447,31 @@ public class NewRightsManagementController implements Initializable, FxControlle
     }
 
     private void refreshGroupsListViews(boolean isCalledAfterUserDeletion, boolean isCalledAfterGroupDeletion) {
-        L.debug("refreshGroupListViews() called");
-        GroupAgent agent = Dl.remote().lookup(GroupAgent.class);
-        List<Persona> foundGroups = agent.findAll(Persona.class);
-//        List<UiPersona> allGroups = new ArrayList<>();
-//        foundGroups.forEach(g -> allGroups.add(new UiPersona(g)));
-        List<Group> allGroups = new ArrayList<>();
-        foundGroups.forEach(g -> allGroups.add(new Group.Builder()
-                .setId(g.getId())
-                .setName(g.getName())
-                .setOptLock(g.getOptLock())
-                .addAllRights(g.getPersonaRights())
-                .build()));
+        L.info("refreshGroupListViews() called");
+
+        GroupApi groupBean = Dl.remote().lookup(GroupApi.class);
+        List<Group> groups = groupBean.findAll();
+
         if ( selectedUser == null || isCalledAfterUserDeletion ) {
             activeGroupsListView.getItems().clear();
-//            Collections.sort(allGroups, (UiPersona o1, UiPersona o2) -> o1.nameProperty().get().compareTo(o2.nameProperty().get()));
-            Collections.sort(allGroups, (Group o1, Group o2) -> o1.getName().compareTo(o2.getName()));
-            inactiveGroupsListView.setItems(FXCollections.observableArrayList(allGroups));
+            Collections.sort(groups, (Group o1, Group o2) -> o1.getName().compareTo(o2.getName()));
+            inactiveGroupsListView.setItems(FXCollections.observableArrayList(groups));
         } else {
-//            UiOperator user = getSelectedUserFromUserListView();
             User user = getSelectedUserFromUserListView();
-//            List<UiPersona> activeGroups = user.getPersonas();
-//            Collections.sort(activeGroups, (UiPersona o1, UiPersona o2) -> o1.nameProperty().get().compareTo(o2.nameProperty().get()));
-//            List<Group> activeGroups = user.getPersonas();
             List<Group> activeGroups = user.getGroups();
-//            Collections.sort(activeGroups, (Group o1, Group o2) -> o1.getName().compareTo(o2.getName()));
+            Collections.sort(activeGroups, (Group o1, Group o2) -> o1.getName().compareTo(o2.getName()));
             activeGroupsListView.setItems(FXCollections.observableArrayList(activeGroups));
-//            List<UiPersona> inactiveGroups = allGroups
-            List<Group> inactiveGroups = allGroups
+            List<Group> inactiveGroups = groups
                     .stream()
-                    //                    .filter(g -> !user.getPersonas().contains(g))
                     .filter(g -> !user.getGroups().contains(g))
                     .collect(Collectors.toList());
-//            Collections.sort(inactiveGroups, (UiPersona o1, UiPersona o2) -> o1.nameProperty().get().compareTo(o2.nameProperty().get()));
             Collections.sort(inactiveGroups, (Group o1, Group o2) -> o1.getName().compareTo(o2.getName()));
             inactiveGroupsListView.setItems(FXCollections.observableArrayList(inactiveGroups));
         }
         if ( !isCalledAfterGroupDeletion && selectedGroup != null ) {
-//            long groupId = selectedGroup.idProperty().get();
-//            ObservableList<UiPersona> groups = activeGroupsListView.getItems();
-            long groupId = selectedGroup.getId();
-            ObservableList<Group> groups = activeGroupsListView.getItems();
-//            if ( groups.stream().mapToLong(g -> g.idProperty().get())
-            if ( groups.stream().mapToLong(g -> g.getId())
+            long groupId = selectedGroup.getId().get();
+            ObservableList<Group> obsGroups = activeGroupsListView.getItems();
+            if ( obsGroups.stream().mapToLong(g -> g.getId().get())
                     .anyMatch(id -> id == groupId) ) {
                 activeGroupsListView.getSelectionModel().select(selectedGroup);
             } else {
@@ -491,11 +481,10 @@ public class NewRightsManagementController implements Initializable, FxControlle
     }
 
     private void refreshSelectedUserRightsListViews() {
-        L.debug("refreshSelectedUserRightsListViews() called");
+        L.info("refreshSelectedUserRightsListViews() called");
         if ( selectedUser == null ) {
             allActiveUserRightsListView.getItems().clear();
         } else {
-//            ObservableList<AtomicRight> allActiveUserRights = FXCollections.observableArrayList(getSelectedUserFromUserListView().getAllActiveRights());
             ObservableList<AtomicRight> allActiveUserRights = FXCollections.observableArrayList(getSelectedUserFromUserListView().getAllRights());
             Collections.sort(allActiveUserRights, (AtomicRight r1, AtomicRight r2) -> r1.toName().compareTo(r2.toName()));
             allActiveUserRightsListView.setItems(allActiveUserRights);
@@ -504,13 +493,11 @@ public class NewRightsManagementController implements Initializable, FxControlle
     }
 
     private void refreshSelectedGroupRightsListView() {
-        L.debug("refreshSelectedGroupRightsListView() called");
+        L.info("refreshSelectedGroupRightsListView() called");
         if ( selectedGroup == null ) {
             allActiveGroupRightsListView.getItems().clear();
         } else {
-//            List<AtomicRight> allActiveGroupRights = selectedGroup.personaRightsProperty().get();
             List<AtomicRight> allActiveGroupRights = selectedGroup.getRights();
-//            Collections.sort(allActiveGroupRights, (AtomicRight o1, AtomicRight o2) -> o1.toName().compareTo(o2.toName()));
             allActiveGroupRightsListView.setItems(FXCollections.observableArrayList(allActiveGroupRights));
         }
     }

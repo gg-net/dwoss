@@ -32,9 +32,7 @@ public class NewRightsManagementAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.exec(() -> {
-            Ui.build().fxml().show(NewRightsManagementController.class);
-        });
+        Ui.build().fxml().show(NewRightsManagementController.class);
     }
 
 }
