@@ -22,10 +22,11 @@ import java.util.*;
 import org.inferred.freebuilder.FreeBuilder;
 
 /**
- * Discribes an (authenticatable) User.
+ * Data transfer object of an {@link Operator} that exposes only some information.
  *
  * @author oliver.guenther
  */
+// HINT: password and quickloginkey are only in the api, so we can set @Role later.
 @FreeBuilder
 public interface User extends Serializable {
 
@@ -33,7 +34,7 @@ public interface User extends Serializable {
     };
 
     Optional<Long> getId();
-    
+
     String getUsername();
 
     Optional<Integer> getOptLock();
@@ -42,12 +43,18 @@ public interface User extends Serializable {
 
     List<Group> getGroups();
 
+    /**
+     * Returns a List with all {@link AtomicRight}<code>s</code> granted to the {@link User}, both from associated {@link Group}<code>s</code> and granted
+     * directly.
+     *
+     * @return List&lt;AtomicRight&gt; - List with all AtomicRights granted to the User.
+     */
     default List<AtomicRight> getAllRights() {
         EnumSet<AtomicRight> rights = EnumSet.noneOf(AtomicRight.class);
         rights.addAll(getRights());
-        for (Group group : getGroups()) {
+        getGroups().forEach((group) -> {
             rights.addAll(group.getRights());
-        }
+        });
         return new ArrayList<>(rights);
     }
 }

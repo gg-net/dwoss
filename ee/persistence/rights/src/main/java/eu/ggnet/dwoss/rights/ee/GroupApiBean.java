@@ -18,6 +18,7 @@ package eu.ggnet.dwoss.rights.ee;
 
 import java.util.*;
 
+import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -32,6 +33,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import static eu.ggnet.dwoss.rights.ee.entity.QPersona.persona;
 
 /**
+ * Implementation of {@link GroupApi}.
  *
  * @author mirko.schulze
  */
@@ -113,7 +115,9 @@ public class GroupApiBean implements GroupApi {
     @Override
     public Group findById(long groupId) throws IllegalArgumentException {
         Persona group = new JPAQuery<Persona>(em).from(persona).where(persona.id.eq(groupId)).fetchOne();
-        if ( group == null ) throw new IllegalArgumentException("No Group found with id " + groupId + ".");
+        if ( group == null ) {
+            throw new IllegalArgumentException("No Group found with id " + groupId + ".");
+        }
         return new Group.Builder()
                 .setId(Optional.of(group.getId()))
                 .setName(group.getName())
@@ -126,7 +130,9 @@ public class GroupApiBean implements GroupApi {
     public Group findByName(String name) throws IllegalArgumentException, NullPointerException {
         Objects.requireNonNull(name, "Submitted name is null,");
         Persona group = new JPAQuery<Persona>(em).from(persona).where(persona.name.eq(name)).fetchOne();
-        if ( group == null ) throw new IllegalArgumentException("No Group found with name " + name + ".");
+        if ( group == null ) {
+            throw new IllegalArgumentException("No Group found with name " + name + ".");
+        }
         return new Group.Builder()
                 .setId(Optional.of(group.getId()))
                 .setName(group.getName())
@@ -141,20 +147,30 @@ public class GroupApiBean implements GroupApi {
         List<Group> groups = new ArrayList<>();
         personas.forEach(g -> {
             groups.add(new Group.Builder()
-                    .setId(g.getId())
+                    .setId(Optional.of(g.getId()))
                     .setName(g.getName())
-                    .setOptLock(g.getOptLock())
-                    .addAllRights(g.getPersonaRights()).build());
+                    .setOptLock(Optional.of(g.getOptLock()))
+                    .addAllRights(g.getPersonaRights())
+                    .build());
         });
         return groups;
     }
 
+    /**
+     * Compares the submitted name to the names of {@link Persona}<code>s</code> in the database.
+     * <p/>
+     * Returns true if the name is already used by another Persona.
+     *
+     * @param groupId one optional id, which might have the supplied name, same datebaase object. 0 oder lower if not to be considered.
+     * @param name    name to check for duplicate.
+     * @return boolean - true, if the submitted name is already used by another Persona.
+     */
     private boolean isNameAlreadyUsedByAnotherGroup(long groupId, String name) {
         Persona group = new JPAQuery<Persona>(em).from(persona).where(persona.id.eq(groupId)).fetchOne();
         if ( group != null ) {
             if ( group.getName().equals(name) ) return false;
         }
-        List<Group> allGroups = findAll();
+        List<Persona> allGroups = new JPAQuery<Persona>(em).from(persona).fetch();
         return allGroups.stream().anyMatch(g -> g.getName().equals(name));
     }
 

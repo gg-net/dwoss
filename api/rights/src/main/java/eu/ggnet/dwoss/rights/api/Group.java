@@ -23,6 +23,7 @@ import java.util.Optional;
 import org.inferred.freebuilder.FreeBuilder;
 
 /**
+ * Data transfer object of a {@link Persona} that exposes only some information.
  *
  * @author oliver.guenther
  */
