@@ -23,6 +23,7 @@ import javafx.util.Callback;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 
 /**
+ * Extension of {@link ListCell}, specified for the usage of {@link AtomicRight} elements.
  *
  * @author Bastian Venz
  */

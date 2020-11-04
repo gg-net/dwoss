@@ -26,16 +26,25 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Group;
 
 /**
+ * Invokes a specified {@link Dialog} pane with a {@link Label}, a {@link TextField} and {@link ListView} components to create a new {@link Group}.
+ * <p>
+ * The created Group is the return value of the constructor, if a valid name is entered and the finish button is clicked, else the return value is null.
  *
  * @author mirko.schulze
  */
 public class CreateGroupDialog extends Dialog<Group> {
 
+    private static final Logger L = LoggerFactory.getLogger(CreateGroupDialog.class);
+
     public CreateGroupDialog() {
+        L.debug("Constructor called");
         this.setTitle("Gruppen-Verwaltung");
         this.setHeaderText("Legen Sie eine neue Gruppe an.");
         this.initModality(Modality.WINDOW_MODAL);
@@ -49,7 +58,7 @@ public class CreateGroupDialog extends Dialog<Group> {
         ListView<AtomicRight> selectedRightsListView = new ListView<>(FXCollections.observableArrayList());
         selectedRightsListView.setCellFactory(new RightsListCell.Factory());
         selectedRightsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        
+
         TitledPane selectedRightsTitle = new TitledPane("Gewährte Rechte", selectedRightsListView);
         selectedRightsTitle.setCollapsible(false);
         selectedRightsTitle.setAlignment(Pos.CENTER);
@@ -57,7 +66,7 @@ public class CreateGroupDialog extends Dialog<Group> {
         ListView<AtomicRight> availableRightsListView = new ListView<>(FXCollections.observableArrayList(AtomicRight.values()));
         availableRightsListView.setCellFactory(new RightsListCell.Factory());
         availableRightsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        
+
         TitledPane availableRightsTitle = new TitledPane("Verfügbare Rechte", availableRightsListView);
         availableRightsTitle.setCollapsible(false);
         availableRightsTitle.setAlignment(Pos.CENTER);
@@ -104,18 +113,24 @@ public class CreateGroupDialog extends Dialog<Group> {
         Button finishButton = (Button)this.getDialogPane().lookupButton(ButtonType.FINISH);
         finishButton.addEventFilter(ActionEvent.ACTION, ef -> {
             if ( nameTextField.getText().isEmpty() ) {
+                L.debug("Consuming {}: no name entered", ef.getEventType());
                 ef.consume();
-                new Alert(Alert.AlertType.ERROR, "Gib einen Namen ein").show();
+                new Alert(Alert.AlertType.ERROR, "Geben Sie einen Namen ein.").show();
             }
         });
 
         this.setResultConverter(type -> {
             if ( type == ButtonType.FINISH ) {
-                return new Group.Builder()
+                Group group = new Group.Builder()
+                        .setId(Optional.empty())
                         .setName(nameTextField.getText())
+                        .setOptLock(Optional.empty())
                         .addAllRights(selectedRightsListView.getItems())
                         .build();
+                L.debug("Returning Group {}", group.toString());
+                return group;
             } else {
+                L.debug("Returning null");
                 return null;
             }
         });

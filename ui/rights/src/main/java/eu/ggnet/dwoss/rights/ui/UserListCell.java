@@ -23,7 +23,7 @@ import javafx.util.Callback;
 import eu.ggnet.dwoss.rights.api.User;
 
 /**
- *
+ * Extension of {@link ListCell}, specified for the usage of {@link User} elements.
  * @author mirko.schulze
  */
 public class UserListCell extends ListCell<User> {

@@ -23,11 +23,12 @@ import javafx.util.Callback;
 import eu.ggnet.dwoss.rights.api.Group;
 
 /**
+ * Extension of {@link ListCell}, specified for the usage of {@link Group} elements.
  *
  * @author mirko.schulze
  */
-public class GroupListCell extends ListCell<Group>{
-    
+public class GroupListCell extends ListCell<Group> {
+
     public static class Factory implements Callback<ListView<Group>, ListCell<Group>> {
 
         @Override
@@ -42,5 +43,5 @@ public class GroupListCell extends ListCell<Group>{
         setText("");
         if ( !empty || item != null ) setText(item.getName());
     }
-    
+
 }

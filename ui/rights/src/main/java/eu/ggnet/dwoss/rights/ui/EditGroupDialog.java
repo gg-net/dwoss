@@ -20,22 +20,32 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Group;
 
 /**
+ * Invokes a specified {@link Dialog} pane with a {@link Label}, a {@link TextField} and {@link ListView} components to edit a {@link Group}.
+ * <p>
+ * The modified Group is the return value of the constructor, if a valid name is entered and the finish button is clicked, else the return value is null.
  *
  * @author mirko.schulze
  */
-public class EditGroupDialog extends Dialog<Group>{
-    
+public class EditGroupDialog extends Dialog<Group> {
+
+    private static final Logger L = LoggerFactory.getLogger(EditGroupDialog.class);
+
     public EditGroupDialog(Group group) {
+        L.debug("Constructor called");
         this.setTitle("Gruppen-Verwaltung");
         this.setHeaderText("Passen Sie die Gruppe an.");
         this.initModality(Modality.WINDOW_MODAL);
@@ -48,7 +58,7 @@ public class EditGroupDialog extends Dialog<Group>{
         ListView<AtomicRight> selectedRightsListView = new ListView<>(FXCollections.observableArrayList(group.getRights()));
         selectedRightsListView.setCellFactory(new RightsListCell.Factory());
         selectedRightsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        
+
         TitledPane selectedRightsTitle = new TitledPane("Gewährte Rechte", selectedRightsListView);
         selectedRightsTitle.setCollapsible(false);
         selectedRightsTitle.setAlignment(Pos.CENTER);
@@ -60,7 +70,7 @@ public class EditGroupDialog extends Dialog<Group>{
         ListView<AtomicRight> availableRightsListView = new ListView<>(FXCollections.observableArrayList(filteredRights));
         availableRightsListView.setCellFactory(new RightsListCell.Factory());
         availableRightsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        
+
         TitledPane availableRightsTitle = new TitledPane("Verfügbare Rechte", availableRightsListView);
         availableRightsTitle.setCollapsible(false);
         availableRightsTitle.setAlignment(Pos.CENTER);
@@ -103,18 +113,30 @@ public class EditGroupDialog extends Dialog<Group>{
         this.getDialogPane().setContent(vbox);
         this.getDialogPane().getButtonTypes().addAll(ButtonType.FINISH, ButtonType.CANCEL);
 
+        Button finishButton = (Button)this.getDialogPane().lookupButton(ButtonType.FINISH);
+        finishButton.addEventFilter(ActionEvent.ACTION, ef -> {
+            if ( nameTextField.getText().isEmpty() ) {
+                L.debug("Consuming {}: no name entered", ef.getEventType());
+                ef.consume();
+                new Alert(Alert.AlertType.ERROR, "Geben Sie einen Namen ein.").show();
+            }
+        });
+
         this.setResultConverter(type -> {
             if ( type == ButtonType.FINISH ) {
-                return new Group.Builder()
-                        .setId(Optional.of(group.getId().get()))
+                Group g = new Group.Builder()
+                        .setId(group.getId())
                         .setName(nameTextField.getText())
-                        .setOptLock(Optional.of(group.getOptLock().get()))
+                        .setOptLock(group.getOptLock())
                         .addAllRights(selectedRightsListView.getItems())
                         .build();
+                L.debug("Returning Group {}", g.toString());
+                return g;
             } else {
+                L.debug("Returning null");
                 return null;
             }
         });
     }
-    
+
 }

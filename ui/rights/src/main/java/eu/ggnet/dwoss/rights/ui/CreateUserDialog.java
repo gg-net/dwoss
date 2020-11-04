@@ -17,6 +17,7 @@
 package eu.ggnet.dwoss.rights.ui;
 
 import java.util.List;
+import java.util.Optional;
 
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -26,16 +27,25 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.rights.api.*;
 
 /**
+ * Invokes a specified {@link Dialog} pane with a {@link Label}, a {@link TextField} and {@link ListView} components to create a new {@link User}.
+ * <p>
+ * The created User is the return value of the constructor, if a valid name is entered and the finish button is clicked, else the return value is null.
  *
  * @author mirko.schulze
  */
 public class CreateUserDialog extends Dialog<User> {
 
+    private static final Logger L = LoggerFactory.getLogger(CreateUserDialog.class);
+
     public CreateUserDialog() {
+        L.debug("Constructor called");
         this.setTitle("Benutzer-Verwaltung");
         this.setHeaderText("Legen Sie einen neuen Benutzer an.");
         this.initModality(Modality.WINDOW_MODAL);
@@ -49,7 +59,7 @@ public class CreateUserDialog extends Dialog<User> {
         ListView<AtomicRight> selectedRightsListView = new ListView<>(FXCollections.observableArrayList());
         selectedRightsListView.setCellFactory(new RightsListCell.Factory());
         selectedRightsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        
+
         TitledPane selectedRightsTitle = new TitledPane("Gewährte Rechte", selectedRightsListView);
         selectedRightsTitle.setCollapsible(false);
         selectedRightsTitle.setAlignment(Pos.CENTER);
@@ -57,7 +67,7 @@ public class CreateUserDialog extends Dialog<User> {
         ListView<AtomicRight> availableRightsListView = new ListView<>(FXCollections.observableArrayList(AtomicRight.values()));
         availableRightsListView.setCellFactory(new RightsListCell.Factory());
         availableRightsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        
+
         TitledPane availableRightsTitle = new TitledPane("Verfügbare Rechte", availableRightsListView);
         availableRightsTitle.setCollapsible(false);
         availableRightsTitle.setAlignment(Pos.CENTER);
@@ -99,7 +109,7 @@ public class CreateUserDialog extends Dialog<User> {
         ListView<Group> selectedGroupsListView = new ListView<>(FXCollections.observableArrayList());
         selectedGroupsListView.setCellFactory(new GroupListCell.Factory());
         selectedGroupsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        
+
         TitledPane selectedGroupsTitle = new TitledPane("Zugewiesene Gruppen", selectedGroupsListView);
         selectedGroupsTitle.setCollapsible(false);
         selectedRightsTitle.setAlignment(Pos.CENTER);
@@ -109,7 +119,7 @@ public class CreateUserDialog extends Dialog<User> {
         ListView<Group> availableGroupsListView = new ListView<>(FXCollections.observableArrayList(groups));
         availableGroupsListView.setCellFactory(new GroupListCell.Factory());
         availableGroupsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        
+
         TitledPane availableGroupsTitle = new TitledPane("Verfügbare Gruppen", availableGroupsListView);
         availableGroupsTitle.setCollapsible(false);
         availableGroupsTitle.setAlignment(Pos.CENTER);
@@ -159,19 +169,25 @@ public class CreateUserDialog extends Dialog<User> {
         Button finishButton = (Button)this.getDialogPane().lookupButton(ButtonType.FINISH);
         finishButton.addEventFilter(ActionEvent.ACTION, ef -> {
             if ( nameTextField.getText().isEmpty() ) {
+                L.debug("Consuming {}: no name entered", ef.getEventType());
                 ef.consume();
-                new Alert(Alert.AlertType.ERROR, "Gib einen Namen ein").show();
+                new Alert(Alert.AlertType.ERROR, "Geben Sie einen Namen ein.").show();
             }
         });
 
         this.setResultConverter(type -> {
             if ( type == ButtonType.FINISH ) {
-                return new User.Builder()
+                User user = new User.Builder()
+                        .setId(Optional.empty())
                         .setUsername(nameTextField.getText())
+                        .setOptLock(Optional.empty())
                         .addAllRights(selectedRightsListView.getItems())
                         .addAllGroups(selectedGroupsListView.getItems())
                         .build();
+                L.debug("Returning Group {}", user.toString());
+                return user;
             } else {
+                L.debug("Returning null");
                 return null;
             }
         });
