@@ -62,6 +62,7 @@ import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.core.widget.auth.UserChangeListener;
+import eu.ggnet.dwoss.rights.ui.cap.NewRightsManagementAction;
 
 /**
  * Main UI, consist of menubar, toolbar, statusline and main ui container.
@@ -173,7 +174,7 @@ public class DwOssClientController {
 
         // -- Rechte
         Menu rights = new Menu("Rechte");
-        rights.getItems().add(m.item(RightsManagmentAction.class));
+        rights.getItems().addAll(m.items(RightsManagmentAction.class, NewRightsManagementAction.class));
 
         // -- Geschäftsführung
         Menu gl_allgemein = new Menu("Allgemeine Reporte");

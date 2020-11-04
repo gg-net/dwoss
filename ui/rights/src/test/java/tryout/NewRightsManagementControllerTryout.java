@@ -19,6 +19,9 @@ package tryout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
 import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.dl.RemoteLookup;
 import eu.ggnet.dwoss.rights.api.GroupApi;
@@ -29,12 +32,14 @@ import eu.ggnet.saft.core.UiCore;
 import tryout.stub.*;
 
 /**
+ * This tryout allows testing the funcionality of the Rights module seperated from the application.
  *
  * @author mirko.schulze
  */
 public class NewRightsManagementControllerTryout {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) {                
+        
         Dl.local().add(RemoteLookup.class, new RemoteLookup() {
             @Override
             public <T> boolean contains(Class<T> clazz) {
@@ -46,13 +51,10 @@ public class NewRightsManagementControllerTryout {
                 return null;
             }
         });
-//        Dl.remote().add(UserAgent.class, new UserAgentStub());
-//        Dl.remote().add(GroupAgent.class, new GroupAgentStub());
         Dl.remote().add(UserApi.class, new UserApiStub());
         Dl.remote().add(GroupApi.class, new GroupApiStub());
 
         UiCore.startSwing(() -> {
-
             JPanel main = new JPanel();
             main.add(new JButton(new NewRightsManagementAction()));
             return main;

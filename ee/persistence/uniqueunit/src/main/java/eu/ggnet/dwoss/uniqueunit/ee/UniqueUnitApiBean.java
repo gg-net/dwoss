@@ -26,7 +26,6 @@ import javax.inject.Inject;
 import eu.ggnet.dwoss.redtape.api.DossierViewer;
 import eu.ggnet.dwoss.report.api.ReportApiLocal;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.dwoss.rights.api.RightsApiLocal;
 import eu.ggnet.dwoss.stock.api.StockApiLocal;
 import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
@@ -34,6 +33,7 @@ import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnitHistory;
 import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
+import eu.ggnet.dwoss.rights.api.UserApiLocal;
 
 /**
  *
@@ -49,7 +49,7 @@ public class UniqueUnitApiBean implements UniqueUnitApi {
     private Instance<DossierViewer> dossierViewer;
 
     @Inject
-    private Instance<RightsApiLocal> rights;
+    private Instance<UserApiLocal> rights;
 
     @Inject
     private Instance<StockApiLocal> stocks;
@@ -100,12 +100,16 @@ public class UniqueUnitApiBean implements UniqueUnitApi {
             re += reports.get().findReportLinesByUniqueUnitIdAsHtml(id);
         }
 
-        if ( rights.isResolvable() && rights.get().findByName(username).contains(AtomicRight.VIEW_COST_AND_REFERENCE_PRICES) ) {
-            re += "<hr />";
-            re += "<b>Geräte Preis-Informationen</b>";
-            re += UniqueUnitFormater.toHtmlPriceInformation(uu.getPrices(), uu.getPriceHistory());
-            re += "<b>Artikel Preis-Informationen</b>";
-            re += UniqueUnitFormater.toHtmlPriceInformation(uu.getProduct().getPrices(), uu.getProduct().getPriceHistory());
+        try {
+            if ( rights.isResolvable() && rights.get().findByName(username).getAllRights().contains(AtomicRight.VIEW_COST_AND_REFERENCE_PRICES) ) {
+                re += "<hr />";
+                re += "<b>Geräte Preis-Informationen</b>";
+                re += UniqueUnitFormater.toHtmlPriceInformation(uu.getPrices(), uu.getPriceHistory());
+                re += "<b>Artikel Preis-Informationen</b>";
+                re += UniqueUnitFormater.toHtmlPriceInformation(uu.getProduct().getPrices(), uu.getProduct().getPriceHistory());
+            }
+        } catch (IllegalArgumentException | NullPointerException e) {
+            // Both are thrown in findByName, if user is missing.
         }
         return re;
     }

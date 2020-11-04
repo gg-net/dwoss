@@ -18,6 +18,8 @@ package eu.ggnet.dwoss.rights.ui.cap;
 
 import java.awt.event.ActionEvent;
 
+import javax.swing.Action;
+
 import eu.ggnet.dwoss.core.widget.AccessableAction;
 import eu.ggnet.dwoss.rights.ui.NewRightsManagementController;
 import eu.ggnet.saft.core.Ui;
@@ -28,6 +30,7 @@ public class NewRightsManagementAction extends AccessableAction {
 
     public NewRightsManagementAction() {
         super(CREATE_UPDATE_RIGHTS);
+        putValue(Action.NAME, "Neu: " + CREATE_UPDATE_RIGHTS.toName());
     }
 
     @Override

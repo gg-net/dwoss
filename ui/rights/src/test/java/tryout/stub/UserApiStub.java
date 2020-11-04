@@ -22,12 +22,13 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.rights.api.*;
 import eu.ggnet.dwoss.rights.ee.entity.Operator;
 import eu.ggnet.dwoss.rights.ee.entity.Persona;
 
-
 /**
+ * Stub implementation of {@link UserApi} for testing purposes.
  *
  * @author mirko.schulze
  */
@@ -38,6 +39,8 @@ public class UserApiStub implements UserApi {
     private static final Map<Long, Operator> usersByIds = new HashMap<>();
 
     private static final Map<Long, Persona> groupsByIds = new HashMap<>();
+
+    private int userId = 1;
 
     public static Map<Long, Operator> getUsersByIds() {
         return usersByIds;
@@ -57,21 +60,18 @@ public class UserApiStub implements UserApi {
         for (int j = 1; j < 4; j++) {
             int endIndex = (int)(Math.random() * 3 - 1);
             List<Persona> groups = new ArrayList<>(groupsByIds.values()).subList(0, endIndex);
-            Operator user = new Operator(j, 0, 0, "Benutzer " + j, RandomStringUtils.randomAlphanumeric(6).getBytes(),
+            Operator user = new Operator(userId, 0, 0, "Benutzer " + j, RandomStringUtils.randomAlphanumeric(6).getBytes(),
                     RandomStringUtils.randomAlphanumeric(5).getBytes(), groups, getRandomRights());
             usersByIds.put(user.getId(), user);
-            L.debug("constructor: Added User {}", user);
+            userId++;
+            L.info("constructor: Added User {}", user);
         }
         L.debug("Exiting UserApiStub construsctor");
     }
 
     @Override
-    public boolean authenticate(String username, byte[] password) throws IllegalArgumentException, NullPointerException {
-        L.debug("Entering authenticate({}, {})", username, password);
-        Objects.requireNonNull(username, "Submitted username is null.");
-        Operator user = usersByIds.values().stream().filter(u -> u.getUsername().equals(username)).findAny().orElseGet(() -> null);
-        if ( user == null ) throw new IllegalArgumentException("No User found with name " + username + ".");
-        return user.getPassword() == password;
+    public User authenticate(String username, char[] password) throws UserInfoException {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -91,9 +91,12 @@ public class UserApiStub implements UserApi {
         if ( username.isBlank() ) {
             throw new IllegalArgumentException("Submitted username is blank.");
         }
-        Operator user = new Operator(username);
+        Operator user = new Operator(userId, 0, 0, username, RandomStringUtils.randomAlphanumeric(6).getBytes(),
+                RandomStringUtils.randomAlphanumeric(5).getBytes(), new ArrayList<>(), getRandomRights());
+
         usersByIds.put(user.getId(), user);
-        L.debug("create(): added new User {}", user);
+        userId++;
+        L.info("create(): added new User {}", user);
 
         return new User.Builder()
                 .setId(user.getId())
@@ -135,7 +138,7 @@ public class UserApiStub implements UserApi {
         L.debug("updateUsername(): set username to {}", user.getUsername());
         return u;
     }
-    
+
     @Override
     public User addRight(long userId, AtomicRight right) throws IllegalArgumentException, NullPointerException {
         L.debug("Entering addRight({}, {})", userId, right);
@@ -323,7 +326,9 @@ public class UserApiStub implements UserApi {
             throw new IllegalArgumentException("Submitted username is blank.");
         }
         Operator user = usersByIds.values().stream().filter(u -> u.getUsername().equals(username)).findAny().orElseGet(() -> null);
-        if ( user == null ) throw new IllegalArgumentException("No User found with username = " + username + ".");
+        if ( user == null ) {
+            throw new IllegalArgumentException("No User found with username = " + username + ".");
+        }
 
         List<Persona> personas = user.getPersonas();
         List<Group> groups = new ArrayList<>();

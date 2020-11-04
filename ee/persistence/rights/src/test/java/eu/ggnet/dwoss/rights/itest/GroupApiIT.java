@@ -26,6 +26,7 @@ import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
+import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.rights.api.*;
 import eu.ggnet.dwoss.rights.ee.assist.Rights;
 import eu.ggnet.dwoss.rights.ee.entity.Persona;
@@ -42,7 +43,7 @@ public class GroupApiIT extends ArquillianProjectArchive {
     private EntityManager em;
 
     @EJB
-    private GroupApi bean;
+    private GroupApi groupApi;
 
     @Inject
     private UserTransaction utx;
@@ -59,25 +60,7 @@ public class GroupApiIT extends ArquillianProjectArchive {
     public void tearDown() throws Exception {
         utx.begin();
         em.joinTransaction();
-
-        if ( em == null ) {
-            return;
-        }
-        em.createNativeQuery("SET REFERENTIAL_INTEGRITY FALSE").executeUpdate();
-
-        em.createNativeQuery("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA='PUBLIC'")
-                .getResultList()
-                .stream().forEachOrdered((table) -> {
-                    em.createNativeQuery("TRUNCATE TABLE " + table).executeUpdate();
-                });
-
-        em.createNativeQuery("SELECT SEQUENCE_NAME FROM INFORMATION_SCHEMA.SEQUENCES WHERE SEQUENCE_SCHEMA='PUBLIC'")
-                .getResultList()
-                .stream().forEachOrdered((sequence) -> {
-                    em.createNativeQuery("ALTER SEQUENCE " + sequence + " RESTART WITH 1").executeUpdate();
-                });
-        em.createNativeQuery("SET REFERENTIAL_INTEGRITY TRUE").executeUpdate();
-
+        Utils.clearH2Db(em);
         utx.commit();
     }
 
@@ -86,11 +69,11 @@ public class GroupApiIT extends ArquillianProjectArchive {
 
     @Test
     public void testCreate() throws Exception {
-        bean.create(NAME);
+        groupApi.create(NAME);
 
-        assertThat(bean.findAll().size()).as("One existing Group").isEqualTo(1);
+        assertThat(groupApi.findAll().size()).as("One existing Group").isEqualTo(1);
 
-        Group found = bean.findByName(NAME);
+        Group found = groupApi.findByName(NAME);
         assertThat(found).as("Group exists").isNotNull();
     }
 
@@ -98,24 +81,24 @@ public class GroupApiIT extends ArquillianProjectArchive {
     public void testCreateNameIsBlank() throws Exception {
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        bean.create(BLANK);
+        groupApi.create(BLANK);
     }
 
     @Test
     public void testCreateNameIsNull() throws Exception {
         expectedException.expectCause(isA(NullPointerException.class));
 
-        bean.create(null);
+        groupApi.create(null);
 
     }
 
     @Test
     public void testCreateNameIsDuplicate() throws Exception {
-        bean.create(NAME);
+        groupApi.create(NAME);
 
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        bean.create(NAME);
+        groupApi.create(NAME);
     }
 
     @Test
@@ -126,9 +109,9 @@ public class GroupApiIT extends ArquillianProjectArchive {
         em.persist(group);
         utx.commit();
 
-        bean.updateName(group.getId(), UPDATED_NAME);
+        groupApi.updateName(group.getId(), UPDATED_NAME);
 
-        Group found = bean.findByName(UPDATED_NAME);
+        Group found = groupApi.findByName(UPDATED_NAME);
         assertThat(found).as("Group exists with new name").isNotNull();
     }
 
@@ -142,7 +125,7 @@ public class GroupApiIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        bean.updateName(group.getId() + 1, UPDATED_NAME);
+        groupApi.updateName(group.getId() + 1, UPDATED_NAME);
     }
 
     @Test
@@ -155,7 +138,7 @@ public class GroupApiIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        bean.updateName(group.getId(), BLANK);
+        groupApi.updateName(group.getId(), BLANK);
     }
 
     @Test
@@ -168,7 +151,7 @@ public class GroupApiIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(NullPointerException.class));
 
-        bean.updateName(group.getId(), null);
+        groupApi.updateName(group.getId(), null);
     }
 
     @Test
@@ -183,7 +166,7 @@ public class GroupApiIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        bean.updateName(group.getId(), UPDATED_NAME);
+        groupApi.updateName(group.getId(), UPDATED_NAME);
     }
 
     @Test
@@ -194,9 +177,9 @@ public class GroupApiIT extends ArquillianProjectArchive {
         em.persist(group);
         utx.commit();
 
-        bean.addRight(group.getId(), R);
+        groupApi.addRight(group.getId(), R);
 
-        Group found = bean.findByName(NAME);
+        Group found = groupApi.findByName(NAME);
         assertThat(found).as("Group exists").isNotNull();
         assertThat(found.getRights()).as("Existing Group has one right").containsExactly(R);
     }
@@ -211,7 +194,7 @@ public class GroupApiIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        bean.addRight(group.getId() + 1, R);
+        groupApi.addRight(group.getId() + 1, R);
     }
 
     @Test
@@ -225,7 +208,7 @@ public class GroupApiIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        bean.addRight(group.getId(), R);
+        groupApi.addRight(group.getId(), R);
     }
 
     @Test
@@ -238,7 +221,7 @@ public class GroupApiIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(NullPointerException.class));
 
-        bean.addRight(group.getId(), null);
+        groupApi.addRight(group.getId(), null);
     }
 
     @Test
@@ -250,9 +233,9 @@ public class GroupApiIT extends ArquillianProjectArchive {
         em.persist(group);
         utx.commit();
 
-        bean.removeRight(group.getId(), R);
+        groupApi.removeRight(group.getId(), R);
 
-        Group found = bean.findByName(NAME);
+        Group found = groupApi.findByName(NAME);
         assertThat(found).as("Group exists").isNotNull();
         assertThat(found.getRights()).as("Existing Group has no rights").isEmpty();
     }
@@ -267,7 +250,7 @@ public class GroupApiIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        bean.removeRight(group.getId() + 1, R);
+        groupApi.removeRight(group.getId() + 1, R);
     }
 
     @Test
@@ -280,7 +263,7 @@ public class GroupApiIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        bean.removeRight(group.getId(), R);
+        groupApi.removeRight(group.getId(), R);
     }
 
     @Test
@@ -293,7 +276,7 @@ public class GroupApiIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(NullPointerException.class));
 
-        bean.removeRight(group.getId(), null);
+        groupApi.removeRight(group.getId(), null);
     }
 
     @Test
@@ -304,11 +287,11 @@ public class GroupApiIT extends ArquillianProjectArchive {
         em.persist(group);
         utx.commit();
 
-        assertThat(bean.findAll().size()).as("One Group exists").isEqualTo(1);
+        assertThat(groupApi.findAll().size()).as("One Group exists").isEqualTo(1);
 
-        bean.delete(group.getId());
+        groupApi.delete(group.getId());
 
-        assertThat(bean.findAll().size()).as("No Groups exist").isZero();
+        assertThat(groupApi.findAll().size()).as("No Groups exist").isZero();
     }
 
     @Test
@@ -321,6 +304,6 @@ public class GroupApiIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        bean.delete(group.getId() + 1);
+        groupApi.delete(group.getId() + 1);
     }
 }

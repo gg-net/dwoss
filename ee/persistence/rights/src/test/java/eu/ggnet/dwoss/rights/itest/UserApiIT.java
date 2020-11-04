@@ -26,6 +26,7 @@ import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
+import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.rights.api.*;
 import eu.ggnet.dwoss.rights.ee.assist.Rights;
 import eu.ggnet.dwoss.rights.ee.entity.Operator;
@@ -43,7 +44,7 @@ public class UserApiIT extends ArquillianProjectArchive {
     private EntityManager em;
 
     @EJB
-    private UserApi bean;
+    private UserApi userApi;
 
     @Inject
     private UserTransaction utx;
@@ -62,25 +63,7 @@ public class UserApiIT extends ArquillianProjectArchive {
     public void tearDown() throws Exception {
         utx.begin();
         em.joinTransaction();
-
-        if ( em == null ) {
-            return;
-        }
-        em.createNativeQuery("SET REFERENTIAL_INTEGRITY FALSE").executeUpdate();
-
-        em.createNativeQuery("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA='PUBLIC'")
-                .getResultList()
-                .stream().forEachOrdered((table) -> {
-                    em.createNativeQuery("TRUNCATE TABLE " + table).executeUpdate();
-                });
-
-        em.createNativeQuery("SELECT SEQUENCE_NAME FROM INFORMATION_SCHEMA.SEQUENCES WHERE SEQUENCE_SCHEMA='PUBLIC'")
-                .getResultList()
-                .stream().forEachOrdered((sequence) -> {
-                    em.createNativeQuery("ALTER SEQUENCE " + sequence + " RESTART WITH 1").executeUpdate();
-                });
-        em.createNativeQuery("SET REFERENTIAL_INTEGRITY TRUE").executeUpdate();
-
+        Utils.clearH2Db(em);
         utx.commit();
     }
 
@@ -89,10 +72,10 @@ public class UserApiIT extends ArquillianProjectArchive {
 
     @Test
     public void testCreate() throws Exception {
-        bean.create(NAME);
+        userApi.create(NAME);
 
-        assertThat(bean.findAll().size()).as("One existing User").isEqualTo(1);
-        User found = bean.findByName(NAME);
+        assertThat(userApi.findAll().size()).as("One existing User").isEqualTo(1);
+        User found = userApi.findByName(NAME);
         assertThat(found).as("User exists").isNotNull();
     }
 
@@ -100,14 +83,14 @@ public class UserApiIT extends ArquillianProjectArchive {
     public void testCreateUsernameIsBlank() throws Exception {
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        bean.create(BLANK);
+        userApi.create(BLANK);
     }
 
     @Test
     public void testCreateUsernameIsNull() throws Exception {
         expectedException.expectCause(isA(NullPointerException.class));
 
-        bean.create(null);
+        userApi.create(null);
     }
 
     @Test
@@ -118,9 +101,9 @@ public class UserApiIT extends ArquillianProjectArchive {
         em.persist(user);
         utx.commit();
 
-        bean.updateUsername(user.getId(), UPDATED_NAME);
+        userApi.updateUsername(user.getId(), UPDATED_NAME);
 
-        User found = bean.findByName(UPDATED_NAME);
+        User found = userApi.findByName(UPDATED_NAME);
         assertThat(found).as("User exists with new username").isNotNull();
     }
 
@@ -134,7 +117,7 @@ public class UserApiIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        bean.updateUsername(user.getId() + 1, UPDATED_NAME);
+        userApi.updateUsername(user.getId() + 1, UPDATED_NAME);
     }
 
     @Test
@@ -147,7 +130,7 @@ public class UserApiIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        bean.updateUsername(user.getId(), BLANK);
+        userApi.updateUsername(user.getId(), BLANK);
     }
 
     @Test
@@ -160,7 +143,7 @@ public class UserApiIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(NullPointerException.class));
 
-        bean.updateUsername(user.getId(), null);
+        userApi.updateUsername(user.getId(), null);
     }
 
     @Test
@@ -173,9 +156,9 @@ public class UserApiIT extends ArquillianProjectArchive {
 
         assertThat(user.getRights()).as("Existing User has no Rights").isEmpty();
 
-        bean.addRight(user.getId(), R);
+        userApi.addRight(user.getId(), R);
 
-        User found = bean.findByName(NAME);
+        User found = userApi.findByName(NAME);
         assertThat(found.getRights()).as("Existing User has one Right").containsExactly(R);
     }
 
@@ -189,7 +172,7 @@ public class UserApiIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        bean.addRight(user.getId() + 1, R);
+        userApi.addRight(user.getId() + 1, R);
     }
 
     @Test
@@ -203,7 +186,7 @@ public class UserApiIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        bean.addRight(user.getId(), R);
+        userApi.addRight(user.getId(), R);
     }
 
     @Test
@@ -216,7 +199,7 @@ public class UserApiIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(NullPointerException.class));
 
-        bean.addRight(user.getId(), null);
+        userApi.addRight(user.getId(), null);
     }
 
     @Test
@@ -230,9 +213,9 @@ public class UserApiIT extends ArquillianProjectArchive {
 
         assertThat(user.getRights()).as("Existing User has one Right").containsExactly(R);
 
-        bean.removeRight(user.getId(), R);
+        userApi.removeRight(user.getId(), R);
 
-        User found = bean.findByName(NAME);
+        User found = userApi.findByName(NAME);
         assertThat(found.getRights()).as("Existing User has no Rights").isEmpty();
     }
 
@@ -247,7 +230,7 @@ public class UserApiIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        bean.removeRight(user.getId() + 1, R);
+        userApi.removeRight(user.getId() + 1, R);
     }
 
     @Test
@@ -260,7 +243,7 @@ public class UserApiIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        bean.removeRight(user.getId(), R);
+        userApi.removeRight(user.getId(), R);
     }
 
     @Test
@@ -273,7 +256,7 @@ public class UserApiIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(NullPointerException.class));
 
-        bean.removeRight(user.getId(), null);
+        userApi.removeRight(user.getId(), null);
     }
 
     @Test
@@ -288,9 +271,9 @@ public class UserApiIT extends ArquillianProjectArchive {
 
         assertThat(user.getPersonas()).as("Existing User has no Groups").isEmpty();
 
-        bean.addGroup(user.getId(), group.getId());
+        userApi.addGroup(user.getId(), group.getId());
 
-        User found = bean.findByName(NAME);
+        User found = userApi.findByName(NAME);
         assertThat(found.getGroups()).as("Existing User has one Group").hasSize(1);
     }
 
@@ -306,7 +289,7 @@ public class UserApiIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        bean.addGroup(user.getId() + 1, group.getId());
+        userApi.addGroup(user.getId() + 1, group.getId());
     }
 
     @Test
@@ -321,7 +304,7 @@ public class UserApiIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        bean.addGroup(user.getId(), group.getId() + 1);
+        userApi.addGroup(user.getId(), group.getId() + 1);
     }
 
     @Test
@@ -337,7 +320,7 @@ public class UserApiIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        bean.addGroup(user.getId(), group.getId());
+        userApi.addGroup(user.getId(), group.getId());
     }
 
     @Test
@@ -353,9 +336,9 @@ public class UserApiIT extends ArquillianProjectArchive {
 
         assertThat(user.getPersonas()).as("Existing User has one Group").hasSize(1);
 
-        bean.removeGroup(user.getId(), group.getId());
+        userApi.removeGroup(user.getId(), group.getId());
 
-        User found = bean.findByName(NAME);
+        User found = userApi.findByName(NAME);
         assertThat(found.getGroups()).as("Existing User has no Groups").isEmpty();
     }
 
@@ -371,7 +354,7 @@ public class UserApiIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        bean.removeGroup(user.getId() + 1, group.getId());
+        userApi.removeGroup(user.getId() + 1, group.getId());
     }
 
     @Test
@@ -386,7 +369,7 @@ public class UserApiIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        bean.removeGroup(user.getId(), group.getId() + 1);
+        userApi.removeGroup(user.getId(), group.getId() + 1);
     }
 
     @Test
@@ -401,7 +384,7 @@ public class UserApiIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        bean.removeGroup(user.getId(), group.getId());
+        userApi.removeGroup(user.getId(), group.getId());
     }
 
     @Test
@@ -412,11 +395,11 @@ public class UserApiIT extends ArquillianProjectArchive {
         em.persist(user);
         utx.commit();
 
-        assertThat(bean.findAll().size()).as("One User exists").isEqualTo(1);
+        assertThat(userApi.findAll().size()).as("One User exists").isEqualTo(1);
 
-        bean.delete(user.getId());
+        userApi.delete(user.getId());
 
-        assertThat(bean.findAll().size()).as("No Users exist").isZero();
+        assertThat(userApi.findAll().size()).as("No Users exist").isZero();
     }
 
     @Test
@@ -429,6 +412,6 @@ public class UserApiIT extends ArquillianProjectArchive {
 
         expectedException.expectCause(isA(IllegalArgumentException.class));
 
-        bean.delete(user.getId() + 1);
+        userApi.delete(user.getId() + 1);
     }
 }

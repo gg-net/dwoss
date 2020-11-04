@@ -26,15 +26,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.dwoss.rights.ee.api.AuthenticationService;
 import eu.ggnet.dwoss.rights.ee.entity.Operator;
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.rights.ee.eao.OperatorEao;
+import eu.ggnet.dwoss.rights.api.PreAuthenticationHook;
 
 /**
  *
  * @author Bastian Venz
  */
+@Deprecated
 @Stateless
 public class AuthenticationBean implements Authentication {
 
@@ -44,7 +45,7 @@ public class AuthenticationBean implements Authentication {
     private OperatorEao userEao;
 
     @Inject
-    private Instance<AuthenticationService> service;
+    private Instance<PreAuthenticationHook> service;
 
     /**
      * This method returns a {@link Set} of {@link AtomicRight}'s when the {@link Operator} is authorized or throw a {@link UserInfoException} when username

@@ -24,7 +24,9 @@ import java.util.*;
  * <p>
  * @author Bastian Venz
  * <p>
+ * @deprecated Use {@link User} and {@link UserApi#getQuickLoginKey(long) }
  */
+@Deprecated
 public class Operator implements Serializable {
 
     public final String username;

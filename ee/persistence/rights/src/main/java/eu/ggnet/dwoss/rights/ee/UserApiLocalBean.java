@@ -14,17 +14,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.rights.ui;
+package eu.ggnet.dwoss.rights.ee;
 
-import org.junit.Test;
+import java.util.*;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import javax.ejb.Stateless;
+import javax.inject.Inject;
 
-public class NewRightsManagementControllerTest {
+import eu.ggnet.dwoss.rights.api.*;
+import eu.ggnet.dwoss.rights.ee.eao.OperatorEao;
+import eu.ggnet.dwoss.rights.ee.entity.Operator;
 
-    @Test
-    public void testResource() {
-        assertThat(RightsManagmentController.loadFxml()).isNotNull();
+/**
+ *
+ * @author oliver.guenther
+ */
+@Stateless
+public class UserApiLocalBean implements UserApiLocal {
+
+    @Inject
+    private UserApiBean bean;
+
+    @Override
+    public User findByName(String username) {        
+        return bean.findByName(username);
     }
 
 }

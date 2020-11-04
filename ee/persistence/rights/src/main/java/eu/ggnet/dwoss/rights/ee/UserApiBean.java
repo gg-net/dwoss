@@ -20,9 +20,14 @@ import java.util.*;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.system.autolog.AutoLogger;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.User;
@@ -31,12 +36,16 @@ import eu.ggnet.dwoss.rights.api.Group;
 import eu.ggnet.dwoss.rights.ee.assist.Rights;
 import eu.ggnet.dwoss.rights.ee.entity.Operator;
 import eu.ggnet.dwoss.rights.ee.entity.Persona;
+import eu.ggnet.dwoss.rights.ee.op.PasswordUtil;
 
 import com.querydsl.jpa.impl.JPAQuery;
 
 import static eu.ggnet.dwoss.rights.ee.entity.QOperator.operator;
 
+import eu.ggnet.dwoss.rights.api.PreAuthenticationHook;
+
 /**
+ * Implementation of {@link UserApi}.
  *
  * @author mirko.schulze
  */
@@ -48,19 +57,45 @@ public class UserApiBean implements UserApi {
     @Inject
     @Rights
     private EntityManager em;
+    
+    private final static Logger L = LoggerFactory.getLogger(UserApiBean.class);
 
+    
+    @Inject
+    private Instance<PreAuthenticationHook> service;
+    
     @Override
-    public boolean authenticate(String username, byte[] password) throws IllegalArgumentException, NullPointerException {
-        Objects.requireNonNull(username, "Submitted username is null.");
-        Operator user = new JPAQuery<Operator>(em).from(operator).where(operator.username.eq(username)).fetchOne();
-        if ( user == null ) throw new IllegalArgumentException("No User found with name " + username + ".");
-        return user.getPassword() == password;
+    public User authenticate(String username, char[] password) throws UserInfoException {
+        L.info("login(user={}, password=xxxxxxx) requested", username);
+        //find users by Username
+        if ( username == null ) throw new UserInfoException("Kein Username angegeben");
+        if ( password == null || password.length == 0 ) throw new UserInfoException("Kein Password angegeben");
+        
+        Operator op = new JPAQuery<Operator>(em).from(operator).where(operator.username.eq(username)).fetchOne();
+        if ( op == null ) throw new UserInfoException("User " + username + " existiert nicht");
+        if ( !service.isAmbiguous() && !service.isUnsatisfied() ) {
+            if ( service.get().authenticate(username, password) ) {
+                L.info("login(user={}, password=xxxxxxx) via AuthenticationService successful.", username);
+                return findByName(username);
+            }
+        } else {
+            if ( op.getPassword() != null && op.getSalt() != null
+                    && Arrays.equals(op.getPassword(), PasswordUtil.hashPassword(password, op.getSalt())) ) {
+                L.info("login(user={}, password=xxxxxxx) via internal database successful.", username);
+                return findByName(username);
+            }
+
+        }
+        L.warn("login(user={}, password=xxxxxxx) failed.", username);
+        throw new UserInfoException("Authentifizierung nicht gelungen!");
     }
 
     @Override
     public int getQuickLoginKey(long id) throws IllegalArgumentException {
         Operator user = new JPAQuery<Operator>(em).from(operator).where(operator.id.eq(id)).fetchOne();
-        if ( user == null ) throw new IllegalArgumentException("No User found with id " + id + ".");
+        if ( user == null ) {
+            throw new IllegalArgumentException("No User found with id " + id + ".");
+        }
         return user.getQuickLoginKey();
     }
 
@@ -85,25 +120,7 @@ public class UserApiBean implements UserApi {
             throw new IllegalArgumentException("Submitted username is blank.");
         }
         user.setUsername(username);
-
-        List<Persona> personas = user.getPersonas();
-        List<Group> groups = new ArrayList<>();
-        personas.forEach(g -> {
-            groups.add(new Group.Builder()
-                    .setId(g.getId())
-                    .setName(g.getName())
-                    .setOptLock(g.getOptLock())
-                    .addAllRights(g.getPersonaRights())
-                    .build());
-        });
-
-        return new User.Builder()
-                .setId(user.getId())
-                .setUsername(username)
-                .setOptLock(Optional.empty())
-                .addAllGroups(groups)
-                .addAllRights(user.getRights())
-                .build();
+        return findById(userId);
     }
 
     @Override
@@ -117,24 +134,7 @@ public class UserApiBean implements UserApi {
             throw new IllegalArgumentException("Submitted Right " + right + " is already granted to User " + user.getUsername() + ".");
         }
         user.add(right);
-
-        List<Persona> personas = user.getPersonas();
-        List<Group> groups = new ArrayList<>();
-        personas.forEach(g -> {
-            groups.add(new Group.Builder()
-                    .setId(g.getId())
-                    .setName(g.getName())
-                    .setOptLock(g.getOptLock())
-                    .addAllRights(g.getPersonaRights())
-                    .build());
-        });
-
-        return new User.Builder()
-                .setId(user.getId())
-                .setUsername(user.getUsername())
-                .addAllGroups(groups)
-                .addAllRights(user.getRights())
-                .build();
+        return findById(userId);
     }
 
     @Override
@@ -148,24 +148,7 @@ public class UserApiBean implements UserApi {
             throw new IllegalArgumentException("Submitted Right " + right + " was not granted to User " + user.getUsername() + " at all.");
         }
         user.getRights().remove(right);
-
-        List<Persona> personas = user.getPersonas();
-        List<Group> groups = new ArrayList<>();
-        personas.forEach(g -> {
-            groups.add(new Group.Builder()
-                    .setId(g.getId())
-                    .setName(g.getName())
-                    .setOptLock(g.getOptLock())
-                    .addAllRights(g.getPersonaRights())
-                    .build());
-        });
-
-        return new User.Builder()
-                .setId(user.getId())
-                .setUsername(user.getUsername())
-                .addAllGroups(groups)
-                .addAllRights(user.getRights())
-                .build();
+        return findById(userId);
     }
 
     @Override
@@ -182,24 +165,7 @@ public class UserApiBean implements UserApi {
             throw new IllegalArgumentException("Submitted Group " + group.getName() + " is already associated with User " + user.getUsername() + ".");
         }
         user.getPersonas().add(group);
-
-        List<Persona> personas = user.getPersonas();
-        List<Group> groups = new ArrayList<>();
-        personas.forEach(g -> {
-            groups.add(new Group.Builder()
-                    .setId(g.getId())
-                    .setName(g.getName())
-                    .setOptLock(g.getOptLock())
-                    .addAllRights(g.getPersonaRights())
-                    .build());
-        });
-
-        return new User.Builder()
-                .setId(user.getId())
-                .setUsername(user.getUsername())
-                .addAllGroups(groups)
-                .addAllRights(user.getRights())
-                .build();
+        return findById(userId);
     }
 
     @Override
@@ -216,24 +182,7 @@ public class UserApiBean implements UserApi {
             throw new IllegalArgumentException("Submitted Group " + group.getName() + " wasn't associated with User " + user.getUsername() + " at all.");
         }
         user.getPersonas().remove(group);
-
-        List<Persona> personas = user.getPersonas();
-        List<Group> groups = new ArrayList<>();
-        personas.forEach(g -> {
-            groups.add(new Group.Builder()
-                    .setId(g.getId())
-                    .setName(g.getName())
-                    .setOptLock(g.getOptLock())
-                    .addAllRights(g.getPersonaRights())
-                    .build());
-        });
-
-        return new User.Builder()
-                .setId(user.getId())
-                .setUsername(user.getUsername())
-                .addAllGroups(groups)
-                .addAllRights(user.getRights())
-                .build();
+        return findById(userId);
     }
 
     @Override
@@ -248,21 +197,23 @@ public class UserApiBean implements UserApi {
     @Override
     public User findById(long id) throws IllegalArgumentException {
         Operator user = new JPAQuery<Operator>(em).from(operator).where(operator.id.eq(id)).fetchOne();
-        if ( user == null ) throw new IllegalArgumentException("No User found with id " + id + ".");
+        if ( user == null ) {
+            throw new IllegalArgumentException("No User found with id " + id + ".");
+        }
         List<Persona> personas = user.getPersonas();
         List<Group> groups = new ArrayList<>();
         personas.forEach(g -> {
             groups.add(new Group.Builder()
-                    .setId(g.getId())
+                    .setId(Optional.of(g.getId()))
                     .setName(g.getName())
-                    .setOptLock(g.getOptLock())
+                    .setOptLock(Optional.of(g.getOptLock()))
                     .addAllRights(g.getPersonaRights())
                     .build());
         });
         return new User.Builder()
-                .setId(user.getId())
+                .setId(Optional.of(user.getId()))
                 .setUsername(user.getUsername())
-                .setOptLock(user.getOptLock())
+                .setOptLock(Optional.of(user.getOptLock()))
                 .addAllGroups(groups)
                 .addAllRights(user.getRights())
                 .build();
@@ -272,21 +223,23 @@ public class UserApiBean implements UserApi {
     public User findByName(String username) throws IllegalArgumentException, NullPointerException {
         Objects.requireNonNull(username, "Username is null.");
         Operator user = new JPAQuery<Operator>(em).from(operator).where(operator.username.eq(username)).fetchOne();
-        if ( user == null ) throw new IllegalArgumentException("No User found with name " + username + ".");
+        if ( user == null ) {
+            throw new IllegalArgumentException("No User found with name " + username + ".");
+        }
         List<Persona> personas = user.getPersonas();
         List<Group> groups = new ArrayList<>();
         personas.forEach(g -> {
             groups.add(new Group.Builder()
-                    .setId(g.getId())
+                    .setId(Optional.of(g.getId()))
                     .setName(g.getName())
-                    .setOptLock(g.getOptLock())
+                    .setOptLock(Optional.of(g.getOptLock()))
                     .addAllRights(g.getPersonaRights())
                     .build());
         });
         return new User.Builder()
-                .setId(user.getId())
+                .setId(Optional.of(user.getId()))
                 .setUsername(user.getUsername())
-                .setOptLock(user.getOptLock())
+                .setOptLock(Optional.of(user.getOptLock()))
                 .addAllGroups(groups)
                 .addAllRights(user.getRights())
                 .build();
@@ -300,16 +253,16 @@ public class UserApiBean implements UserApi {
             List<Group> groups = new ArrayList<>();
             u.getPersonas().forEach(g -> {
                 groups.add(new Group.Builder()
-                        .setId(g.getId())
+                        .setId(Optional.of(g.getId()))
                         .setName(g.getName())
-                        .setOptLock(g.getOptLock())
+                        .setOptLock(Optional.of(g.getOptLock()))
                         .addAllRights(g.getPersonaRights())
                         .build());
             });
             users.add(new User.Builder()
-                    .setId(u.getId())
+                    .setId(Optional.of(u.getId()))
                     .setUsername(u.getUsername())
-                    .setOptLock(u.getOptLock())
+                    .setOptLock(Optional.of(u.getOptLock()))
                     .addAllGroups(groups)
                     .addAllRights(u.getRights())
                     .build());

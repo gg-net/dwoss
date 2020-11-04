@@ -23,11 +23,14 @@ import javax.ejb.Remote;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;
 import eu.ggnet.dwoss.core.common.UserInfoException;
+import eu.ggnet.dwoss.rights.api.*;
 
 /**
  *
  * @author Bastian Venz
+ * @deprecated Use {@link UserApi#authenticate(java.lang.String, byte[]) } and {@link UserApi#getQuickLoginKey(long) }
  */
+@Deprecated
 @Remote
 public interface Authentication {
 
@@ -39,7 +42,9 @@ public interface Authentication {
      * @param password the password of the {@link Operator}.
      * @return {@link Set} of {@link AtomicRight}'s when the {@link Operator} is authorized.
      * @throws UserInfoException is thrown when username and/or password is wrong.
+     * @deprecated Use {@link UserApi#authenticate(java.lang.String, byte[]) } and {@link UserApi#getQuickLoginKey(long) }
      */
+    @Deprecated
     Operator login(String username, char[] password) throws UserInfoException;
 
 }

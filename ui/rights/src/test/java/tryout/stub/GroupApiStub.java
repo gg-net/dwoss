@@ -25,6 +25,7 @@ import eu.ggnet.dwoss.rights.api.*;
 import eu.ggnet.dwoss.rights.ee.entity.Persona;
 
 /**
+ * Stub implementation of {@link GroupApi} for testing purposes.
  *
  * @author mirko.schulze
  */
@@ -39,7 +40,7 @@ public class GroupApiStub implements GroupApi {
         if ( name.isBlank() ) {
             throw new IllegalArgumentException("Submitted name is blank.");
         }
-        if ( isNameAlreadyByAnotherGroup(-1, name) ) {
+        if ( isNameAlreadyUsedByAnotherGroup(-1, name) ) {
             throw new IllegalArgumentException("Submitted name " + name + " is already used.");
         }
         Persona group = new Persona(name);
@@ -65,7 +66,7 @@ public class GroupApiStub implements GroupApi {
         if ( group == null ) {
             throw new IllegalArgumentException("No Group found with groupId = " + groupId + ".");
         }
-        if ( isNameAlreadyByAnotherGroup(groupId, name) ) {
+        if ( isNameAlreadyUsedByAnotherGroup(groupId, name) ) {
             throw new IllegalArgumentException("Submitted name " + name + " is already used.");
         }
         group.setName(name);
@@ -186,7 +187,7 @@ public class GroupApiStub implements GroupApi {
         return findAll;
     }
 
-    private boolean isNameAlreadyByAnotherGroup(long groupId, String name) {
+    private boolean isNameAlreadyUsedByAnotherGroup(long groupId, String name) {
         Persona group = UserApiStub.getGroupsByIds().get(groupId);
         if ( group != null ) {
             if ( group.getName().equals(name) ) return false;

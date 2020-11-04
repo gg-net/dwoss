@@ -20,7 +20,9 @@ package eu.ggnet.dwoss.rights.api;
  * Tagging Interface for every kind of Authorisation implementation.
  * <p>
  * @author oliver.guenther
+ * @deprecated Use AtomicRight direct.
  */
+@Deprecated
 public interface Authorisation {
 
     String toName();
