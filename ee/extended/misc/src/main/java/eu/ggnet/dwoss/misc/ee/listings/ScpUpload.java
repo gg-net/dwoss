@@ -63,6 +63,7 @@ public class ScpUpload {
 
                 for (File file : upload.getFiles()) {
                     m.worked(1, "uploading to " + upload.getPath() + " file " + file.getName());
+                    L.info("upload() uploading file:{}", file.getName());
                     ssh.newSCPFileTransfer().upload(new FileSystemFile(file), ".");
                 }
 
