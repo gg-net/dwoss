@@ -35,7 +35,7 @@ public class GroupApiStub implements GroupApi {
 
     @Override
     public Group create(String name) throws IllegalArgumentException, NullPointerException {
-        L.info("Entering create({})", name);
+        L.debug("Entering create({})", name);
         Objects.requireNonNull(name, "Submitted name is null.");
         if ( name.isBlank() ) {
             throw new IllegalArgumentException("Submitted name is blank.");
@@ -43,17 +43,35 @@ public class GroupApiStub implements GroupApi {
         if ( isNameAlreadyUsedByAnotherGroup(-1, name) ) {
             throw new IllegalArgumentException("Submitted name " + name + " is already used.");
         }
-        Persona group = new Persona(name);
+        Persona group = new Persona(UserApiStub.getGroupId(), 0, name, new ArrayList<>());
         UserApiStub.getGroupsByIds().put(group.getId(), group);
-        L.info("create()): added new Group {}", group);
+        UserApiStub.incrementGroupId();
+        L.debug("create()): added new Group {}", group);
 
-        return new Group.Builder()
-                .setId(group.getId())
-                .setName(name)
-                .setOptLock(group.getOptLock())
-                .addAllRights(group.getPersonaRights())
-                .build();
+        return findByName(name);
     }
+    
+//    @Override
+//    public Group create(String name) throws IllegalArgumentException, NullPointerException {
+//        L.info("Entering create({})", name);
+//        Objects.requireNonNull(name, "Submitted name is null.");
+//        if ( name.isBlank() ) {
+//            throw new IllegalArgumentException("Submitted name is blank.");
+//        }
+//        if ( isNameAlreadyUsedByAnotherGroup(-1, name) ) {
+//            throw new IllegalArgumentException("Submitted name " + name + " is already used.");
+//        }
+//        Persona group = new Persona(name);
+//        UserApiStub.getGroupsByIds().put(group.getId(), group);
+//        L.info("create()): added new Group {}", group);
+//
+//        return new Group.Builder()
+//                .setId(group.getId())
+//                .setName(name)
+//                .setOptLock(group.getOptLock())
+//                .addAllRights(group.getPersonaRights())
+//                .build();
+//    }
 
     @Override
     public Group updateName(long groupId, String name) throws IllegalArgumentException, NullPointerException {

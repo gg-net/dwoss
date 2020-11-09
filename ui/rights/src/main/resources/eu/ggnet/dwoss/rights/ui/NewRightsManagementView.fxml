@@ -6,7 +6,6 @@
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
@@ -121,48 +120,6 @@
                         </TitledPane>
                     </children>
                 </AnchorPane>
-                <FlowPane alignment="CENTER" columnHalignment="CENTER" prefHeight="80.0" prefWidth="200.0" GridPane.columnSpan="4" GridPane.rowIndex="3">
-                    <children>
-                        <Button fx:id="createUserButton" mnemonicParsing="false" text="Neuen Benutzer anlegen">
-                            <padding>
-                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                            </padding>
-                            <FlowPane.margin>
-                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                            </FlowPane.margin>
-                        </Button>
-                        <Button fx:id="createGroupButton" mnemonicParsing="false" text="Neue Gruppe anlegen">
-                            <FlowPane.margin>
-                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                            </FlowPane.margin>
-                            <padding>
-                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                            </padding>
-                        </Button>
-                        <Button fx:id="deleteUserButton" mnemonicParsing="false" text="Benutzer löschen">
-                            <FlowPane.margin>
-                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                            </FlowPane.margin>
-                            <padding>
-                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                            </padding>
-                        </Button>
-                        <Button fx:id="deleteGroupButton" mnemonicParsing="false" text="Gruppe löschen">
-                            <FlowPane.margin>
-                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                            </FlowPane.margin>
-                            <padding>
-                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                            </padding>
-                        </Button>
-                    </children>
-                    <GridPane.margin>
-                        <Insets />
-                    </GridPane.margin>
-                    <padding>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                    </padding>
-                </FlowPane>
                 <HBox alignment="CENTER" GridPane.columnIndex="4" GridPane.rowIndex="3">
                     <children>
                         <Button fx:id="closeButton" mnemonicParsing="false" text="Schließen">
@@ -175,6 +132,33 @@
                         </Button>
                     </children>
                 </HBox>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnSpan="4" GridPane.rowIndex="3">
+               <children>
+                        <Button fx:id="createGroupButton" mnemonicParsing="false" text="Neue Gruppe anlegen">
+                            <padding>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                            </padding>
+                        </Button>
+                        <Button fx:id="createUserButton" mnemonicParsing="false" text="Neuen Benutzer anlegen">
+                            <padding>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                            </padding>
+                        </Button>
+                        <Button fx:id="deleteUserButton" mnemonicParsing="false" text="Benutzer löschen">
+                            <padding>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                            </padding>
+                        </Button>
+                        <Button fx:id="deleteGroupButton" mnemonicParsing="false" text="Gruppen löschen">
+                            <padding>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                            </padding>
+                        </Button>
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </HBox>
             </children>
         </GridPane>
     </children>

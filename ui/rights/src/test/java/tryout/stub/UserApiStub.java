@@ -41,6 +41,8 @@ public class UserApiStub implements UserApi {
     private static final Map<Long, Persona> groupsByIds = new HashMap<>();
 
     private int userId = 1;
+    
+    private static int groupId = 1;
 
     public static Map<Long, Operator> getUsersByIds() {
         return usersByIds;
@@ -49,12 +51,21 @@ public class UserApiStub implements UserApi {
     public static Map<Long, Persona> getGroupsByIds() {
         return groupsByIds;
     }
+    
+    public static int getGroupId() {
+        return groupId;
+    }
+
+    public static void incrementGroupId() {
+        groupId++;
+    }
 
     public UserApiStub() {
         L.debug("Entering UserApiStub constructor");
         for (int i = 1; i < 4; i++) {
-            Persona group = new Persona(i, 0, "Gruppe " + i, getRandomRights());
+            Persona group = new Persona(groupId, 0, "Gruppe " + i, getRandomRights());
             groupsByIds.put(group.getId(), group);
+            groupId++;
             L.debug("constructor: Added Group {}", group);
         }
         for (int j = 1; j < 4; j++) {
