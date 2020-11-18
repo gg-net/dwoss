@@ -159,7 +159,7 @@ public class GroupManagementController implements Initializable, FxController, C
     }
 
     public static URL loadFxml() {
-        return PersonaManagmentController.class.getResource("GroupManagementView.fxml");
+        return GroupManagementController.class.getResource("GroupManagementView.fxml");
     }
 
 }

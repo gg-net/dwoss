@@ -16,9 +16,6 @@
  */
 package eu.ggnet.dwoss.rights.ee;
 
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 import javax.ejb.LocalBean;
@@ -94,7 +91,6 @@ public class UserApiBean implements UserApi {
 
     @Override
     public int getQuickLoginKey(long id) throws IllegalArgumentException {
-        L.info("getQuickLoginKey({}) called", id);
         Operator user = new JPAQuery<Operator>(em).from(operator).where(operator.id.eq(id)).fetchOne();
         if ( user == null ) {
             L.info("No User found with id {}.", user, id);
@@ -105,7 +101,6 @@ public class UserApiBean implements UserApi {
 
     @Override
     public User create(String username) throws IllegalArgumentException, NullPointerException {
-        L.info("create({}) called", username);
         Objects.requireNonNull(username, "Submitted username is null.");
         if ( username.isBlank() ) {
             throw new IllegalArgumentException("Submitted username is blank.");
@@ -116,7 +111,6 @@ public class UserApiBean implements UserApi {
 
     @Override
     public User updateUsername(long userId, String username) throws IllegalArgumentException, NullPointerException {
-        L.info("updateUsername({}, {}) called", userId, username);
         Operator user = em.find(Operator.class, userId);
         if ( user == null ) {
             throw new IllegalArgumentException("No User found with userId = " + userId + ".");
@@ -131,7 +125,6 @@ public class UserApiBean implements UserApi {
 
     @Override
     public User updatePassword(long userId, char[] password) throws IllegalArgumentException, NullPointerException {
-        L.info("updatePassword({}, {}) called", userId, password);
         Operator user = em.find(Operator.class, userId);
         if ( user == null ) {
             throw new IllegalArgumentException("No User found with userId = " + userId + ".");
@@ -151,7 +144,6 @@ public class UserApiBean implements UserApi {
 
     @Override
     public User addRight(long userId, AtomicRight right) throws IllegalArgumentException, NullPointerException {
-        L.info("addRight({}, {}) called", userId, right);
         Operator user = em.find(Operator.class, userId);
         if ( user == null ) {
             throw new IllegalArgumentException("No User found with userId = " + userId + ".");
@@ -166,7 +158,6 @@ public class UserApiBean implements UserApi {
 
     @Override
     public User removeRight(long userId, AtomicRight right) throws IllegalArgumentException, NullPointerException {
-        L.info("removeRight({}, {}) called", userId, right);
         Operator user = em.find(Operator.class, userId);
         if ( user == null ) {
             throw new IllegalArgumentException("No User found with userId = " + userId + ".");
@@ -181,7 +172,6 @@ public class UserApiBean implements UserApi {
 
     @Override
     public User addGroup(long userId, long groupId) throws IllegalArgumentException {
-        L.info("addGroup({}, {}) called", userId, groupId);
         Operator user = em.find(Operator.class, userId);
         if ( user == null ) {
             throw new IllegalArgumentException("No User found with userId " + userId + ".");
@@ -199,7 +189,6 @@ public class UserApiBean implements UserApi {
 
     @Override
     public User removeGroup(long userId, long groupId) throws IllegalArgumentException {
-        L.info("removeGroup({}, {}) called", userId, groupId);
         Operator user = em.find(Operator.class, userId);
         if ( user == null ) {
             throw new IllegalArgumentException("No User found with userId " + userId + ".");
@@ -217,7 +206,6 @@ public class UserApiBean implements UserApi {
 
     @Override
     public void delete(long userId) throws IllegalArgumentException {
-        L.info("delete({}) called", userId);
         Operator user = em.find(Operator.class, userId);
         if ( user == null ) {
             throw new IllegalArgumentException("No User found with userId = " + userId + ".");
@@ -227,36 +215,30 @@ public class UserApiBean implements UserApi {
 
     @Override
     public User findById(long id) throws IllegalArgumentException {
-        L.info("findById({}) called", id);
         Operator user = new JPAQuery<Operator>(em).from(operator).where(operator.id.eq(id)).fetchOne();
         if ( user == null ) {
             throw new IllegalArgumentException("No User found with id " + id + ".");
         }
         User u = user.toApiUser();
-        L.info("findById() returning {}", u);
         return u;
     }
 
     @Override
     public User findByName(String username) throws IllegalArgumentException, NullPointerException {
-        L.info("findByName({}) called", username);
         Objects.requireNonNull(username, "Username is null.");
         Operator user = new JPAQuery<Operator>(em).from(operator).where(operator.username.eq(username)).fetchOne();
         if ( user == null ) {
             throw new IllegalArgumentException("No User found with name " + username + ".");
         }
         User u = user.toApiUser();
-        L.info("findByName() returning {}", u);
         return u;
     }
 
     @Override
     public List<User> findAll() {
-        L.info("findAll() called");
         List<Operator> operators = new JPAQuery<Operator>(em).from(operator).fetch();
         List<User> users = new ArrayList<>();
         operators.forEach(u -> users.add(u.toApiUser()));
-        L.info("findAll() returning {}", users);
         return users;
     }
 }

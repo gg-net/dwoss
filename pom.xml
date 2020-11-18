@@ -84,7 +84,7 @@
         <javaee.artifactId>javaee-api</javaee.artifactId>
         <javaee.version>8.0</javaee.version>
         <netbeans.hint.license>gpl30</netbeans.hint.license>
-        <netbeans.compile.on.save>test</netbeans.compile.on.save>
+        <netbeans.compile.on.save>all</netbeans.compile.on.save>
         <redtape-pu.default-datasource>
           <![CDATA[
                 <provider>org.hibernate.ejb.HibernatePersistence</provider>

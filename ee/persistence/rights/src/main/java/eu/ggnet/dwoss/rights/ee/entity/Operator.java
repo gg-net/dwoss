@@ -216,18 +216,6 @@ public class Operator extends BaseEntity implements Serializable, EagerAble {
                 .build();
     }
 
-    /**
-     * This method will be called bevor persisting and will remove all duplicated rights in the rights list and remove all rights that are already in the
-     * Personas.
-     */
-    @PrePersist
-    @PreUpdate
-    public void preStrored() {
-        for (Persona persona : personas) {
-            rights.removeAll(persona.getPersonaRights());
-        }
-    }
-
     @Override
     public void fetchEager() {
         rights.size();

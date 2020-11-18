@@ -33,7 +33,7 @@ import eu.ggnet.dwoss.price.ui.PriceBlockerViewCask;
 import eu.ggnet.dwoss.receipt.ui.UiUnitSupport;
 import eu.ggnet.dwoss.redtapext.ui.ReactivePicoUnitDetailViewCask;
 import eu.ggnet.dwoss.report.ui.RawReportView;
-import eu.ggnet.dwoss.rights.ui.UiPersona;
+import eu.ggnet.dwoss.rights.ui.UserManagementController;
 import eu.ggnet.dwoss.search.ui.SearchCask;
 import eu.ggnet.dwoss.stock.ui.StockUpiImpl;
 import eu.ggnet.dwoss.uniqueunit.ui.ProductTask;
@@ -58,7 +58,7 @@ public class DwOssMain {
         cc.addPackages(true, PriceBlockerViewCask.class); // price.ui
         cc.addPackages(true, UiUnitSupport.class); // receipt.ui
         cc.addPackages(true, RawReportView.class); // report.ui
-        cc.addPackages(true, UiPersona.class); // rights.ui
+        cc.addPackages(true, UserManagementController.class); // rights.ui
         cc.addPackages(true, StockUpiImpl.class); // stock.ui
         cc.addPackages(true, ProductTask.class); // uniqueunit.ui
         cc.addPackages(true, ReactivePicoUnitDetailViewCask.class); // redtapext.ui

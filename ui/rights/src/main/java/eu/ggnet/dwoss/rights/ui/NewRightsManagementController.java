@@ -18,9 +18,14 @@ package eu.ggnet.dwoss.rights.ui;
 
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.CancellationException;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -38,6 +43,8 @@ import eu.ggnet.dwoss.rights.ee.entity.Persona;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.core.ui.*;
+
+import static javafx.scene.control.ButtonType.OK;
 
 /**
  * FXML Controller class for the RightsManagementView.fxml.
@@ -133,22 +140,22 @@ public class NewRightsManagementController implements Initializable, FxControlle
     private Long getSelectedUserIdFromUserListView() {
         return userListView.getSelectionModel().getSelectedItem().getId().get();
     }
-    
-    private boolean getSelectedGroupListView(){
-        if(activeGroupsListView.getSelectionModel().getSelectedIndex() > 0){
+
+    private boolean getSelectedGroupListView() {
+        if ( activeGroupsListView.getSelectionModel().getSelectedIndex() > 0 ) {
             L.info("getSelectedGroupListView() returning true");
             return true;
-        }else{
+        } else {
             L.info("getSelectedGroupListView() returning false");
             return false;
         }
     }
-    
-    private int getIndexOfSelectedGroup(){
+
+    private int getIndexOfSelectedGroup() {
         int selectedIndex;
-        if(getSelectedGroupListView()){
+        if ( getSelectedGroupListView() ) {
             selectedIndex = activeGroupsListView.getSelectionModel().selectedIndexProperty().get();
-        }else{
+        } else {
             selectedIndex = inactiveGroupsListView.getSelectionModel().selectedIndexProperty().get();
         }
         L.info("getIndexOfSelectedGroup() returning index {}", selectedIndex);
@@ -175,7 +182,6 @@ public class NewRightsManagementController implements Initializable, FxControlle
                     refreshSelectedGroupRightsListView();
                 } else {
                     Ui.build(closeButton)
-                            .frame(true)
                             .title("Benutzer-Verwaltung: Benutzer bearbeiten")
                             .modality(Modality.WINDOW_MODAL)
                             .fxml()
@@ -214,15 +220,12 @@ public class NewRightsManagementController implements Initializable, FxControlle
         activeGroupsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         activeGroupsListView.setOnMouseClicked(e -> {
             if ( e.getButton().equals(MouseButton.PRIMARY) ) {
-                int index = getIndexOfSelectedGroup();
                 selectedGroup = activeGroupsListView.getSelectionModel().getSelectedItem();
-                inactiveGroupsListView.getSelectionModel().select(-1);
                 if ( e.getClickCount() == 1 ) {
                     refreshSelectedGroupRightsListView();
                 } else {
                     editGroup(selectedGroup);
                 }
-                activeGroupsListView.getSelectionModel().select(index);
             }
         });
         //inactiveGroupsListView
@@ -230,15 +233,13 @@ public class NewRightsManagementController implements Initializable, FxControlle
         inactiveGroupsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         inactiveGroupsListView.setOnMouseClicked(e -> {
             if ( e.getButton().equals(MouseButton.PRIMARY) ) {
-                int index = getIndexOfSelectedGroup();
                 selectedGroup = inactiveGroupsListView.getSelectionModel().getSelectedItem();
-                activeGroupsListView.getSelectionModel().select(-1);
+//                activeGroupsListView.getSelectionModel().select(-1);
                 if ( e.getClickCount() == 1 ) {
                     refreshSelectedGroupRightsListView();
                 } else {
                     editGroup(selectedGroup);
                 }
-                inactiveGroupsListView.getSelectionModel().select(index);
             }
         });
         //allActiveRightsUserListView
@@ -334,7 +335,6 @@ public class NewRightsManagementController implements Initializable, FxControlle
         createUserButton.setOnAction(e -> {
             L.info("createUser");
             Ui.build(createUserButton)
-                    .frame(true)
                     .title("Benutzer-Verwaltung: Neuen Benutzer anlegen")
                     .modality(Modality.WINDOW_MODAL)
                     .fxml()
@@ -358,7 +358,6 @@ public class NewRightsManagementController implements Initializable, FxControlle
         //createGroupButton
         createGroupButton.setOnAction(e -> {
             Ui.build(createGroupButton)
-                    .frame(true)
                     .title("Gruppen-Verwaltung: Neue Gruppe anlegen")
                     .modality(Modality.WINDOW_MODAL)
                     .fxml()
@@ -377,21 +376,21 @@ public class NewRightsManagementController implements Initializable, FxControlle
         });
         //deleteUserButton
         deleteUserButton.setOnAction(e -> {
-            if ( selectedUser != null ) {
-                if ( new Alert(Alert.AlertType.CONFIRMATION,
-                        "Wollen Sie den ausgewählten Benutzer löschen?")
-                        .showAndWait().get() == ButtonType.OK ) {
-                    List<Long> selectedUsersIds = userListView.getSelectionModel().getSelectedItems()
-                            .stream()
-                            .mapToLong(u -> u.getId().get())
-                            .boxed()
-                            .collect(Collectors.toList());
-                    selectedUsersIds.forEach(id -> userApi.delete(id));
-                    selectedUser = null;
-                    loadUsersAndGroups();
-                    refreshUi();
-                }
-            }
+            if ( selectedUser == null ) return;
+            Ui.build(addAllGroupsButton).dialog()
+                    .eval(() -> new Alert(Alert.AlertType.CONFIRMATION,
+                    "Wollen Sie den ausgewählten Benutzer löschen?")).cf().thenAccept((bt) -> {
+                if ( bt != OK ) throw new CancellationException();
+                List<Long> selectedUsersIds = userListView.getSelectionModel().getSelectedItems()
+                        .stream()
+                        .mapToLong(u -> u.getId().get())
+                        .boxed()
+                        .collect(Collectors.toList());
+                selectedUsersIds.forEach(id -> userApi.delete(id));
+                selectedUser = null;
+                loadUsersAndGroups();
+                refreshUi();
+            });
         });
         //deleteGroupButton
         deleteGroupButton.setOnAction(e -> {
@@ -399,39 +398,31 @@ public class NewRightsManagementController implements Initializable, FxControlle
                 //Groups that are used by any User must not simply be deleted
                 Set<Group> groupsInUsage = new HashSet<>();
                 allUsers.forEach(u -> u.getGroups().forEach(g -> groupsInUsage.add(g)));
-                List<Long> selectedGroupsIds = activeGroupsListView.getSelectionModel().getSelectedItems()
-                        .stream()
-                        .mapToLong(g -> g.getId().get())
-                        .boxed()
-                        .collect(Collectors.toList());
-                //TODO beide listen
-                if ( selectedGroupsIds.isEmpty() ) {
-                    selectedGroupsIds = inactiveGroupsListView.getSelectionModel().getSelectedItems()
-                            .stream()
-                            .mapToLong(g -> g.getId().get())
-                            .boxed()
-                            .collect(Collectors.toList());
+
+                List<String> groupUsers = new ArrayList<>();
+                List<String> groupNames = new ArrayList<>();
+
+                for (Group group : inactiveGroupsListView.getSelectionModel().getSelectedItems()) {
+                    groupNames.add(group.getName());
+                    for (User user : allUsers) {
+                        if ( user.getGroups().contains(group) ) groupUsers.add(user.getUsername());
+                    }
                 }
-                if ( new Alert(Alert.AlertType.CONFIRMATION,
-                        "Wollen Sie die ausgewählten Gruppen löschen?")
-                        .showAndWait().get() == ButtonType.OK ) {
-                    selectedGroupsIds.forEach(id -> {
-                        Group group = groupApi.findById(id);
-                        if ( groupsInUsage.contains(group) ) {
-                            if ( new Alert(Alert.AlertType.CONFIRMATION,
-                                    "Gruppe " + group.getName() + " wird noch verwendet.\nWollen Sie die Gruppe dennoch löschen?")
-                                    .showAndWait().get() == ButtonType.OK ) {
-                                groupApi.delete(group.getId().get());
-                                selectedGroup = null;
-                            }
-                        } else {
-                            groupApi.delete(group.getId().get());
-                            selectedGroup = null;
-                        }
-                    });
+
+                final String msg = "Wollen Sie die Gruppen " + groupNames + " löschen?"
+                        + (groupUsers.isEmpty() ? "" : "\nFolgende Nutzer sind noch Mitglied:" + groupUsers);
+
+                Ui.build(addAllGroupsButton).dialog()
+                        .eval(() -> new Alert(Alert.AlertType.CONFIRMATION, msg)).cf().thenAccept((bt) -> {
+                    if ( bt != OK ) throw new CancellationException();
+                    for (Group group : inactiveGroupsListView.getSelectionModel().getSelectedItems()) {
+                        groupApi.delete(group.getId().get());
+                    }
+                    selectedGroup = null;
                     loadUsersAndGroups();
                     refreshUi();
-                }
+
+                });
             }
         });
         //closeButton
@@ -452,21 +443,18 @@ public class NewRightsManagementController implements Initializable, FxControlle
     private void editGroup(Group group) {
         L.info("editGroup({}) called", group);
         Ui.build(closeButton)
-                .frame(true)
                 .title("Gruppen-Verwaltung: Gruppe bearbeiten")
                 .modality(Modality.WINDOW_MODAL)
                 .fxml()
                 .eval(() -> group, GroupManagementController.class)
                 .cf()
-                .thenAcceptAsync(g -> {
+                .thenAccept(g -> {
                     selectedGroup.getRights().forEach(r -> groupApi.removeRight(selectedGroup.getId().get(), r));
                     groupApi.updateName(g.getId().get(), g.getName());
                     g.getRights().forEach(r -> groupApi.addRight(selectedGroup.getId().get(), r));
-                }, UiCore.getExecutor())
-                .thenRunAsync(() -> {
                     loadUsersAndGroups();
                     refreshUi();
-                }, Platform::runLater)
+                })
                 .handle(Ui.handler());
     }
 
@@ -502,10 +490,10 @@ public class NewRightsManagementController implements Initializable, FxControlle
     private void refreshUserListView() {
         L.info("refreshUserListView() called");
         int index = userListView.getSelectionModel().selectedIndexProperty().get();
-
         userListView.setItems(FXCollections.observableArrayList(allUsers));
-        if ( selectedUser != null ) {
+        if ( index >= 0 ) {
             userListView.getSelectionModel().select(index);
+            selectedUser = userListView.getSelectionModel().getSelectedItem();
         }
     }
 

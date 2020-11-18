@@ -228,7 +228,7 @@ public class UserManagementController implements Initializable, FxController, Co
     }
 
     public static URL loadFxml() {
-        return PersonaManagmentController.class.getResource("UserManagementView.fxml");
+        return UserManagementController.class.getResource("UserManagementView.fxml");
     }
 
 }

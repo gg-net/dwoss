@@ -53,7 +53,6 @@ import eu.ggnet.dwoss.receipt.ui.cap.*;
 import eu.ggnet.dwoss.receipt.ui.product.SpecListAction;
 import eu.ggnet.dwoss.redtapext.ui.cap.*;
 import eu.ggnet.dwoss.report.ui.cap.*;
-import eu.ggnet.dwoss.rights.ui.cap.RightsManagmentAction;
 import eu.ggnet.dwoss.search.ui.SearchCask;
 import eu.ggnet.dwoss.search.ui.cap.OpenSearchAction;
 import eu.ggnet.dwoss.stock.ui.cap.*;
@@ -174,7 +173,7 @@ public class DwOssClientController {
 
         // -- Rechte
         Menu rights = new Menu("Rechte");
-        rights.getItems().addAll(m.items(RightsManagmentAction.class, NewRightsManagementAction.class));
+        rights.getItems().addAll(m.items(NewRightsManagementAction.class));
 
         // -- Geschäftsführung
         Menu gl_allgemein = new Menu("Allgemeine Reporte");
