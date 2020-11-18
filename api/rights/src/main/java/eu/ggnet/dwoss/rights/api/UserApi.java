@@ -40,12 +40,11 @@ public interface UserApi {
      *
      * @param username name of the Operator, must not be null or blank.
      * @param password password of the Operator, must not be null or empty.
-     * @return boolean - true, if the submitted password matches the password of the Operator with the submitted username.
-     * @throws IllegalArgumentException <ol><li>if the submitted username is blank.</li>
-     * <li>if the submitted password is empty.</li>
-     * <li>if no Operator with the submitted username exists.</li></ol>
-     * @throws NullPointerException     <ol><li>if the submitted username is null.</li>
-     * <li>if the submitted password is null.</li></ol>
+     * @return User - representation the Operator, if the submitted password matches the password of the Operator with the submitted username.
+     * @throws UserInfoException <ol><li>if the submitted username is null or blank.</li>
+     * <li>if the submitted password is null or empty.</li>
+     * <li>if no Operator with the submitted username exists.
+     * <li>if the User can not be authenticated.</li></ol>
      */
     User authenticate(String username, char[] password) throws UserInfoException;
 
@@ -79,6 +78,18 @@ public interface UserApi {
      * @throws NullPointerException     if the submitted username is null.
      */
     User updateUsername(long userId, String username) throws IllegalArgumentException, NullPointerException;
+
+    /**
+     * Sets the submitted password as new password at the {@link Operator} with the submitted userId and returns a {@link User} representation of that Operator.
+     *
+     * @param userId   id of the Operator, must exist in the database.
+     * @param password new password for the Operator, must not be null or empty.
+     * @return User - representation of the Operator that was modified.
+     * @throws IllegalArgumentException <ol><li>if no Operator with the submitted userId exists.</li>
+     * <li>if the submitted password is empty.</li></ol>
+     * @throws NullPointerException     if the submitted password is null.
+     */
+    User updatePassword(long userId, char[] password) throws IllegalArgumentException, NullPointerException;
 
     /**
      * Adds the submitted {@link AtomicRight} to the {@link Operator} with the submitted userId and returns a {@link User} representation of that Operator.
