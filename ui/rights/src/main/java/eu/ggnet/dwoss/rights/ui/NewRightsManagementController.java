@@ -47,6 +47,7 @@ import eu.ggnet.saft.core.ui.*;
 //TODO umlaute berücksichtigen beim sortieren
 //sort unmodifiable collection
 //reselect Group
+//refresh überdenken
 @Title("Rechte-Verwaltung")
 @Frame
 public class NewRightsManagementController implements Initializable, FxController {
@@ -250,6 +251,7 @@ public class NewRightsManagementController implements Initializable, FxControlle
         addAllRightsButton.setOnAction(e -> {
             inactiveRightsListView.getItems().forEach(r -> userApi.addRight(getSelectedUserIdFromUserListView(), r));
             loadUsersAndGroups();
+            selectedUser = userApi.findById(selectedUser.getId().get());
             refreshUi();
         });
         //addRightButton
@@ -257,6 +259,7 @@ public class NewRightsManagementController implements Initializable, FxControlle
         addRightButton.setOnAction(e -> {
             inactiveRightsListView.getSelectionModel().getSelectedItems().forEach(r -> userApi.addRight(getSelectedUserIdFromUserListView(), r));
             loadUsersAndGroups();
+            selectedUser = userApi.findById(selectedUser.getId().get());
             refreshUi();
         });
         //removeRightButton
@@ -264,6 +267,7 @@ public class NewRightsManagementController implements Initializable, FxControlle
         removeRightButton.setOnAction(e -> {
             activeRightsListView.getSelectionModel().getSelectedItems().forEach(r -> userApi.removeRight(getSelectedUserIdFromUserListView(), r));
             loadUsersAndGroups();
+            selectedUser = userApi.findById(selectedUser.getId().get());
             refreshUi();
         });
         //removeAllRightsButton
@@ -271,6 +275,7 @@ public class NewRightsManagementController implements Initializable, FxControlle
         removeAllRightsButton.setOnAction(e -> {
             activeRightsListView.getItems().forEach(r -> userApi.removeRight(getSelectedUserIdFromUserListView(), r));
             loadUsersAndGroups();
+            selectedUser = userApi.findById(selectedUser.getId().get());
             refreshUi();
         });
         //addAllGroupsButton
@@ -283,6 +288,7 @@ public class NewRightsManagementController implements Initializable, FxControlle
                     .collect(Collectors.toList());
             inactiveGroupIds.forEach(id -> userApi.addGroup(getSelectedUserIdFromUserListView(), id));
             loadUsersAndGroups();
+            selectedUser = userApi.findById(selectedUser.getId().get());
             refreshUi();
         });
         //addGroupButton
@@ -295,6 +301,7 @@ public class NewRightsManagementController implements Initializable, FxControlle
                     .collect(Collectors.toList());
             selectedInactiveGroupIds.forEach(id -> userApi.addGroup(getSelectedUserIdFromUserListView(), id));
             loadUsersAndGroups();
+            selectedUser = userApi.findById(selectedUser.getId().get());
             refreshUi();
         });
         //removeGroupButton
@@ -307,6 +314,7 @@ public class NewRightsManagementController implements Initializable, FxControlle
                     .collect(Collectors.toList());
             selectedActiveGroupIds.forEach(id -> userApi.removeGroup(getSelectedUserIdFromUserListView(), id));
             loadUsersAndGroups();
+            selectedUser = userApi.findById(selectedUser.getId().get());
             refreshUi();
         });
         //removeAllGroupsButton
@@ -319,6 +327,7 @@ public class NewRightsManagementController implements Initializable, FxControlle
                     .collect(Collectors.toList());
             activeGroupIds.forEach(id -> userApi.removeGroup(getSelectedUserIdFromUserListView(), id));
             loadUsersAndGroups();
+            selectedUser = userApi.findById(selectedUser.getId().get());
             refreshUi();
         });
         //createUserButton
@@ -395,6 +404,7 @@ public class NewRightsManagementController implements Initializable, FxControlle
                         .mapToLong(g -> g.getId().get())
                         .boxed()
                         .collect(Collectors.toList());
+                //TODO beide listen
                 if ( selectedGroupsIds.isEmpty() ) {
                     selectedGroupsIds = inactiveGroupsListView.getSelectionModel().getSelectedItems()
                             .stream()
