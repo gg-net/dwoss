@@ -21,23 +21,31 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.UserTransaction;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.rights.api.*;
 import eu.ggnet.dwoss.rights.ee.assist.Rights;
 import eu.ggnet.dwoss.rights.ee.entity.Operator;
 import eu.ggnet.dwoss.rights.ee.entity.Persona;
+import eu.ggnet.dwoss.rights.ee.op.PasswordUtil;
 import eu.ggnet.dwoss.rights.itest.support.ArquillianProjectArchive;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.hamcrest.CoreMatchers.isA;
 
 @RunWith(Arquillian.class)
 public class UserApiIT extends ArquillianProjectArchive {
+
+    private static final Logger L = LoggerFactory.getLogger(UserApiIT.class);
 
     @Inject
     @Rights
@@ -57,6 +65,16 @@ public class UserApiIT extends ArquillianProjectArchive {
 
     private static final String GROUP_NAME = "Test Group";
 
+    private static final char[] PASSWORD = {'q', 'w', 'e', 'r', 't'};
+
+    private static final char[] EMPTY_PASSWORD = {};
+
+    private static final char[] WRONG_PASSWORD = {'z', 'u', 'i', 'o', 'p'};
+
+    private static final byte[] SALT = RandomStringUtils.random(30).getBytes();
+
+    private static final byte[] WRONG_SALT = RandomStringUtils.random(10).getBytes();
+
     private final static AtomicRight R = AtomicRight.CHANGE_TAX;
 
     @After
@@ -71,7 +89,122 @@ public class UserApiIT extends ArquillianProjectArchive {
     public ExpectedException expectedException = ExpectedException.none();
 
     @Test
+    public void testAuthenticate() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        Operator op = new Operator(NAME);
+        op.setPassword(PasswordUtil.hashPassword(PASSWORD, SALT));
+        op.setSalt(SALT);
+        em.persist(op);
+        utx.commit();
+
+        User user = userApi.authenticate(NAME, PASSWORD);
+
+        assertThat(user).as("User has been authenticated").isNotNull();
+    }
+
+    @Test
+    public void testAuthenticateUsernameNotFound() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        Operator op = new Operator(NAME);
+        op.setPassword(PasswordUtil.hashPassword(PASSWORD, SALT));
+        op.setSalt(SALT);
+        em.persist(op);
+        utx.commit();
+
+        Throwable thrown = catchThrowable(() -> userApi.authenticate(UPDATED_NAME, PASSWORD));
+        assertThat(thrown).isInstanceOf(UserInfoException.class).hasMessageContaining("Benutzer " + UPDATED_NAME + " existiert nicht.");
+    }
+
+    @Test
+    public void testAuthenticateUsernameIsBlank() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        Operator op = new Operator(NAME);
+        op.setPassword(PasswordUtil.hashPassword(PASSWORD, SALT));
+        op.setSalt(SALT);
+        em.persist(op);
+        utx.commit();
+
+        Throwable thrown = catchThrowable(() -> userApi.authenticate(BLANK, PASSWORD));
+        assertThat(thrown).isInstanceOf(UserInfoException.class).hasMessageContaining("Kein Nutzername angegeben.");
+    }
+
+    @Test
+    public void testAuthenticatePasswordIsEmpty() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        Operator op = new Operator(NAME);
+        op.setPassword(PasswordUtil.hashPassword(PASSWORD, SALT));
+        op.setSalt(SALT);
+        em.persist(op);
+        utx.commit();
+
+        Throwable thrown = catchThrowable(() -> userApi.authenticate(NAME, EMPTY_PASSWORD));
+        assertThat(thrown).isInstanceOf(UserInfoException.class).hasMessageContaining("Kein Passwort angegeben.");
+    }
+
+    @Test
+    public void testAuthenticateUsernameIsNull() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        Operator op = new Operator(NAME);
+        op.setPassword(PasswordUtil.hashPassword(PASSWORD, SALT));
+        op.setSalt(SALT);
+        em.persist(op);
+        utx.commit();
+
+        Throwable thrown = catchThrowable(() -> userApi.authenticate(null, PASSWORD));
+        assertThat(thrown).isInstanceOf(UserInfoException.class).hasMessageContaining("Kein Nutzername angegeben.");
+    }
+
+    @Test
+    public void testAuthenticatePasswordIsNull() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        Operator op = new Operator(NAME);
+        op.setPassword(PasswordUtil.hashPassword(PASSWORD, SALT));
+        op.setSalt(SALT);
+        em.persist(op);
+        utx.commit();
+
+        Throwable thrown = catchThrowable(() -> userApi.authenticate(NAME, null));
+        assertThat(thrown).isInstanceOf(UserInfoException.class).hasMessageContaining("Kein Passwort angegeben.");
+    }
+
+    @Test
+    public void testAuthenticatePasswordIsWrong() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        Operator op = new Operator(NAME);
+        op.setPassword(PasswordUtil.hashPassword(PASSWORD, SALT));
+        op.setSalt(SALT);
+        em.persist(op);
+        utx.commit();
+        
+        Throwable thrown = catchThrowable(() -> userApi.authenticate(NAME, WRONG_PASSWORD));
+        assertThat(thrown).isInstanceOf(UserInfoException.class).hasMessageContaining("Authentifizierung nicht gelungen!");
+    }
+
+    @Test
+    public void testAuthenticateSaltIsWrong() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        Operator op = new Operator(NAME);
+        op.setPassword(PasswordUtil.hashPassword(PASSWORD, SALT));
+        op.setSalt(WRONG_SALT);
+        em.persist(op);
+        utx.commit();
+        
+        Throwable thrown = catchThrowable(() -> userApi.authenticate(NAME, PASSWORD));
+        assertThat(thrown).isInstanceOf(UserInfoException.class).hasMessageContaining("Authentifizierung nicht gelungen!");
+    }
+
+    @Test
     public void testCreate() throws Exception {
+        assertThat(userApi.findAll().size()).as("No existing Users").isZero();
+        
         userApi.create(NAME);
 
         assertThat(userApi.findAll().size()).as("One existing User").isEqualTo(1);
@@ -144,6 +277,61 @@ public class UserApiIT extends ArquillianProjectArchive {
         expectedException.expectCause(isA(NullPointerException.class));
 
         userApi.updateUsername(user.getId(), null);
+    }
+
+    @Test
+    public void testUpdatePassword() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        Operator user = new Operator(NAME);
+        em.persist(user);
+        utx.commit();
+
+        assertThat(user.getPassword()).as("Existing User has no password").isNull();
+
+        userApi.updatePassword(user.getId(), PASSWORD);
+        User found = userApi.findByName(NAME);
+
+        assertThat(found.getPassword().get()).as("Existing User has a password").isNotNull();
+    }
+
+    @Test
+    public void testUpdatePasswordUserIdNotFound() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        Operator user = new Operator(NAME);
+        em.persist(user);
+        utx.commit();
+
+        expectedException.expectCause(isA(IllegalArgumentException.class));
+
+        userApi.updatePassword(user.getId() + 1, PASSWORD);
+    }
+
+    @Test
+    public void testUpdatePasswordPasswordIsEmpty() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        Operator user = new Operator(NAME);
+        em.persist(user);
+        utx.commit();
+
+        expectedException.expectCause(isA(IllegalArgumentException.class));
+
+        userApi.updatePassword(user.getId(), EMPTY_PASSWORD);
+    }
+
+    @Test
+    public void testUpdatePasswordPasswordIsNull() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        Operator user = new Operator(NAME);
+        em.persist(user);
+        utx.commit();
+
+        expectedException.expectCause(isA(NullPointerException.class));
+
+        userApi.updatePassword(user.getId(), null);
     }
 
     @Test
