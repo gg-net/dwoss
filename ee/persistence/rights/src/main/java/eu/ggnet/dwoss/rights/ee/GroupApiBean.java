@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.rights.ee;
 
 import java.util.*;
 
-import javax.ejb.LocalBean;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -40,6 +40,9 @@ import static eu.ggnet.dwoss.rights.ee.entity.QPersona.persona;
 @Stateless
 @AutoLogger
 public class GroupApiBean implements GroupApi {
+
+    @EJB
+    private UserApi userApi;
 
     @Inject
     @Rights
@@ -72,7 +75,7 @@ public class GroupApiBean implements GroupApi {
             throw new IllegalArgumentException("Submitted name " + name + " is already used.");
         }
         group.setName(name);
-        return findById(groupId);
+        return group.toApiGroup();
     }
 
     @Override
@@ -86,7 +89,7 @@ public class GroupApiBean implements GroupApi {
             throw new IllegalArgumentException("Submitted Right " + right + " is already granted to Group " + group.getName() + ".");
         }
         group.add(right);
-        return findById(groupId);
+        return group.toApiGroup();
     }
 
     @Override
@@ -100,16 +103,25 @@ public class GroupApiBean implements GroupApi {
             throw new IllegalArgumentException("Submitted Right " + right + " was not granted to Group " + group.getName() + " at all.");
         }
         group.getPersonaRights().remove(right);
-        return findById(groupId);
+        return group.toApiGroup();
     }
 
     @Override
     public void delete(long groupId) throws IllegalArgumentException {
-        Persona group = em.find(Persona.class, groupId);
-        if ( group == null ) {
+        Persona persona = em.find(Persona.class, groupId);
+        if ( persona == null ) {
             throw new IllegalArgumentException("No Group found with groupId = " + groupId + ".");
         }
-        em.remove(group);
+
+        Group group = persona.toApiGroup();
+        List<User> allUsers = userApi.findAll();
+        allUsers.forEach(u -> {
+            if ( u.getGroups().contains(group) ) {
+                userApi.removeGroup(u.getId().get(), group.getId().get());
+            }
+        });
+
+        em.remove(persona);
     }
 
     @Override
@@ -118,12 +130,7 @@ public class GroupApiBean implements GroupApi {
         if ( group == null ) {
             throw new IllegalArgumentException("No Group found with id " + groupId + ".");
         }
-        return new Group.Builder()
-                .setId(Optional.of(group.getId()))
-                .setName(group.getName())
-                .setOptLock(Optional.of(group.getOptLock()))
-                .addAllRights(group.getPersonaRights())
-                .build();
+        return group.toApiGroup();
     }
 
     @Override
@@ -133,26 +140,14 @@ public class GroupApiBean implements GroupApi {
         if ( group == null ) {
             throw new IllegalArgumentException("No Group found with name " + name + ".");
         }
-        return new Group.Builder()
-                .setId(Optional.of(group.getId()))
-                .setName(group.getName())
-                .setOptLock(Optional.of(group.getOptLock()))
-                .addAllRights(group.getPersonaRights())
-                .build();
+        return group.toApiGroup();
     }
 
     @Override
     public List<Group> findAll() {
         List<Persona> personas = new JPAQuery<Persona>(em).from(persona).fetch();
         List<Group> groups = new ArrayList<>();
-        personas.forEach(g -> {
-            groups.add(new Group.Builder()
-                    .setId(Optional.of(g.getId()))
-                    .setName(g.getName())
-                    .setOptLock(Optional.of(g.getOptLock()))
-                    .addAllRights(g.getPersonaRights())
-                    .build());
-        });
+        personas.forEach(g -> groups.add(g.toApiGroup()));
         return groups;
     }
 
