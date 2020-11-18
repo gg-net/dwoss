@@ -205,9 +205,16 @@ public class UserManagementController implements Initializable, FxController, Co
                 id = Optional.empty();
                 optLock = Optional.empty();
             }
+            String password;
+            if(passwordField.getText().isEmpty()){
+                password = null;
+            }else{
+                password = passwordField.getText();
+            }
             User result = new User.Builder()
                     .setId(id)
                     .setUsername(nameTextField.getText())
+                    .setNullablePassword(password)
                     .setOptLock(optLock)
                     .addAllRights(selectedRightsListView.getItems())
                     .addAllGroups(selectedGroupsListView.getItems())

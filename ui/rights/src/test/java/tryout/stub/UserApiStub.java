@@ -26,6 +26,7 @@ import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.rights.api.*;
 import eu.ggnet.dwoss.rights.ee.entity.Operator;
 import eu.ggnet.dwoss.rights.ee.entity.Persona;
+import eu.ggnet.dwoss.rights.ee.op.PasswordUtil;
 
 /**
  * Stub implementation of {@link UserApi} for testing purposes.
@@ -40,8 +41,10 @@ public class UserApiStub implements UserApi {
 
     private static final Map<Long, Persona> groupsByIds = new HashMap<>();
 
+    private final String password = "qwert";
+
     private int userId = 1;
-    
+
     private static int groupId = 1;
 
     public static Map<Long, Operator> getUsersByIds() {
@@ -51,7 +54,7 @@ public class UserApiStub implements UserApi {
     public static Map<Long, Persona> getGroupsByIds() {
         return groupsByIds;
     }
-    
+
     public static int getGroupId() {
         return groupId;
     }
@@ -61,12 +64,12 @@ public class UserApiStub implements UserApi {
     }
 
     public UserApiStub() {
-        L.debug("Entering UserApiStub constructor");
+        L.info("Entering UserApiStub constructor");
         for (int i = 1; i < 4; i++) {
             Persona group = new Persona(groupId, 0, "Gruppe " + i, getRandomRights());
             groupsByIds.put(group.getId(), group);
             groupId++;
-            L.debug("constructor: Added Group {}", group);
+            L.info("constructor: Added Group {}", group);
         }
         for (int j = 1; j < 4; j++) {
             int endIndex = (int)(Math.random() * 3 - 1);
@@ -77,7 +80,7 @@ public class UserApiStub implements UserApi {
             userId++;
             L.info("constructor: Added User {}", user);
         }
-        L.debug("Exiting UserApiStub construsctor");
+        L.info("Exiting UserApiStub construsctor");
     }
 
     @Override
@@ -87,7 +90,7 @@ public class UserApiStub implements UserApi {
 
     @Override
     public int getQuickLoginKey(long id) throws IllegalArgumentException {
-        L.debug("Entering getQuickLoginKey({})", id);
+        L.info("Entering getQuickLoginKey({})", id);
         Operator user = usersByIds.get(id);
         if ( user == null ) {
             throw new IllegalArgumentException("No User found with userId = " + id + ".");
@@ -97,28 +100,23 @@ public class UserApiStub implements UserApi {
 
     @Override
     public User create(String username) throws IllegalArgumentException, NullPointerException {
-        L.debug("Entering create({})", username);
+        L.info("Entering create({})", username);
         Objects.requireNonNull(username, "Submitted username is null.");
         if ( username.isBlank() ) {
             throw new IllegalArgumentException("Submitted username is blank.");
         }
-        Operator user = new Operator(userId, 0, 0, username, RandomStringUtils.randomAlphanumeric(6).getBytes(),
-                RandomStringUtils.randomAlphanumeric(5).getBytes(), new ArrayList<>(), getRandomRights());
+        Operator user = new Operator(userId, 0, 0, username, null, null, new ArrayList<>(), new ArrayList<>());
 
         usersByIds.put(user.getId(), user);
         userId++;
         L.info("create(): added new User {}", user);
 
-        return new User.Builder()
-                .setId(user.getId())
-                .setUsername(username)
-                .setOptLock(user.getOptLock())
-                .build();
+        return user.toApiUser();
     }
 
     @Override
     public User updateUsername(long userId, String username) throws IllegalArgumentException, NullPointerException {
-        L.debug("Entering updateUsername({}, {})", userId, username);
+        L.info("Entering updateUsername({}, {})", userId, username);
         Operator user = usersByIds.get(userId);
         if ( user == null ) {
             throw new IllegalArgumentException("No User found with userId = " + userId + ".");
@@ -128,31 +126,35 @@ public class UserApiStub implements UserApi {
             throw new IllegalArgumentException("Submitted username is blank.");
         }
         user.setUsername(username);
+        User u = user.toApiUser();
+        L.info("updateUsername(): set username to {}", user.getUsername());
+        return u;
+    }
 
-        List<Persona> personas = user.getPersonas();
-        List<Group> groups = new ArrayList<>();
-        personas.forEach(u -> groups.add(new Group.Builder()
-                .setId(u.getId())
-                .setName(u.getName())
-                .setOptLock(u.getOptLock())
-                .addAllRights(u.getPersonaRights())
-                .build()));
+    @Override
+    public User updatePassword(long userId, char[] password) throws IllegalArgumentException, NullPointerException {
+        L.info("Entering updatePassword({}, {})", userId, password);
+        Operator user = usersByIds.get(userId);
+        if ( user == null ) {
+            throw new IllegalArgumentException("No User found with userId = " + userId + ".");
+        }
+        Objects.requireNonNull(password, "Submitted password is null.");
+        if ( password.length == 0 ) {
+            throw new IllegalArgumentException("Submitted password is empty.");
+        }
+        byte[] salt = RandomStringUtils.random(30).getBytes();
+        byte[] hashPassword = PasswordUtil.hashPassword(password, salt);
 
-        User u = new User.Builder()
-                .setId(user.getId())
-                .setUsername(user.getUsername())
-                .setOptLock(user.getOptLock())
-                .addAllGroups(groups)
-                .addAllRights(user.getRights())
-                .build();
-
-        L.debug("updateUsername(): set username to {}", user.getUsername());
+        user.setPassword(hashPassword);
+        user.setSalt(salt);
+        User u = user.toApiUser();
+        L.info("updatePassword(): set password to {}", user.getPassword());
         return u;
     }
 
     @Override
     public User addRight(long userId, AtomicRight right) throws IllegalArgumentException, NullPointerException {
-        L.debug("Entering addRight({}, {})", userId, right);
+        L.info("Entering addRight({}, {})", userId, right);
         Operator user = usersByIds.get(userId);
         if ( user == null ) {
             throw new IllegalArgumentException("No User found with userId = " + userId + ".");
@@ -162,31 +164,14 @@ public class UserApiStub implements UserApi {
             throw new IllegalArgumentException("Submitted Right " + right + " is already granted to User " + user.getUsername() + ".");
         }
         user.add(right);
-
-        List<Persona> personas = user.getPersonas();
-        List<Group> groups = new ArrayList<>();
-        personas.forEach(u -> groups.add(new Group.Builder()
-                .setId(u.getId())
-                .setName(u.getName())
-                .setOptLock(u.getOptLock())
-                .addAllRights(u.getPersonaRights())
-                .build()));
-
-        User u = new User.Builder()
-                .setId(user.getId())
-                .setUsername(user.getUsername())
-                .setOptLock(user.getOptLock())
-                .addAllGroups(groups)
-                .addAllRights(user.getRights())
-                .build();
-
-        L.debug("addRight(): added Right {} to User {}", right, user);
+        User u = user.toApiUser();
+        L.info("addRight(): added Right {} to User {}", right, user);
         return u;
     }
 
     @Override
     public User removeRight(long userId, AtomicRight right) throws IllegalArgumentException, NullPointerException {
-        L.debug("Entering removeRight({}, {})", userId, right);
+        L.info("Entering removeRight({}, {})", userId, right);
         Operator user = usersByIds.get(userId);
         if ( user == null ) {
             throw new IllegalArgumentException("No User found with userId = " + userId + ".");
@@ -196,31 +181,14 @@ public class UserApiStub implements UserApi {
             throw new IllegalArgumentException("Submitted Right " + right + " was not granted to User " + user.getUsername() + " at all.");
         }
         user.getRights().remove(right);
-
-        List<Persona> personas = user.getPersonas();
-        List<Group> groups = new ArrayList<>();
-        personas.forEach(u -> groups.add(new Group.Builder()
-                .setId(u.getId())
-                .setName(u.getName())
-                .setOptLock(u.getOptLock())
-                .addAllRights(u.getPersonaRights())
-                .build()));
-
-        User u = new User.Builder()
-                .setId(user.getId())
-                .setUsername(user.getUsername())
-                .setOptLock(user.getOptLock())
-                .addAllGroups(groups)
-                .addAllRights(user.getRights())
-                .build();
-
-        L.debug("removeRight(): removed Right {} from User {}", right, user);
+        User u = user.toApiUser();
+        L.info("removeRight(): removed Right {} from User {}", right, user);
         return u;
     }
 
     @Override
     public User addGroup(long userId, long groupId) throws IllegalArgumentException {
-        L.debug("Entering addGroup({}, {})", userId, groupId);
+        L.info("Entering addGroup({}, {})", userId, groupId);
         Operator user = usersByIds.get(userId);
         if ( user == null ) {
             throw new IllegalArgumentException("No User found with userId " + userId + ".");
@@ -233,31 +201,14 @@ public class UserApiStub implements UserApi {
             throw new IllegalArgumentException("Submitted Group " + group.getName() + " is already associated with User " + user.getUsername() + ".");
         }
         user.getPersonas().add(group);
-
-        List<Persona> personas = user.getPersonas();
-        List<Group> groups = new ArrayList<>();
-        personas.forEach(u -> groups.add(new Group.Builder()
-                .setId(u.getId())
-                .setName(u.getName())
-                .setOptLock(u.getOptLock())
-                .addAllRights(u.getPersonaRights())
-                .build()));
-
-        User u = new User.Builder()
-                .setId(user.getId())
-                .setUsername(user.getUsername())
-                .setOptLock(user.getOptLock())
-                .addAllGroups(groups)
-                .addAllRights(user.getRights())
-                .build();
-
-        L.debug("addGroup(): added Group {} to User {}", group, user);
+        User u = user.toApiUser();
+        L.info("addGroup(): added Group {} to User {}", group, user);
         return u;
     }
 
     @Override
     public User removeGroup(long userId, long groupId) throws IllegalArgumentException {
-        L.debug("Entering removeGroup({}, {})", userId, groupId);
+        L.info("Entering removeGroup({}, {})", userId, groupId);
         Operator user = usersByIds.get(userId);
         if ( user == null ) {
             throw new IllegalArgumentException("No User found with userId " + userId + ".");
@@ -270,68 +221,34 @@ public class UserApiStub implements UserApi {
             throw new IllegalArgumentException("Submitted Group " + group.getName() + " wasn't associated with User " + user.getUsername() + " at all.");
         }
         user.getPersonas().remove(group);
-
-        List<Persona> personas = user.getPersonas();
-        List<Group> groups = new ArrayList<>();
-        personas.forEach(u -> groups.add(new Group.Builder()
-                .setId(u.getId())
-                .setName(u.getName())
-                .setOptLock(u.getOptLock())
-                .addAllRights(u.getPersonaRights())
-                .build()));
-
-        User u = new User.Builder()
-                .setId(user.getId())
-                .setUsername(user.getUsername())
-                .setOptLock(user.getOptLock())
-                .addAllGroups(groups)
-                .addAllRights(user.getRights())
-                .build();
-
-        L.debug("removeGroup(): removed Group {} from User {}", group, user);
+        User u = user.toApiUser();
+        L.info("removeGroup(): removed Group {} from User {}", group, user);
         return u;
     }
 
     @Override
     public void delete(long userId) throws IllegalArgumentException {
-        L.debug("Entering delete({})", userId);
+        L.info("Entering delete({})", userId);
         Operator user = usersByIds.get(userId);
         if ( user == null ) {
             throw new IllegalArgumentException("No User found with userId = " + userId + ".");
         }
         usersByIds.remove(user.getId());
-        L.debug("delete(): deleted User {}", user);
+        L.info("delete(): deleted User {}", user);
     }
 
     @Override
     public User findById(long id) throws IllegalArgumentException {
-        L.debug("Entering findById({})", id);
+        L.info("Entering findById({})", id);
         Operator user = usersByIds.get(id);
-
-        List<Persona> personas = user.getPersonas();
-        List<Group> groups = new ArrayList<>();
-        personas.forEach(u -> groups.add(new Group.Builder()
-                .setId(u.getId())
-                .setName(u.getName())
-                .setOptLock(u.getOptLock())
-                .addAllRights(u.getPersonaRights())
-                .build()));
-
-        User u = new User.Builder()
-                .setId(user.getId())
-                .setUsername(user.getUsername())
-                .setOptLock(user.getOptLock())
-                .addAllGroups(groups)
-                .addAllRights(user.getRights())
-                .build();
-
-        L.debug("findById(): returning User {}", u);
+        User u = user.toApiUser();
+        L.info("findById(): returning User {}", u);
         return u;
     }
 
     @Override
     public User findByName(String username) throws IllegalArgumentException, NullPointerException {
-        L.debug("Entering findByName({})", username);
+        L.info("Entering findByName({})", username);
         Objects.requireNonNull(username, "Submitted username is null.");
         if ( username.isBlank() ) {
             throw new IllegalArgumentException("Submitted username is blank.");
@@ -340,61 +257,28 @@ public class UserApiStub implements UserApi {
         if ( user == null ) {
             throw new IllegalArgumentException("No User found with username = " + username + ".");
         }
-
-        List<Persona> personas = user.getPersonas();
-        List<Group> groups = new ArrayList<>();
-        personas.forEach(u -> groups.add(new Group.Builder()
-                .setId(u.getId())
-                .setName(u.getName())
-                .setOptLock(u.getOptLock())
-                .addAllRights(u.getPersonaRights())
-                .build()));
-
-        User u = new User.Builder()
-                .setId(user.getId())
-                .setUsername(user.getUsername())
-                .setOptLock(user.getOptLock())
-                .addAllGroups(groups)
-                .addAllRights(user.getRights())
-                .build();
-
-        L.debug("findByName(): returning User {}", u);
+        User u = user.toApiUser();
+        L.info("findByName(): returning User {}", u);
         return u;
     }
 
     @Override
     public List<User> findAll() {
-        L.debug("Entering findAll()");
+        L.info("Entering findAll()");
         List<Operator> users = new ArrayList<>(usersByIds.values());
         List<User> findAll = new ArrayList<>();
-        users.forEach(u -> {
-            List<Persona> personas = u.getPersonas();
-            List<Group> groups = new ArrayList<>();
-            personas.forEach(g -> groups.add(new Group.Builder()
-                    .setId(g.getId())
-                    .setName(g.getName())
-                    .setOptLock(g.getOptLock())
-                    .addAllRights(g.getPersonaRights())
-                    .build()));
-            findAll.add(new User.Builder()
-                    .setId(u.getId())
-                    .setUsername(u.getUsername())
-                    .setOptLock(u.getOptLock())
-                    .addAllGroups(groups)
-                    .addAllRights(u.getRights())
-                    .build());
-        });
-        L.debug("findAll(): returning {}", findAll);
+        users.forEach(u -> findAll.add(u.toApiUser()));
+        L.info("findAll(): returning {}", findAll);
         return findAll;
     }
 
     private List<AtomicRight> getRandomRights() {
-        L.debug("Entering getRandomRights()");
+        L.info("Entering getRandomRights()");
         List<AtomicRight> rights = Arrays.asList(AtomicRight.values());
         Collections.shuffle(rights);
         int till = (int)(Math.random() * rights.size() - 1) + 1;
         rights = rights.subList(0, till);
-        L.debug("getRandomRights(): returning List of Rights {}", rights);
+        L.info("getRandomRights(): returning List of Rights {}", rights);
         return rights;
     }
 

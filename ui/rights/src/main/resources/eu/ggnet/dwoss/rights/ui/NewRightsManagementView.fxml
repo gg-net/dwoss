@@ -134,12 +134,12 @@
                 </HBox>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnSpan="4" GridPane.rowIndex="3">
                <children>
-                        <Button fx:id="createGroupButton" mnemonicParsing="false" text="Neue Gruppe anlegen">
+                        <Button fx:id="createUserButton" mnemonicParsing="false" text="Neuen Benutzer anlegen">
                             <padding>
                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                             </padding>
                         </Button>
-                        <Button fx:id="createUserButton" mnemonicParsing="false" text="Neuen Benutzer anlegen">
+                        <Button fx:id="createGroupButton" mnemonicParsing="false" text="Neue Gruppe anlegen">
                             <padding>
                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                             </padding>
