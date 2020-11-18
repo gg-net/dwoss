@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.rights.api;
 
-import java.util.Set;
 
 import javax.ejb.Local;
 
