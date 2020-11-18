@@ -34,10 +34,12 @@ public interface User extends Serializable {
     };
 
     Optional<Long> getId();
+    
+    Optional<Integer> getOptLock();
 
     String getUsername();
-
-    Optional<Integer> getOptLock();
+    
+    Optional<String> getPassword();
 
     List<AtomicRight> getRights();
 
