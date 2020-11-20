@@ -60,6 +60,7 @@ import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.core.widget.dl.RemoteLookup;
 import eu.ggnet.dwoss.mandator.spi.CachedMandators;
+import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.core.ui.*;
 
@@ -269,6 +270,10 @@ public class DwOssApplication extends Application {
         UiCore.overwriteFinalExceptionConsumer(new DwFinalExceptionConsumer(() -> Dl.local().lookup(CachedMandators.class).loadMandator().bugMail()));
         UiCore.registerExceptionConsumer(UserInfoException.class, new UserInfoExceptionConsumer());
         UiCore.registerExceptionConsumer(ConstraintViolationException.class, new ConstraintViolationConsumer());
+        Thread.setDefaultUncaughtExceptionHandler((Thread t, Throwable e) -> {
+            L.warn("Exception occured on {}", t, e);
+            Ui.handle(e);
+        });
     }
 
     /**
