@@ -27,6 +27,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 import eu.ggnet.dwoss.core.system.persistence.EagerAble;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
+import eu.ggnet.dwoss.rights.api.Group;
 
 /**
  * This Class represent a Persona
@@ -111,6 +112,20 @@ public class Persona extends BaseEntity implements Serializable, Comparable<Pers
             if ( atomicRight != null && !personaRights.contains(atomicRight) )
                 personaRights.add(atomicRight);
         }
+    }
+    
+    /**
+     * Creates and returns a {@link Group} representation of this {@link Persona}.
+     *
+     * @return Group - representation this Persona.
+     */
+    public Group toApiGroup(){
+        return new Group.Builder()
+                .setId(Optional.of(this.id))
+                .setOptLock(Optional.of(this.optLock))
+                .setName(this.name)
+                .addAllRights(this.personaRights)
+                .build();
     }
 
     @Override

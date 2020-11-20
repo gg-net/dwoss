@@ -19,9 +19,6 @@ package tryout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-
 import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.dl.RemoteLookup;
 import eu.ggnet.dwoss.rights.api.GroupApi;
@@ -38,8 +35,8 @@ import tryout.stub.*;
  */
 public class NewRightsManagementControllerTryout {
 
-    public static void main(String[] args) {                
-        
+    public static void main(String[] args) {
+
         Dl.local().add(RemoteLookup.class, new RemoteLookup() {
             @Override
             public <T> boolean contains(Class<T> clazz) {

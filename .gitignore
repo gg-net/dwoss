@@ -152,3 +152,6 @@ hs_err_pid*
 /yncubator/statemachine/target/
 /assembly/server-sample/target/
 /api/report/target/
+/spi/mandator/target/
+/spi/stock/target/
+/spi/customer/target/

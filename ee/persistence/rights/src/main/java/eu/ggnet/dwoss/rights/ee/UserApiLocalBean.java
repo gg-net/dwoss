@@ -16,14 +16,10 @@
  */
 package eu.ggnet.dwoss.rights.ee;
 
-import java.util.*;
-
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import eu.ggnet.dwoss.rights.api.*;
-import eu.ggnet.dwoss.rights.ee.eao.OperatorEao;
-import eu.ggnet.dwoss.rights.ee.entity.Operator;
 
 /**
  *
@@ -36,7 +32,7 @@ public class UserApiLocalBean implements UserApiLocal {
     private UserApiBean bean;
 
     @Override
-    public User findByName(String username) {        
+    public User findByName(String username) {
         return bean.findByName(username);
     }
 

@@ -22,33 +22,37 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * Utility for passwords.
- * 
+ *
  * @author oliver.guenther
  */
 public final class PasswordUtil {
 
     /**
      * This hash the given password with the given salt.
-     * <p>
+     *
      * @param password is the readable Password.
      * @param salt     is the Salt that will used to salt the password.
      * @return return the hashed and salted password.
      */
     public static byte[] hashPassword(char[] password, byte[] salt) {
+        if ( password == null || password.length == 0 ) throw new NullPointerException("password is null or empty");
+        if ( salt == null || salt.length == 0 ) throw new NullPointerException("salt is null or empty");
+
+        // TODO: If we want to be real secure, never create a String
+        String pw = String.valueOf(password);
+        if ( pw.isBlank() ) throw new IllegalArgumentException("password is blank");
+
         StringBuilder sb = new StringBuilder();
         try {
-            byte[] pwBytes = new String(password).getBytes("UTF-8");
             MessageDigest md = MessageDigest.getInstance("SHA-512");
             md.update(salt);
-            byte[] bytes = md.digest(pwBytes);
-            for (int i = 0; i < bytes.length;
-                    i++) {
+            byte[] bytes = md.digest(pw.getBytes("UTF-8"));
+            for (int i = 0; i < bytes.length; i++) {
                 sb.append(Integer.toString((bytes[i] & 255) + 256, 16).substring(1));
             }
             return sb.toString().getBytes("UTF-8");
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException ex) {
-            throw new RuntimeException();
+            throw new RuntimeException(ex);
         }
     }
-    
 }

@@ -31,7 +31,7 @@ import eu.ggnet.dwoss.rights.ee.entity.Persona;
  */
 public class GroupApiStub implements GroupApi {
 
-    private static final Logger L = LoggerFactory.getLogger(UserApiStub.class);
+    private static final Logger L = LoggerFactory.getLogger(GroupApiStub.class);
 
     @Override
     public Group create(String name) throws IllegalArgumentException, NullPointerException {
@@ -43,16 +43,12 @@ public class GroupApiStub implements GroupApi {
         if ( isNameAlreadyUsedByAnotherGroup(-1, name) ) {
             throw new IllegalArgumentException("Submitted name " + name + " is already used.");
         }
-        Persona group = new Persona(name);
+        Persona group = new Persona(UserApiStub.getGroupId(), 0, name, new ArrayList<>());
         UserApiStub.getGroupsByIds().put(group.getId(), group);
+        UserApiStub.incrementGroupId();
         L.info("create()): added new Group {}", group);
 
-        return new Group.Builder()
-                .setId(group.getId())
-                .setName(name)
-                .setOptLock(group.getOptLock())
-                .addAllRights(group.getPersonaRights())
-                .build();
+        return findByName(name);
     }
 
     @Override
@@ -71,13 +67,7 @@ public class GroupApiStub implements GroupApi {
         }
         group.setName(name);
         L.info("updateName(): set name to {}", name);
-
-        return new Group.Builder()
-                .setId(group.getId())
-                .setName(group.getName())
-                .setOptLock(group.getOptLock())
-                .addAllRights(group.getPersonaRights())
-                .build();
+        return group.toApiGroup();
     }
 
     @Override
@@ -93,13 +83,7 @@ public class GroupApiStub implements GroupApi {
         }
         group.add(right);
         L.info("addRight(): added Right {} to Group {}", right, group);
-
-        return new Group.Builder()
-                .setId(group.getId())
-                .setName(group.getName())
-                .setOptLock(group.getOptLock())
-                .addAllRights(group.getPersonaRights())
-                .build();
+        return group.toApiGroup();
     }
 
     @Override
@@ -115,13 +99,7 @@ public class GroupApiStub implements GroupApi {
         }
         group.getPersonaRights().remove(right);
         L.info("removeRight(): removed Right {} from Group {}", right, group);
-
-        return new Group.Builder()
-                .setId(group.getId())
-                .setName(group.getName())
-                .setOptLock(group.getOptLock())
-                .addAllRights(group.getPersonaRights())
-                .build();
+        return group.toApiGroup();
     }
 
     @Override
@@ -131,6 +109,11 @@ public class GroupApiStub implements GroupApi {
         if ( group == null ) {
             throw new IllegalArgumentException("No Group found with groupId = " + groupId + ".");
         }
+        UserApiStub.getUsersByIds().values().forEach(u -> {
+            if ( u.getPersonas().contains(group) ) {
+                UserApiStub.getUsersByIds().get(u.getId()).getPersonas().remove(group);
+            }
+        });
         UserApiStub.getGroupsByIds().remove(group.getId());
         L.info("delete(): deleted Group {}", group);
     }
@@ -141,13 +124,7 @@ public class GroupApiStub implements GroupApi {
         Persona group = UserApiStub.getGroupsByIds().get(id);
         L.info("found group = {}", group);
 
-        Group g = new Group.Builder()
-                .setId(Optional.of(group.getId()))
-                .setName(group.getName())
-                .setOptLock(group.getOptLock())
-                .addAllRights(group.getPersonaRights())
-                .build();
-
+        Group g = group.toApiGroup();
         L.info("findById(): returning {}", g);
         return g;
     }
@@ -161,14 +138,8 @@ public class GroupApiStub implements GroupApi {
         }
         Persona group = UserApiStub.getGroupsByIds().values().stream().filter(u -> u.getName().equals(name)).findAny().orElseGet(() -> null);
 
-        Group g = new Group.Builder()
-                .setId(group.getId())
-                .setName(group.getName())
-                .setOptLock(group.getOptLock())
-                .addAllRights(group.getPersonaRights())
-                .build();
-
-        L.info("findByName(): returning Group {}", group);
+        Group g = group.toApiGroup();
+        L.info("findById(): returning {}", g);
         return g;
     }
 
@@ -177,12 +148,7 @@ public class GroupApiStub implements GroupApi {
         L.info("Entering findAll()");
         List<Persona> groups = new ArrayList<>(UserApiStub.getGroupsByIds().values());
         List<Group> findAll = new ArrayList<>();
-        groups.forEach(g -> findAll.add(new Group.Builder()
-                .setId(g.getId())
-                .setName(g.getName())
-                .setOptLock(g.getOptLock())
-                .addAllRights(g.getPersonaRights())
-                .build()));
+        groups.forEach(g -> findAll.add(g.toApiGroup()));
         L.info("findAll(): returning {}", findAll);
         return findAll;
     }

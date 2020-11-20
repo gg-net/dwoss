@@ -17,6 +17,7 @@
 package eu.ggnet.dwoss.rights.ee.entity;
 
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import javax.persistence.*;
@@ -24,7 +25,7 @@ import javax.validation.constraints.NotNull;
 
 import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 import eu.ggnet.dwoss.core.system.persistence.EagerAble;
-import eu.ggnet.dwoss.rights.api.AtomicRight;
+import eu.ggnet.dwoss.rights.api.*;
 
 import static javax.persistence.FetchType.EAGER;
 
@@ -198,15 +199,21 @@ public class Operator extends BaseEntity implements Serializable, EagerAble {
     }
 
     /**
-     * This method will be called bevor persisting and will remove all duplicated rights in the rights list and remove all rights that are already in the
-     * Personas.
+     * Creates and returns a {@link User} representation of this {@link Operator}.
+     *
+     * @return User - representation this Operator.
      */
-    @PrePersist
-    @PreUpdate
-    public void preStrored() {
-        for (Persona persona : personas) {
-            rights.removeAll(persona.getPersonaRights());
-        }
+    public User toApiUser() {
+        List<Group> groups = new ArrayList<>();
+        this.personas.forEach(p -> groups.add(p.toApiGroup()));
+        return new User.Builder()
+                .setId(Optional.of(this.id))
+                .setOptLock(Optional.of(this.optLock))
+                .setUsername(this.username)
+                .setNullablePassword(this.password == null ? null : new String(this.password, StandardCharsets.UTF_8))
+                .addAllRights(this.rights)
+                .addAllGroups(groups)
+                .build();
     }
 
     @Override
