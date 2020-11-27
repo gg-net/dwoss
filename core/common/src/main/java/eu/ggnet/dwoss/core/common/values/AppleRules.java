@@ -26,37 +26,35 @@ import java.util.stream.Collectors;
  */
 public class AppleRules {
 
-    private final static List<Pattern> partNoPattern = Arrays.asList(
+    private final static List<Pattern> PART_NO_PATTERNS = Arrays.asList(
             Pattern.compile("[A-Z]{1}[A-Z0-9]{4}[A-Z]{1,2}/[A-Z]{1}"),
             Pattern.compile("[A-Z]{1}[0-9]{1}[A-Z]{2}[0-9]{3}[A-Z0-9]{2}")
     );
 
-    private final static Pattern serialPattern = Pattern.compile("[A-Z0-9]{11,12}");
+    private final static Pattern SERIAL_PATTERN = Pattern.compile("[A-Z0-9]{11,12}");
 
     /**
      * Validates a PartNo of Apple, returns null if ok or else a String representing the error.
      * Allowed is : M[A-Z][0-9]{3}[A-Z]{1-2}/A
-     * <p/>
+     * <p>
      * @param partNo the partNo to validate
      * @return null if ok or else a String representing the error.
      */
     public static String validatePartNo(String partNo) {
         if ( partNo == null ) return "PartNo must not be null";
-        for (Pattern pattern : partNoPattern) {
+        for (Pattern pattern : PART_NO_PATTERNS) {
             if ( pattern.matcher(partNo).matches() ) {
                 return null;
             }
         }
-        return "Apple Artikelnummer " + partNo + " passt nicht auf eines der Pattern:" + partNoPattern.stream().map(Pattern::pattern).collect(Collectors.joining(","));
+        return "Apple Artikelnummer " + partNo + " passt nicht auf eines der Pattern:" + PART_NO_PATTERNS.stream().map(Pattern::pattern).collect(Collectors.joining(","));
     }
 
     /**
      * Validates a Serial of Apple, returns null if ok or else a String representing the error.
      * Allowed is: [A-Z][A-Z0-9]{11}
      * F17JQM9DDTWD
-     * <p/>
-     * <
-     * p/>
+     *
      * @param serial the serial
      * @return null if ok or else a String representing the error.
      */
@@ -64,7 +62,7 @@ public class AppleRules {
         if ( serial == null ) return "Seriennummer darf nicht null sein";
         if ( serial.length() < 11 ) return "Seriennummer ist zu kurz ! (ist " + serial.length() + ", soll 11-12)";
         if ( serial.length() > 12 ) return "Seriennummer ist zu lang ! (ist " + serial.length() + ", soll 11-12)";
-        if ( !serialPattern.matcher(serial).matches() ) {
+        if ( !SERIAL_PATTERN.matcher(serial).matches() ) {
             return "Apple Seriennummer " + serial + " passt nicht auf Apple Pattern ************ (*=Zahl/Buchstabe) !";
         }
         return null;
