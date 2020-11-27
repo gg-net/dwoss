@@ -1,10 +1,11 @@
 package test;
 
-import eu.ggnet.dwoss.core.common.values.AppleRules;
-
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import eu.ggnet.dwoss.core.common.values.AppleRules;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class AppleRulesTest {
 
@@ -13,7 +14,8 @@ public class AppleRulesTest {
         String[] validPartNos = {"MC769FD/A", "MC979FD/A", "MC773FD/A", "MC770FD/A", "MC980FD/A", "MC774FD/A", "MC983FD/A", "MC916FD/A", "MC981FD/A",
             "MC775FD/A", "MC984FD/A", "MD510FD/A", "MD513FD/A", "MD522FD/A", "MD525FD/A", "MD511FD/A", "MD514FD/A", "MD523FD/A", "MD526FD/A",
             "MD512FD/A", "MD515FD/A", "MD524FD/A", "MD527FD/A", "MD531FD/A", "MD541FD/A", "MD530FD/A", "MD542FD/A", "MD545FD/A", "MD198DN/A",
-            "MD235D/A", "MD239D/A", "MD297DN/A", "MD102D/A", "MD101D/A", "MD103D/A", "MD387D/A", "MC975D/A", "Z0RS00054", "Z0RT000BN"};
+            "MD235D/A", "MD239D/A", "MD297DN/A", "MD102D/A", "MD101D/A", "MD103D/A", "MD387D/A", "MC975D/A", "Z0RS00054", "Z0RT000BN", "M00H3FD/A",
+            "M00J3FD/A", "M00M3FD/A", "M06Q3FD/A", "M00A3FD/A", "M09J3FD/A"};
         String[] invalidPartNos = {null, "", "1C769FD/A", "MC979FD", "1P773fd/A", "_MC770FD/A", "MC98  0FD/A", "  MC774FD/A", "MC983FD/A  ", "()MC916FD/A", "=MC981FD/A",
             "Z0RT00EBN", "Z0R000BN", "Z0RT000N", "Z0RT0000BN"};
 

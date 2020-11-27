@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,9 +26,8 @@ import java.util.stream.Collectors;
  */
 public class AppleRules {
 
-//    private final static Pattern partNoPattern = Pattern.compile("[A-Z]{2}[A-Z0-9]{3}[A-Z]{1,2}/[A-Z]{1}");
     private final static List<Pattern> partNoPattern = Arrays.asList(
-            Pattern.compile("[A-Z]{2}[A-Z0-9]{3}[A-Z]{1,2}/[A-Z]{1}"),
+            Pattern.compile("[A-Z]{1}[A-Z0-9]{4}[A-Z]{1,2}/[A-Z]{1}"),
             Pattern.compile("[A-Z]{1}[0-9]{1}[A-Z]{2}[0-9]{3}[A-Z0-9]{2}")
     );
 
