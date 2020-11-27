@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
+ * Static methods, that cover all rules for apple units, like patters for serials oder partnos.
  *
  * @author oliver.guenther
  */
