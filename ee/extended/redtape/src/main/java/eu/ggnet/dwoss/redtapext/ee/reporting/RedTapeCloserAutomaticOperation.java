@@ -16,12 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ee.reporting;
 
-import eu.ggnet.dwoss.core.system.progress.SubMonitor;
-import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
-import eu.ggnet.dwoss.core.system.progress.IMonitor;
-import eu.ggnet.dwoss.core.common.values.PositionType;
-import eu.ggnet.dwoss.core.common.values.DocumentType;
-
 import java.util.Map.Entry;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -39,6 +33,10 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.PositionType;
+import eu.ggnet.dwoss.core.system.progress.*;
+import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
 import eu.ggnet.dwoss.mandator.api.service.WarrantyService;
@@ -62,7 +60,6 @@ import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.statemachine.State.Type;
 
 import static eu.ggnet.dwoss.core.common.values.DocumentType.BLOCK;
@@ -378,26 +375,34 @@ public class RedTapeCloserAutomaticOperation {
         for (Dossier dossier : openDossiers) {
             m.worked(1, " selecting " + dossier.getIdentifier());
 
-            // Canceled Order
+            // Shortcut Only Order
             if ( dossier.getActiveDocuments().size() == 1 && dossier.getActiveDocuments(DocumentType.ORDER).size() == 1 ) {
                 Document doc = dossier.getActiveDocuments(DocumentType.ORDER).get(0);
-                if ( doc.getConditions().contains(CANCELED) ) closeable.add(doc);
-                L.debug("Filtered not reportable {}, cause: canceled order", doc.getDossier().getIdentifier());
+                if ( doc.getConditions().contains(CANCELED) ) { // Only Order Canceled -> Close
+                    closeable.add(doc);
+                    L.info("findReportable() {} closeable {}, canceled only order", doc.getDossier().getIdentifier(), doc.getType().description);
+                } else {
+                    L.info("findReportable() {} not closeable {}, open only order", doc.getDossier().getIdentifier(), doc.getType().description);
+                }
                 continue; // Shortcut
             }
             // Canceled CAPITAL_ASSET
             if ( dossier.getActiveDocuments().size() == 1 && dossier.getActiveDocuments(DocumentType.CAPITAL_ASSET).size() == 1 ) {
                 Document doc = dossier.getActiveDocuments(DocumentType.CAPITAL_ASSET).get(0);
-                if ( doc.getConditions().contains(CANCELED) ) closeable.add(doc);
-                L.debug("Filtered not reportable {}, cause: canceled capital asset", doc.getDossier().getIdentifier());
-                continue; // Shortcut
+                if ( doc.getConditions().contains(CANCELED) ) {
+                    closeable.add(doc);
+                    L.info("findReportable() {} closeable {}, canceled capital asset", doc.getDossier().getIdentifier(), doc.getType().description);
+                    continue; // Shortcut
+                }
             }
             // Canceled RETURNS
             if ( dossier.getActiveDocuments().size() == 1 && dossier.getActiveDocuments(DocumentType.RETURNS).size() == 1 ) {
                 Document doc = dossier.getActiveDocuments(DocumentType.RETURNS).get(0);
-                if ( doc.getConditions().contains(CANCELED) ) closeable.add(doc);
-                L.debug("Filtered not reportable {}, cause: canceled returns", doc.getDossier().getIdentifier());
-                continue; // Shortcut
+                if ( doc.getConditions().contains(CANCELED) ) {
+                    closeable.add(doc);
+                    L.info("findReportable() {} closeable {}, canceled returs", doc.getDossier().getIdentifier(), doc.getType().description);
+                    continue; // Shortcut
+                }
             }
             // Check the Closing State. Every closable document is removed from the copied collection.
             // If the collection is empty at the end, the dossier can be closed, meaning we remove all cases that we consider closing state.
@@ -443,13 +448,11 @@ public class RedTapeCloserAutomaticOperation {
                     if ( document.isClosed() ) continue; // Don't close it twice
                     closeable.add(document);
                 }
+                L.info("findReportable() {} closeable, all active documents are in close condition: {}", dossier.getIdentifier(),
+                        dossier.getActiveDocuments().stream().map(Document::toTypeConditions).collect(Collectors.toList()));
             } else if ( L.isDebugEnabled() ) {
-                List<String> shorts = new ArrayList<>();
-                String identifier = activeDocuments.get(0).getIdentifier();
-                for (Document document : activeDocuments) {
-                    shorts.add(document.toTypeConditions());
-                }
-                L.debug("Filtered not reportable {}, cause: Not closeable documents: {}", identifier, shorts);
+                L.info("findReportable() {} not closeable, cause: contains not closeable document(s): {}", dossier.getIdentifier(),
+                        activeDocuments.stream().map(Document::toTypeConditions).collect(Collectors.toList()));
             }
         }
         m.finish();

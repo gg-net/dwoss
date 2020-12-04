@@ -46,6 +46,8 @@ import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 @TransactionAttribute(REQUIRES_NEW)
 public class CustomerGeneratorOperation {
 
+    private final static String SAMPLE_MATCHCODE = "SAMPLE";
+
     private final Logger L = LoggerFactory.getLogger(CustomerGeneratorOperation.class);
 
     @Inject
@@ -160,6 +162,9 @@ public class CustomerGeneratorOperation {
             customer.getCompanies().get(0).setName(type.getName() + " Special Customer");
             customer.setComment("Generatered " + type.getName() + "");
             customer.getFlags().add(CustomerFlag.SYSTEM_CUSTOMER);
+            MandatorMetadata mm = new MandatorMetadata(SAMPLE_MATCHCODE);
+            mm.setPaymentMethod(PaymentMethod.INVOICE);
+            customer.getMandatorMetadata().add(mm);
             em.persist(customer);
             specialCustomers.put(customer.getId(), type);
         }
