@@ -17,6 +17,7 @@
 package eu.ggnet.dwoss.misc.ui.cap;
 
 import java.awt.event.ActionEvent;
+import java.util.concurrent.CompletableFuture;
 
 import javax.swing.AbstractAction;
 
@@ -32,8 +33,13 @@ public class DatabaseValidationAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.exec(() -> {
-            Progressor.global().run(() -> Dl.remote().lookup(PersistenceValidator.class).validateDatabase()).map(fj -> fj.toTemporaryFile()).ifPresent(FileUtil::osOpen);
-        });
+        CompletableFuture.supplyAsync(() -> Progressor.global().run("Datenbankvalidatiaon", () -> Dl.remote().lookup(PersistenceValidator.class).validateDatabase()))
+                .thenAccept(fj -> {
+                    if ( fj == null ) {
+                        Ui.build().alert("Datenbank ist valid");
+                    } else {
+                        FileUtil.osOpen(fj.toTemporaryFile());
+                    }
+                }).handle(Ui.handler());
     }
 }

@@ -86,7 +86,7 @@ public class DwOssApplication extends Application {
     private SeContainer container;
 
     private Instance<Object> instance;
-    
+
     private Saft saft;
 
     private final static Logger L = LoggerFactory.getLogger(DwOssApplication.class);
@@ -181,7 +181,6 @@ public class DwOssApplication extends Application {
             container.getBeanManager().createInstance().select(ExecutorManager.class).get().shutdown();
             container.close();
         }
-        UiCore.global().shutdown();
     }
 
     /**
@@ -311,8 +310,8 @@ public class DwOssApplication extends Application {
      * @return the created pane.
      */
     private Pane initMainPane() {
-        // TODO: If Saft uses CDI, we can start unsing it here.        
-        FXMLLoader mainLoader = new FXMLLoader(DwOssClientController.class.getResource("DwOssClientView.fxml"), null, null,  p -> instance.select(p).get(), StandardCharsets.UTF_8);
+        // TODO: If Saft uses CDI, we can start unsing it here.
+        FXMLLoader mainLoader = new FXMLLoader(DwOssClientController.class.getResource("DwOssClientView.fxml"), null, null, p -> instance.select(p).get(), StandardCharsets.UTF_8);
         try {
             mainLoader.load();
         } catch (IOException ex) {
@@ -347,7 +346,7 @@ public class DwOssApplication extends Application {
                 saft.locationStorage().storeLocation(DwOssApplication.class, mainFrame);
             }
         });
-         saft.locationStorage().loadLocation(DwOssApplication.class, mainFrame);
+        saft.locationStorage().loadLocation(DwOssApplication.class, mainFrame);
 
         /*
          // If we switch to saft javafx, use this. And uns Platform::runLater

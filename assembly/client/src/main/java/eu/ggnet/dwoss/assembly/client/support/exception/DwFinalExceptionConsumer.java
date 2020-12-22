@@ -66,7 +66,7 @@ public class DwFinalExceptionConsumer implements BiConsumer<Optional<UiParent>, 
         } else {
             Objects.requireNonNull(optParent, "optParent must not be null").map(p -> Ui.build().parent(p)).orElse(Ui.build()).title("Systemfehler").swing()
                     .show(() -> new DetailView(deepestMessage, getUserInfo() + '\n' + toMultilineStacktraceMessages(b), getUserInfo() + '\n' + ExceptionUtils.toStackStrace(b),
-                    bugMail.orElse(() -> null).get()));            
+                    bugMail.orElse(() -> null).get()));
         }
     }
 

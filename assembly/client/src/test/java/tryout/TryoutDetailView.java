@@ -44,7 +44,7 @@ public class TryoutDetailView {
             });
             add(new JLabel("Obendrüber"));
             add(e);
-            
+
         }
 
     }

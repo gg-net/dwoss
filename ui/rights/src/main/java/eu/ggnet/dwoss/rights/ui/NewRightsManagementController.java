@@ -335,7 +335,7 @@ public class NewRightsManagementController implements Initializable, FxControlle
                     .title("Benutzer-Verwaltung: Neuen Benutzer anlegen")
                     .modality(Modality.WINDOW_MODAL)
                     .fxml()
-                    .eval(() -> null, UserManagementController.class)
+                    .eval(UserManagementController.class)
                     .cf()
                     .thenAcceptAsync(user -> {
                         userApi.create(user.getUsername());
@@ -350,7 +350,7 @@ public class NewRightsManagementController implements Initializable, FxControlle
                         loadUsersAndGroups();
                         refreshUi();
                     }, Platform::runLater)
-                    .handle(UiCore.global().handler(closeButton));
+                    .handle(UiCore.global().handler(createUserButton));
         });
         //createGroupButton
         createGroupButton.setOnAction(e -> {
@@ -358,7 +358,7 @@ public class NewRightsManagementController implements Initializable, FxControlle
                     .title("Gruppen-Verwaltung: Neue Gruppe anlegen")
                     .modality(Modality.WINDOW_MODAL)
                     .fxml()
-                    .eval(() -> null, GroupManagementController.class)
+                    .eval(GroupManagementController.class)
                     .cf()
                     .thenAcceptAsync(group -> {
                         groupApi.create(group.getName());

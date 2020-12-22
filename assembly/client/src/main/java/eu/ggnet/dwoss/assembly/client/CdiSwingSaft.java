@@ -29,7 +29,7 @@ import eu.ggnet.saft.core.ui.LocationStorage;
 
 /**
  * CDI Saft with Swing.
- *  
+ *
  * @author mirko.schulze
  */
 @ApplicationScoped
@@ -39,14 +39,14 @@ public class CdiSwingSaft extends Saft {
     @Inject
     private Instance<Object> instance;
 
-    
     public CdiSwingSaft() {
         super(new LocationStorage(), Executors.newCachedThreadPool());
     }
-    
+
     @PostConstruct
     private void postInit() {
         init(new Swing(this, p -> instance.select(p).get()));
+        core().captureMode(true);
     }
-    
+
 }
