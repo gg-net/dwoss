@@ -14,35 +14,39 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.assembly.client.support;
+package eu.ggnet.dwoss.assembly.client;
 
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
-import javafx.scene.control.MenuItem;
-
-import eu.ggnet.dwoss.assembly.client.support.executor.Executor;
-import eu.ggnet.dwoss.core.widget.Progressor;
+import eu.ggnet.saft.core.Saft;
+import eu.ggnet.saft.core.impl.Swing;
+import eu.ggnet.saft.core.ui.LocationStorage;
 
 /**
- *
- * @author oliver.guenther
+ * CDI Saft with Swing.
+ *  
+ * @author mirko.schulze
  */
-public class LocalProgressSimulatorMenuItem extends MenuItem {
+@ApplicationScoped
+// @Specializes
+public class CdiSwingSaft extends Saft {
 
-    @Inject @Executor
-    public ExecutorService es;
+    @Inject
+    private Instance<Object> instance;
+
     
-    public LocalProgressSimulatorMenuItem() {
-        super("Lokale Hintergrundaktivität simulieren");
-        setOnAction((e) -> es.submit(() -> Progressor.global().run("Lokale Simulation",() -> {
-                    Thread.sleep(3000);
-                    System.out.println("done");
-                    return null;
-                })));
+    public CdiSwingSaft() {
+        super(new LocationStorage(), Executors.newCachedThreadPool());
     }
     
-    
+    @PostConstruct
+    private void postInit() {
+        init(new Swing(this, p -> instance.select(p).get()));
+    }
     
 }

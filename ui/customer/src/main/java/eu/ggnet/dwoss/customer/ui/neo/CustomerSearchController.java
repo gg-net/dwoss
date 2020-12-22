@@ -19,6 +19,7 @@ package eu.ggnet.dwoss.customer.ui.neo;
 import java.net.URL;
 import java.util.*;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -36,13 +37,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.common.Css;
-import eu.ggnet.dwoss.core.widget.HtmlPane;
+import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
 import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
 import eu.ggnet.dwoss.customer.ui.CustomerTaskService;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.*;
 
@@ -164,7 +164,7 @@ public class CustomerSearchController implements Initializable, FxController, Cl
         progressBar.progressProperty().bind(CUSTOMER_TASK_SERVICE.progressProperty());
         progressIndicator.progressProperty().bind(CUSTOMER_TASK_SERVICE.progressProperty());
 
-        Ui.progress().observe(CUSTOMER_TASK_SERVICE);
+        Progressor.global().observe(CUSTOMER_TASK_SERVICE);
     }
 
     /**
@@ -252,7 +252,7 @@ public class CustomerSearchController implements Initializable, FxController, Cl
             if ( resultListView.getSelectionModel().getSelectedItem() == null ) return;
             PicoCustomer picoCustomer = resultListView.getSelectionModel().getSelectedItem();
             Ui.exec(() -> {
-                CustomerConnectorFascade.edit(Ui.progress().call(() -> AGENT.findByIdEager(Customer.class, picoCustomer.id)), UiParent.of(resultListView), () -> {
+                CustomerConnectorFascade.edit(Progressor.global().run(() -> AGENT.findByIdEager(Customer.class, picoCustomer.id)), UiParent.of(resultListView), () -> {
                     // TODO: We could reload the picocustomer, which was changed and updaten the search list.
                 });
             });
@@ -281,11 +281,11 @@ public class CustomerSearchController implements Initializable, FxController, Cl
 
     @Override
     public void closed() {
-        FxSaft.dispatch(() -> {
+        // TODO: Verify, that this needs to be run in the platform thread.
+        Platform.runLater(() -> {
             if ( CUSTOMER_TASK_SERVICE.isRunning() ) {
                 CUSTOMER_TASK_SERVICE.cancel();
             }
-            return null;
         });
     }
 

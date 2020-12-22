@@ -16,10 +16,6 @@
  */
 package eu.ggnet.dwoss.assembly.client;
 
-import eu.ggnet.dwoss.assembly.client.support.ActiveStockSelectorToolbarPane;
-import eu.ggnet.dwoss.assembly.client.support.LafMenuManager;
-import eu.ggnet.dwoss.assembly.client.support.LocalProgressSimulatorMenuItem;
-
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
@@ -35,10 +31,12 @@ import javafx.scene.control.*;
 
 import org.slf4j.Logger;
 
-import eu.ggnet.dwoss.assembly.client.support.MenuBuilder;
-import eu.ggnet.dwoss.assembly.client.support.RightsToolbarManager;
+import eu.ggnet.dwoss.assembly.client.support.*;
 import eu.ggnet.dwoss.assembly.client.support.login.LoggedInTimeoutManager;
 import eu.ggnet.dwoss.assembly.client.support.monitor.*;
+import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.auth.UserChangeListener;
 import eu.ggnet.dwoss.core.widget.event.UserChange;
 import eu.ggnet.dwoss.customer.ui.cap.*;
 import eu.ggnet.dwoss.mail.ui.cap.SendResellerListToSubscribedCustomersMenuItem;
@@ -53,15 +51,12 @@ import eu.ggnet.dwoss.receipt.ui.cap.*;
 import eu.ggnet.dwoss.receipt.ui.product.SpecListAction;
 import eu.ggnet.dwoss.redtapext.ui.cap.*;
 import eu.ggnet.dwoss.report.ui.cap.*;
+import eu.ggnet.dwoss.rights.ui.cap.NewRightsManagementAction;
 import eu.ggnet.dwoss.search.ui.SearchCask;
 import eu.ggnet.dwoss.search.ui.cap.OpenSearchAction;
 import eu.ggnet.dwoss.stock.ui.cap.*;
 import eu.ggnet.dwoss.uniqueunit.ui.cap.ProductListAction;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.dwoss.core.widget.auth.Guardian;
-import eu.ggnet.dwoss.core.widget.auth.UserChangeListener;
-import eu.ggnet.dwoss.rights.ui.cap.NewRightsManagementAction;
 
 /**
  * Main UI, consist of menubar, toolbar, statusline and main ui container.
@@ -107,7 +102,7 @@ public class DwOssClientController {
         UnitAvailabilityPane unitAvailability = instance.select(UnitAvailabilityPane.class).get();
         SearchCask search = instance.select(SearchCask.class).get();
         search.disableProgressBar();
-        UiCore.addOnShutdown(() -> search.closed());
+        UiCore.global().addOnShutdown(() -> search.closed());
 
         FileListPane filelist = instance.select(FileListPane.class).get();
         MonitorPane monitorPane = monitorManager.createPane();

@@ -16,13 +16,12 @@
  */
 package eu.ggnet.dwoss.receipt.ui.cap;
 
-import eu.ggnet.dwoss.receipt.ee.reporting.AuditReporter;
-
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.*;
+import eu.ggnet.dwoss.receipt.ee.reporting.AuditReporter;
 import eu.ggnet.saft.core.Ui;
 
 /**
@@ -38,7 +37,7 @@ public class AuditReportOnRollInAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.osOpen(Ui.progress().title("Auditreport").call(() -> Dl.remote().lookup(AuditReporter.class).onRollIn().toTemporaryFile()));
+            FileUtil.osOpen(Progressor.global().run("Auditreport", () -> Dl.remote().lookup(AuditReporter.class).onRollIn().toTemporaryFile()));
         });
     }
 }

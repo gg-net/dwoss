@@ -20,9 +20,9 @@ import java.awt.BorderLayout;
 import java.util.List;
 import java.util.function.Consumer;
 
-import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.core.system.util.Utils;
-import eu.ggnet.saft.core.Ui;
+import eu.ggnet.dwoss.core.widget.FileUtil;
+import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 
 /**
  *
@@ -132,7 +132,7 @@ public class ReturnsReportView extends javax.swing.JPanel implements Consumer<Li
 
     private void exportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportButtonActionPerformed
         ReturnsTableModel model = (ReturnsTableModel)reportTableViewCask.getModel();
-        Ui.osOpen(ReturnsExporter.returnsToXls(model.getSelectedLines()));
+        FileUtil.osOpen(ReturnsExporter.returnsToXls(model.getSelectedLines()));
     }//GEN-LAST:event_exportButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

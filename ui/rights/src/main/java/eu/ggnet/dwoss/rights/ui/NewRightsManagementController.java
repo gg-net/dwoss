@@ -17,16 +17,14 @@
 package eu.ggnet.dwoss.rights.ui;
 
 import java.net.URL;
+import java.text.Collator;
 import java.util.*;
 import java.util.concurrent.CancellationException;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.*;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -41,7 +39,6 @@ import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.rights.api.*;
 import eu.ggnet.dwoss.rights.ee.entity.Persona;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.core.ui.*;
 
 import static javafx.scene.control.ButtonType.OK;
@@ -51,8 +48,7 @@ import static javafx.scene.control.ButtonType.OK;
  *
  * @author mirko.schulze
  */
-//TODO umlaute berücksichtigen beim sortieren
-//sort unmodifiable collection
+//TODO 
 //reselect Group
 //refresh überdenken
 @Title("Rechte-Verwaltung")
@@ -64,6 +60,12 @@ public class NewRightsManagementController implements Initializable, FxControlle
     private final UserApi userApi = Dl.remote().lookup(UserApi.class);
 
     private final GroupApi groupApi = Dl.remote().lookup(GroupApi.class);
+
+    private final Comparator<User> userComparator = Comparator.comparing(User::getUsername, Collator.getInstance(Locale.GERMAN));
+
+    private final Comparator<Group> groupComparator = Comparator.comparing(Group::getName, Collator.getInstance(Locale.GERMAN));
+
+    private final Comparator<AtomicRight> rightComparator = Comparator.comparing(AtomicRight::toName, Collator.getInstance(Locale.GERMAN));
 
     /**
      * List with a {@link User} representation for each {@link Operator} in the database.
@@ -133,44 +135,31 @@ public class NewRightsManagementController implements Initializable, FxControlle
             removeAllRightsButton, createUserButton, createGroupButton, deleteUserButton, deleteGroupButton, closeButton;
     //</editor-fold>
 
-    private User getSelectedUserFromUserListView() {
-        return userListView.getSelectionModel().getSelectedItem();
-    }
-
-    private Long getSelectedUserIdFromUserListView() {
-        return userListView.getSelectionModel().getSelectedItem().getId().get();
-    }
-
-    private boolean getSelectedGroupListView() {
-        if ( activeGroupsListView.getSelectionModel().getSelectedIndex() > 0 ) {
-            L.info("getSelectedGroupListView() returning true");
-            return true;
-        } else {
-            L.info("getSelectedGroupListView() returning false");
-            return false;
-        }
-    }
-
-    private int getIndexOfSelectedGroup() {
-        int selectedIndex;
-        if ( getSelectedGroupListView() ) {
-            selectedIndex = activeGroupsListView.getSelectionModel().selectedIndexProperty().get();
-        } else {
-            selectedIndex = inactiveGroupsListView.getSelectionModel().selectedIndexProperty().get();
-        }
-        L.info("getIndexOfSelectedGroup() returning index {}", selectedIndex);
-        return selectedIndex;
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        //ListViews
+        initListViews();
+        initRightButtons();
+        initGroupButtons();
+        initCreateButtons();
+        initEditButtons();
+        initDeleteButtons();
+        //closeButton
+        closeButton.setOnAction(e -> {
+            Ui.closeWindowOf(closeButton);
+        }
+        );
+        //load data
+        loadUsersAndGroups();
+        refreshUi();
+    }
+
+    private void initListViews() {
         //userListView
         userListView.setCellFactory(new UserListCell.Factory());
         userListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         userListView.setOnMouseClicked(e -> {
             if ( e.getButton().equals(MouseButton.PRIMARY) ) {
-                selectedUser = getSelectedUserFromUserListView();
+                selectedUser = userListView.getSelectionModel().getSelectedItem();
                 activeRightsListView.getSelectionModel().select(-1);
                 inactiveRightsListView.getSelectionModel().select(-1);
                 activeGroupsListView.getSelectionModel().select(-1);
@@ -194,11 +183,9 @@ public class NewRightsManagementController implements Initializable, FxControlle
                                 u.getPassword().ifPresent(p -> userApi.updatePassword(selectedUser.getId().get(), p.toCharArray()));
                                 u.getRights().forEach(r -> userApi.addRight(selectedUser.getId().get(), r));
                                 u.getGroups().forEach(g -> userApi.addGroup(selectedUser.getId().get(), g.getId().get()));
-                            }, UiCore.getExecutor())
-                            .thenRunAsync(() -> {
                                 loadUsersAndGroups();
                                 refreshUi();
-                            }, Platform::runLater)
+                            })
                             .handle(Ui.handler());
                 }
             }
@@ -234,7 +221,6 @@ public class NewRightsManagementController implements Initializable, FxControlle
         inactiveGroupsListView.setOnMouseClicked(e -> {
             if ( e.getButton().equals(MouseButton.PRIMARY) ) {
                 selectedGroup = inactiveGroupsListView.getSelectionModel().getSelectedItem();
-//                activeGroupsListView.getSelectionModel().select(-1);
                 if ( e.getClickCount() == 1 ) {
                     refreshSelectedGroupRightsListView();
                 } else {
@@ -246,11 +232,13 @@ public class NewRightsManagementController implements Initializable, FxControlle
         allActiveUserRightsListView.setCellFactory(new RightsListCell.Factory());
         //allActiveRightsGroupListView
         allActiveGroupRightsListView.setCellFactory(new RightsListCell.Factory());
-        //Buttons
+    }
+
+    private void initRightButtons() {
         //addAllRightsButton
         addAllRightsButton.disableProperty().bind(userListView.getSelectionModel().selectedIndexProperty().isEqualTo(-1));
         addAllRightsButton.setOnAction(e -> {
-            inactiveRightsListView.getItems().forEach(r -> userApi.addRight(getSelectedUserIdFromUserListView(), r));
+            inactiveRightsListView.getItems().forEach(r -> userApi.addRight(selectedUser.getId().get(), r));
             loadUsersAndGroups();
             selectedUser = userApi.findById(selectedUser.getId().get());
             refreshUi();
@@ -258,7 +246,7 @@ public class NewRightsManagementController implements Initializable, FxControlle
         //addRightButton
         addRightButton.disableProperty().bind(userListView.getSelectionModel().selectedIndexProperty().isEqualTo(-1));
         addRightButton.setOnAction(e -> {
-            inactiveRightsListView.getSelectionModel().getSelectedItems().forEach(r -> userApi.addRight(getSelectedUserIdFromUserListView(), r));
+            inactiveRightsListView.getSelectionModel().getSelectedItems().forEach(r -> userApi.addRight(selectedUser.getId().get(), r));
             loadUsersAndGroups();
             selectedUser = userApi.findById(selectedUser.getId().get());
             refreshUi();
@@ -266,7 +254,7 @@ public class NewRightsManagementController implements Initializable, FxControlle
         //removeRightButton
         removeRightButton.disableProperty().bind(userListView.getSelectionModel().selectedIndexProperty().isEqualTo(-1));
         removeRightButton.setOnAction(e -> {
-            activeRightsListView.getSelectionModel().getSelectedItems().forEach(r -> userApi.removeRight(getSelectedUserIdFromUserListView(), r));
+            activeRightsListView.getSelectionModel().getSelectedItems().forEach(r -> userApi.removeRight(selectedUser.getId().get(), r));
             loadUsersAndGroups();
             selectedUser = userApi.findById(selectedUser.getId().get());
             refreshUi();
@@ -274,11 +262,14 @@ public class NewRightsManagementController implements Initializable, FxControlle
         //removeAllRightsButton
         removeAllRightsButton.disableProperty().bind(userListView.getSelectionModel().selectedIndexProperty().isEqualTo(-1));
         removeAllRightsButton.setOnAction(e -> {
-            activeRightsListView.getItems().forEach(r -> userApi.removeRight(getSelectedUserIdFromUserListView(), r));
+            activeRightsListView.getItems().forEach(r -> userApi.removeRight(selectedUser.getId().get(), r));
             loadUsersAndGroups();
             selectedUser = userApi.findById(selectedUser.getId().get());
             refreshUi();
         });
+    }
+
+    private void initGroupButtons() {
         //addAllGroupsButton
         addAllGroupsButton.disableProperty().bind(userListView.getSelectionModel().selectedIndexProperty().isEqualTo(-1));
         addAllGroupsButton.setOnAction(e -> {
@@ -287,7 +278,7 @@ public class NewRightsManagementController implements Initializable, FxControlle
                     .mapToLong(g -> g.getId().get())
                     .boxed()
                     .collect(Collectors.toList());
-            inactiveGroupIds.forEach(id -> userApi.addGroup(getSelectedUserIdFromUserListView(), id));
+            inactiveGroupIds.forEach(id -> userApi.addGroup(selectedUser.getId().get(), id));
             loadUsersAndGroups();
             selectedUser = userApi.findById(selectedUser.getId().get());
             refreshUi();
@@ -300,7 +291,7 @@ public class NewRightsManagementController implements Initializable, FxControlle
                     .mapToLong(g -> g.getId().get())
                     .boxed()
                     .collect(Collectors.toList());
-            selectedInactiveGroupIds.forEach(id -> userApi.addGroup(getSelectedUserIdFromUserListView(), id));
+            selectedInactiveGroupIds.forEach(id -> userApi.addGroup(selectedUser.getId().get(), id));
             loadUsersAndGroups();
             selectedUser = userApi.findById(selectedUser.getId().get());
             refreshUi();
@@ -313,7 +304,7 @@ public class NewRightsManagementController implements Initializable, FxControlle
                     .mapToLong(g -> g.getId().get())
                     .boxed()
                     .collect(Collectors.toList());
-            selectedActiveGroupIds.forEach(id -> userApi.removeGroup(getSelectedUserIdFromUserListView(), id));
+            selectedActiveGroupIds.forEach(id -> userApi.removeGroup(selectedUser.getId().get(), id));
             loadUsersAndGroups();
             selectedUser = userApi.findById(selectedUser.getId().get());
             refreshUi();
@@ -326,11 +317,14 @@ public class NewRightsManagementController implements Initializable, FxControlle
                     .mapToLong(g -> g.getId().get())
                     .boxed()
                     .collect(Collectors.toList());
-            activeGroupIds.forEach(id -> userApi.removeGroup(getSelectedUserIdFromUserListView(), id));
+            activeGroupIds.forEach(id -> userApi.removeGroup(selectedUser.getId().get(), id));
             loadUsersAndGroups();
             selectedUser = userApi.findById(selectedUser.getId().get());
             refreshUi();
         });
+    }
+
+    private void initCreateButtons() {
         //createUserButton
         createUserButton.setOnAction(e -> {
             L.info("createUser");
@@ -340,7 +334,7 @@ public class NewRightsManagementController implements Initializable, FxControlle
                     .fxml()
                     .eval(() -> null, UserManagementController.class)
                     .cf()
-                    .thenAcceptAsync(user -> {
+                    .thenAccept(user -> {
                         userApi.create(user.getUsername());
                         long id = userApi.findByName(user.getUsername()).getId().get();
                         user.getPassword().ifPresent(p -> userApi.updatePassword(id, p.toCharArray()));
@@ -348,11 +342,9 @@ public class NewRightsManagementController implements Initializable, FxControlle
                         user.getGroups().forEach(g -> userApi.addGroup(id, g.getId().get()));
                         selectedUser = userApi.findById(id);
                         userListView.getSelectionModel().select(selectedUser);
-                    }, UiCore.getExecutor())
-                    .thenRunAsync(() -> {
                         loadUsersAndGroups();
                         refreshUi();
-                    }, Platform::runLater)
+                    })
                     .handle(Ui.handler());
         });
         //createGroupButton
@@ -363,17 +355,22 @@ public class NewRightsManagementController implements Initializable, FxControlle
                     .fxml()
                     .eval(() -> null, GroupManagementController.class)
                     .cf()
-                    .thenAcceptAsync(group -> {
+                    .thenAccept(group -> {
                         groupApi.create(group.getName());
                         long id = groupApi.findByName(group.getName()).getId().get();
                         group.getRights().forEach(r -> groupApi.addRight(id, r));
-                    }, UiCore.getExecutor())
-                    .thenRunAsync(() -> {
                         loadUsersAndGroups();
                         refreshUi();
-                    }, Platform::runLater)
+                    })
                     .handle(Ui.handler());
         });
+    }
+
+    private void initEditButtons() {
+
+    }
+
+    private void initDeleteButtons() {
         //deleteUserButton
         deleteUserButton.setOnAction(e -> {
             if ( selectedUser == null ) return;
@@ -425,14 +422,6 @@ public class NewRightsManagementController implements Initializable, FxControlle
                 });
             }
         });
-        //closeButton
-        closeButton.setOnAction(e -> {
-            Ui.closeWindowOf(closeButton);
-        }
-        );
-        //load data
-        loadUsersAndGroups();
-        refreshUi();
     }
 
     /**
@@ -490,7 +479,8 @@ public class NewRightsManagementController implements Initializable, FxControlle
     private void refreshUserListView() {
         L.info("refreshUserListView() called");
         int index = userListView.getSelectionModel().selectedIndexProperty().get();
-        userListView.setItems(FXCollections.observableArrayList(allUsers));
+//        userListView.setItems(FXCollections.observableArrayList(allUsers));
+        userListView.setItems(sortListForView(allUsers, userComparator));
         if ( index >= 0 ) {
             userListView.getSelectionModel().select(index);
             selectedUser = userListView.getSelectionModel().getSelectedItem();
@@ -502,21 +492,24 @@ public class NewRightsManagementController implements Initializable, FxControlle
      */
     private void refreshRightsListViews() {
         L.info("refreshRightsListViews() called");
-//        User user = getSelectedUserFromUserListView();
+//        List<AtomicRight> sortedRights;
         if ( selectedUser == null ) {
             activeRightsListView.getItems().clear();
-            ObservableList<AtomicRight> inactiveRights = FXCollections.observableArrayList(AtomicRight.values());
-            Collections.sort(inactiveRights, Comparator.comparing(AtomicRight::toName));
-            inactiveRightsListView.setItems(FXCollections.observableArrayList(inactiveRights));
+//            sortedRights = new SortedList<>(FXCollections.observableArrayList(AtomicRight.values()), rightComparator);
+//            inactiveRightsListView.setItems(FXCollections.observableArrayList(sortedRights));
+            inactiveRightsListView.setItems(sortListForView(List.of(AtomicRight.values()), rightComparator));
         } else {
-            List<AtomicRight> activeRights = selectedUser.getRights();
-            activeRightsListView.setItems(FXCollections.observableArrayList(activeRights));
+//            List<AtomicRight> activeRights = selectedUser.getRights();
+//            sortedRights = new SortedList<>(FXCollections.observableArrayList(activeRights), rightComparator);
+//            activeRightsListView.setItems(FXCollections.observableArrayList(sortedRights));
+            activeRightsListView.setItems(sortListForView(selectedUser.getRights(), rightComparator));
             List<AtomicRight> inactiveRights = Arrays.asList(AtomicRight.values())
                     .stream()
                     .filter(r -> !selectedUser.getRights().contains(r))
                     .collect(Collectors.toList());
-            Collections.sort(inactiveRights, (AtomicRight o1, AtomicRight o2) -> o1.toName().compareTo(o2.toName()));
-            inactiveRightsListView.setItems(FXCollections.observableArrayList(inactiveRights));
+//            sortedRights = new SortedList<>(FXCollections.observableArrayList(inactiveRights), rightComparator);
+//            inactiveRightsListView.setItems(FXCollections.observableArrayList(sortedRights));
+            inactiveRightsListView.setItems(sortListForView(inactiveRights, rightComparator));
         }
     }
 
@@ -526,30 +519,23 @@ public class NewRightsManagementController implements Initializable, FxControlle
      */
     private void refreshGroupsListViews() {
         L.info("refreshGroupListViews() called");
-//        boolean active = true;
-//        int index = activeGroupsListView.getSelectionModel().selectedIndexProperty().get();
-//        if ( index == -1 ) {
-//            index = inactiveGroupsListView.getSelectionModel().selectedIndexProperty().get();
-//            active = false;
-//        }
         if ( selectedUser == null ) {
             activeGroupsListView.getItems().clear();
-            inactiveGroupsListView.setItems(FXCollections.observableArrayList(allGroups));
+//            List<Group> sortedGroups = new SortedList<>(FXCollections.observableArrayList(allGroups), groupComparator);
+//            inactiveGroupsListView.setItems(FXCollections.observableArrayList(sortedGroups));
+            inactiveGroupsListView.setItems(sortListForView(allGroups, groupComparator));
         } else {
-//            User user = getSelectedUserFromUserListView();
-            List<Group> activeGroups = selectedUser.getGroups();
-            activeGroupsListView.setItems(FXCollections.observableArrayList(activeGroups));
+//            List<Group> activeGroups = selectedUser.getGroups();
+//            List<Group> sortedGroups = new SortedList<>(FXCollections.observableArrayList(activeGroups), groupComparator);
+//            activeGroupsListView.setItems(FXCollections.observableArrayList(sortedGroups));
+            activeGroupsListView.setItems(sortListForView(selectedUser.getGroups(), groupComparator));
             List<Group> inactiveGroups = allGroups
                     .stream()
                     .filter(g -> !selectedUser.getGroups().contains(g))
                     .collect(Collectors.toList());
-            inactiveGroupsListView.setItems(FXCollections.observableArrayList(inactiveGroups));
-
-//            if ( active ) {
-//                activeGroupsListView.getSelectionModel().select(index);
-//            } else {
-//                inactiveGroupsListView.getSelectionModel().select(index);
-//            }
+//            sortedGroups = new SortedList<>(FXCollections.observableArrayList(inactiveGroups), groupComparator);
+//            inactiveGroupsListView.setItems(FXCollections.observableArrayList(sortedGroups));
+            inactiveGroupsListView.setItems(sortListForView(inactiveGroups, groupComparator));
         }
     }
 
@@ -561,9 +547,10 @@ public class NewRightsManagementController implements Initializable, FxControlle
         if ( selectedUser == null ) {
             allActiveUserRightsListView.getItems().clear();
         } else {
-            ObservableList<AtomicRight> allActiveUserRights = FXCollections.observableArrayList(selectedUser.getAllRights());
-            Collections.sort(allActiveUserRights, Comparator.comparing(AtomicRight::toName));
-            allActiveUserRightsListView.setItems(allActiveUserRights);
+//            ObservableList<AtomicRight> allActiveUserRights = FXCollections.observableArrayList(selectedUser.getAllRights());
+//            List<AtomicRight> sortedRights = new SortedList<>(FXCollections.observableArrayList(allActiveUserRights), rightComparator);
+//            allActiveUserRightsListView.setItems(FXCollections.observableArrayList(sortedRights));
+            allActiveUserRightsListView.setItems(sortListForView(selectedUser.getAllRights(), rightComparator));
         }
     }
 
@@ -575,9 +562,17 @@ public class NewRightsManagementController implements Initializable, FxControlle
         if ( selectedGroup == null ) {
             allActiveGroupRightsListView.getItems().clear();
         } else {
-            List<AtomicRight> allActiveGroupRights = selectedGroup.getRights();
-            allActiveGroupRightsListView.setItems(FXCollections.observableArrayList(allActiveGroupRights));
+//            List<AtomicRight> allActiveGroupRights = selectedGroup.getRights();
+//            List<AtomicRight> sortedRights = new SortedList<>(FXCollections.observableArrayList(allActiveGroupRights), rightComparator);
+//            allActiveGroupRightsListView.setItems(FXCollections.observableArrayList(sortedRights));
+            allActiveGroupRightsListView.setItems(sortListForView(selectedGroup.getRights(), rightComparator));
         }
+    }
+    
+    private <T> ObservableList<T> sortListForView(List<T> list, Comparator<T> comparator){
+//        List<T> sortedList = new SortedList<>(FXCollections.observableArrayList(immutableList), comparator);
+//        return FXCollections.observableArrayList(sortedList);
+        return new SortedList<>(FXCollections.observableArrayList(list), comparator);
     }
 
 }

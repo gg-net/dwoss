@@ -21,8 +21,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import eu.ggnet.dwoss.core.system.GlobalConfig;
+import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.misc.ee.listings.SalesListingProducer;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 
 /**
@@ -38,7 +38,7 @@ public class AllSalesListingAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.osOpen(Ui.progress().call(() -> Dl.remote().lookup(SalesListingProducer.class).generateAllSalesListing().toFile(GlobalConfig.APPLICATION_PATH_OUTPUT)));
+            FileUtil.osOpen(Progressor.global().run(() -> Dl.remote().lookup(SalesListingProducer.class).generateAllSalesListing().toFile(GlobalConfig.APPLICATION_PATH_OUTPUT)));
         });
     }
 }

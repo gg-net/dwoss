@@ -20,8 +20,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
+import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.misc.ee.PersistenceValidator;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 
 public class DatabaseValidationAction extends AbstractAction {
@@ -33,7 +33,7 @@ public class DatabaseValidationAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.progress().call(() -> Dl.remote().lookup(PersistenceValidator.class).validateDatabase()).map(fj -> fj.toTemporaryFile()).ifPresent(Ui::osOpen);
+            Progressor.global().run(() -> Dl.remote().lookup(PersistenceValidator.class).validateDatabase()).map(fj -> fj.toTemporaryFile()).ifPresent(FileUtil::osOpen);
         });
     }
 }

@@ -50,7 +50,8 @@ import eu.ggnet.dwoss.redtapext.ui.cao.common.DocumentStringRenderer;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.UiCustomerRenderer;
 import eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableView;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.ui.*;
+import eu.ggnet.saft.core.ui.StoreLocation;
+import eu.ggnet.saft.core.ui.Title;
 
 /**
  * The main UI for using RedTape components.
@@ -60,8 +61,9 @@ import eu.ggnet.saft.core.ui.*;
 @eu.ggnet.saft.core.ui.Frame
 @Title("Kunden und Aufträge")
 @StoreLocation
-@Once
 public class RedTapeView extends JPanel {
+    
+    public final static String ONCE_KEY = "RedTape";
 
     private final Logger L = LoggerFactory.getLogger(RedTapeView.class);
 

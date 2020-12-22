@@ -26,7 +26,6 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
-import eu.ggnet.saft.core.ui.FxSaft;
 import eu.ggnet.dwoss.core.widget.auth.Accessable;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.core.widget.ops.DescriptiveConsumerRunner;
@@ -60,7 +59,7 @@ public class FxOps {
     }
 
     public static <T> ContextMenu contextMenuOf(SelectionModel<T> selectionModel, SelectionEnhancer<T> filter, Guardian guardian) {
-        ContextMenu menu = FxSaft.dispatch(() -> new ContextMenu());
+        ContextMenu menu = new ContextMenu();
         final MenuItem noAction = new MenuItem("No Context Action");
         noAction.setDisable(true);
         menu.getItems().add(noAction);

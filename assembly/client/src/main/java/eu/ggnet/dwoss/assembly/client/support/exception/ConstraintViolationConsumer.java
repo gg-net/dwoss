@@ -16,40 +16,34 @@
  */
 package eu.ggnet.dwoss.assembly.client.support.exception;
 
-import java.awt.Window;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.function.Consumer;
+import java.util.*;
+import java.util.function.BiConsumer;
 
 import javax.validation.ConstraintViolationException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.core.widget.swing.DetailDialog;
 import eu.ggnet.dwoss.core.system.util.ValidationUtil;
-import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.core.widget.Dl;
-import eu.ggnet.saft.core.ui.SwingSaft;
-
-import static eu.ggnet.saft.core.ui.exception.ExceptionUtil.toStackStrace;
+import eu.ggnet.dwoss.mandator.spi.CachedMandators;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.UiParent;
 
 /**
  *
  * @author oliver.guenther
  */
-public class ConstraintViolationConsumer implements Consumer<ConstraintViolationException> {
+public class ConstraintViolationConsumer implements  BiConsumer<Optional<UiParent>, ConstraintViolationException>  {
 
     private final static Logger L = LoggerFactory.getLogger(ConstraintViolationConsumer.class);
 
     @Override
-    public void accept(ConstraintViolationException ex) {
-        L.info("ConstraintViolationException {}", ValidationUtil.formatToSingleLine(new HashSet(ex.getConstraintViolations())));
-        SwingSaft.run(() -> {
-            DetailDialog.show(Arrays.stream(Window.getWindows()).filter(Window::isActive).findFirst().orElse(null),
-                    "Validationsfehler", "Fehler bei der Validation", ValidationUtil.formatToMultiLine(ex.getConstraintViolations(), true), toStackStrace(ex),
-                    Dl.local().lookup(CachedMandators.class).loadMandator().bugMail());
-        });
+    public void accept(Optional<UiParent> optParent,ConstraintViolationException ex) {
+        L.info("ConstraintViolationException {}", ValidationUtil.formatToSingleLine(new HashSet(ex.getConstraintViolations())));        
+        Objects.requireNonNull(optParent, "optParent must not be null").map(p -> Ui.build().parent(p)).orElse(Ui.build()).title("Validationsfehler").swing()
+                    .show(() -> new DetailView("Fehler bei der Validation", ValidationUtil.formatToMultiLine(ex.getConstraintViolations(), true), ExceptionUtils.toStackStrace(ex),
+                    Dl.local().lookup(CachedMandators.class).loadMandator().bugMail()));
     }
 
 }

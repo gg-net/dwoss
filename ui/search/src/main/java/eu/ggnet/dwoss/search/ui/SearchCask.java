@@ -19,6 +19,7 @@ package eu.ggnet.dwoss.search.ui;
 import java.util.Collections;
 import java.util.List;
 
+import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener.Change;
@@ -34,15 +35,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.core.widget.*;
+import eu.ggnet.dwoss.core.widget.ops.Selector;
 import eu.ggnet.dwoss.search.api.SearchRequest;
 import eu.ggnet.dwoss.search.api.ShortSearchResult;
 import eu.ggnet.dwoss.search.ee.Searcher;
+import eu.ggnet.dwoss.search.ui.HtmlPane;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.*;
-import eu.ggnet.dwoss.core.widget.Ops;
-import eu.ggnet.dwoss.core.widget.ops.Selector;
 
 import static eu.ggnet.dwoss.search.api.GlobalKey.Component.UNIQUE_UNIT;
 import static java.lang.Double.MAX_VALUE;
@@ -56,9 +57,10 @@ import static javafx.scene.input.MouseButton.PRIMARY;
  * @author oliver.guenther
  */
 @Title("Suche")
-@Once
 @Frame
 public class SearchCask extends BorderPane implements ClosedListener {
+    
+    public final static String ONCE_KEY = "Search";
 
     private final Service<List<ShortSearchResult>> searchService;
 
@@ -129,7 +131,7 @@ public class SearchCask extends BorderPane implements ClosedListener {
         };
 
         // Binding all Ui Properties
-        Ui.progress().observe(searchService);
+        Progressor.global().observe(searchService);
         searchProperty.bind(searchField.textProperty());
         resultListView.itemsProperty().bind(new SimpleListProperty<>(resultProperty));
         progressBar.progressProperty().bind(searchService.progressProperty());
@@ -179,10 +181,7 @@ public class SearchCask extends BorderPane implements ClosedListener {
 
     @Override
     public void closed() {
-        if ( searchService != null ) FxSaft.dispatch(() -> {
-                if ( searchService.isRunning() ) searchService.cancel();
-                return null;
-            });
+        if ( searchService != null && searchService.isRunning() ) Platform.runLater(() ->  searchService.cancel());
     }
 
     // TODO: optional on hide: pause search

@@ -23,24 +23,21 @@ import javax.swing.Action;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.mail.ee.MailSalesListingService;
 import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.Progressor;
+import eu.ggnet.dwoss.mail.ee.MailSalesListingService;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.ui.builder.UiWorkflowBreak;
-
-import static javafx.scene.control.ButtonType.OK;
 
 /**
  *
  * @author oliver.guenther
  */
 public class SendResellerListToSubscribedCustomersAction extends AbstractAction {
-    
+
     private final static Logger L = LoggerFactory.getLogger(SendResellerListToSubscribedCustomersAction.class);
 
     public SendResellerListToSubscribedCustomersAction() {
@@ -53,16 +50,21 @@ public class SendResellerListToSubscribedCustomersAction extends AbstractAction 
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.build().dialog().eval(() -> {
-            Alert alert = new Alert(AlertType.CONFIRMATION);
-            alert.setTitle("Händlerliste versenden");
-            alert.setHeaderText("Möchten Sie die Händlerliste jetzt versenden");
-            return alert;
-        }).cf().thenAccept((ButtonType t) -> {
-            L.debug("OK/Cancel Dialog result {}",t);
-            if ( t != OK ) throw new UiWorkflowBreak(UiWorkflowBreak.Type.NULL_RESULT);
-        })
-                .thenRun(() -> Ui.progress().wrap(() -> Dl.remote().lookup(MailSalesListingService.class).generateResellerXlsAndSendToSubscribedCustomers()).run())
+        Ui.build().dialog()
+                .eval(() -> {
+                    Alert alert = new Alert(AlertType.CONFIRMATION);
+                    alert.setTitle("Händlerliste versenden");
+                    alert.setHeaderText("Möchten Sie die Händlerliste jetzt versenden");
+                    return alert;
+                }).cf()
+                .thenRun(() -> Progressor.global().run(() -> Dl.remote().lookup(MailSalesListingService.class).generateResellerXlsAndSendToSubscribedCustomers()))
                 .handle(Ui.handler());
     }
+
+    /*
+    
+    Progressor.run("Title",() -> Dl.remote().lookup(MailSalesListingService.class).generateResellerXlsAndSendToSubscribedCustomers());
+    
+    Progressor.run(() -> Dl.remote().lookup(MailSalesListingService.class).generateResellerXlsAndSendToSubscribedCustomers());
+     */
 }

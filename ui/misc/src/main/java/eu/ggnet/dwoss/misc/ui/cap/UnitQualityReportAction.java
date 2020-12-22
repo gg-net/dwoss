@@ -20,9 +20,9 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
+import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.misc.ui.cap.support.DateRangeAndContractorChooserView;
 import eu.ggnet.dwoss.uniqueunit.ee.op.UniqueUnitReporter;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 
 /**
@@ -39,7 +39,7 @@ public class UnitQualityReportAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
             Ui.build().fx().eval(() -> new DateRangeAndContractorChooserView()).opt().ifPresent(rp -> {
-                Ui.osOpen(Ui.progress().call(() -> Dl.remote().lookup(UniqueUnitReporter.class).quality(rp.startAsDate(), rp.endAsDate(), rp.contractor).toTemporaryFile()));
+                FileUtil.osOpen(Progressor.global().run(() -> Dl.remote().lookup(UniqueUnitReporter.class).quality(rp.startAsDate(), rp.endAsDate(), rp.contractor).toTemporaryFile()));
             });
         });
     }

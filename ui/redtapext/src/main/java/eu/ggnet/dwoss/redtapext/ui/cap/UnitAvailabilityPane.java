@@ -31,18 +31,16 @@ import javafx.scene.text.*;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.common.Css;
-import eu.ggnet.dwoss.core.widget.HtmlPane;
+import eu.ggnet.dwoss.core.widget.*;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.ops.SelectionEnhancer;
+import eu.ggnet.dwoss.core.widget.ops.Selector;
 import eu.ggnet.dwoss.redtape.api.RedTapeApi;
 import eu.ggnet.dwoss.redtape.api.UnitAvailability;
 import eu.ggnet.dwoss.stock.spi.ActiveStock;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.dwoss.core.widget.Ops;
-import eu.ggnet.dwoss.core.widget.auth.Guardian;
-import eu.ggnet.dwoss.core.widget.ops.SelectionEnhancer;
-import eu.ggnet.dwoss.core.widget.ops.Selector;
 
 import static javafx.scene.text.FontPosture.ITALIC;
 
@@ -143,7 +141,7 @@ public class UnitAvailabilityPane extends BorderPane {
             if ( ua == null ) return;
             if ( !ua.uniqueUnitId().isPresent() ) return;
             if ( e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2 ) {
-                Ui.build().id(ua.refurbishId()).fx().show(() -> Css.toHtml5WithStyle(Dl.remote().lookup(UniqueUnitApi.class).findAsHtml(ua.uniqueUnitId().get(),
+                Ui.build().fx().show(() -> Css.toHtml5WithStyle(Dl.remote().lookup(UniqueUnitApi.class).findAsHtml(ua.uniqueUnitId().get(),
                         Dl.local().lookup(Guardian.class).getUsername())), () -> new HtmlPane());
             }
         });

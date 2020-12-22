@@ -16,10 +16,6 @@
  */
 package eu.ggnet.dwoss.receipt.ui.unit;
 
-import eu.ggnet.dwoss.receipt.ui.SwingTraversalUtil;
-import eu.ggnet.dwoss.core.widget.swing.ComboBoxController;
-import eu.ggnet.dwoss.core.widget.swing.NamedEnumCellRenderer;
-
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -30,19 +26,21 @@ import javax.swing.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 
-import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.common.values.Warranty;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.widget.swing.ComboBoxController;
+import eu.ggnet.dwoss.core.widget.swing.NamedEnumCellRenderer;
 import eu.ggnet.dwoss.receipt.ui.CheckBoxTableNoteModel;
+import eu.ggnet.dwoss.receipt.ui.SwingTraversalUtil;
 import eu.ggnet.dwoss.receipt.ui.unit.UnitModel.Survey;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Equipment;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.StaticComment;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.StaticInternalComment;
-import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.ui.UserPreferences;
+import eu.ggnet.saft.core.UiCore;
 
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.REFURBISHED_ID;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.SERIAL;
@@ -103,7 +101,7 @@ public class UnitView extends javax.swing.JDialog {
         initComponents();
         setModalityType(ModalityType.APPLICATION_MODAL);
         setLocationRelativeTo(window);
-        Dl.local().lookup(UserPreferences.class).loadLocation(this.getClass(), this);
+        UiCore.global().locationStorage().loadLocation(this.getClass(), this);
         // Setting the change also in the subcomponent. FocusListener does not work completely.
         mfgDateChooser.addPropertyChangeListener(mfgProperty);
         mfgDateChooser.getDateEditor().getUiComponent().addPropertyChangeListener(mfgProperty);
@@ -693,7 +691,7 @@ public class UnitView extends javax.swing.JDialog {
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        Dl.local().lookup(UserPreferences.class).storeLocation(this.getClass(), this);
+        UiCore.global().locationStorage().storeLocation(this.getClass(), this);
     }//GEN-LAST:event_formWindowClosing
 
     private void messagesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_messagesButtonActionPerformed

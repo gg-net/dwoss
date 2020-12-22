@@ -19,8 +19,8 @@ package eu.ggnet.dwoss.redtapext.ui.cap;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 
-import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
-import eu.ggnet.saft.core.Ui;
+import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeView;
+import eu.ggnet.saft.core.UiCore;
 
 /**
  *
@@ -30,7 +30,7 @@ public class RedTapeMenuItem extends MenuItem {
 
     public RedTapeMenuItem() {
         super("Kunden und Aufträge verwalten", new ImageView(CapRes.smallIcon().toExternalForm()));
-        setOnAction(e -> Ui.build().swing().show(() -> RedTapeController.build().getView()));
+        setOnAction(e -> UiCore.global().showOnce(RedTapeView.ONCE_KEY));
     }
 
 }

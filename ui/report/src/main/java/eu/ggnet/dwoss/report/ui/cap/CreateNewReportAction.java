@@ -20,15 +20,14 @@ import java.awt.event.ActionEvent;
 
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.core.widget.*;
+import eu.ggnet.dwoss.core.widget.saft.OkCancelWrap;
+import eu.ggnet.dwoss.core.widget.saft.Reply;
 import eu.ggnet.dwoss.report.ee.ReportAgent;
 import eu.ggnet.dwoss.report.ui.cap.support.CreateNewReportView;
 import eu.ggnet.dwoss.report.ui.main.ReportController;
 import eu.ggnet.dwoss.report.ui.main.ReportController.In;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.dwoss.core.widget.saft.Reply;
-import eu.ggnet.dwoss.core.widget.AccessableAction;
-import eu.ggnet.dwoss.core.widget.saft.OkCancelWrap;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_SALES_REPORT;
 
@@ -52,7 +51,7 @@ public class CreateNewReportAction extends AccessableAction {
                     .map(Reply::getPayload)
                     .ifPresent(v -> {
                         LoggerFactory.getLogger(CreateNewReportAction.class).info("{}", v.getParameter());
-                        Ui.build().fxml().show(() -> Ui.progress().call(() -> new In(Dl.remote().lookup(ReportAgent.class).prepareReport(v.getParameter(), v.loadUnreported()), false)), ReportController.class);
+                        Ui.build().fxml().show(() -> Progressor.global().run(() -> new In(Dl.remote().lookup(ReportAgent.class).prepareReport(v.getParameter(), v.loadUnreported()), false)), ReportController.class);
                     });
         });
     }

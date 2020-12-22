@@ -18,9 +18,9 @@ package eu.ggnet.dwoss.report.ui.cap;
 
 import java.awt.event.ActionEvent;
 
-import eu.ggnet.dwoss.report.ui.RawReportView;
-import eu.ggnet.saft.core.Ui;
 import eu.ggnet.dwoss.core.widget.AccessableAction;
+import eu.ggnet.dwoss.report.ui.RawReportView;
+import eu.ggnet.saft.core.UiCore;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.READ_RAW_REPORT_DATA;
 
@@ -37,8 +37,6 @@ public class OpenRawReportLinesAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.exec(() -> {
-            Ui.build().fx().show(() -> new RawReportView());
-        });
+        UiCore.global().showOnce(RawReportView.ONCE_KEY);
     }
 }

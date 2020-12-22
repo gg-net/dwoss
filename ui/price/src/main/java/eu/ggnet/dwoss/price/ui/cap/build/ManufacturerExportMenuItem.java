@@ -19,8 +19,8 @@ package eu.ggnet.dwoss.price.ui.cap.build;
 import javafx.scene.control.MenuItem;
 
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.price.ee.imex.ContractorPricePartNoExporter;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 
 /**
@@ -33,8 +33,8 @@ public class ManufacturerExportMenuItem extends MenuItem {
         setText("Export fehlende " + contractor.getDescription() + " Daten (Hersteller)");
         setOnAction(e -> {
             Ui.exec(() -> {
-                Ui.osOpen(Ui.progress().title("Export Fehlende Daten")
-                        .call(() -> Dl.remote().lookup(ContractorPricePartNoExporter.class).toManufacturerMissingXls(contractor).toTemporaryFile()));
+                FileUtil.osOpen(Progressor.global()
+                        .run("Export Fehlende Daten", () -> Dl.remote().lookup(ContractorPricePartNoExporter.class).toManufacturerMissingXls(contractor).toTemporaryFile()));
             });
         });
         return this;

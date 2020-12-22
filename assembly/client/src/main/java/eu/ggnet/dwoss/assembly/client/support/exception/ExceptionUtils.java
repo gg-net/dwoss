@@ -14,7 +14,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package eu.ggnet.dwoss.assembly.client.support.exception;
+
+import java.io.*;
+
 /**
- * Tryout for cdi and fxml loader, remove after saft upgrade.
+ *
+ * @author mirko.schulze
  */
-package eu.ggnet.dwoss.assembly.remote.cdi;
+public class ExceptionUtils {
+    
+    /**
+     * Converts exception stack trace as string
+     *
+     * @param ex the stack trace
+     * @return {@link Throwable#printStackTrace()} as string.
+     */
+    public static String toStackStrace(Throwable ex) {
+        try (StringWriter sw = new StringWriter()) {
+            ex.printStackTrace(new PrintWriter(sw));
+            return sw.toString();
+        } catch (IOException e) {
+            return e.getMessage();
+        }
+    }
+    
+}

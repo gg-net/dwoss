@@ -43,7 +43,6 @@ import eu.ggnet.dwoss.stock.api.PicoStock;
 import eu.ggnet.dwoss.stock.api.StockApi;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.saft.core.ui.FxSaft;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_TRANSACTION_FOR_SINGLE_UNIT;
 import static javafx.stage.Modality.WINDOW_MODAL;
@@ -78,7 +77,9 @@ public class RedTapeFxUtil {
     }
 
     public static ContextMenu contextMenuOf(JComponent parent, SelectionModel<Position> selectionModel, Guardian guardian) {
-        ContextMenu menu = FxSaft.dispatch(() -> new ContextMenu());
+        // ContextMenu menu = SaftUtil.dispatchFx(() -> new ContextMenu());
+        // should work
+        ContextMenu menu = new ContextMenu();
 
         final javafx.scene.control.MenuItem noAction = new javafx.scene.control.MenuItem("No Context Action");
         noAction.setDisable(true);

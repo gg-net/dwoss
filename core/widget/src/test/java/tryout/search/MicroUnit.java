@@ -18,13 +18,12 @@ package tryout.search;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
-import eu.ggnet.saft.api.IdSupplier;
 
 /**
  *
  * @author oliver.guenther
  */
-public class MicroUnit implements SearchResult,IdSupplier {
+public class MicroUnit implements SearchResult {
     
     public final int uniqueUnitId;
     
@@ -40,7 +39,6 @@ public class MicroUnit implements SearchResult,IdSupplier {
         return shortDescription;
     }
 
-    @Override
     public String id() {
         return "" + uniqueUnitId;
     }

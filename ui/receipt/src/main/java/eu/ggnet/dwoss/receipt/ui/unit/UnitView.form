@@ -43,7 +43,7 @@
                       <Component id="operationButtonPanel" pref="1212" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="unitWritePanel" pref="1293" max="32767" attributes="0"/>
+                      <Component id="unitWritePanel" pref="1305" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
