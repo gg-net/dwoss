@@ -350,7 +350,7 @@ public class NewRightsManagementController implements Initializable, FxControlle
                         loadUsersAndGroups();
                         refreshUi();
                     }, Platform::runLater)
-                    .handle(Ui.handler());
+                    .handle(UiCore.global().handler(closeButton));
         });
         //createGroupButton
         createGroupButton.setOnAction(e -> {

@@ -18,10 +18,15 @@ package eu.ggnet.dwoss.assembly.client.support.exception;
 
 import java.awt.Desktop;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 
 import eu.ggnet.dwoss.core.widget.MailTo;
 import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.Bind;
+
+import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
 
 /**
  *
@@ -29,15 +34,9 @@ import eu.ggnet.saft.core.Ui;
  */
 public class DetailView extends javax.swing.JPanel {
 
-//    public static void show(Window parent, String head, String messsage, String overview, String details, String bugMail) {
-//        new DetailView(parent)
-//                .head(head)
-//                .message(messsage)
-//                .overview(overview)
-//                .details(details)
-//                .bugMail(bugMail)
-//                .showDialog();
-//    }
+    @Bind(SHOWING)
+    private final BooleanProperty showingProperty = new SimpleBooleanProperty();
+    
     /** Creates new form DetailDialog
      * <p>
      * @param parent
@@ -167,7 +166,7 @@ public class DetailView extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
-        setVisible(false);
+       showingProperty.set(false);
     }//GEN-LAST:event_closeButtonActionPerformed
 
     private void mailButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mailButtonActionPerformed
@@ -195,16 +194,4 @@ public class DetailView extends javax.swing.JPanel {
     private javax.swing.JTextArea overviewPane;
     // End of variables declaration//GEN-END:variables
 
-    public static void main(String[] args) throws UnsupportedEncodingException {
-//        JFrame f = new JFrame();
-//        new DetailView(f).head("Fehler").message("Eine Nachricht Nachricht Nachricht Nachricht Nachricht Nachricht Nachricht Nachricht Nachricht Nachricht")
-//                .overview("Oh Oh"
-//                        + "Oh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh "
-//                        + "OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh OhOh Oh"
-//                        + "").details("Oh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh Ja"
-//                        + "Oh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh Ja"
-//                        + "Oh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh JaOh Ja"
-//                        + "").bugMail("balsls").showDialog();
-
-    }
 }
