@@ -16,20 +16,26 @@
  */
 package tryout;
 
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.dwoss.core.widget.Dl;
-import eu.ggnet.saft.core.UiCore;
-
 import java.awt.Dimension;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.enterprise.inject.Instance;
+import javax.enterprise.inject.se.SeContainer;
+import javax.enterprise.inject.se.SeContainerInitializer;
 import javax.persistence.LockModeType;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 
+import eu.ggnet.dwoss.core.widget.cdi.WidgetProducers;
+import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.*;
+import eu.ggnet.dwoss.stock.ui.StockUpiImpl;
 import eu.ggnet.dwoss.stock.ui.transactions.CreateSelectionController;
+import eu.ggnet.saft.core.Saft;
+import eu.ggnet.saft.core.UiUtil;
+import eu.ggnet.saft.core.impl.Swing;
 
 /**
  *
@@ -38,13 +44,27 @@ import eu.ggnet.dwoss.stock.ui.transactions.CreateSelectionController;
 public class CreateSelectionTryout {
 
     public static void main(String[] args) throws InterruptedException {
+
+        SeContainerInitializer ci = SeContainerInitializer.newInstance();
+        ci.addPackages(CreateSelectionTryout.class);
+        ci.addPackages(WidgetProducers.class);
+        ci.addPackages(true, StockUpiImpl.class);
+        ci.disableDiscovery();
+        SeContainer container = ci.initialize();
+        Instance<Object> instance = container.getBeanManager().createInstance();
+
+        Saft saft = instance.select(Saft.class).get();
+        saft.addOnShutdown(() -> container.close());
+
         JButton b = new JButton("Press to close");
         b.setPreferredSize(new Dimension(200, 50));
         b.addActionListener(e -> {
-            Ui.closeWindowOf(b);
+            saft.closeWindowOf(b);
         });
 
-        Dl.remote().add(StockAgent.class, new StockAgent() {
+        RemoteDl remote = instance.select(RemoteDl.class).get();
+
+        remote.add(StockAgent.class, new StockAgent() {
 
             @Override
             public <T> List<T> findAll(Class<T> entityClass) {
@@ -140,9 +160,11 @@ public class CreateSelectionTryout {
             // </editor-fold>
         });
 
-        UiCore.startSwing(() -> b);
-        Ui.exec(() -> {
-            Ui.build().fxml().eval(CreateSelectionController.class).opt().ifPresent(System.out::println);
+        JFrame f = UiUtil.startup(() -> b);
+        saft.core(Swing.class).initMain(f);
+
+        saft.exec(() -> {
+            saft.build().fxml().eval(CreateSelectionController.class).opt().ifPresent(System.out::println);
         });
     }
 
