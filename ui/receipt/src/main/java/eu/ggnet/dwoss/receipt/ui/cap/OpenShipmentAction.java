@@ -16,11 +16,12 @@
  */
 package eu.ggnet.dwoss.receipt.ui.cap;
 
+import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 
+import eu.ggnet.dwoss.core.widget.AccessableAction;
 import eu.ggnet.dwoss.receipt.ui.shipment.ShipmentController;
 import eu.ggnet.dwoss.receipt.ui.shipment.ShipmentDialog;
-import eu.ggnet.dwoss.core.widget.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.READ_CREATE_UPDATE_DELETE_SHIPMENTS;
 
@@ -36,6 +37,8 @@ public class OpenShipmentAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        new ShipmentDialog(new ShipmentController()).setVisible(true);
+        EventQueue.invokeLater(() -> {
+            new ShipmentDialog(new ShipmentController()).setVisible(true);
+        });
     }
 }

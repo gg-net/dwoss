@@ -16,15 +16,15 @@
  */
 package eu.ggnet.dwoss.receipt.ui.cap;
 
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.dwoss.core.widget.Dl;
-import eu.ggnet.dwoss.receipt.ui.cap.support.ReportRefurbishmentDialog;
-import eu.ggnet.dwoss.receipt.ee.reporting.RefurbishmentReporter;
-
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
+
+import eu.ggnet.dwoss.core.widget.*;
+import eu.ggnet.dwoss.receipt.ee.reporting.RefurbishmentReporter;
+import eu.ggnet.dwoss.receipt.ui.cap.support.ReportRefurbishmentDialog;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
 
 
 /**
@@ -43,8 +43,8 @@ public class ReportRefurbishmentAction extends AbstractAction {
         dialog.setVisible(true);
         if ( !dialog.isOk() ) return;
         Ui.exec(() -> {
-            Ui.osOpen(Ui.progress().title("Refurbishmentreport")
-                    .call(() -> Dl.remote().lookup(RefurbishmentReporter.class).toXls(dialog.getContractor(), dialog.getStart(), dialog.getEnd()).toTemporaryFile()));
+            FileUtil.osOpen(Progressor.global()
+                    .run("Refurbishmentreporter", () -> Dl.remote().lookup(RefurbishmentReporter.class).toXls(dialog.getContractor(), dialog.getStart(), dialog.getEnd()).toTemporaryFile()));
         });
     }
 }

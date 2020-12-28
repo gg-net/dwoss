@@ -20,12 +20,11 @@ import java.awt.event.ActionEvent;
 
 import javafx.application.Platform;
 
-import eu.ggnet.dwoss.misc.ui.cap.support.OkCancelStage;
+import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.misc.ui.cap.support.InputReportSelectorPane;
+import eu.ggnet.dwoss.misc.ui.cap.support.OkCancelStage;
 import eu.ggnet.dwoss.uniqueunit.ee.op.UniqueUnitReporter;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.dwoss.core.widget.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_INPUT_REPORT;
 
@@ -47,8 +46,8 @@ public class ExportInputReportAction extends AccessableAction {
             stage.showAndWait();
             if ( stage.isCancel() ) return;
             Ui.exec(() -> {
-                Ui.osOpen(Ui.progress().title(EXPORT_INPUT_REPORT.toName())
-                        .call(() -> Dl.remote().lookup(UniqueUnitReporter.class).unitInputAsXls(selector.getStart(), selector.getEnd(), selector.getStep()).toTemporaryFile()));
+                FileUtil.osOpen(Progressor.global().run(EXPORT_INPUT_REPORT.toName(),
+                        () -> Dl.remote().lookup(UniqueUnitReporter.class).unitInputAsXls(selector.getStart(), selector.getEnd(), selector.getStep()).toTemporaryFile()));
             });
         });
     }

@@ -20,17 +20,21 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.function.Consumer;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 
+import eu.ggnet.saft.core.ui.Bind;
 import eu.ggnet.saft.core.ui.Title;
+
+import static eu.ggnet.saft.core.ui.Bind.Type.TITLE;
 
 /**
  *
  * @author oliver.guenther
  */
-@Title("Unit {id}")
 public class UnitDetailView extends BorderPane implements Consumer<MicroUnit> {
 
     private final TextField header;
@@ -38,6 +42,9 @@ public class UnitDetailView extends BorderPane implements Consumer<MicroUnit> {
     private final TextArea body;
 
     private final ProgressIndicator progressIndicator;
+    
+    @Bind(TITLE)
+    private final StringProperty titleProperty = new SimpleStringProperty("Unit");
 
     public UnitDetailView() {
         header = new TextField();
@@ -49,6 +56,7 @@ public class UnitDetailView extends BorderPane implements Consumer<MicroUnit> {
 
     @Override
     public void accept(MicroUnit mu) {
+        titleProperty.set("Unit " + mu.id());
         header.setText(mu.shortDescription());
         ForkJoinPool.commonPool().execute(() -> {
             Unit unit = VirtualDataSource.findUnit(mu.uniqueUnitId);

@@ -19,12 +19,11 @@ package eu.ggnet.dwoss.receipt.ui.shipment;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.swing.ComboBoxController;
 import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.saft.core.ui.UserPreferences;
 
 /**
  *
@@ -60,7 +59,7 @@ public class ShipmentDialog extends javax.swing.JDialog {
         filterStatus = new ComboBoxController<>(filterStatusbox, Shipment.Status.values());
         filterOwner = new ComboBoxController<>(filterOwnerbox, Dl.local().lookup(CachedMandators.class).loadContractors().all().toArray());
         if ( parent != null ) setLocationRelativeTo(parent);
-        Dl.local().lookup(UserPreferences.class).loadLocation(this.getClass(), this);
+        UiCore.global().locationStorage().loadLocation(this.getClass(), this);
     }
 
     /** This method is called from within the constructor to
@@ -346,7 +345,7 @@ public class ShipmentDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_exitButtonActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        Dl.local().lookup(UserPreferences.class).storeLocation(this.getClass(), this);
+        UiCore.global().locationStorage().storeLocation(this.getClass(), this);
     }//GEN-LAST:event_formWindowClosing
 
     /**

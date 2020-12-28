@@ -98,7 +98,6 @@ public class MonitorTryout {
 
         @Override
         public void stop() throws Exception {
-            container.getBeanManager().createInstance().select(ExecutorManager.class).get().shutdown();
             container.close();
         }
 

@@ -16,11 +16,11 @@
  */
 package eu.ggnet.dwoss.assembly.client;
 
-import java.awt.Window;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.util.Iterator;
+import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import javax.enterprise.inject.Instance;
@@ -51,18 +51,21 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.assembly.client.support.*;
 import eu.ggnet.dwoss.assembly.client.support.exception.*;
-import eu.ggnet.dwoss.assembly.client.support.executor.ExecutorManager;
 import eu.ggnet.dwoss.assembly.client.support.login.*;
 import eu.ggnet.dwoss.assembly.client.support.monitor.MonitorManager;
-import eu.ggnet.dwoss.assembly.remote.cdi.FxmlLoaderInitializer;
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.core.widget.dl.RemoteLookup;
 import eu.ggnet.dwoss.mandator.spi.CachedMandators;
-import eu.ggnet.saft.core.Ui;
+import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
+import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeView;
+import eu.ggnet.dwoss.redtapext.ui.dbs.DossierFilterView;
+import eu.ggnet.dwoss.report.ui.RawReportView;
+import eu.ggnet.dwoss.search.ui.SearchCask;
+import eu.ggnet.saft.core.Saft;
 import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.saft.core.ui.*;
+import eu.ggnet.saft.core.impl.Swing;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
@@ -82,6 +85,8 @@ public class DwOssApplication extends Application {
     private SeContainer container;
 
     private Instance<Object> instance;
+
+    private Saft saft;
 
     private final static Logger L = LoggerFactory.getLogger(DwOssApplication.class);
 
@@ -138,17 +143,21 @@ public class DwOssApplication extends Application {
                     .runAsync(() -> {
                         container = initSeContainer();
                         instance = container.getBeanManager().createInstance();
+
+                        saft = instance.select(Saft.class).get();
+                        UiCore.initGlobal(saft);
                     })
                     .thenRun(() -> initGlobalExceptionHandling())
                     .thenRun(() -> initRemoteConnection(cp))
                     .thenApply(v -> initMainPane())
                     .thenAcceptAsync(mainView -> startSaftInitMainFrameAndWrapMainPane(mainFrame, mainView, cp), java.awt.EventQueue::invokeLater)
                     .thenRunAsync(() -> firstLoginScreen.setAndActivateGuardian(Dl.local().lookup(Guardian.class)))
+                    .thenRun(() -> initOnceViews())
                     .thenRun(() -> instance.select(MonitorManager.class).get().startPolling())
                     .thenRun(() -> initSessionTimeoutAndManualLogoutKeys())
                     .thenRun(() -> initRelocationKeys())
                     .handle((v, ex) -> {
-                        new DwFinalExceptionConsumer(null).accept(ex);
+                        new DwFinalExceptionConsumer(null).accept(Optional.empty(), ex);
                         return null;
                     });
         } catch (ParameterException e) {
@@ -167,12 +176,7 @@ public class DwOssApplication extends Application {
 
     @Override
     public void stop() throws Exception {
-        if ( container.isRunning() ) {
-            // Shutdown the global executor.
-            container.getBeanManager().createInstance().select(ExecutorManager.class).get().shutdown();
-            container.close();
-        }
-        UiCore.shutdown();
+        if ( container.isRunning() ) container.close();
     }
 
     /**
@@ -267,13 +271,16 @@ public class DwOssApplication extends Application {
      */
     private void initGlobalExceptionHandling() {
         java.awt.Toolkit.getDefaultToolkit().getSystemEventQueue().push(new UnhandledExceptionCatcher());
-        UiCore.overwriteFinalExceptionConsumer(new DwFinalExceptionConsumer(() -> Dl.local().lookup(CachedMandators.class).loadMandator().bugMail()));
-        UiCore.registerExceptionConsumer(UserInfoException.class, new UserInfoExceptionConsumer());
-        UiCore.registerExceptionConsumer(ConstraintViolationException.class, new ConstraintViolationConsumer());
-        Thread.setDefaultUncaughtExceptionHandler((Thread t, Throwable e) -> {
-            L.warn("Exception occured on {}", t, e);
-            Ui.handle(e);
-        });
+        saft.overwriteFinalExceptionConsumer(new DwFinalExceptionConsumer(() -> Dl.local().lookup(CachedMandators.class).loadMandator().bugMail()));
+        saft.registerExceptionConsumer(UserInfoException.class, new UserInfoExceptionConsumer());
+        saft.registerExceptionConsumer(ConstraintViolationException.class, new ConstraintViolationConsumer());
+    }
+
+    private void initOnceViews() {
+        saft.registerOnceFx(SearchCask.ONCE_KEY, SearchCask.class);
+        saft.registerOnceFx(RawReportView.ONCE_KEY, RawReportView.class);
+        saft.registerOnceSwing(RedTapeView.ONCE_KEY, () -> RedTapeController.build().getView());
+        saft.registerOnceSwing(DossierFilterView.ONCE_KEY, () -> DossierFilterView.build());
     }
 
     /**
@@ -300,7 +307,7 @@ public class DwOssApplication extends Application {
      */
     private Pane initMainPane() {
         // TODO: If Saft uses CDI, we can start unsing it here.
-        FXMLLoader mainLoader = instance.select(FxmlLoaderInitializer.class).get().createLoader(DwOssClientController.class.getResource("DwOssClientView.fxml"));
+        FXMLLoader mainLoader = new FXMLLoader(DwOssClientController.class.getResource("DwOssClientView.fxml"), null, null, p -> instance.select(p).get(), StandardCharsets.UTF_8);
         try {
             mainLoader.load();
         } catch (IOException ex) {
@@ -319,8 +326,8 @@ public class DwOssApplication extends Application {
     private void startSaftInitMainFrameAndWrapMainPane(JFrame mainFrame, Pane mainPane, ConnectionParameter cp) {
         JFXPanel p = new JFXPanel();
         p.setScene(new Scene(mainPane));
+        mainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         mainFrame.getContentPane().add(p);
-        // Todo: Store and Load location
         mainFrame.setSize(800, 600);
         mainFrame.setLocationByPlatform(true);
         mainFrame.setTitle(Dl.local().lookup(CachedMandators.class).loadMandator().company().name()
@@ -328,25 +335,20 @@ public class DwOssApplication extends Application {
                 + cp.toUrl());
         mainFrame.setIconImage(new ImageIcon(DwOssClientController.loadIcon()).getImage());
 
-        Dl.local().add(UserPreferences.class, new UserPreferencesJdk()); // Hard added here.
-        UiCore.continueSwing(mainFrame);
+        saft.core(Swing.class).initMain(mainFrame);
         mainFrame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                Dl.local().lookup(UserPreferences.class).storeLocation(DwOssApplication.class, mainFrame);
-                UiCore.shutdown(); // Todo: Saft does that on closed, but closed is never called.
+                saft.locationStorage().storeLocation(DwOssApplication.class, mainFrame);
             }
-
         });
-        Dl.local().lookup(UserPreferences.class).loadLocation(DwOssApplication.class, mainFrame);
+        saft.locationStorage().loadLocation(DwOssApplication.class, mainFrame);
 
         /*
          // If we switch to saft javafx, use this. And uns Platform::runLater
          mainPane.getChildren().clear(); // remove everything
          mainPane.getChildren().add(mainView);
          */
-        // Old Ops usage, RedTape Ui Contextmenu
-        // Ops.registerActionFactory(new ConsumerFactoryOfStockTransactions());
     }
 
     /**
@@ -358,8 +360,7 @@ public class DwOssApplication extends Application {
         java.awt.KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher((java.awt.event.KeyEvent e) -> {
             if ( e.getID() == java.awt.event.KeyEvent.KEY_PRESSED && e.isControlDown() && e.isShiftDown() && e.getKeyCode() == java.awt.event.KeyEvent.VK_R ) {
                 L.info("KeyEvent[Ctrl+Shift+R] detected");
-                if ( UiCore.isSwing() ) relocateWindowsInSwingMode();
-                if ( UiCore.isFx() ) relocateWindowsInJavaFxMode();
+                UiCore.global().core().relocate();
             }
             return false;
         });
@@ -369,8 +370,7 @@ public class DwOssApplication extends Application {
         addEventFilter(KeyEvent.KEY_PRESSED, k -> {
             if ( keysCtrlShiftR.match(k) ) {
                 L.info("KeyEvent[Ctrl+Shift+R] detected");
-                if ( UiCore.isSwing() ) relocateWindowsInSwingMode();
-                if ( UiCore.isFx() ) relocateWindowsInJavaFxMode();
+                UiCore.global().core().relocate();
             }
         });
 
@@ -407,52 +407,6 @@ public class DwOssApplication extends Application {
         });
         // JavaFx: Session Timeout activity detector
         addEventHandler(EventType.ROOT, (e) -> loggedInTimeout.resetTime());
-    }
-
-    private void relocateWindowsInSwingMode() {
-        int i = 20;
-
-        Window m = UiCore.getMainFrame();
-        L.debug("relocateWindowsInSwingMode() relocating MainFrame {}", m);
-        m.setSize(800, 600);
-        m.setLocation(i, i);
-        i = i + 20;
-
-        for (Iterator<java.awt.Window> iterator = SwingCore.ACTIVE_WINDOWS.values().stream().map(w -> w.get()).filter(w -> w != null).iterator();
-                iterator.hasNext();) {
-            Window w = iterator.next();
-            L.debug("relocateWindowsInSwingMode() relocating {}", w);
-            w.setSize(800, 600);
-            w.setLocation(i, i);
-            i = i + 20;
-        }
-        // Todo: implement a global clear.
-        // Dl.local().lookup(UserPreferences.class).isReset();
-
-    }
-
-    private void relocateWindowsInJavaFxMode() {
-        // INFO: Untested.
-        int i = 20;
-        Stage m = UiCore.getMainStage();
-        L.debug("relocateWindowsInJavaFxMode() relocating MainWindow {}", m);
-        m.setX(i);
-        m.setY(i);
-        m.setWidth(800);
-        m.setHeight(600);
-
-        i = i + 20;
-
-        for (Iterator<Stage> iterator = FxCore.ACTIVE_STAGES.values().stream().map(w -> w.get()).filter(w -> w != null).iterator();
-                iterator.hasNext();) {
-            Stage w = iterator.next();
-            L.debug("relocateWindowsInJavaFxMode() relocating {}", w);
-            w.setX(i);
-            w.setY(i);
-            w.setWidth(800);
-            w.setHeight(600);
-            i = i + 20;
-        }
     }
 
     private <T extends javafx.event.Event> void addEventFilter(

@@ -16,14 +16,17 @@
  */
 package eu.ggnet.dwoss.assembly.client.support.executor;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.annotation.PreDestroy;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.slf4j.Logger;
+
+import eu.ggnet.dwoss.assembly.client.support.executor.Executor;
 
 /**
  * First throw with an alternative to static UiCore executors.
@@ -38,9 +41,20 @@ public class ExecutorManager {
 
     @Produces
     @Executor
-    private final ScheduledExecutorService ses = Executors.newScheduledThreadPool(6);
+    private final ScheduledExecutorService ses = Executors.newScheduledThreadPool(1, new ThreadFactory() {
 
-    public void shutdown() {
+        private final ThreadGroup group = new ThreadGroup("dwoss-global-scheduled-pool");
+
+        private final AtomicInteger counter = new AtomicInteger(0);
+
+        @Override
+        public Thread newThread(Runnable r) {
+            return new Thread(group, r, "ScheduledThread-" + counter.incrementAndGet() + "-" + r.toString());
+        }
+    });
+
+    @PreDestroy
+    private void shutdown() {
         log.debug("shutdown()");
         ses.shutdown();
     }

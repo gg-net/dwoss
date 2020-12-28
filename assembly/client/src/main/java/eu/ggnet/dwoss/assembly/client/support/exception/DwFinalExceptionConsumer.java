@@ -20,28 +20,25 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Consumer;
+import java.util.concurrent.CancellationException;
+import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.core.widget.swing.DetailDialog;
 import eu.ggnet.dwoss.core.widget.Dl;
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.ui.SwingCore;
-import eu.ggnet.saft.core.ui.SwingSaft;
-import eu.ggnet.saft.core.ui.builder.UiWorkflowBreak;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.UiParent;
 
 import static eu.ggnet.saft.core.ui.AlertType.WARNING;
-import static eu.ggnet.saft.core.ui.exception.ExceptionUtil.*;
 
 /**
  *
  * @author oliver.guenther
  */
-public class DwFinalExceptionConsumer implements Consumer<Throwable> {
+public class DwFinalExceptionConsumer implements BiConsumer<Optional<UiParent>, Throwable> {
 
     private final static Logger L = LoggerFactory.getLogger(DwFinalExceptionConsumer.class);
 
@@ -52,28 +49,24 @@ public class DwFinalExceptionConsumer implements Consumer<Throwable> {
     }
 
     @Override
-    public void accept(Throwable throwable) {
+    public void accept(Optional<UiParent> optParent, Throwable throwable) {
         Throwable b = Objects.requireNonNull(throwable, "Throwable must not be null");
-        if ( b instanceof UiWorkflowBreak || b.getCause() instanceof UiWorkflowBreak ) {
-            L.debug("FinalExceptionConsumer catches UiWorkflowBreak, which is ignored by default");
+        if ( b instanceof CancellationException || b.getCause() instanceof CancellationException ) {
+            L.debug("FinalExceptionConsumer catches CancellationException, which is ignored by default");
             return;
         }
-        L.error("Systemfehler: {} , {}", b.getClass().getSimpleName(), b.getMessage());
+        L.error("Systemfehler: {}", b.getClass().getSimpleName(), b);
         if ( b.getMessage() != null && b.getMessage().contains("pushingpixels") ) return; // Ignore alle plaf problems
         String deepestMessage = extractDeepestMessage(b);
         if ( deepestMessage.contains("EJBCLIENT000025") ) {
-            Ui.exec(() -> {
-                Ui.build().title("Netzwerkfehler").alert()
-                        .message("Es ist eine Netzwerkproblem aufgetreten")
-                        .nl("Bitte das aktuelle Fenster einmal schliessen und noch einmal versuchen")
-                        .show(WARNING);
-            });
+            Ui.build().title("Netzwerkfehler").alert()
+                    .message("Es ist eine Netzwerkproblem aufgetreten")
+                    .nl("Bitte das aktuelle Fenster einmal schliessen und noch einmal versuchen")
+                    .show(WARNING);
         } else {
-            SwingSaft.run(() -> {
-                DetailDialog.show(SwingCore.mainFrame(), "Systemfehler", deepestMessage,
-                        getUserInfo() + '\n' + toMultilineStacktraceMessages(b), getUserInfo() + '\n' + toStackStrace(b),
-                        bugMail.orElse(() -> null).get());
-            });
+            Objects.requireNonNull(optParent, "optParent must not be null").map(p -> Ui.build().parent(p)).orElse(Ui.build()).title("Systemfehler").swing()
+                    .show(() -> new DetailView(deepestMessage, getUserInfo() + '\n' + toMultilineStacktraceMessages(b), getUserInfo() + '\n' + ExceptionUtils.toStackStrace(b),
+                    bugMail.orElse(() -> null).get()));
         }
     }
 
@@ -91,6 +84,30 @@ public class DwFinalExceptionConsumer implements Consumer<Throwable> {
         sb.append("Beim Nutzer \"").append(workspaceUser).append("\" ist ein Fehler Aufgetreten!\n")
                 .append("Windows Daten: User=").append(windowsUser).append(" Hostname=").append(host);
         return sb.toString();
+    }
+
+    /**
+     * Extract the deepest Throwable and return its message.
+     *
+     * @param ex the exception to parse the stack trace.
+     * @return the simple class name and the message of the deepest throwable.
+     */
+    private String extractDeepestMessage(Throwable ex) {
+        if ( ex == null ) return "";
+        if ( ex.getCause() == null ) return ex.getClass().getSimpleName() + ": " + ex.getLocalizedMessage();
+        return extractDeepestMessage(ex.getCause());
+    }
+
+    /**
+     * Returns all stack trace class simple names and messages as a multiline string.
+     *
+     * @param ex the exception to start with.
+     * @return all messages and class names.
+     */
+    private String toMultilineStacktraceMessages(Throwable ex) {
+        if ( ex == null ) return "";
+        if ( ex.getCause() == null ) return ex.getClass().getSimpleName() + ":" + ex.getLocalizedMessage();
+        return ex.getClass().getSimpleName() + ":" + ex.getLocalizedMessage() + "\n" + toMultilineStacktraceMessages(ex.getCause());
     }
 
 }

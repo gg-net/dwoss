@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.misc.ee.ImageIdHandler;
 import eu.ggnet.saft.core.Ui;
 
@@ -37,7 +37,7 @@ public class ExportImageIdsAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.osOpen(Ui.progress().title("Bilder Ids").call(() -> Dl.remote().lookup(ImageIdHandler.class).exportMissing(null).toTemporaryFile()));
+            FileUtil.osOpen(Progressor.global().run("Bilder Ids", () -> Dl.remote().lookup(ImageIdHandler.class).exportMissing(null).toTemporaryFile()));
         });
     }
 }

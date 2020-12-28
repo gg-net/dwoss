@@ -26,8 +26,7 @@ import javax.swing.*;
 import org.openide.util.lookup.ServiceProvider;
 
 import eu.ggnet.dwoss.core.system.GlobalConfig;
-import eu.ggnet.saft.core.Ui;
-
+import eu.ggnet.dwoss.core.widget.FileUtil;
 import eu.ggnet.dwoss.core.widget.MainComponent;
 
 /**
@@ -58,7 +57,7 @@ public class FileListViewCask extends javax.swing.JPanel implements MainComponen
                 ListModel model = fileList.getModel();
                 Object value = model.getElementAt(index);
                 if ( !(value instanceof File) ) return;
-                Ui.osOpen((File)value);
+                FileUtil.osOpen((File)value);
             }
         });
 

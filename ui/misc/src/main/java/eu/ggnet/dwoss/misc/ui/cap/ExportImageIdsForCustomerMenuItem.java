@@ -18,8 +18,8 @@ package eu.ggnet.dwoss.misc.ui.cap;
 
 import javafx.scene.control.MenuItem;
 
+import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.misc.ee.ImageIdHandler;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 
 import static eu.ggnet.dwoss.core.common.values.SalesChannel.CUSTOMER;
@@ -34,8 +34,7 @@ public class ExportImageIdsForCustomerMenuItem extends MenuItem {
         super("Bilder Ids für Verkaufskanal Endkunde exportieren");
         setOnAction((e) -> {
             Ui.exec(() -> {
-                Ui.osOpen(Ui.progress().title("Bilder Ids")
-                        .call(() -> Dl.remote().lookup(ImageIdHandler.class).exportMissing(CUSTOMER).toTemporaryFile()));
+                FileUtil.osOpen(Progressor.global().run("Bilder Ids", () -> Dl.remote().lookup(ImageIdHandler.class).exportMissing(CUSTOMER).toTemporaryFile()));
             });
         });
     }

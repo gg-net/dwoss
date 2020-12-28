@@ -53,7 +53,7 @@ public class FileListTryout {
         @Override
         public void stop() throws Exception {
             container.close();
-            UiCore.shutdown();
+            UiCore.global().shutdown();
         }        
 
     }

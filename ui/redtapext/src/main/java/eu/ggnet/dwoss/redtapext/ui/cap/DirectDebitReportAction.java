@@ -20,8 +20,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
+import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.redtapext.ee.reporting.DirectDebitReporter;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 
 /**
@@ -37,7 +37,7 @@ public class DirectDebitReportAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.osOpen(Ui.progress().title("Lastschriftenreport").call(() -> Dl.remote().lookup(DirectDebitReporter.class).toXls().toTemporaryFile()));
+            FileUtil.osOpen(Progressor.global().run("Lastschriftenreport", () -> Dl.remote().lookup(DirectDebitReporter.class).toXls().toTemporaryFile()));
         });
     }
 }

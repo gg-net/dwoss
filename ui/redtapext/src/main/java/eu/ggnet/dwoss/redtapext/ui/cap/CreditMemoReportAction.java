@@ -20,9 +20,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.dwoss.core.widget.DateRangeChooserView;
+import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.redtapext.ee.reporting.CreditMemoReporter;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 
 /**
@@ -41,7 +40,7 @@ public class CreditMemoReportAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
             Ui.build().title("Stornoreport Zeitraum").fx().eval(() -> new DateRangeChooserView()).opt()
-                    .ifPresent(r -> Ui.osOpen(Ui.progress().call(() -> Dl.remote().lookup(CreditMemoReporter.class).toXls(r.startAsDate(), r.endAsDate()).toTemporaryFile())));
+                    .ifPresent(r -> FileUtil.osOpen(Progressor.global().run(() -> Dl.remote().lookup(CreditMemoReporter.class).toXls(r.startAsDate(), r.endAsDate()).toTemporaryFile())));
         });
     }
 }

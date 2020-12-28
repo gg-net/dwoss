@@ -24,11 +24,12 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.validation.*;
 
+import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.core.common.values.PositionType;
-import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
 import eu.ggnet.dwoss.core.system.progress.SubMonitor;
+import eu.ggnet.dwoss.core.system.util.ValidationUtil;
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.eao.DossierEao;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
@@ -40,7 +41,6 @@ import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-import eu.ggnet.dwoss.core.system.util.ValidationUtil;
 import eu.ggnet.lucidcalc.*;
 
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.BOLD_ITALIC;
@@ -103,7 +103,7 @@ public class PersistenceValidatorOperation implements PersistenceValidator {
      * @return a Filejacket where a xls from the JExcel api is, that contains all Errors.
      */
     @Override
-    public Optional<FileJacket> validateDatabase() {
+    public FileJacket validateDatabase() {
         List<Vm> vms = new ArrayList<>();
         UniqueUnitEao uuEao = new UniqueUnitEao(uuEm);
         DossierEao dossierEao = new DossierEao(redTapeEm);
@@ -335,8 +335,8 @@ public class PersistenceValidatorOperation implements PersistenceValidator {
      * @param errors
      * @return an optional of filejacket, if empty no errors are found.
      */
-    private Optional<FileJacket> createFileJacket(List<Vm> errors) {
-        if ( errors.isEmpty() ) return Optional.empty();
+    private FileJacket createFileJacket(List<Vm> errors) {
+        if ( errors.isEmpty() ) return null;
         List<Object[]> rows = new ArrayList<>();
         for (Vm vm : errors) {
             rows.add(new Object[]{vm.level.description, vm.message});
@@ -352,7 +352,7 @@ public class PersistenceValidatorOperation implements PersistenceValidator {
         document.add(sheet);
         File file = LucidCalc.createWriter(LucidCalc.Backend.XLS).write(document);
         FileJacket result = new FileJacket("Datenbank_Errors", ".xls", file);
-        return Optional.of(result);
+        return result;
     }
 
     private void error(List<Vm> vms, String msg) {

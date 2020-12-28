@@ -16,30 +16,31 @@
  */
 package tryout;
 
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.dwoss.core.widget.Dl;
-import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
-import eu.ggnet.dwoss.stock.ee.entity.Stock;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransactionType;
-import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
-
 import java.awt.Dimension;
 import java.util.*;
 
+import javax.enterprise.inject.Instance;
+import javax.enterprise.inject.se.SeContainer;
+import javax.enterprise.inject.se.SeContainerInitializer;
 import javax.persistence.LockModeType;
-import javax.swing.JButton;
-import javax.swing.JPanel;
+import javax.swing.*;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
+import eu.ggnet.dwoss.core.widget.AbstractGuardian;
+import eu.ggnet.dwoss.core.widget.auth.AuthenticationException;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.cdi.WidgetProducers;
+import eu.ggnet.dwoss.core.widget.dl.LocalDl;
+import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
+import eu.ggnet.dwoss.rights.api.Operator;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.StockTransactionProcessor;
+import eu.ggnet.dwoss.stock.ee.entity.*;
+import eu.ggnet.dwoss.stock.ui.StockUpiImpl;
 import eu.ggnet.dwoss.stock.ui.cap.CreateSimpleAction;
-import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.dwoss.core.widget.auth.Guardian;
-
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
+import eu.ggnet.saft.core.Saft;
+import eu.ggnet.saft.core.UiUtil;
+import eu.ggnet.saft.core.impl.Swing;
 
 /**
  *
@@ -48,17 +49,25 @@ import static org.mockito.Mockito.mock;
 public class CreateSimpleActionTryout {
 
     public static void main(String[] args) {
-        JPanel p = new JPanel();
-        JButton b = new JButton("Press to close");
-        b.setPreferredSize(new Dimension(200, 50));
-        b.addActionListener(e -> {
-            Ui.closeWindowOf(b);
-        });
+        cdi();
+    }
 
-        p.add(new JButton(new CreateSimpleAction()));
-        p.add(b);
+    public static void cdi() {
+        SeContainerInitializer ci = SeContainerInitializer.newInstance();
+        ci.addPackages(CreateSimpleActionTryout.class);
+        ci.addPackages(WidgetProducers.class);
+        ci.addPackages(true, StockUpiImpl.class);
+        ci.disableDiscovery();
+        SeContainer container = ci.initialize();
+        Instance<Object> instance = container.getBeanManager().createInstance();
 
-        Dl.remote().add(StockAgent.class, new StockAgent() {
+        Saft saft = instance.select(Saft.class).get();
+        saft.addOnShutdown(() -> container.close());
+
+        RemoteDl remote = instance.select(RemoteDl.class).get();
+        LocalDl local = instance.select(LocalDl.class).get();
+
+        remote.add(StockAgent.class, new StockAgent() {
 
             @Override
             public <T> List<T> findAll(Class<T> entityClass) {
@@ -159,7 +168,7 @@ public class CreateSimpleActionTryout {
             }
             // </editor-fold>
         });
-        Dl.remote().add(StockTransactionProcessor.class, new StockTransactionProcessor() {
+        remote.add(StockTransactionProcessor.class, new StockTransactionProcessor() {
             @Override
             public SortedMap<Integer, String> perpareTransfer(List<StockUnit> stockUnits, int destinationStockId, String arranger, String comment) throws UserInfoException {
                 SortedMap<Integer, String> r = new TreeMap<>();
@@ -195,11 +204,30 @@ public class CreateSimpleActionTryout {
             // </editor-fold>
 
         });
-        Guardian guardianMock = mock(Guardian.class);
-        given(guardianMock.getUsername()).willAnswer(i -> "Testuser");
-        Dl.local().add(Guardian.class, guardianMock);
 
-        UiCore.startSwing(() -> p);
+        local.add(Guardian.class, new AbstractGuardian() {
+
+            {
+                setRights(new Operator("Testuser", 123, Collections.emptyList()));
+            }
+
+            @Override
+            public void login(String user, char[] pass) throws AuthenticationException {
+            }
+        });
+
+        JPanel p = new JPanel();
+        JButton b = new JButton("Press to close");
+        b.setPreferredSize(new Dimension(200, 50));
+        b.addActionListener(e -> {
+            saft.closeWindowOf(b);
+        });
+
+        p.add(new JButton(instance.select(CreateSimpleAction.class).get()));
+        p.add(b);
+
+        JFrame f = UiUtil.startup(() -> p);
+        saft.core(Swing.class).initMain(f);
     }
 
 }

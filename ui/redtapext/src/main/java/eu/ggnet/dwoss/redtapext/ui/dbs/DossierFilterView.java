@@ -16,10 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.dbs;
 
-import eu.ggnet.dwoss.core.widget.Dl;
-import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.saft.core.Ui;
-
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
@@ -27,42 +23,43 @@ import java.util.Map;
 
 import javax.swing.*;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+
 import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.core.common.values.PaymentMethod;
-import eu.ggnet.dwoss.core.widget.swing.ComboBoxController;
 import eu.ggnet.dwoss.core.widget.HtmlPane;
+import eu.ggnet.dwoss.core.widget.swing.ComboBoxController;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
 import eu.ggnet.dwoss.redtape.ee.format.DossierFormater;
-import eu.ggnet.saft.core.ui.UserPreferences;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.*;
+
+import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
 
 /**
  *
  * @author bastian.venz
  */
-public class DossierFilterView extends javax.swing.JFrame {
+@Title("Aufträge nach Status")
+@StoreLocation
+public class DossierFilterView extends javax.swing.JPanel {
+    
+    public final static String ONCE_KEY = "DossierFilterView";
 
-    private static DossierFilterView instance;
-
-    /**
-     * Returns a single Instance of this view, initalizing and showing it.
-     */
-    public static void showSingleInstance() {
-        if ( instance == null ) {
-            instance = new DossierFilterView();
-            DossierFilterModel model = new DossierFilterModel();
-            DossierFilterController controller = new DossierFilterController();
-            instance.setLocationRelativeTo(UiCore.getMainFrame());
-            Dl.local().lookup(UserPreferences.class).loadLocation(instance.getClass(), instance);
-            instance.setController(controller);
-            controller.setView(instance);
-            instance.setModel(model);
-            controller.setModel(model);
-            instance.setVisible(true);
-        } else {
-            instance.toFront();
-            if ( instance.getState() == JFrame.ICONIFIED ) instance.setState(JFrame.NORMAL);
-        }
+    public static DossierFilterView build() {
+        DossierFilterView view = new DossierFilterView();
+        DossierFilterModel model = new DossierFilterModel();
+        DossierFilterController controller = new DossierFilterController();
+        view.setController(controller);
+        controller.setView(view);
+        view.setModel(model);
+        controller.setModel(model);
+        return view;
     }
+
+    @Bind(SHOWING)
+    private final BooleanProperty showingProperty = new SimpleBooleanProperty();
 
     private final ComboBoxController<String> directiveFilter;
 
@@ -108,10 +105,12 @@ public class DossierFilterView extends javax.swing.JFrame {
             paymentTypeNames.put(method.getNote(), method);
         }
         paymentMethodFilter = new ComboBoxController<>(paymentComboBox, paymentTypeNames.keySet());
-        this.pack();
         this.revalidate();
 
         dossierPopup = buildDossierPopup();
+        showingProperty.addListener((ov, o, n) -> {
+            if ( !n && controller != null ) controller.cancelLoader();
+        });
     }
 
     public void setController(DossierFilterController controller) {
@@ -175,14 +174,7 @@ public class DossierFilterView extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         dossierTable = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Aufträge nach Status");
         setMinimumSize(new java.awt.Dimension(400, 200));
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
-            }
-        });
 
         jPanel1.setLayout(new java.awt.GridBagLayout());
 
@@ -540,8 +532,8 @@ public class DossierFilterView extends javax.swing.JFrame {
         gridBagConstraints.weighty = 1.0;
         jPanel1.add(jScrollPane1, gridBagConstraints);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 1082, Short.MAX_VALUE)
@@ -555,10 +547,9 @@ public class DossierFilterView extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 584, Short.MAX_VALUE))
         );
 
-        pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void dossierTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dossierTableMouseClicked
+    private void dossierTableMouseClicked(java.awt.event.MouseEvent evt) {
 
         if ( !filterModel.getLines().isEmpty() && SwingUtilities.isRightMouseButton(evt) ) {
             int row = dossierTable.rowAtPoint(evt.getPoint());
@@ -570,14 +561,7 @@ public class DossierFilterView extends javax.swing.JFrame {
             dossierTable.getSelectionModel().setSelectionInterval(row, row);
             controller.openDossierDetailViewer(filterModel.getSelected());
         }
-
-    }//GEN-LAST:event_dossierTableMouseClicked
-
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        if ( controller != null ) controller.cancelLoader();
-        Dl.local().lookup(UserPreferences.class).storeLocation(instance.getClass(), instance);
-        instance = null;
-    }//GEN-LAST:event_formWindowClosing
+    }
 
     private void directiveComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_directiveComboBoxActionPerformed
         if ( controller == null ) return;

@@ -25,6 +25,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 
+import eu.ggnet.dwoss.core.widget.FileUtil;
 import eu.ggnet.saft.core.Ui;
 
 /**
@@ -53,7 +54,7 @@ public class FileListPane extends BorderPane {
 
         fileListView.setOnMouseClicked((e) -> {
             if ( !fileListView.getSelectionModel().isEmpty() && e.getButton() == MouseButton.PRIMARY && e.getClickCount() == 2 ) {
-                Ui.exec(() -> Ui.osOpen(fileListView.getSelectionModel().getSelectedItem()));
+                Ui.exec(() -> FileUtil.osOpen(fileListView.getSelectionModel().getSelectedItem()));
             }
         });
 

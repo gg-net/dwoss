@@ -27,7 +27,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.ui.Once;
 import eu.ggnet.saft.core.ui.ResultProducer;
 
 /**
@@ -35,7 +34,6 @@ import eu.ggnet.saft.core.ui.ResultProducer;
  *
  * @author oliver.guenther
  */
-@Once(false)
 public class DateRangeChooserView extends BorderPane implements ResultProducer<DateRangeChooserView.Range> {
 
     public static final class Range {

@@ -18,15 +18,19 @@ package eu.ggnet.dwoss.rights.ui.cap;
 
 import java.awt.event.ActionEvent;
 
+import javax.inject.Inject;
 import javax.swing.Action;
 
 import eu.ggnet.dwoss.core.widget.AccessableAction;
 import eu.ggnet.dwoss.rights.ui.NewRightsManagementController;
-import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.Saft;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_UPDATE_RIGHTS;
 
 public class NewRightsManagementAction extends AccessableAction {
+
+    @Inject
+    private Saft saft;
 
     public NewRightsManagementAction() {
         super(CREATE_UPDATE_RIGHTS);
@@ -35,7 +39,8 @@ public class NewRightsManagementAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.build().fxml().show(NewRightsManagementController.class);
+        saft.build().fxml().show(NewRightsManagementController.class);
+//        Ui.build().fxml().show(NewRightsManagementController.class);
     }
 
 }

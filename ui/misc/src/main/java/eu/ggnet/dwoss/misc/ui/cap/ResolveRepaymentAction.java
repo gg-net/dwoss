@@ -20,13 +20,12 @@ import java.awt.event.ActionEvent;
 
 import javafx.scene.control.ChoiceDialog;
 
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.mandator.api.value.Contractors;
 import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.misc.ui.ResolveRepaymentController;
-import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.dwoss.core.widget.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.RESOLVE_REPAYMENT;
 
@@ -45,7 +44,7 @@ public class ResolveRepaymentAction extends AccessableAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Contractors contractors = Ui.progress().call(() -> Dl.local().lookup(CachedMandators.class).loadContractors());
+            Contractors contractors = Progressor.global().run(() -> Dl.local().lookup(CachedMandators.class).loadContractors());
             Ui.exec(() -> {
                 Ui.build().dialog().eval(() -> {
                     ChoiceDialog<TradeName> dialog = new ChoiceDialog<>(contractors.all().iterator().next(), contractors.all());

@@ -16,17 +16,25 @@
  */
 package tryout;
 
-import javax.swing.JButton;
-import javax.swing.JPanel;
+import java.awt.Dimension;
 
-import eu.ggnet.dwoss.core.widget.Dl;
-import eu.ggnet.dwoss.core.widget.dl.RemoteLookup;
+import javax.enterprise.inject.Instance;
+import javax.enterprise.inject.se.SeContainer;
+import javax.enterprise.inject.se.SeContainerInitializer;
+import javax.swing.*;
+
+import eu.ggnet.dwoss.core.widget.cdi.WidgetProducers;
+import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
 import eu.ggnet.dwoss.rights.api.GroupApi;
 import eu.ggnet.dwoss.rights.api.UserApi;
+import eu.ggnet.dwoss.rights.ui.NewRightsManagementController;
 import eu.ggnet.dwoss.rights.ui.cap.NewRightsManagementAction;
-import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.core.Saft;
+import eu.ggnet.saft.core.UiUtil;
+import eu.ggnet.saft.core.impl.Swing;
 
-import tryout.stub.*;
+import tryout.stub.GroupApiStub;
+import tryout.stub.UserApiStub;
 
 /**
  * This tryout allows testing the funcionality of the Rights module seperated from the application.
@@ -34,28 +42,64 @@ import tryout.stub.*;
  * @author mirko.schulze
  */
 public class NewRightsManagementControllerTryout {
-
+    
     public static void main(String[] args) {
-
-        Dl.local().add(RemoteLookup.class, new RemoteLookup() {
-            @Override
-            public <T> boolean contains(Class<T> clazz) {
-                return false;
-            }
-
-            @Override
-            public <T> T lookup(Class<T> clazz) {
-                return null;
-            }
-        });
-        Dl.remote().add(UserApi.class, new UserApiStub());
-        Dl.remote().add(GroupApi.class, new GroupApiStub());
-
-        UiCore.startSwing(() -> {
-            JPanel main = new JPanel();
-            main.add(new JButton(new NewRightsManagementAction()));
-            return main;
-        });
+//        cdiFx();
+        cdiSwing();
     }
+    
+//    public static void cdiFx(){
+//        SeContainerInitializer ci = SeContainerInitializer.newInstance();
+//        ci.addPackages(NewRightsManagementControllerTryout.class);
+//        ci.addPackages(WidgetProducers.class);
+//        ci.addPackages(true, NewRightsManagementController.class);
+//        ci.disableDiscovery();
+//        SeContainer container = ci.initialize();
+//        Instance<Object> instance = container.getBeanManager().createInstance();
+//
+//        Saft saft = instance.select(Saft.class).get();
+////        saft.addOnShutdown(() -> container.close());
+//
+//        RemoteDl remote = instance.select(RemoteDl.class).get();
+//        remote.add(UserApi.class, new UserApiStub());
+//        remote.add(GroupApi.class, new GroupApiStub());
+//        
+//        Button b = new Button();
+//        b.setOnAction(e -> instance.select(NewRightsManagementAction.class).get());
+//        
+//        Stage s = new Stage();
+//        s.setScene(new Scene(b, 200, 100));
+//        
+//        saft.core(Fx.class).initMain(s);
+//    }
 
+    public static void cdiSwing() {
+        SeContainerInitializer ci = SeContainerInitializer.newInstance();
+        ci.addPackages(NewRightsManagementControllerTryout.class);
+        ci.addPackages(WidgetProducers.class);
+        ci.addPackages(true, NewRightsManagementController.class);
+        ci.disableDiscovery();
+        SeContainer container = ci.initialize();
+        Instance<Object> instance = container.getBeanManager().createInstance();
+
+        Saft saft = instance.select(Saft.class).get();
+        saft.addOnShutdown(() -> container.close());
+
+        RemoteDl remote = instance.select(RemoteDl.class).get();
+        remote.add(UserApi.class, new UserApiStub());
+        remote.add(GroupApi.class, new GroupApiStub());
+        
+        JPanel p = new JPanel();
+        JButton b = new JButton("Press to close");
+        b.setPreferredSize(new Dimension(200, 50));
+        b.addActionListener(e -> {
+            saft.closeWindowOf(b);
+        });
+
+        p.add(new JButton(instance.select(NewRightsManagementAction.class).get()));
+        p.add(b);
+
+        JFrame f = UiUtil.startup(() -> p);
+        saft.core(Swing.class).initMain(f);
+    }
 }

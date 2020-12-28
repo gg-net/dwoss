@@ -19,14 +19,11 @@ package eu.ggnet.dwoss.rights.ui;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.CancellationException;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -338,7 +335,7 @@ public class NewRightsManagementController implements Initializable, FxControlle
                     .title("Benutzer-Verwaltung: Neuen Benutzer anlegen")
                     .modality(Modality.WINDOW_MODAL)
                     .fxml()
-                    .eval(() -> null, UserManagementController.class)
+                    .eval(UserManagementController.class)
                     .cf()
                     .thenAcceptAsync(user -> {
                         userApi.create(user.getUsername());
@@ -353,7 +350,7 @@ public class NewRightsManagementController implements Initializable, FxControlle
                         loadUsersAndGroups();
                         refreshUi();
                     }, Platform::runLater)
-                    .handle(Ui.handler());
+                    .handle(UiCore.global().handler(createUserButton));
         });
         //createGroupButton
         createGroupButton.setOnAction(e -> {
@@ -361,7 +358,7 @@ public class NewRightsManagementController implements Initializable, FxControlle
                     .title("Gruppen-Verwaltung: Neue Gruppe anlegen")
                     .modality(Modality.WINDOW_MODAL)
                     .fxml()
-                    .eval(() -> null, GroupManagementController.class)
+                    .eval(GroupManagementController.class)
                     .cf()
                     .thenAcceptAsync(group -> {
                         groupApi.create(group.getName());

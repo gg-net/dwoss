@@ -21,6 +21,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import eu.ggnet.dwoss.redtapext.ui.dbs.DossierFilterView;
+import eu.ggnet.saft.core.UiCore;
 
 /**
  * @author bastian.venz
@@ -35,6 +36,6 @@ public class DossiersByStatusAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        DossierFilterView.showSingleInstance();
+        UiCore.global().showOnce(DossierFilterView.ONCE_KEY);
     }
 }

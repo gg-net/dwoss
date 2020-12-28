@@ -39,17 +39,17 @@ import javafx.scene.layout.*;
 import javafx.util.Callback;
 
 import eu.ggnet.dwoss.core.system.util.Utils;
+import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.report.ee.ReportAgent;
 import eu.ggnet.dwoss.report.ee.ViewReportResult;
 import eu.ggnet.dwoss.report.ee.ViewReportResult.Type;
 import eu.ggnet.dwoss.report.ee.api.ReportExporter;
 import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
-import eu.ggnet.saft.api.IdSupplier;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.*;
 
+import static eu.ggnet.saft.core.ui.Bind.Type.TITLE;
 import static javafx.scene.control.ButtonBar.ButtonData.OK_DONE;
 import static javafx.scene.control.SelectionMode.MULTIPLE;
 
@@ -59,11 +59,10 @@ import static javafx.scene.control.SelectionMode.MULTIPLE;
  * @author pascal.perau
  */
 @Frame
-@Title("Report Ansicht : {id}")
 @StoreLocation
 public class ReportController implements Initializable, FxController, Consumer<ReportController.In> {
 
-    public static class In implements IdSupplier {
+    public static class In {
 
         private final ViewReportResult reportResult;
 
@@ -72,11 +71,6 @@ public class ReportController implements Initializable, FxController, Consumer<R
         public In(ViewReportResult reportResult, boolean viewmode) {
             this.reportResult = reportResult;
             this.viewmode = viewmode;
-        }
-
-        @Override
-        public String id() {
-            return reportResult.getParameter().reportName();
         }
 
     }
@@ -183,6 +177,9 @@ public class ReportController implements Initializable, FxController, Consumer<R
     @FXML
     Button fullExportButton;
 
+    @Bind(TITLE)
+    private StringProperty titleProperty = new SimpleStringProperty("Report Ansicht");
+    
     private SelectableViewReportResult selectAbleReportResult;
 
     private final Map<TableView<SelectableReportLine>, TableSummary> tableSummarys = new HashMap<>();
@@ -341,24 +338,16 @@ public class ReportController implements Initializable, FxController, Consumer<R
 
     @Override
     public void accept(In in) {
-        initReportData(in.reportResult, in.viewmode);
-    }
-
-    /**
-     * Initialize model data.
-     * <p>
-     * In viewmode only display concerning actions are allowed. Creation of reports is disabled.
-     * <p>
-     * @param in       the result containing report data
-     * @param viewmode is this only viewmode or not.
-     */
-    public void initReportData(ViewReportResult in, boolean viewmode) {
-        this.viewmode.set(viewmode);
+        ViewReportResult vrr = in.reportResult;
+        boolean vm = in.viewmode;
+        titleProperty.set("Report Ansicht : " + vrr.getParameter().reportName());
+        
+        this.viewmode.set(vm);
         createButton.disableProperty().bind(this.viewmode);
 
         exportButton.setDisable(!Dl.remote().contains(ReportExporter.class));
 
-        this.selectAbleReportResult = new SelectableViewReportResult(in);
+        this.selectAbleReportResult = new SelectableViewReportResult(vrr);
         nameLabel.setText(selectAbleReportResult.getParameter().reportName());
         fromDateLabel.setText(Utils.ISO_DATE.format(selectAbleReportResult.getParameter().start()));
         toDateLabel.setText(Utils.ISO_DATE.format(selectAbleReportResult.getParameter().end()));
@@ -415,7 +404,7 @@ public class ReportController implements Initializable, FxController, Consumer<R
             Ui.build().parent(mainPane).dialog()
                     .eval(() -> selectAbleReportResult, () -> new ResultPane())
                     .opt()
-                    .ifPresent(r -> Ui.progress().call(() -> {
+                    .ifPresent(r -> Progressor.global().run(() -> {
                 Dl.remote().lookup(ReportAgent.class).store(
                         new Report(r.getParameter().reportName(), r.getParameter().contractor(), r.getParameter().start(), r.getParameter().end(), r.getParameter().viewMode()),
                         getSelectedLines(r.getLines()).values().stream().flatMap(Collection::stream).map(ReportLine::toStorable).collect(Collectors.toList()));
@@ -427,12 +416,12 @@ public class ReportController implements Initializable, FxController, Consumer<R
 
     @FXML
     public void handleExportButtonAction() {
-        Ui.osOpen(Dl.remote().lookup(ReportExporter.class).toFullXls(filterRelevantLines()).toTemporaryFile());
+        FileUtil.osOpen(Dl.remote().lookup(ReportExporter.class).toFullXls(filterRelevantLines()).toTemporaryFile());
     }
 
     @FXML
     public void handleFullExportButtonAction() {
-        Ui.osOpen(XlsExporter.toFullXls(filterRelevantLines()));
+        FileUtil.osOpen(XlsExporter.toFullXls(filterRelevantLines()));
     }
 
     public static URL loadFxml() {

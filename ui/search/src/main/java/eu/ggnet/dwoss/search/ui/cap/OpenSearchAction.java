@@ -16,13 +16,12 @@
  */
 package eu.ggnet.dwoss.search.ui.cap;
 
-import eu.ggnet.dwoss.search.ui.SearchCask;
-
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.saft.core.Ui;
+import eu.ggnet.dwoss.search.ui.SearchCask;
+import eu.ggnet.saft.core.UiCore;
 
 /**
  *
@@ -36,9 +35,7 @@ public class OpenSearchAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.exec(() -> {
-            Ui.build().fx().show(() -> new SearchCask());
-        });
+        UiCore.global().showOnce(SearchCask.ONCE_KEY);
     }
 
 }

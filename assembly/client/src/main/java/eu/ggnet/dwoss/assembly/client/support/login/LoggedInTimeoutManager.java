@@ -223,7 +223,7 @@ public class LoggedInTimeoutManager {
                     loggedOut.set(false);
                     startTime();
                 })
-                .onCancel(() -> UiCore.shutdown())
+                .onCancel(() -> UiCore.global().shutdown())
                 .guardian(Dl.local().lookup(Guardian.class))
                 .build(), LoginScreenController.class);
     }

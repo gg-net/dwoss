@@ -16,13 +16,6 @@
  */
 package eu.ggnet.dwoss.core.widget;
 
-import eu.ggnet.dwoss.core.widget.ops.DefaultAction;
-import eu.ggnet.dwoss.core.widget.ops.DescriptiveConsumer;
-import eu.ggnet.dwoss.core.widget.ops.DescriptiveConsumerRunner;
-import eu.ggnet.dwoss.core.widget.ops.SelectionEnhancer;
-import eu.ggnet.dwoss.core.widget.ops.Selector;
-import eu.ggnet.dwoss.core.widget.ops.DescriptiveConsumerFactory;
-
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.*;
@@ -32,6 +25,8 @@ import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import eu.ggnet.dwoss.core.widget.ops.*;
 
 
 /**
@@ -124,21 +119,6 @@ public class Ops {
         L.info("Registering factory, key {} with {}", clazz, factory);
         if ( !REGISTERED_ACTION_FACTORIES.containsKey(clazz) ) REGISTERED_ACTION_FACTORIES.put(clazz, new ArrayList<>());
         REGISTERED_ACTION_FACTORIES.get(clazz).add(factory);
-    }
-
-    /**
-     * Register a Consumer as global action, possibly annotated for title and more.
-     * <p>
-     * @param <T>      the type as key, what this action is for.
-     * @param consumer the consumer as action.
-     */
-    public static <T> void registerAction(Consumer<T> consumer) {
-        Class clazz = extractSingleType(Consumer.class, consumer);
-        L.info("Registering action, key {} with {}", clazz, consumer);
-        DescriptiveConsumer descriptiveConsumer = new DescriptiveConsumer(consumer);
-        if ( consumer.getClass().getAnnotation(DefaultAction.class) != null ) REGISTERED_DEFAULT_ACTIONS.put(clazz, descriptiveConsumer);
-        if ( !REGISTERED_ACTIONS.containsKey(clazz) ) REGISTERED_ACTIONS.put(clazz, new ArrayList<>());
-        REGISTERED_ACTIONS.get(clazz).add(descriptiveConsumer);
     }
 
     /**

@@ -32,15 +32,14 @@ import net.sf.jasperreports.view.JasperViewer;
 import org.slf4j.Logger;
 
 import eu.ggnet.dwoss.core.common.FileJacket;
-import eu.ggnet.dwoss.core.widget.Dl;
-import eu.ggnet.dwoss.core.widget.TikaUtil;
+import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.core.widget.saft.Failure;
+import eu.ggnet.dwoss.core.widget.saft.Reply;
 import eu.ggnet.dwoss.misc.ee.StockTaking;
 import eu.ggnet.dwoss.misc.ee.movement.MovementListingProducer;
 import eu.ggnet.dwoss.misc.ee.movement.MovementListingProducer.ListType;
 import eu.ggnet.dwoss.stock.api.PicoStock;
 import eu.ggnet.dwoss.stock.api.StockApi;
-import eu.ggnet.dwoss.core.widget.saft.Reply;
 import eu.ggnet.saft.core.Ui;
 
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
@@ -61,7 +60,7 @@ public class MovmentMenuItemsProducer {
             setText(listType.description + " - " + stock.shortDescription + " - XLS");
             setOnAction((e) -> {
                 Ui.exec(() -> {
-                    Ui.osOpen(Ui.progress().call(() -> Dl.remote().lookup(MovementListingProducer.class).generateXls(listType, stock).toTemporaryFile()));
+                    FileUtil.osOpen(Progressor.global().run(() -> Dl.remote().lookup(MovementListingProducer.class).generateXls(listType, stock).toTemporaryFile()));
                 });
             });
         }
@@ -76,7 +75,7 @@ public class MovmentMenuItemsProducer {
             setOnAction((e) -> {
                 Ui.exec(() -> {
                     // TODO: Switch to JavaFX Implementation of RedTape.
-                    JasperPrint jasper = Ui.progress().call(() -> Dl.remote().lookup(MovementListingProducer.class).generateList(listType, stock));
+                    JasperPrint jasper = Progressor.global().run(() -> Dl.remote().lookup(MovementListingProducer.class).generateList(listType, stock));
                     JasperViewer viewer = new JasperViewer(jasper, false);
                     EventQueue.invokeLater(() -> viewer.setVisible(true));
                 });
@@ -96,7 +95,7 @@ public class MovmentMenuItemsProducer {
             setContent(l);
             setOnAction((e) -> {
                 Ui.exec(() -> {
-                    Optional<File> inFile = Ui.fileChooser().open().opt();
+                    Optional<File> inFile = FileUtil.open(null).opt();
                     if ( !inFile.isPresent() ) return;
                     Ui.build().dialog().eval(
                             () -> new Alert(CONFIRMATION, (stock == null ? "" : " für " + stock.shortDescription) + " aus der Datei:" + inFile.get().getPath() + " vervollständigen ?"))
@@ -105,8 +104,8 @@ public class MovmentMenuItemsProducer {
                             .map(b -> TikaUtil.isExcel(inFile.get()))
                             .filter(Failure::handle)
                             .map(Reply::getPayload)
-                            .map(f -> Ui.progress().call(() -> Dl.remote().lookup(StockTaking.class).fullfillDetails(new FileJacket("in", ".xls", f), (stock == null ? null : stock.id))))
-                            .ifPresent(f -> Ui.osOpen(f.toTemporaryFile()));
+                            .map(f -> Progressor.global().run(() -> Dl.remote().lookup(StockTaking.class).fullfillDetails(new FileJacket("in", ".xls", f), (stock == null ? null : stock.id))))
+                            .ifPresent(f -> FileUtil.osOpen(f.toTemporaryFile()));
 
                 });
             });

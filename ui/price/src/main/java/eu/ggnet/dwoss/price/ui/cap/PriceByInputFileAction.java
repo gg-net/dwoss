@@ -23,8 +23,8 @@ import javafx.scene.control.Alert;
 import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.core.widget.saft.Failure;
-import eu.ggnet.dwoss.price.ee.Exporter;
 import eu.ggnet.dwoss.core.widget.saft.Reply;
+import eu.ggnet.dwoss.price.ee.Exporter;
 import eu.ggnet.saft.core.Ui;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_PRICE_BY_XLS;
@@ -45,17 +45,16 @@ public class PriceByInputFileAction extends AccessableAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.fileChooser()
-                    .open().opt().ifPresent(r -> {
-                        Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "Xls Datei " + r.getPath() + " als Eingabequelle verwenden ? (erste Zeile = Überschrift, erste Spalte enthält Artikelnummern) Preise erzeugen nach Referencedaten"))
-                                .opt()
-                                .filter(b -> b == OK)
-                                .map(b -> TikaUtil.isExcel(r))
-                                .filter(Failure::handle)
-                                .map(Reply::getPayload)
-                                .map(f -> Ui.progress().call(() -> Dl.remote().lookup(Exporter.class).toXlsByXls(new FileJacket("in", ".xls", f))))
-                                .ifPresent(c -> Ui.osOpen(c.toTemporaryFile()));
-                    });
+            FileUtil.open(null).opt().ifPresent(r -> {
+                Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "Xls Datei " + r.getPath() + " als Eingabequelle verwenden ? (erste Zeile = Überschrift, erste Spalte enthält Artikelnummern) Preise erzeugen nach Referencedaten"))
+                        .opt()
+                        .filter(b -> b == OK)
+                        .map(b -> TikaUtil.isExcel(r))
+                        .filter(Failure::handle)
+                        .map(Reply::getPayload)
+                        .map(f -> Progressor.global().run(() -> Dl.remote().lookup(Exporter.class).toXlsByXls(new FileJacket("in", ".xls", f))))
+                        .ifPresent(c -> FileUtil.osOpen(c.toTemporaryFile()));
+            });
         });
     }
 }

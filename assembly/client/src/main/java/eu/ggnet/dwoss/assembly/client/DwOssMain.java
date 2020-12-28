@@ -23,9 +23,9 @@ import javafx.application.Application;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.assembly.client.support.ContainerConfiguration;
-import eu.ggnet.dwoss.assembly.remote.cdi.MainCdi;
 import eu.ggnet.dwoss.core.system.GlobalConfig;
 import eu.ggnet.dwoss.core.system.autolog.LoggerProducer;
+import eu.ggnet.dwoss.core.widget.cdi.WidgetProducers;
 import eu.ggnet.dwoss.customer.ui.CustomerTaskService;
 import eu.ggnet.dwoss.mail.ui.cap.SendResellerListToSubscribedCustomersMenuItem;
 import eu.ggnet.dwoss.misc.ui.AboutController;
@@ -51,7 +51,6 @@ public class DwOssMain {
         LoggerFactory.getLogger(DwOssMain.class).info("main({}) starting", Arrays.asList(args));
 
         ContainerConfiguration cc = ContainerConfiguration.instance();
-        cc.addPackages(true, MainCdi.class);
         cc.addPackages(true, DwOssMain.class);
         cc.addPackages(true, CustomerTaskService.class); // customer.ui
         cc.addPackages(true, SendResellerListToSubscribedCustomersMenuItem.class); // mail.ui
@@ -64,7 +63,8 @@ public class DwOssMain {
         cc.addPackages(true, ReactivePicoUnitDetailViewCask.class); // redtapext.ui
         cc.addPackages(true, AboutController.class); // misc.ui
         cc.addPackages(true, SearchCask.class); // search.ui
-        cc.addPackages(LoggerProducer.class); // core.system. autolog
+        cc.addPackages(LoggerProducer.class); // core.system.autolog
+        cc.addPackages(WidgetProducers.class); // core.widget.cdi
         cc.addPackages(GlobalConfig.class); // Global Config produces.
 
         Application.launch(DwOssApplication.class, args);

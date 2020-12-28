@@ -16,16 +16,18 @@
  */
 package eu.ggnet.dwoss.mail.ui.cap;
 
+import java.util.concurrent.CancellationException;
+
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.mail.ee.MailSalesListingService;
 import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.Progressor;
+import eu.ggnet.dwoss.mail.ee.MailSalesListingService;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.ui.builder.UiWorkflowBreak;
 
 import static javafx.scene.control.ButtonType.OK;
 
@@ -50,9 +52,9 @@ public class SendResellerListToSubscribedCustomersMenuItem extends MenuItem {
                 return alert;
             }).cf().thenAccept((ButtonType t) -> {
                 L.debug("OK/Cancel Dialog result {}", t);
-                if ( t != OK ) throw new UiWorkflowBreak(UiWorkflowBreak.Type.NULL_RESULT);
+                if ( t != OK ) throw new CancellationException();
             })
-                    .thenRun(() -> Ui.progress().wrap(() -> Dl.remote().lookup(MailSalesListingService.class).generateResellerXlsAndSendToSubscribedCustomers()).run())
+                    .thenRun(() -> Progressor.global().run(() -> Dl.remote().lookup(MailSalesListingService.class).generateResellerXlsAndSendToSubscribedCustomers()))
                     .handle(Ui.handler());
         });
     }

@@ -28,6 +28,7 @@ import javafx.concurrent.Task;
 import org.slf4j.Logger;
 
 import eu.ggnet.dwoss.assembly.client.support.executor.Executor;
+import eu.ggnet.dwoss.core.widget.Progressor;
 import eu.ggnet.saft.core.UiCore;
 
 /**
@@ -43,7 +44,7 @@ import eu.ggnet.saft.core.UiCore;
  */
 //TODO: This class is a great candidate to replace Ui.progress() of Saft. Needs some stripping and a movement to core.widget.
 @Singleton
-public class MonitorManager {
+public class MonitorManager implements Progressor.Displayer {
 
     @Inject
     private Logger log;
@@ -88,8 +89,8 @@ public class MonitorManager {
         poller.view(monitorPane);
         ses.scheduleAtFixedRate(poller, 2, 2, TimeUnit.SECONDS);
 
-        log.debug("startPolling() setting the listener for saft naiv progress.");
-        UiCore.backgroundActivityProperty().addListener((ob, o, n) -> monitorPane.saftBackground(n));
+        log.debug("startPolling() setting the listener for progressor progress.");
+        Progressor.global().setDisplayer(this);
     }
 
     /**

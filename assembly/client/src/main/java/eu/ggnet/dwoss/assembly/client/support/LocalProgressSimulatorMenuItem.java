@@ -16,15 +16,14 @@
  */
 package eu.ggnet.dwoss.assembly.client.support;
 
-import eu.ggnet.dwoss.assembly.client.support.executor.Executor;
-
 import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
 
 import javafx.scene.control.MenuItem;
 
-import eu.ggnet.saft.core.Ui;
+import eu.ggnet.dwoss.assembly.client.support.executor.Executor;
+import eu.ggnet.dwoss.core.widget.Progressor;
 
 /**
  *
@@ -37,7 +36,7 @@ public class LocalProgressSimulatorMenuItem extends MenuItem {
     
     public LocalProgressSimulatorMenuItem() {
         super("Lokale Hintergrundaktivität simulieren");
-        setOnAction((e) -> es.submit(() -> Ui.progress().call(() -> {
+        setOnAction((e) -> es.submit(() -> Progressor.global().run("Lokale Simulation",() -> {
                     Thread.sleep(3000);
                     System.out.println("done");
                     return null;

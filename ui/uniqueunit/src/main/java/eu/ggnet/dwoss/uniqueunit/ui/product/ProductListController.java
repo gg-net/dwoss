@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
@@ -21,11 +22,13 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.system.util.Utils;
+import eu.ggnet.dwoss.core.widget.Progressor;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ui.ProductTask;
-import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.ui.*;
+import eu.ggnet.saft.core.ui.ClosedListener;
+import eu.ggnet.saft.core.ui.FxController;
 
 import static javafx.scene.control.SelectionMode.MULTIPLE;
 
@@ -156,8 +159,7 @@ public class ProductListController implements Initializable, FxController, Close
         tableView.setItems(sortedProducts);
         editButton.disableProperty().bind(tableView.getSelectionModel().selectedItemProperty().isNull());
 
-        Ui.progress().observe(LOADING_TASK);
-        Ui.exec(LOADING_TASK);
+        Progressor.global().submit(LOADING_TASK);
     }
 
     /**
@@ -233,9 +235,8 @@ public class ProductListController implements Initializable, FxController, Close
 
     @Override
     public void closed() {
-        FxSaft.dispatch(() -> {
+        Platform.runLater(() -> {
             if ( LOADING_TASK.isRunning() ) LOADING_TASK.cancel();
-            return null;
         });
     }
 

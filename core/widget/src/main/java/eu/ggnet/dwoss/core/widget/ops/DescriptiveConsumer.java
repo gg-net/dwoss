@@ -18,7 +18,6 @@ package eu.ggnet.dwoss.core.widget.ops;
 
 import java.util.function.Consumer;
 
-import eu.ggnet.saft.core.ui.TitleUtil;
 
 /**
  * A Wrapper for a consumer, which also holds a title.
@@ -35,15 +34,6 @@ public class DescriptiveConsumer<T> {
     public DescriptiveConsumer(String title, Consumer<T> consumer) {
         this.title = title;
         this.consumer = consumer;
-    }
-
-    /**
-     * Constructor, that tries to extract the title from annotations on the Consumer.
-     * <p>
-     * @param consumer the consumer to wrap.
-     */
-    public DescriptiveConsumer(Consumer<T> consumer) {
-        this(TitleUtil.title(consumer.getClass()), consumer);
     }
 
     public Consumer<T> consumer() {

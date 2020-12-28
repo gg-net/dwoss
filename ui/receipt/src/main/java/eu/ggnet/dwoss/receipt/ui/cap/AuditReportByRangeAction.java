@@ -20,9 +20,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.dwoss.core.widget.DateRangeChooserView;
+import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.receipt.ee.reporting.AuditReporter;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 
 /**
@@ -39,7 +38,7 @@ public class AuditReportByRangeAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
             Ui.build().title("Audit Report nach Datum").fx().eval(() -> new DateRangeChooserView()).opt().ifPresent(r -> {
-                Ui.osOpen(Ui.progress().title("Auditreport").call(() -> Dl.remote().lookup(AuditReporter.class).byRange(r.startAsDate(), r.endAsDate()).toTemporaryFile()));
+                FileUtil.osOpen(Progressor.global().run("Auditreporter", () -> Dl.remote().lookup(AuditReporter.class).byRange(r.startAsDate(), r.endAsDate()).toTemporaryFile()));
             });
         });
     }

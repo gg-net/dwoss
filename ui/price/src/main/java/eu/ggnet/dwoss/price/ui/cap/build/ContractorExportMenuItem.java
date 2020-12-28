@@ -19,8 +19,8 @@ package eu.ggnet.dwoss.price.ui.cap.build;
 import javafx.scene.control.MenuItem;
 
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.price.ee.imex.ContractorPricePartNoExporter;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 
 /**
@@ -33,10 +33,10 @@ public class ContractorExportMenuItem extends MenuItem {
         setText("Export " + (missing ? "fehlende " : "alle ") + contractor.getName() + " Daten (Lieferant" + (contractor.isManufacturer() ? "+Hersteller" : "") + ")");
         setOnAction(e -> {
             Ui.exec(() -> {
-                Ui.osOpen(Ui.progress().title("Export " + (missing ? "Fehlende" : "Alle") + " Daten")
-                        .call(() -> (missing
-                                     ? Dl.remote().lookup(ContractorPricePartNoExporter.class).toContractorMissingXls(contractor)
-                                     : Dl.remote().lookup(ContractorPricePartNoExporter.class).toContractorXls(contractor)).toTemporaryFile()));
+                FileUtil.osOpen(Progressor.global().run("Export " + (missing ? "Fehlende" : "Alle") + " Daten",
+                        () -> (missing
+                               ? Dl.remote().lookup(ContractorPricePartNoExporter.class).toContractorMissingXls(contractor)
+                               : Dl.remote().lookup(ContractorPricePartNoExporter.class).toContractorXls(contractor)).toTemporaryFile()));
             });
         });
         return this;

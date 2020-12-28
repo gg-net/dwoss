@@ -18,10 +18,8 @@ package eu.ggnet.dwoss.customer.ui.cap;
 
 import java.awt.event.ActionEvent;
 
+import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.customer.ee.CustomerExporter;
-import eu.ggnet.dwoss.core.widget.Dl;
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.dwoss.core.widget.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_ALL_CUSTOMERS;
 
@@ -37,6 +35,6 @@ public class ExportAllCustomers extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent event) {
-        Ui.exec(Ui.progress().wrap(() -> Ui.osOpen(Dl.remote().lookup(CustomerExporter.class).allToXls().toTemporaryFile())));
+        Progressor.global().run(() -> FileUtil.osOpen(Dl.remote().lookup(CustomerExporter.class).allToXls().toTemporaryFile()));
     }
 }

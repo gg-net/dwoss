@@ -19,12 +19,14 @@ package eu.ggnet.dwoss.stock.ui.cap;
 import java.awt.event.ActionEvent;
 import java.util.*;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.widget.AccessableAction;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
 import eu.ggnet.dwoss.core.widget.saft.Failure;
 import eu.ggnet.dwoss.core.widget.saft.ReplyUtil;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
@@ -32,16 +34,26 @@ import eu.ggnet.dwoss.stock.ee.StockTransactionProcessor;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
 import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
 import eu.ggnet.dwoss.stock.ui.transactions.*;
+import eu.ggnet.saft.core.Saft;
 import eu.ggnet.saft.core.Ui;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_TRANSACTION_FOR_SINGLE_UNIT;
 
 /**
  * Creates or uses a Transfer Transaction to move a Unit from one stock to another.
- * <p/>
+ * <p>
  * @author oliver.guenther
  */
 public class CreateSimpleAction extends AccessableAction {
+
+    @Inject
+    private Saft saft;
+
+    @Inject
+    private RemoteDl remote;
+
+    @Inject
+    private Guardian guard;
 
     public CreateSimpleAction() {
         super(CREATE_TRANSACTION_FOR_SINGLE_UNIT);
@@ -49,18 +61,17 @@ public class CreateSimpleAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
-        Ui.exec(() -> {
-            Ui.build().fxml().eval(CreateSelectionController.class)
+        saft.exec(() -> {
+            saft.build().fxml().eval(CreateSelectionController.class)
                     .opt()
                     .map(this::handleResult)
                     .ifPresent(c -> {
-                        Ui.build().dialog().eval(() -> c, () -> new CreateQuestionView())
+                        saft.build().dialog().eval(() -> c, () -> new CreateQuestionView())
                                 .opt()
-                                .map(v -> ReplyUtil.wrap(() -> Dl.remote().lookup(StockTransactionProcessor.class)
-                                .perpareTransfer(v.stockUnits, v.destination.getId(), Dl.local().lookup(Guardian.class).getUsername(), v.comment))
+                                .map(v -> ReplyUtil.wrap(() -> remote.lookup(StockTransactionProcessor.class)
+                                .perpareTransfer(v.stockUnits, v.destination.getId(), guard.getUsername(), v.comment))
                                 ).filter(Failure::handle)
-                                .ifPresent(t -> Ui.build().alert("Umfuhr angelegt"));
+                                .ifPresent(t -> saft.build().alert("Umfuhr angelegt"));
                     });
         });
 
@@ -93,7 +104,7 @@ public class CreateSimpleAction extends AccessableAction {
             if ( c.target() == null ) throw new UserInfoException("Kein Ziellager ausgewählt");
             List<String> refurbishIds = parseRefurbishIds(c.refurbishIds());
             if ( refurbishIds.isEmpty() ) throw new UserInfoException("Keine SopoNr in " + c.refurbishIds() + " erkannt");
-            List<StockUnit> stockUnits = Dl.remote().lookup(StockAgent.class).findStockUnitsByRefurbishIdEager(refurbishIds);
+            List<StockUnit> stockUnits = remote.lookup(StockAgent.class).findStockUnitsByRefurbishIdEager(refurbishIds);
             if ( stockUnits.isEmpty() ) throw new UserInfoException("Keine der SopoNr(n) " + refurbishIds + " ist im Lager");
             if ( stockUnits.stream().anyMatch(s -> s.isInTransaction()) )
                 throw new UserInfoException("Mindestens eine SopoNr ist auf einer Transaktion");

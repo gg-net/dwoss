@@ -24,7 +24,7 @@
         </dependency>
         <dependency>
             <groupId>eu.ggnet.saft</groupId>
-            <artifactId>saft-api</artifactId>
+            <artifactId>saft-core</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>

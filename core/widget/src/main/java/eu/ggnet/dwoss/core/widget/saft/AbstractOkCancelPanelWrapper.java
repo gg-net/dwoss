@@ -19,9 +19,7 @@ package eu.ggnet.dwoss.core.widget.saft;
 import javax.swing.JPanel;
 
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.ui.Once;
 
-@Once(false)
 public class AbstractOkCancelPanelWrapper<T extends JPanel> extends javax.swing.JPanel {
 
     @SuppressWarnings("unchecked")
