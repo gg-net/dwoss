@@ -14,33 +14,39 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.rights.ui.cap;
+package tryout;
 
-import java.awt.event.ActionEvent;
+import java.util.concurrent.Executors;
 
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
-import javax.swing.Action;
 
-import eu.ggnet.dwoss.core.widget.AccessableAction;
-import eu.ggnet.dwoss.rights.ui.NewRightsManagementController;
 import eu.ggnet.saft.core.Saft;
+import eu.ggnet.saft.core.impl.Swing;
+import eu.ggnet.saft.core.ui.LocationStorage;
 
-import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_UPDATE_RIGHTS;
-
-public class NewRightsManagementAction extends AccessableAction {
+/**
+ * CDI Saft with Swing.
+ *
+ * @author mirko.schulze
+ */
+@ApplicationScoped
+// @Specializes
+public class CdiSwingSaft extends Saft {
 
     @Inject
-    private Saft saft;
+    private Instance<Object> instance;
 
-    public NewRightsManagementAction() {
-        super(CREATE_UPDATE_RIGHTS);
-        putValue(Action.NAME, "Neu: " + CREATE_UPDATE_RIGHTS.toName());
+    public CdiSwingSaft() {
+        super(new LocationStorage(), Executors.newCachedThreadPool());
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        saft.build().fxml().show(NewRightsManagementController.class);
-//        Ui.build().fxml().show(NewRightsManagementController.class);
+    @PostConstruct
+    private void postInit() {
+        init(new Swing(this, p -> instance.select(p).get()));
+        core().captureMode(true);
     }
 
 }
