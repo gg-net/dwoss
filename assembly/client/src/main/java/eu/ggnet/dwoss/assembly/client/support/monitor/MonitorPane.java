@@ -17,11 +17,11 @@
 package eu.ggnet.dwoss.assembly.client.support.monitor;
 
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.inject.Inject;
 
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -62,13 +62,12 @@ public class MonitorPane extends BorderPane {
                     setText(null);
                     setGraphic(null);
                 } else {
-                    // TODO: add title.
                     setText(null);
                     ProgressBar bar = new ProgressBar();
                     bar.setMaxWidth(MAX_VALUE);
                     bar.progressProperty().bind(item.progressProperty());
                     Label status = new Label();
-                    status.textProperty().bind(item.messageProperty());
+                    status.textProperty().bind(Bindings.concat(item.titleProperty(), ":", item.messageProperty()));
                     VBox b = new VBox(bar, status);
                     b.setFillWidth(true);
                     setGraphic(b);
@@ -92,12 +91,11 @@ public class MonitorPane extends BorderPane {
         t.setOnSucceeded(e);
         t.setOnFailed(e);
         t.setOnCancelled(e);
-        
+
         // Add Task to the UI
         Platform.runLater(() -> taskList.add(t));
         // Start task
         ses.execute(t);
     }
-
 
 }
