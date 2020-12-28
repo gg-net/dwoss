@@ -16,18 +16,16 @@
  */
 package eu.ggnet.dwoss.receipt.ui.cap;
 
-import eu.ggnet.dwoss.receipt.ui.cap.support.RollInPreparedTransactionViewCask;
-
 import java.awt.event.ActionEvent;
 
-import eu.ggnet.dwoss.stock.ee.StockAgent;
-import eu.ggnet.dwoss.stock.ee.StockTransactionProcessor;
-import eu.ggnet.dwoss.core.widget.Dl;
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.dwoss.core.widget.saft.Reply;
-import eu.ggnet.dwoss.core.widget.AccessableAction;
+import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.core.widget.saft.OkCancelWrap;
+import eu.ggnet.dwoss.core.widget.saft.Reply;
+import eu.ggnet.dwoss.receipt.ui.cap.support.RollInPreparedTransactionViewCask;
+import eu.ggnet.dwoss.stock.ee.StockAgent;
+import eu.ggnet.dwoss.stock.ee.StockTransactionProcessor;
+import eu.ggnet.saft.core.Ui;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_ROLL_IN_OF_PREPARED_TRANSACTIONS;
 import static eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType.PREPARED;
@@ -51,7 +49,14 @@ public class RollInPreparedTransactionsAction extends AccessableAction {
                     .opt()
                     .filter(Reply::hasSucceded)
                     .map(Reply::getPayload)
-                    .ifPresent(sts -> Ui.progress().call(() -> Dl.remote().lookup(StockTransactionProcessor.class).rollIn(sts, Dl.local().lookup(Guardian.class).getUsername())));
+                    .ifPresent(sts -> Progressor.global().run(() -> Dl.remote().lookup(StockTransactionProcessor.class).rollIn(sts, Dl.local().lookup(Guardian.class).getUsername())));
         });
     }
+    
+    /*
+     
+    Progressor.global().run("Title",() -> Dl.remote().lookup(MailSalesListingService.class).generateResellerXlsAndSendToSubscribedCustomers());    
+    Progressor.run(() -> Dl.remote().lookup(MailSalesListingService.class).generateResellerXlsAndSendToSubscribedCustomers());
+
+     */
 }

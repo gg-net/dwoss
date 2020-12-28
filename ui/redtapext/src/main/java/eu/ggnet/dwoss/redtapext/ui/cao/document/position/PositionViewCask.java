@@ -25,19 +25,18 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.web.WebView;
 
+import eu.ggnet.dwoss.core.common.values.PositionType;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.redtape.ee.format.PositionFormater;
-import eu.ggnet.dwoss.core.common.values.PositionType;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
 import eu.ggnet.dwoss.stock.ee.format.StockUnitFormater;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.Title;
-import eu.ggnet.saft.core.ui.FxSaft;
 
 import static javafx.scene.text.Font.font;
 
@@ -59,7 +58,9 @@ public class PositionViewCask extends BorderPane implements Consumer<Position> {
         head = new Label("No Position");
         head.setFont(font(20));
         setTop(head);
-        webView = FxSaft.dispatch(() -> new WebView());
+        //webView = SaftUtil.dispatchFx(() -> new WebView());
+        // should work.
+        webView =  new WebView();
         progressIndicator = new ProgressIndicator();
         setCenter(new StackPane(webView, progressIndicator));
     }

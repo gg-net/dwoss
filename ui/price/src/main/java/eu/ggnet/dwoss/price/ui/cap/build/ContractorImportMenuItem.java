@@ -20,11 +20,9 @@ import javafx.scene.control.MenuItem;
 
 import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
-import eu.ggnet.dwoss.core.widget.Dl;
-import eu.ggnet.dwoss.core.widget.TikaUtil;
+import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.price.ee.imex.ContractorPricePartNoImporter;
-import eu.ggnet.dwoss.core.widget.ConfirmationDialog;
 import eu.ggnet.dwoss.price.ui.cap.ImportResultView;
 import eu.ggnet.saft.core.Ui;
 
@@ -41,14 +39,14 @@ public class ContractorImportMenuItem extends MenuItem {
     public ContractorImportMenuItem init(TradeName contractor) {
         setText("Import fehlende " + contractor.getDescription() + " Daten (Lieferant" + (contractor.isManufacturer() ? "+Hersteller" : "") + ")");
         setOnAction(e -> {
-            Ui.fileChooser().open().cf()
+            FileUtil.open(null).cf()
                     .thenCompose(f -> Ui.build().dialog().eval(() -> new ConfirmationDialog<>("Import durchführen ?", "Fehlende " + contractor.getDescription() + " Daten aus der Datei:" + f.getPath() + " importieren ?", f)).cf())
                     .thenApply(f -> TikaUtil.verifyExcel(f))
                     .thenApply(f -> {
                         if ( contractor.isManufacturer() )
-                            return Ui.progress().call(() -> importer().fromManufacturerXls(contractor, new FileJacket("in", ".xls", f), user()));
+                            return Progressor.global().run(() -> importer().fromManufacturerXls(contractor, new FileJacket("in", ".xls", f), user()));
                         else
-                            return Ui.progress().call(() -> importer().fromContractorXls(contractor, new FileJacket("in", ".xls", f), user()));
+                            return Progressor.global().run(() -> importer().fromContractorXls(contractor, new FileJacket("in", ".xls", f), user()));
                     })
                     .thenAccept(ir -> Ui.build().fx().show(() -> ir, () -> new ImportResultView()))
                     .handle(Ui.handler());

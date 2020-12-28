@@ -21,10 +21,9 @@ import java.awt.event.ActionEvent;
 import javafx.beans.binding.Bindings;
 import javafx.scene.control.TextInputDialog;
 
+import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.dwoss.core.widget.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_DOSSIER_TO_XLS;
 import static javafx.scene.control.ButtonType.OK;
@@ -50,7 +49,7 @@ public class ExportDossierToXlsAction extends AccessableAction {
                         .disableProperty()
                         .bind(Bindings.createBooleanBinding(() -> dialog.getEditor().getText().trim().isEmpty(), dialog.getEditor().textProperty()));
                 return dialog;
-            }).opt().ifPresent(r -> Ui.osOpen(Dl.remote().lookup(DocumentSupporter.class).toXls(r).toTemporaryFile()));
+            }).opt().ifPresent(r -> FileUtil.osOpen(Dl.remote().lookup(DocumentSupporter.class).toXls(r).toTemporaryFile()));
         });
     }
 }

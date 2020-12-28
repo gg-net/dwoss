@@ -16,17 +16,15 @@
  */
 package eu.ggnet.dwoss.misc.ui.cap;
 
-import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.dwoss.core.widget.Dl;
-import eu.ggnet.saft.core.Ui;
-
 import java.awt.event.ActionEvent;
 
 import javax.swing.JOptionPane;
 
 import eu.ggnet.dwoss.core.system.GlobalConfig;
+import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.spec.ee.SpecExporter;
-import eu.ggnet.dwoss.core.widget.AccessableAction;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.READ_PRODUCT_SPEC_FOR_XML_EXPORT;
 
@@ -48,7 +46,7 @@ public class ProductSpecExportAction extends AccessableAction {
         try {
             final int amount = Integer.parseInt(input);
             Ui.exec(() -> {
-                Ui.progress().wrap(() -> Dl.remote().lookup(SpecExporter.class).toXml(amount).toFile(GlobalConfig.APPLICATION_PATH_OUTPUT));
+                Progressor.global().run(() -> Dl.remote().lookup(SpecExporter.class).toXml(amount).toFile(GlobalConfig.APPLICATION_PATH_OUTPUT));
             });
 
         } catch (NumberFormatException ex) {

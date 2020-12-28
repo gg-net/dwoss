@@ -16,12 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao;
 
-import eu.ggnet.dwoss.core.widget.HtmlPane;
-import eu.ggnet.dwoss.redtapext.ui.HtmlDialog;
-import eu.ggnet.dwoss.core.widget.swing.CloseType;
-import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
-import eu.ggnet.dwoss.core.widget.AccessableAction;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
@@ -37,9 +31,15 @@ import javax.swing.border.SoftBevelBorder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.common.values.CustomerFlag;
 import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.widget.*;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.swing.CloseType;
+import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
 import eu.ggnet.dwoss.customer.api.CustomerService;
+import eu.ggnet.dwoss.customer.spi.CustomerUiModifier;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;
 import eu.ggnet.dwoss.mandator.spi.CachedMandators;
@@ -51,23 +51,20 @@ import eu.ggnet.dwoss.redtape.ee.format.DocumentFormater;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateTransition.Hint;
 import eu.ggnet.dwoss.redtapext.ee.state.*;
+import eu.ggnet.dwoss.redtapext.ui.HtmlDialog;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.IDossierSelectionHandler;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.StringAreaView;
 import eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableController;
 import eu.ggnet.dwoss.redtapext.ui.cao.jasper.DocumentViewAction;
 import eu.ggnet.dwoss.redtapext.ui.cao.stateaction.*;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.ui.SwingCore;
+import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.core.impl.Swing;
 import eu.ggnet.saft.core.ui.UiParent;
-import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.statemachine.StateTransition;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_ANNULATION_INVOICE;
-
-import eu.ggnet.dwoss.customer.spi.CustomerUiModifier;
 
 /**
  * The RedTape main component controller handling all in/output as well as update actions provided by the {@link RedTapeView}.
@@ -518,8 +515,8 @@ public class RedTapeController implements IDossierSelectionHandler {
         return true;
     }
 
-    private Window parent() {
-        return SwingCore.windowAncestor(view).orElse(SwingCore.mainFrame());
+    private Window parent() {        
+        return UiCore.global().core(Swing.class).unwrap(UiParent.of(view)).orElse(null);
     }
 
     private void updateCustomer(long id) {

@@ -16,29 +16,22 @@
  */
 package tryout;
 
-import java.util.Optional;
-import java.util.concurrent.Callable;
-import java.util.function.Consumer;
-import java.util.function.Function;
+import java.util.concurrent.CancellationException;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.saft.core.ui.builder.UiWorkflowBreak;
 
 import static javafx.scene.control.ButtonType.OK;
 
 /**
  *
- import static eu.ggnet.saft.core.ui.builder.UiWorkflowBreak.Type.NULL_RESULT;
-* @author oliver.guenther
+ * @author oliver.guenther
  */
 public class ConfirmationTryout {
 
@@ -54,7 +47,7 @@ public class ConfirmationTryout {
                         alert.setTitle("Händlerliste versenden");
                         alert.setHeaderText("Möchten Sie die Händlerliste jetzt versenden");
                         return alert;
-                    }).cf().thenAccept((ButtonType t) -> {if( t != OK) throw new UiWorkflowBreak(UiWorkflowBreak.Type.NULL_RESULT);})
+                    }).cf().thenAccept((ButtonType t) -> {if( t != OK) throw new CancellationException("Result is null");})
                            .thenRun(() -> System.out.println("JO")).handle(Ui.handler());
                 });
                 return b;

@@ -26,13 +26,13 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.web.WebView;
 
 import eu.ggnet.dwoss.core.common.Css;
-import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
-import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
 import eu.ggnet.dwoss.core.widget.Dl;
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.ui.*;
 import eu.ggnet.dwoss.core.widget.Ops;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
+import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.*;
 
 import static javafx.scene.text.Font.font;
 
@@ -56,7 +56,9 @@ public class ReactivePicoUnitDetailViewCask extends BorderPane implements Consum
         head = new Label("No UniqueUnit");
         head.setFont(font(20));
         setTop(head);
-        webView = FxSaft.dispatch(() -> new WebView());
+        // webView = SaftUtil.dispatchFx(() -> new WebView());
+        // Should work, because this is created via saft.
+        webView = new WebView();
         progressIndicator = new ProgressIndicator();
         setCenter(new StackPane(webView, progressIndicator));
         progressIndicator.setVisible(false);

@@ -20,11 +20,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import eu.ggnet.dwoss.customer.ui.neo.*;
-import eu.ggnet.saft.core.ui.UiParent;
+import eu.ggnet.dwoss.customer.ui.neo.CustomerConnectorFascade;
 
 /**
  *
@@ -32,15 +28,13 @@ import eu.ggnet.saft.core.ui.UiParent;
  */
 public class AddCustomerAction extends AbstractAction {
 
-    private final static Logger L = LoggerFactory.getLogger(AddCustomerAction.class);
-
     public AddCustomerAction() {
         super("Neuen Kunden anlegen");
     }
 
     @Override
     public void actionPerformed(ActionEvent event) {
-        CustomerConnectorFascade.create(UiParent.defaults());
+        CustomerConnectorFascade.create();
     }
 
 }

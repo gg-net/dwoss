@@ -19,6 +19,7 @@ package tryout;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.mandator.sample.impl.Sample;
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapeSamples;
@@ -43,6 +44,7 @@ public class JasperFxViewTryout extends Application {
             documentSupporter.setMandator(Sample.MANDATOR);;
             JasperFxView jp = new JasperFxView();
             Document doc = RedTapeSamples.getDocument();
+            try {
             JasperFxViewData in = new JasperFxViewData.Builder()
                     .document(doc)
                     .jasperPrint(documentSupporter.render(doc, DocumentViewType.DEFAULT))
@@ -55,7 +57,9 @@ public class JasperFxViewTryout extends Application {
                         }
                     }).build();
             jp.accept(in);
-
+            } catch (UserInfoException ex) {
+                throw new RuntimeException(ex);
+            }
             return jp;
         });
     }

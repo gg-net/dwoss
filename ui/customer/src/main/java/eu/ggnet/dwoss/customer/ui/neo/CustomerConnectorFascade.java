@@ -241,10 +241,10 @@ public class CustomerConnectorFascade {
      *
      * @param p a parent for the ui
      */
-    public static void create(UiParent p) {
-        Ui.build().parent(p).fxml().eval(CustomerSimpleController.class).cf()
+    public static void create() {        
+        Ui.build().fxml().eval(CustomerSimpleController.class).cf()
                 .thenApply(CustomerConnectorFascade::optionalStore)
-                .thenCompose(cc -> CustomerConnectorFascade.optionalEnhancedEditorAndStore(p, cc))
+                .thenCompose(cc -> CustomerConnectorFascade.optionalEnhancedEditorAndStore(null, cc))
                 .handle(Ui.handler());
     }
 
@@ -270,9 +270,10 @@ public class CustomerConnectorFascade {
                 : CustomerCommand.select(c);
     }
 
-    private static CompletionStage<Customer> optionalEnhancedEditorAndStore(UiParent p, CustomerCommand cc) {
+    // p can be null ....
+    private static CompletionStage<Customer> optionalEnhancedEditorAndStore(UiParent parent, CustomerCommand cc) {
         if ( !cc.enhance ) return CompletableFuture.completedFuture(cc.customer);
-        return Ui.build().parent(p).fxml().eval(() -> cc.customer, CustomerEnhanceController.class).cf()
+        return Optional.of(parent).map(p -> Ui.build().parent(p)).orElse(Ui.build()).fxml().eval(() -> cc.customer, CustomerEnhanceController.class).cf()
                 .thenApply(c -> {
                     if ( !c.isValid() ) ValidationUtil.validate(c);
                     return c;

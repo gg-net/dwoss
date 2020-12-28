@@ -16,6 +16,12 @@
             <artifactId>saft-core</artifactId>
         </dependency>
         <dependency>
+            <groupId>${javaee.groupId}</groupId>
+            <artifactId>${javaee.artifactId}</artifactId>
+            <version>${javaee.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-core-system</artifactId>
             <version>${project.version}</version>

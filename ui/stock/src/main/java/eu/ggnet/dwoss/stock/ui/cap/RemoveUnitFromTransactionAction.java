@@ -18,12 +18,11 @@ package eu.ggnet.dwoss.stock.ui.cap;
 
 import java.awt.event.ActionEvent;
 
+import eu.ggnet.dwoss.core.widget.*;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.stock.ee.StockTransactionProcessor;
 import eu.ggnet.dwoss.stock.ui.transactions.RemoveQuestionView;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.dwoss.core.widget.AccessableAction;
-import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.saft.core.ui.AlertType;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.REMOVE_SINGE_UNIT_FROM_TRANSACTION;
@@ -43,7 +42,7 @@ public class RemoveUnitFromTransactionAction extends AccessableAction {
     @SuppressWarnings("UseSpecificCatch")
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.build().fx().eval(() -> new RemoveQuestionView()).opt().ifPresent(v -> Ui.progress().call(() -> {
+            Ui.build().fx().eval(() -> new RemoveQuestionView()).opt().ifPresent(v -> Progressor.global().run(() -> {
                 Dl.remote().lookup(StockTransactionProcessor.class).removeFromPreparedTransaction(v.refurbishId(), Dl.local().lookup(Guardian.class).getUsername(), v.comment());
                 Ui.build().alert().message("SopoNr: " + v.refurbishId() + " aus Transaktion entfernt").show(AlertType.INFO);
                 return null;

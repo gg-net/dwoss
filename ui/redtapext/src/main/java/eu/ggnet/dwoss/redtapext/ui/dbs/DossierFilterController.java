@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.dbs;
 
-import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.util.*;
 import java.util.concurrent.CancellationException;
@@ -28,9 +27,11 @@ import javax.swing.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.core.common.Css;
 import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.core.common.values.PaymentMethod;
-import eu.ggnet.dwoss.redtapext.ui.HtmlDialog;
+import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.HtmlPane;
 import eu.ggnet.dwoss.core.widget.swing.PojoFilter;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
@@ -39,7 +40,6 @@ import eu.ggnet.dwoss.redtape.ee.entity.Document.Condition;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 
 /**
@@ -303,7 +303,7 @@ public class DossierFilterController {
     }
 
     public void showSelectedDossier() {
-        new HtmlDialog(view, Dialog.ModalityType.MODELESS).setText(Dl.remote().lookup(RedTapeWorker.class).toDetailedHtml(model.getSelected().getId())).setVisible(true);
+        Ui.build(view).fx().show(() -> Css.toHtml5WithStyle(Dl.remote().lookup(RedTapeWorker.class).toDetailedHtml(model.getSelected().getId())), () -> new HtmlPane());
     }
 
     /**
@@ -342,6 +342,6 @@ public class DossierFilterController {
     }
 
     public void openDossierDetailViewer(Dossier dos) {
-        new HtmlDialog(view, Dialog.ModalityType.MODELESS).setText(Dl.remote().lookup(RedTapeWorker.class).toDetailedHtml(dos.getId())).setVisible(true);
+        Ui.build(view).fx().show(() -> Css.toHtml5WithStyle(Dl.remote().lookup(RedTapeWorker.class).toDetailedHtml(dos.getId())), () -> new HtmlPane());
     }
 }

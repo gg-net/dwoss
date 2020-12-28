@@ -16,14 +16,12 @@
  */
 package eu.ggnet.dwoss.price.ui.cap;
 
-import eu.ggnet.dwoss.price.ee.Importer;
-
 import java.awt.event.ActionEvent;
 
-import eu.ggnet.dwoss.core.widget.Dl;
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.dwoss.core.widget.AccessableAction;
+import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.dwoss.price.ee.Importer;
+import eu.ggnet.saft.core.Ui;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_AND_IMPORT_PRICEMANAGMENT;
 
@@ -40,7 +38,7 @@ public class PriceExportImportAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.exec(() -> Ui.progress().call(() -> {
+        Ui.exec(() -> Progressor.global().run(() -> {
             Dl.remote().lookup(Importer.class).direct(Dl.local().lookup(Guardian.class).getUsername());
             return null;
         }));

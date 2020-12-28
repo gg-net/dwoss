@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.misc.ee;
 
-import java.util.Optional;
-
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.core.common.FileJacket;
@@ -36,7 +34,8 @@ public interface PersistenceValidator {
      * - UniqueUnit
      * - Stock
      * <p/>
-     * @return a Filejacket where a xls from the JExcel api is, that contains all Errors.
+     * @return a Filejacket where a xls from the JExcel api is, that contains all Errors, or null if DB is Valide.
      */
-    Optional<FileJacket> validateDatabase();
+    // HINT: Don't change it to optional, will not work via Wildfly serialisation.
+    FileJacket validateDatabase();
 }

@@ -16,9 +16,9 @@
  */
 package eu.ggnet.dwoss.assembly.client.support.exception;
 
-import java.awt.Window;
-import java.util.Arrays;
-import java.util.function.Consumer;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.BiConsumer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,19 +26,20 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.AlertType;
+import eu.ggnet.saft.core.ui.UiParent;
 
 /**
  *
  * @author oliver.guenther
  */
-public class UserInfoExceptionConsumer implements Consumer<UserInfoException> {
+public class UserInfoExceptionConsumer implements BiConsumer<Optional<UiParent>,UserInfoException> {
 
     private final static Logger L = LoggerFactory.getLogger(UserInfoExceptionConsumer.class);
 
     @Override
-    public void accept(UserInfoException ex) {
+    public void accept(Optional<UiParent> optParent,UserInfoException ex) {
         L.info("UserInfoException {}", ex.getMessage());
-        Ui.build(Arrays.stream(Window.getWindows()).filter(Window::isActive).findFirst().orElse(null))
+        Objects.requireNonNull(optParent, "optParent must not be null").map(p -> Ui.build().parent(p)).orElse(Ui.build())
                 .alert()
                 .title(ex.getHead())
                 .message(ex.getMessage())

@@ -79,7 +79,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <slf4j.version>1.7.28</slf4j.version>
-        <saft.version>1.1</saft.version>
+        <saft.version>2.0</saft.version>
         <javaee.groupId>javax</javaee.groupId>
         <javaee.artifactId>javaee-api</javaee.artifactId>
         <javaee.version>8.0</javaee.version>
@@ -499,11 +499,6 @@
                 <groupId>eu.ggnet.lucidcalc</groupId>
                 <artifactId>lucidcalc</artifactId>
                 <version>1.1</version>
-            </dependency>
-            <dependency>
-                <groupId>eu.ggnet.saft</groupId>
-                <artifactId>saft-api</artifactId>
-                <version>${saft.version}</version>
             </dependency>
             <dependency>
                 <groupId>eu.ggnet.saft</groupId>

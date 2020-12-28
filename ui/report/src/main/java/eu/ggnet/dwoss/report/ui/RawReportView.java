@@ -39,14 +39,15 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.core.common.values.PositionType;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.HtmlPane;
 import eu.ggnet.dwoss.report.ee.ReportAgent;
 import eu.ggnet.dwoss.report.ee.ReportAgent.SearchParameter;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.ui.*;
+import eu.ggnet.saft.core.ui.Frame;
+import eu.ggnet.saft.core.ui.Title;
 
 import static javafx.geometry.Pos.CENTER_LEFT;
 import static javafx.scene.control.SelectionMode.MULTIPLE;
@@ -57,8 +58,9 @@ import static javafx.scene.control.SelectionMode.MULTIPLE;
  */
 @Frame
 @Title("Report Daten")
-@Once
 public class RawReportView extends BorderPane {
+    
+    public final static String ONCE_KEY = "RawReport";
 
     private final Logger L = LoggerFactory.getLogger(SimpleReportLine.class);
 

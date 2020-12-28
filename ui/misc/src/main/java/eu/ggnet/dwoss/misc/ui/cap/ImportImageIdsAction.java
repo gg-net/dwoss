@@ -23,7 +23,6 @@ import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.misc.ee.ImageIdHandler;
 import eu.ggnet.saft.core.Ui;
 
-import static eu.ggnet.dwoss.core.widget.UserInfoCompletionException.wrap;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_IMAGE_IDS;
 
 /**
@@ -39,10 +38,10 @@ public class ImportImageIdsAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.fileChooser().open().cf()
+        FileUtil.open(null).cf()
                 .thenCompose(f -> Ui.build().dialog().eval(() -> new ConfirmationDialog<>("ImageId Import", "ImageIds aus der Datei: " + f.getPath() + " importieren ?", f)).cf())
                 .thenApply(f -> TikaUtil.verifyExcel(f))
-                .thenAccept(f -> Ui.progress().wrap(wrap(() -> Dl.remote().lookup(ImageIdHandler.class).importMissing(new FileJacket("in", ".xls", f)))).run())
+                .thenAccept(f -> Progressor.global().run(() -> Dl.remote().lookup(ImageIdHandler.class).importMissing(new FileJacket("in", ".xls", f))))
                 .handle(Ui.handler());
     }
 }

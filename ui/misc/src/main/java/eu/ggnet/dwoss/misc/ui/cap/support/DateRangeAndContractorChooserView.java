@@ -29,14 +29,14 @@ import javafx.scene.paint.Color;
 
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.ui.*;
+import eu.ggnet.saft.core.ui.ResultProducer;
+import eu.ggnet.saft.core.ui.Title;
 
 /**
  * A Date range and contractor chooser.
  *
  * @author oliver.guenther
  */
-@Once(false)
 @Title("Datum und Lieferant")
 public class DateRangeAndContractorChooserView extends BorderPane implements ResultProducer<DateRangeAndContractorChooserView.RangeAndContractor> {
 

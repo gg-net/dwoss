@@ -50,11 +50,6 @@ public class MonitorPane extends BorderPane {
     @Executor
     private ScheduledExecutorService ses;
 
-    /**
-     * Workarround for the case, that the saftbackgrountask is created but the end has allready happend.
-     */
-    private final AtomicBoolean runningSaftBackgroundTask = new AtomicBoolean(false);
-
     public MonitorPane() {
         taskList = FXCollections.observableArrayList();
         taskListView = new ListView<>(taskList);
@@ -67,6 +62,7 @@ public class MonitorPane extends BorderPane {
                     setText(null);
                     setGraphic(null);
                 } else {
+                    // TODO: add title.
                     setText(null);
                     ProgressBar bar = new ProgressBar();
                     bar.setMaxWidth(MAX_VALUE);
@@ -86,41 +82,22 @@ public class MonitorPane extends BorderPane {
     }
 
     /**
-     * Helpermethod for the stupid saft background construct.
-     *
-     * @param running state of the required background activity.
-     */
-    void saftBackground(boolean running) {
-        if ( !runningSaftBackgroundTask.compareAndSet(!running, running) ) return; // Allready in the right state
-        if ( running ) submit(new SaftNaiveProgressTask(this));
-    }
-
-    /**
      * Allows submisson of task to be displayed and run on the global executor.
      *
      * @param t the task to display
      */
     void submit(Task<?> t) {
-        Platform.runLater(() -> {
-            // Eviction handler.
-            EventHandler<WorkerStateEvent> e = (WorkerStateEvent event) -> Platform.runLater(() -> taskList.remove(t));
-
-            t.setOnSucceeded(e);
-            t.setOnFailed(e);
-            t.setOnCancelled(e);
-
-            taskList.add(t);
-        });
+        // Remove Task from Tasklistview, if task is complete
+        EventHandler<WorkerStateEvent> e = (WorkerStateEvent event) -> Platform.runLater(() -> taskList.remove(t));
+        t.setOnSucceeded(e);
+        t.setOnFailed(e);
+        t.setOnCancelled(e);
+        
+        // Add Task to the UI
+        Platform.runLater(() -> taskList.add(t));
+        // Start task
         ses.execute(t);
     }
 
-    /**
-     * Returns a status of the saft background activity.
-     *
-     * @return a status of the saft background activity.
-     */
-    AtomicBoolean runningSaftBackgroundTask() {
-        return runningSaftBackgroundTask;
-    }
 
 }

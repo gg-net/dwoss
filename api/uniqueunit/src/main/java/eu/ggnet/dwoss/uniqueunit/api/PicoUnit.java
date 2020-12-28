@@ -19,7 +19,6 @@ package eu.ggnet.dwoss.uniqueunit.api;
 import java.io.Serializable;
 import java.util.Objects;
 
-import eu.ggnet.saft.api.IdSupplier;
 
 /**
  * The smallest representation of a unique unit.
@@ -28,7 +27,7 @@ import eu.ggnet.saft.api.IdSupplier;
  * @deprecated use SimpleUnit.
  */
 @Deprecated
-public class PicoUnit implements IdSupplier, Serializable {
+public class PicoUnit implements Serializable {
 
     public static final String MIME_TYPE = "dw-api/picounit";
 
@@ -42,7 +41,6 @@ public class PicoUnit implements IdSupplier, Serializable {
         if (shortDescription.trim().isEmpty()) throw new IllegalArgumentException("shortDescription must not be empty");
     }
 
-    @Override
     public String id() {
         return "" + uniqueUnitId;
     }

@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cap;
 
-import eu.ggnet.dwoss.core.widget.Dl;
-
 import java.awt.event.ActionEvent;
 
 import javafx.scene.control.Alert;
@@ -25,14 +23,14 @@ import javafx.scene.control.Alert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.core.widget.AccessableAction;
-import eu.ggnet.saft.core.*;
+import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.dwoss.redtapext.ee.reporting.RedTapeCloserManual;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXECUTE_MANUAL_CLOSING;
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
-
-import eu.ggnet.dwoss.redtapext.ee.reporting.RedTapeCloserManual;
 
 /**
  * Closes the last Week.
@@ -51,7 +49,7 @@ public class LastWeekCloseAction extends AccessableAction {
     public void actionPerformed(ActionEvent e) {
         Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "Möchten Sie den manuellen Wochen/Tagesabschluss durchführen ?"))
                 .cf().
-                thenAcceptAsync(f -> Ui.progress().wrap(() -> Dl.remote().lookup(RedTapeCloserManual.class).executeManual(Dl.local().lookup(Guardian.class).getUsername())).run(), UiCore.getExecutor())
+                thenAcceptAsync(f -> Progressor.global().run(() -> Dl.remote().lookup(RedTapeCloserManual.class).executeManual(Dl.local().lookup(Guardian.class).getUsername())), UiCore.getExecutor())
                 .handle(Ui.handler());
     }
 }

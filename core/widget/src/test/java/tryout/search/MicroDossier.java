@@ -16,13 +16,11 @@
  */
 package tryout.search;
 
-import eu.ggnet.saft.api.IdSupplier;
-
 /**
  *
  * @author oliver.guenther
  */
-public class MicroDossier implements SearchResult, IdSupplier {
+public class MicroDossier implements SearchResult {
 
     public final long dossierId;
 
@@ -38,7 +36,6 @@ public class MicroDossier implements SearchResult, IdSupplier {
         return shortDescription;
     }
 
-    @Override
     public String id() {
         return "" + dossierId;
     }

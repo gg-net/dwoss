@@ -14,7 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package test;
+
+import org.junit.Test;
+
+import eu.ggnet.dwoss.report.ui.main.ReportController;
+import eu.ggnet.saft.core.ui.FxController;
+
+import static org.junit.Assert.assertNull;
+
 /**
- * Tryout for cdi and fxml loader, remove after saft upgrade.
+ *
+ * @author oliver.guenther
  */
-package eu.ggnet.dwoss.assembly.remote.cdi;
+public class FxControllerTest {
+
+    @Test
+    public void validateAllContontroller() {
+        assertNull(FxController.validationMessage(ReportController.class));
+    }
+
+}

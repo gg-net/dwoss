@@ -26,6 +26,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 
 import eu.ggnet.dwoss.core.system.OutputPath;
+import eu.ggnet.dwoss.core.widget.FileUtil;
 import eu.ggnet.saft.core.Ui;
 
 /**
@@ -43,7 +44,7 @@ public class OpenDirectoryToolbarButton extends Button {
         super(null, new ImageView(loadLargeIcon().toExternalForm()));
         Tooltip tip = new Tooltip("Öffnet das Ausgabeverzeichnis");
         Tooltip.install(this, tip);
-        setOnAction(e -> Ui.exec(() -> Ui.osOpen(new File(outputPath))));
+        setOnAction(e -> Ui.exec(() -> FileUtil.osOpen(new File(outputPath))));
     }
 
     static URL loadLargeIcon() {

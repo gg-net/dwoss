@@ -16,19 +16,18 @@
  */
 package eu.ggnet.dwoss.stock.ui.transactions;
 
-import eu.ggnet.saft.core.ui.ResultProducer;
-import eu.ggnet.saft.core.ui.Title;
-import eu.ggnet.saft.core.ui.FxController;
+import javax.inject.Inject;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
+import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
-import eu.ggnet.dwoss.core.widget.Dl;
-import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.Saft;
+import eu.ggnet.saft.core.ui.*;
 
 /**
  * FXML Controller class
@@ -39,6 +38,12 @@ import eu.ggnet.saft.core.Ui;
 public class CreateSelectionController implements FxController, ResultProducer<CreateSelectionController> {
 
     private boolean ok = false;
+
+    @Inject
+    private Saft saft;
+
+    @Inject
+    private RemoteDl remote;
 
     @FXML
     private GridPane root;
@@ -56,18 +61,18 @@ public class CreateSelectionController implements FxController, ResultProducer<C
     void initialize() {
         target.setCellFactory(new StockListCell.Factory());
         target.setButtonCell(new StockListCell());
-        target.getItems().addAll(Dl.remote().lookup(StockAgent.class).findAll(Stock.class));
+        target.getItems().addAll(remote.lookup(StockAgent.class).findAll(Stock.class));
     }
 
     @FXML
     void okPressed() {
         ok = true;
-        Ui.closeWindowOf(root);
+        saft.closeWindowOf(root);
     }
 
     @FXML
     void cancelPressed() {
-        Ui.closeWindowOf(root);
+        saft.closeWindowOf(root);
     }
 
     public Stock target() {

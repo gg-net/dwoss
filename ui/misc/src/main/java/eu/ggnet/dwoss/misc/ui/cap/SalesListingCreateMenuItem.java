@@ -21,9 +21,10 @@ import java.util.Objects;
 import javafx.scene.control.MenuItem;
 
 import eu.ggnet.dwoss.core.system.GlobalConfig;
+import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.Progressor;
 import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration;
 import eu.ggnet.dwoss.misc.ee.listings.SalesListingProducer;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 
 /**
@@ -39,7 +40,7 @@ public class SalesListingCreateMenuItem extends MenuItem {
         setText(config.name);
         setOnAction((e) -> {
             Ui.exec(() -> {
-                Ui.progress().title(config.name).call(() -> {
+                Progressor.global().run(config.name, () -> {
                     Dl.remote().lookup(SalesListingProducer.class).generateListings(config).forEach(fj -> fj.toFile(GlobalConfig.APPLICATION_PATH_OUTPUT));
                     return null;
                 });
