@@ -30,9 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.system.autolog.AutoLogger;
-import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.dwoss.rights.api.User;
-import eu.ggnet.dwoss.rights.api.UserApi;
+import eu.ggnet.dwoss.rights.api.*;
 import eu.ggnet.dwoss.rights.ee.assist.Rights;
 import eu.ggnet.dwoss.rights.ee.entity.Operator;
 import eu.ggnet.dwoss.rights.ee.entity.Persona;
@@ -41,8 +39,6 @@ import eu.ggnet.dwoss.rights.ee.op.PasswordUtil;
 import com.querydsl.jpa.impl.JPAQuery;
 
 import static eu.ggnet.dwoss.rights.ee.entity.QOperator.operator;
-
-import eu.ggnet.dwoss.rights.api.PreAuthenticationHook;
 
 /**
  * Implementation of {@link UserApi}.
@@ -73,11 +69,9 @@ public class UserApiBean implements UserApi {
         Operator op = new JPAQuery<Operator>(em).from(operator).where(operator.username.eq(username)).fetchOne();
         if ( op == null ) throw new UserInfoException("Benutzer " + username + " existiert nicht.");
 
-        if ( !service.isAmbiguous() && !service.isUnsatisfied() ) {
-            if ( service.get().authenticate(username, password) ) {
-                L.info("login() via AuthenticationService successful");
-                return op.toApiUser();
-            }
+        if ( !service.isAmbiguous() && !service.isUnsatisfied() && service.get().authenticate(username, password) ) {
+            L.info("login() via PreAuthenticationHook {} successful", service.get());
+            return op.toApiUser();
         } else {
             if ( op.getPassword() != null && op.getSalt() != null
                     && Arrays.equals(op.getPassword(), PasswordUtil.hashPassword(password, op.getSalt())) ) {

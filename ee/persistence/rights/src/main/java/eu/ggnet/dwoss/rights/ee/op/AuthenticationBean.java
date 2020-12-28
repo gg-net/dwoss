@@ -16,7 +16,8 @@
  */
 package eu.ggnet.dwoss.rights.ee.op;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.enterprise.inject.Instance;
@@ -25,15 +26,17 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.dwoss.rights.ee.entity.Operator;
 import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.dwoss.rights.ee.eao.OperatorEao;
+import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.PreAuthenticationHook;
+import eu.ggnet.dwoss.rights.ee.eao.OperatorEao;
+import eu.ggnet.dwoss.rights.ee.entity.Operator;
 
 /**
  *
  * @author Bastian Venz
+ *
+ * @deprecated Use UserApi.authenticate()
  */
 @Deprecated
 @Stateless
@@ -62,11 +65,9 @@ public class AuthenticationBean implements Authentication {
         //find users by Username
         Operator op = userEao.findByUsername(username);
         if ( op == null ) throw new UserInfoException("User " + username + " ist noch nicht angelegt");
-        if ( !service.isAmbiguous() && !service.isUnsatisfied() ) {
-            if ( service.get().authenticate(username, password) ) {
-                L.info("login(user={}, password=xxxxxxx) via AuthenticationService successful.", username);
-                return op.toDto();
-            }
+        if ( !service.isAmbiguous() && !service.isUnsatisfied() && service.get().authenticate(username, password) ) {
+            L.info("login(user={}, password=xxxxxxx) via AuthenticationService successful.", username);
+            return op.toDto();
         } else {
             if ( op.getPassword() != null && op.getSalt() != null
                     && Arrays.equals(op.getPassword(), PasswordUtil.hashPassword(password, op.getSalt())) ) {
