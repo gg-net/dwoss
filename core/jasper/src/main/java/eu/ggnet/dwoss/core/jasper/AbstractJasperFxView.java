@@ -14,15 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.redtapext.ui.cao.jasper;
+package eu.ggnet.dwoss.core.jasper;
 
 import java.awt.EventQueue;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.List;
-import java.util.function.Consumer;
 
-import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
@@ -34,7 +32,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-import javafx.stage.Stage;
 
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.export.JRXlsExporter;
@@ -42,8 +39,7 @@ import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.ui.ResultProducer;
+import eu.ggnet.saft.core.UiCore;
 
 /**
  * An simple approach to JasperViewer in JavaFX.
@@ -51,7 +47,7 @@ import eu.ggnet.saft.core.ui.ResultProducer;
  * @author Gustavo Fragoso, Oliver Guenther
  * @version 3.3
  */
-public class JasperFxView extends StackPane implements Consumer<JasperFxViewData>, ResultProducer<JasperFxViewResult> {
+public abstract class AbstractJasperFxView extends StackPane {
 
     private final Button btnPrint;
 
@@ -69,13 +65,11 @@ public class JasperFxView extends StackPane implements Consumer<JasperFxViewData
 
     private final Button btnZoomOut;
 
-    private final Button btnEmail;
-
     private final ImageView report;
 
     private final Label lblReportPages;
 
-    private Stage view;
+    protected final HBox menu;
 
     private TextField txtPage;
 
@@ -89,30 +83,24 @@ public class JasperFxView extends StackPane implements Consumer<JasperFxViewData
 
     private final SimpleIntegerProperty currentPage = new SimpleIntegerProperty(this, "currentPage", 1);
 
-    private JasperFxViewData in;
-
-    private boolean correctlyBriefed = false;
-
-    public JasperFxView() {
+    public AbstractJasperFxView() {
 
         setOnKeyPressed((e) -> {
             if ( e.isControlDown() && e.getCode() == KeyCode.P ) print();
         });
 
-        btnPrint = new Button(null, new ImageView(getClass().getResource("printer.png").toExternalForm()));
-        btnSave = new Button(null, new ImageView(getClass().getResource("save.png").toExternalForm()));
-        btnEmail = new Button(null, new ImageView(getClass().getResource("mail.png").toExternalForm()));
-        btnBackPage = new Button(null, new ImageView(getClass().getResource("backimg.png").toExternalForm()));
-        btnFirstPage = new Button(null, new ImageView(getClass().getResource("firstimg.png").toExternalForm()));
-        btnNextPage = new Button(null, new ImageView(getClass().getResource("nextimg.png").toExternalForm()));
-        btnLastPage = new Button(null, new ImageView(getClass().getResource("lastimg.png").toExternalForm()));
-        btnZoomIn = new Button(null, new ImageView(getClass().getResource("zoomin.png").toExternalForm()));
-        btnZoomOut = new Button(null, new ImageView(getClass().getResource("zoomout.png").toExternalForm()));
+        btnPrint = new Button(null, new ImageView(AbstractJasperFxView.class.getResource("printer.png").toExternalForm()));
+        btnSave = new Button(null, new ImageView(AbstractJasperFxView.class.getResource("save.png").toExternalForm()));
+        btnBackPage = new Button(null, new ImageView(AbstractJasperFxView.class.getResource("backimg.png").toExternalForm()));
+        btnFirstPage = new Button(null, new ImageView(AbstractJasperFxView.class.getResource("firstimg.png").toExternalForm()));
+        btnNextPage = new Button(null, new ImageView(AbstractJasperFxView.class.getResource("nextimg.png").toExternalForm()));
+        btnLastPage = new Button(null, new ImageView(AbstractJasperFxView.class.getResource("lastimg.png").toExternalForm()));
+        btnZoomIn = new Button(null, new ImageView(AbstractJasperFxView.class.getResource("zoomin.png").toExternalForm()));
+        btnZoomOut = new Button(null, new ImageView(AbstractJasperFxView.class.getResource("zoomout.png").toExternalForm()));
 
         btnPrint.setPrefSize(30, 30);
 
         btnSave.setPrefSize(30, 30);
-        btnEmail.setPrefSize(30, 30);
         btnBackPage.setPrefSize(30, 30);
         btnFirstPage.setPrefSize(30, 30);
         btnNextPage.setPrefSize(30, 30);
@@ -122,7 +110,6 @@ public class JasperFxView extends StackPane implements Consumer<JasperFxViewData
 
         btnPrint.setOnAction(event -> print());
         btnSave.setOnAction(event -> saveToFile());
-        btnEmail.setOnAction(e -> mail());
 
         btnBackPage.setOnAction(event -> renderPage(getCurrentPage() - 1));
         btnFirstPage.setOnAction(event -> renderPage(1));
@@ -144,11 +131,11 @@ public class JasperFxView extends StackPane implements Consumer<JasperFxViewData
 
         lblReportPages = new Label("/ 1");
 
-        HBox menu = new HBox(5);
+        menu = new HBox(5);
         menu.setAlignment(Pos.CENTER);
         menu.setPadding(new Insets(5));
         menu.setPrefHeight(50.0);
-        menu.getChildren().addAll(btnPrint, btnSave, btnEmail, btnFirstPage, btnBackPage, txtPage,
+        menu.getChildren().addAll(btnPrint, btnSave, btnFirstPage, btnBackPage, txtPage,
                 lblReportPages, btnNextPage, btnLastPage, btnZoomIn, btnZoomOut);
 
         // This imageview will preview the pdf inside scrollpane
@@ -169,7 +156,7 @@ public class JasperFxView extends StackPane implements Consumer<JasperFxViewData
         scroll.setFitToHeight(true);
 
         BorderPane bp = new BorderPane();
-        
+
         bp.setTop(menu);
         bp.setCenter(scroll);
         getChildren().add(bp);
@@ -204,35 +191,12 @@ public class JasperFxView extends StackPane implements Consumer<JasperFxViewData
         return currentPage;
     }
 
-    private void mail() {
-        ProgressIndicator pi = new ProgressIndicator();
-        pi.setMaxSize(100, 100);
-        getChildren().add(pi);
-        setDisabled(true);
-        
-        Ui.exec(() -> {
-            try {
-                in.mailCallback().get().run();
-                correctlyBriefed = true;
-                Ui.build(this).alert("Dokument per Mail versendet");
-            } catch (Exception ex) {
-                Ui.handle(ex);
-            } finally {
-                Platform.runLater(() -> {
-                    JasperFxView.this.getChildren().remove(pi);
-                    JasperFxView.this.setDisabled(false);
-                });
-            }
-        });
-    }
-
-    private void print() {
+    protected void print() {
         EventQueue.invokeLater(() -> {
             try {
                 JasperPrintManager.printReport(jasperPrint, true);
-                correctlyBriefed = true;
             } catch (JRException ex) {
-                throw new RuntimeException(ex);
+                UiCore.global().handle(btnPrint, ex);
             }
         });
     }
@@ -249,7 +213,7 @@ public class JasperFxView extends StackPane implements Consumer<JasperFxViewData
         chooser.getExtensionFilters().addAll(pdf, html, xml, xls, xlsx);
         chooser.setSelectedExtensionFilter(pdf);
 
-        File file = chooser.showSaveDialog(view);
+        File file = chooser.showSaveDialog(null);
 
         if ( file != null ) {
             List<String> selectedExtension = chooser.getSelectedExtensionFilter().getExtensions();
@@ -270,7 +234,6 @@ public class JasperFxView extends StackPane implements Consumer<JasperFxViewData
         btnFirstPage.setDisable(isFirstPage);
         btnNextPage.setDisable(isLastPage);
         btnLastPage.setDisable(isLastPage);
-        btnEmail.setDisable(!in.mailCallback().isPresent());
     }
 
     // ***********************************************
@@ -410,10 +373,8 @@ public class JasperFxView extends StackPane implements Consumer<JasperFxViewData
         report.setFitWidth(imageWidth + factor);
     }
 
-    @Override
-    public void accept(JasperFxViewData in) {
-        this.in = in;
-        this.jasperPrint = in.jasperPrint();
+    protected void setJasperPrint(JasperPrint jasperPrint) {
+        this.jasperPrint = jasperPrint;
 
         imageHeight = jasperPrint.getPageHeight() + 284;
         imageWidth = jasperPrint.getPageWidth() + 201;
@@ -423,11 +384,6 @@ public class JasperFxView extends StackPane implements Consumer<JasperFxViewData
         if ( reportPages > 0 ) {
             renderPage(1);
         }
-    }
-
-    @Override
-    public JasperFxViewResult getResult() {
-        return new JasperFxViewResult.Builder().document(in.document()).correctlyBriefed(correctlyBriefed).build();
     }
 
 }

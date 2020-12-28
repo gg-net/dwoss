@@ -17,6 +17,7 @@
 package tryout;
 
 import javafx.application.Application;
+import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 import eu.ggnet.dwoss.core.common.UserInfoException;
@@ -25,27 +26,39 @@ import eu.ggnet.dwoss.mandator.sample.impl.Sample;
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapeSamples;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtapext.ee.DocumentSupporterOperation;
-import eu.ggnet.dwoss.redtapext.ui.cao.jasper.JasperFxView;
-import eu.ggnet.dwoss.redtapext.ui.cao.jasper.JasperFxViewData;
-import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.dwoss.redtapext.ui.cao.jasper.DocumentJasperFxView;
+import eu.ggnet.saft.core.*;
+import eu.ggnet.dwoss.redtapext.ui.cao.jasper.DocumentJasper;
 
 /**
  *
  * @author oliver.guenther
  */
-public class JasperFxViewTryout extends Application {
+public class DocumentJasperFxViewTryout {
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
+    public static class DocumentJasperFxViewApplication extends Application {
 
-        UiCore.startJavaFx(primaryStage, () -> {
+        @Override
+        public void start(Stage primaryStage) throws Exception {
 
+            UiCore.continueJavaFx(UiUtil.startup(primaryStage, () -> {
+
+                Button b = new Button("Show Document");
+                b.setOnAction(e -> {
+                    Ui.build(b).title("DocumentViewer").fx()
+                            .eval(() -> createDocumentJasper(), DocumentJasperFxView.class).cf()
+                            .thenAccept(out -> System.out.println("IsBriedfed:" + out.correctlyBriefed()));
+                });
+                return b;
+            }));
+        }
+
+        private DocumentJasper createDocumentJasper() throws UserInfoException {
             DocumentSupporterOperation documentSupporter = new DocumentSupporterOperation();
             documentSupporter.setMandator(Sample.MANDATOR);;
-            JasperFxView jp = new JasperFxView();
+            DocumentJasperFxView jp = new DocumentJasperFxView();
             Document doc = RedTapeSamples.getDocument();
-            try {
-            JasperFxViewData in = new JasperFxViewData.Builder()
+            DocumentJasper in = new DocumentJasper.Builder()
                     .document(doc)
                     .jasperPrint(documentSupporter.render(doc, DocumentViewType.DEFAULT))
                     .mailCallback(() -> {
@@ -56,16 +69,12 @@ public class JasperFxViewTryout extends Application {
                         } catch (InterruptedException ex) {
                         }
                     }).build();
-            jp.accept(in);
-            } catch (UserInfoException ex) {
-                throw new RuntimeException(ex);
-            }
-            return jp;
-        });
+            return in;
+        }
     }
 
     public static void main(String[] args) {
-        launch(args);
+        Application.launch(DocumentJasperFxViewApplication.class, args);
     }
 
 }

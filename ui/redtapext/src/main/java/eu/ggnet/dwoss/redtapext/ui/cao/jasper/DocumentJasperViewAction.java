@@ -44,7 +44,7 @@ import eu.ggnet.statemachine.StateTransition;
  *
  * @author pascal.perau
  */
-public class DocumentViewAction extends AbstractAction {
+public class DocumentJasperViewAction extends AbstractAction {
 
     private Document document;
 
@@ -55,7 +55,7 @@ public class DocumentViewAction extends AbstractAction {
     private long customerId;
 
     @SuppressWarnings("OverridableMethodCallInConstructor")
-    public DocumentViewAction(Document document, DocumentViewType type, RedTapeController controller, long customerId) {
+    public DocumentJasperViewAction(Document document, DocumentViewType type, RedTapeController controller, long customerId) {
         this.document = document;
         this.controller = controller;
         this.type = type;
@@ -79,14 +79,14 @@ public class DocumentViewAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.build(controller.getView()).fx().eval(() -> {
-            JasperFxViewData.Builder bin = new JasperFxViewData.Builder()
+            DocumentJasper.Builder bin = new DocumentJasper.Builder()
                     .document(document)
                     .jasperPrint(Dl.remote().lookup(DocumentSupporter.class).render(document, type));
             if ( !StringUtils.isBlank(Dl.remote().lookup(CustomerService.class).defaultEmailCommunication(customerId)) )
                 bin.mailCallback(() -> Dl.remote().lookup(DocumentSupporter.class).mail(document, type));
 
             return bin.build();
-        }, () -> new JasperFxView())
+        }, () -> new DocumentJasperFxView())
                 .cf()
                 .thenApplyAsync(r -> updateBriefedInDatabase(r), UiCore.getExecutor())
                 .thenAcceptAsync(od -> od.ifPresent(d -> controller.reloadSelectionOnStateChange(d)), EventQueue::invokeLater)
@@ -102,7 +102,7 @@ public class DocumentViewAction extends AbstractAction {
      * @param result the result of the view.
      * @return a dossier if something changed.
      */
-    private Optional<Dossier> updateBriefedInDatabase(JasperFxViewResult result) {
+    private Optional<Dossier> updateBriefedInDatabase(DocumentJasperResult result) {
         if ( !result.correctlyBriefed() ) return Optional.empty();
         CustomerMetaData customer = Dl.remote().lookup(CustomerService.class).asCustomerMetaData(customerId);
         CustomerDocument customerDocument = new CustomerDocument(customer.flags(), document, customer.shippingCondition(), customer.paymentMethod());

@@ -16,12 +16,9 @@
  */
 package eu.ggnet.dwoss.redtape.ee.assist;
 
-import eu.ggnet.dwoss.core.common.values.PositionType;
-import eu.ggnet.dwoss.core.common.values.PaymentMethod;
-import eu.ggnet.dwoss.core.common.values.DocumentType;
-
 import java.util.Collection;
 
+import eu.ggnet.dwoss.core.common.values.*;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 
 /**
@@ -31,8 +28,8 @@ import eu.ggnet.dwoss.redtape.ee.entity.*;
  */
 public class RedTapeSamples {
 
-    private final static double TAX = 0.19;
-    
+    private final static double TAX = TaxType.GENERAL_SALES_TAX_DE_19_PERCENT.tax;
+
     private final static String LOREM_IPSUM = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor"
             + " invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et"
             + " ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, "
@@ -56,6 +53,8 @@ public class RedTapeSamples {
         document.setInvoiceAddress(a);
         document.setShippingAddress(a2);
         document.setIdentifier("TestIdDoc");
+        document.setType(DocumentType.ORDER);
+        document.setTaxType(TaxType.GENERAL_SALES_TAX_DE_19_PERCENT);
         Dossier dossier = new Dossier();
         document.setDossier(dossier);
         dossier.setComment("Epic Fail Comment");
@@ -63,7 +62,7 @@ public class RedTapeSamples {
         dossier.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
         dossier.setDispatch(true);
         dossier.setIdentifier("DosId");
-        document.setType(DocumentType.ORDER);
+
         //Create Positions
         Position p1 = Position.builder().amount(1).type(PositionType.UNIT).uniqueUnitId(1).price(420.17).tax(TAX).name("Packard Bell OneTwo S A4146 GE | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").description("AMD E Series E-300 (1.3 Ghz), Memory (in MB): 4096, AMD Radeon HD 6000 Series 6310, Festplatte(n): 500GB HDD, Optische(s) Laufwerk(e): DVD Super Multi, Display: 20.1\" (51,05 cm), Matt, Full HD (1920x1080), 16:9, Farbe: schwarz-silber, Ausstattung: Webcam, Kartenleser, Windows 7 Home Premium 64").build();
         Position p2 = Position.builder().amount(214).type(PositionType.SERVICE).name("Service").price(7.5).tax(TAX).description("Service Description").build();
@@ -74,7 +73,7 @@ public class RedTapeSamples {
         Position p7 = Position.builder().amount(1).type(PositionType.UNIT).uniqueUnitId(1).price(50.25).tax(TAX).name("Acer Aspire Ungrade | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").description("Ein Menge an ungrader Info").build();
         Position p8 = Position.builder().amount(1).type(PositionType.UNIT).uniqueUnitId(1).price(50.).tax(TAX).name("Acer Aspire Blub | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").description("Ein Menge an Info").build();
         Position p9 = Position.builder().amount(1).type(PositionType.UNIT).uniqueUnitId(1).price(50.).tax(TAX).name("Acer Aspire Blub | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").description(LOREM_IPSUM).build();
-        Position p10 = Position.builder().amount(1).type(PositionType.COMMENT).name("Comment").description(LOREM_IPSUM + " " + LOREM_IPSUM).build();
+        Position p10 = Position.builder().amount(1).type(PositionType.COMMENT).name("Comment").tax(TAX).description(LOREM_IPSUM + " " + LOREM_IPSUM).build();
         Position p11 = Position.builder().amount(1).type(PositionType.SERVICE).name("Service").price(2.).tax(TAX).description("Service Description").build();
         Position p12 = Position.builder().amount(1).type(PositionType.SHIPPING_COST).name("Shipping cost").description("Shipping cost").tax(TAX).price(16.5).build();
         Position p13 = Position.builder().amount(1).type(PositionType.UNIT).uniqueUnitId(1).price(933.61).tax(TAX).name("Acer Aspire Blub | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").description("Intel Core I7 i7-2600 (3.4 Ghz, 4 Kern(e)), Memory (in MB): 8192, nVidia GeForce 500 Series GTX 570 HD, Festplatte(n): 2000GB HDD, 32GB SSD, Optische(s) Laufwerk(e): DVD Super Multi, Blu-Ray Combo, , Farbe: schwarz-orange, Ausstattung: USB 3, PS2, Kartenleser, Videokonnektor(en) : DVI, HDMI, Windows 7 Home Premium 64, Bemerkung: Kratzer auf dem Gehäuse, Untere Fronklappe fehlt, Geänderte Konfiguration: 1x DVD-ROM, 1x DVD-SuperMulti, kein Blu-ray. W-Lan. W-Lan-Antenne dabei.").build();

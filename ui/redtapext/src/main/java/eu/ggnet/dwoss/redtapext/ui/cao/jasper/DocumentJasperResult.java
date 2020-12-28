@@ -16,46 +16,21 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao.jasper;
 
-import java.util.Optional;
-
-import net.sf.jasperreports.engine.JasperPrint;
-
 import org.inferred.freebuilder.FreeBuilder;
 
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
-import eu.ggnet.saft.core.ui.ExceptionWrapper.RunableWithException;
 
 /**
- * Container for the all inputs of the JasperFxView. 
- * 
- * Most of the values are neede for the mail feature.
- * 
+ *
  * @author oliver.guenther
  */
 @FreeBuilder
-public interface JasperFxViewData {
-    
-    /**
-     * The rendered print.
-     * 
-     * @return the rendered print
-     */
-    JasperPrint jasperPrint();
-    
-    /**
-     * The relevant document.
-     * 
-     * @return relevant document
-     */
+public interface DocumentJasperResult {
+
     Document document();
-    
-    
-    /**
-     * Callback, if the document can be mailed.
-     * 
-     * @return the callback.
-     */
-    Optional<RunableWithException> mailCallback();
-   
-    class Builder extends JasperFxViewData_Builder {};
+
+    boolean correctlyBriefed();
+
+    class Builder extends DocumentJasperResult_Builder {
+    };
 }

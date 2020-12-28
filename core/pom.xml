@@ -14,6 +14,7 @@
         <module>common</module>
         <module>system</module>
         <module>widget</module>
+        <module>jasper</module>
     </modules>
 
 </project>
