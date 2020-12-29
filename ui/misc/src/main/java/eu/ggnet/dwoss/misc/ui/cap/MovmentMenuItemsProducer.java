@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.misc.ui.cap;
 
-import java.awt.EventQueue;
 import java.io.File;
 import java.util.*;
 
@@ -26,12 +25,10 @@ import javax.inject.Inject;
 
 import javafx.scene.control.*;
 
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.view.JasperViewer;
-
 import org.slf4j.Logger;
 
 import eu.ggnet.dwoss.core.common.FileJacket;
+import eu.ggnet.dwoss.core.jasper.DefaultJasperFxView;
 import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.core.widget.saft.Failure;
 import eu.ggnet.dwoss.core.widget.saft.Reply;
@@ -73,12 +70,7 @@ public class MovmentMenuItemsProducer {
             Objects.requireNonNull(listType, "listType must not be null");
             setText(listType.description + " - " + stock.shortDescription + " - PDF");
             setOnAction((e) -> {
-                Ui.exec(() -> {
-                    // TODO: Switch to JavaFX Implementation of RedTape.
-                    JasperPrint jasper = Progressor.global().run(() -> Dl.remote().lookup(MovementListingProducer.class).generateList(listType, stock));
-                    JasperViewer viewer = new JasperViewer(jasper, false);
-                    EventQueue.invokeLater(() -> viewer.setVisible(true));
-                });
+                Ui.build().fx().show(() -> Progressor.global().run(() -> Dl.remote().lookup(MovementListingProducer.class).generateList(listType, stock)), DefaultJasperFxView.class);
             });
         }
     }

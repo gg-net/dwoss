@@ -23,6 +23,7 @@ import javafx.application.Application;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.assembly.client.support.ContainerConfiguration;
+import eu.ggnet.dwoss.core.jasper.DefaultJasperFxView;
 import eu.ggnet.dwoss.core.system.GlobalConfig;
 import eu.ggnet.dwoss.core.system.autolog.LoggerProducer;
 import eu.ggnet.dwoss.core.widget.cdi.WidgetProducers;
@@ -65,6 +66,7 @@ public class DwOssMain {
         cc.addPackages(true, SearchCask.class); // search.ui
         cc.addPackages(LoggerProducer.class); // core.system.autolog
         cc.addPackages(WidgetProducers.class); // core.widget.cdi
+        cc.addPackages(DefaultJasperFxView.class); // core.jasper
         cc.addPackages(GlobalConfig.class); // Global Config produces.
 
         Application.launch(DwOssApplication.class, args);

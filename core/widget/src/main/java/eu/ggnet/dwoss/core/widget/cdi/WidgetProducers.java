@@ -21,6 +21,7 @@ import javax.enterprise.inject.Produces;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.Progressor;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.core.widget.dl.LocalDl;
 import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
@@ -36,6 +37,9 @@ public class WidgetProducers {
 
     @Produces
     public static LocalDl localDl = Dl.local();
+
+    @Produces
+    public static Progressor progressor = Progressor.global();
 
     @Produces
     public static Guardian guardian() {

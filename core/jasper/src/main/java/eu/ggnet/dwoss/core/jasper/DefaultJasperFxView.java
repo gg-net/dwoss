@@ -24,7 +24,7 @@ import net.sf.jasperreports.engine.JasperPrint;
  *
  * @author oliver.guenther
  */
-public class DefaultJapserFxView extends AbstractJasperFxView implements Consumer<JasperPrint> {
+public class DefaultJasperFxView extends AbstractJasperFxView implements Consumer<JasperPrint> {
 
     @Override
     public void accept(JasperPrint print) {
