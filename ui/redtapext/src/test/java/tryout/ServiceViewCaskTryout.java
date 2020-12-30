@@ -16,17 +16,16 @@
  */
 package tryout;
 
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.dwoss.core.widget.Dl;
-
 import javax.swing.JLabel;
 
-import eu.ggnet.dwoss.redtapext.ui.cao.document.position.ServiceViewCask;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.dl.RemoteLookup;
 import eu.ggnet.dwoss.core.widget.saft.OkCancelWrap;
+import eu.ggnet.dwoss.redtapext.ui.cao.document.position.ServiceViewCask;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
 
-import static eu.ggnet.dwoss.core.common.values.TaxType.GENERAL_SALES_TAX_DE_CORONA_16_PERCENT;
+import static eu.ggnet.dwoss.core.common.values.TaxType.GENERAL_SALES_TAX_DE_19_PERCENT;
 
 /**
  *
@@ -35,8 +34,8 @@ import static eu.ggnet.dwoss.core.common.values.TaxType.GENERAL_SALES_TAX_DE_COR
 public class ServiceViewCaskTryout {
 
     public static void main(String[] args) {
-        
-        Dl.local().add(RemoteLookup.class,new RemoteLookup() {
+
+        Dl.local().add(RemoteLookup.class, new RemoteLookup() {
             @Override
             public <T> boolean contains(Class<T> clazz) {
                 return false;
@@ -48,12 +47,12 @@ public class ServiceViewCaskTryout {
             }
         });
 
-            UiCore.startSwing(() -> new JLabel("Main Applikation"));
+        UiCore.startSwing(() -> new JLabel("Main Applikation"));
 
 // () -> Position.builder().type(PositionType.SERVICE).price(30.).build()
-            Ui.build().swing().eval(() -> OkCancelWrap.consumerVetoResult(new ServiceViewCask(GENERAL_SALES_TAX_DE_CORONA_16_PERCENT)))
-                    .opt().ifPresent(System.out::println);
-        
+        Ui.build().swing().eval(() -> OkCancelWrap.consumerVetoResult(new ServiceViewCask(GENERAL_SALES_TAX_DE_19_PERCENT)))
+                .opt().ifPresent(System.out::println);
+
     }
 
 }

@@ -48,27 +48,27 @@ public enum TaxType {
     /**
      * Tax value, must never Change.
      */
-    public final double tax;
+    private final double tax;
 
     /**
      * Short name of the tax type, typical usage on buttons.
      */
-    public final String description;
+    private final String description;
 
     /**
      * A more detailed detailedDescription about the tax type, may be used as tooltip.
      */
-    public final String detailedDescription; // Usefull as Tooltip
+    private final String detailedDescription; // Usefull as Tooltip
 
     /**
      * A optional Text, that must be displayed in invoices.
      */
-    public final String documentText;
+    private final String documentText;
 
     /**
      * Code used in the exporter to finacial software (sage in our case).
      */
-    public final String taxCode;
+    private final String taxCode;
 
     private TaxType(double tax, String name, String description, String documentText, String taxCode) {
         this.tax = tax;
@@ -82,10 +82,8 @@ public enum TaxType {
      * Returs the tax
      *
      * @return the tax
-     * @deprecated use field tax
      */
-    @Deprecated
-    public double getTax() {
+    public double tax() {
         return tax;
     }
 
@@ -93,10 +91,8 @@ public enum TaxType {
      * A short (german) description.
      *
      * @return a short (german) description.
-     * @deprecated use field description.
      */
-    @Deprecated
-    public String getName() {
+    public String description() {
         return description;
     }
 
@@ -104,10 +100,8 @@ public enum TaxType {
      * Returns a detailed description
      *
      * @return a detailed desctiption
-     * @deprecated use field detailedDescription
      */
-    @Deprecated
-    public String getDetailedDescription() {
+    public String detailedDescription() {
         return detailedDescription;
     }
 
@@ -115,10 +109,8 @@ public enum TaxType {
      * Returns a text in the document.
      *
      * @return text for the document.
-     * @deprecated use field documentText
      */
-    @Deprecated
-    public String getDocumentText() {
+    public String documentText() {
         return documentText;
     }
 
@@ -126,10 +118,8 @@ public enum TaxType {
      * Returns a tax code.
      *
      * @return a tax code
-     * @deprecated use field taxCode
      */
-    @Deprecated
-    public String getTaxCode() {
+    public String taxCode() {
         return taxCode;
     }
 

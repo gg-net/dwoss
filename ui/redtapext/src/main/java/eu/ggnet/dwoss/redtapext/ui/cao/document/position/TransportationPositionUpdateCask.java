@@ -32,7 +32,7 @@ public class TransportationPositionUpdateCask extends javax.swing.JPanel {
 
     private Converter<Double, String> stringConverter = new TransportationPositionUpdateCask.CurrencyConverter();
 
-    private Converter<Double, String> taxedConverter = new TransportationPositionUpdateCask.CurrencyConverter(GlobalConfig.DEFAULT_TAX.getTax());
+    private Converter<Double, String> taxedConverter = new TransportationPositionUpdateCask.CurrencyConverter(GlobalConfig.DEFAULT_TAX.tax());
 
     private Position position;
 

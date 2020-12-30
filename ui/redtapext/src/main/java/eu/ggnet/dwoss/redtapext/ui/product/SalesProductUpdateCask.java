@@ -33,7 +33,7 @@ public class SalesProductUpdateCask extends javax.swing.JPanel {
 
     private Converter<Double, String> stringConverter = new SalesProductUpdateCask.CurrencyConverter();
 
-    private Converter<Double, String> taxedConverter = new SalesProductUpdateCask.CurrencyConverter(GlobalConfig.DEFAULT_TAX.getTax());
+    private Converter<Double, String> taxedConverter = new SalesProductUpdateCask.CurrencyConverter(GlobalConfig.DEFAULT_TAX.tax());
 
     private class CurrencyConverter extends Converter<Double, String> {
 

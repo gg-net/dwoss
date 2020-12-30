@@ -1,14 +1,11 @@
 package eu.ggnet.dwoss.redtape.test;
 
-import eu.ggnet.dwoss.core.common.values.DocumentType;
-import eu.ggnet.dwoss.core.common.values.TaxType;
-import eu.ggnet.dwoss.core.common.values.PositionType;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.junit.Test;
 
+import eu.ggnet.dwoss.core.common.values.*;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 
 import static org.junit.Assert.*;
@@ -108,7 +105,7 @@ public class DocumentTest {
         //change Tax Type
         doc2.setTaxType(TaxType.UNTAXED);
         assertFalse(doc1.equalsContent(doc2));
-        doc2.setTaxType(TaxType.GENERAL_SALES_TAX_DE_CORONA_16_PERCENT);
+        doc2.setTaxType(TaxType.GENERAL_SALES_TAX_DE_19_PERCENT);
         assertTrue(doc1.equalsContent(doc2));
 
         //change addresses

@@ -18,10 +18,10 @@ package eu.ggnet.dwoss.core.system;
 
 import javax.enterprise.inject.Produces;
 
-import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.core.common.values.TaxType;
+import eu.ggnet.dwoss.core.system.util.Utils;
 
-import static eu.ggnet.dwoss.core.common.values.TaxType.GENERAL_SALES_TAX_DE_CORONA_16_PERCENT;
+import static eu.ggnet.dwoss.core.common.values.TaxType.GENERAL_SALES_TAX_DE_19_PERCENT;
 
 /**
  * Constants, which normaly whould be confiured in the application.
@@ -34,14 +34,15 @@ public final class GlobalConfig {
     /**
      * A central place there the client can put exports.
      */
-    @Produces @OutputPath
+    @Produces
+    @OutputPath
     public static final String APPLICATION_PATH_OUTPUT = Utils.getTempDirectory("output") + "/";
 
     /**
      * The actual tax.
      * Not really good here, but acceptable for now.
      */
-    public static final TaxType DEFAULT_TAX = GENERAL_SALES_TAX_DE_CORONA_16_PERCENT;
+    public static final TaxType DEFAULT_TAX = GENERAL_SALES_TAX_DE_19_PERCENT;
 
     /**
      * Default country, is used for printing information.

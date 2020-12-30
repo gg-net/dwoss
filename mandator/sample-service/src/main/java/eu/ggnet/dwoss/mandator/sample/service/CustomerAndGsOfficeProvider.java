@@ -16,22 +16,15 @@
  */
 package eu.ggnet.dwoss.mandator.sample.service;
 
-import eu.ggnet.dwoss.mandator.api.value.Contractors;
-import eu.ggnet.dwoss.mandator.api.value.RepaymentCustomers;
-import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
-import eu.ggnet.dwoss.mandator.api.value.ScrapCustomers;
-import eu.ggnet.dwoss.mandator.api.value.PostLedger;
-import eu.ggnet.dwoss.mandator.api.value.DeleteCustomers;
-import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
-
 import javax.ejb.Singleton;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
+import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.redtape.ee.sage.DefaultSageExporterConfig;
 import eu.ggnet.dwoss.redtape.ee.sage.SageExporterConfig;
-import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 
 import static eu.ggnet.dwoss.core.common.values.DocumentType.CAPITAL_ASSET;
 import static eu.ggnet.dwoss.core.common.values.DocumentType.RETURNS;
@@ -68,7 +61,7 @@ public class CustomerAndGsOfficeProvider {
     public final static PostLedger NEW_POST_LEDGER = new PostLedger(
             PostLedger.add()
                     .positionTypes(UNIT)
-                    .taxTypes(GENERAL_SALES_TAX_DE_CORONA_16_PERCENT)
+                    .taxTypes(GENERAL_SALES_TAX_DE_19_PERCENT)
                     .primaryLedger(1000, "Standard Gerät")
                     .alternativeLedger(1001, "Nicht Standard Geräte"),
             PostLedger.add()
@@ -81,16 +74,16 @@ public class CustomerAndGsOfficeProvider {
                     .primaryLedger(3000, "Reverse Charge"),
             PostLedger.add()
                     .positionTypes(SERVICE)
-                    .taxTypes(GENERAL_SALES_TAX_DE_CORONA_16_PERCENT)
+                    .taxTypes(GENERAL_SALES_TAX_DE_19_PERCENT)
                     .primaryLedger(4000, "Service")
                     .alternativeLedger(4001, "VIP Service"),
             PostLedger.add()
                     .positionTypes(PRODUCT_BATCH)
-                    .taxTypes(GENERAL_SALES_TAX_DE_CORONA_16_PERCENT)
+                    .taxTypes(GENERAL_SALES_TAX_DE_19_PERCENT)
                     .primaryLedger(5000, "ProductBatch"),
             PostLedger.add()
                     .positionTypes(SHIPPING_COST)
-                    .taxTypes(GENERAL_SALES_TAX_DE_CORONA_16_PERCENT)
+                    .taxTypes(GENERAL_SALES_TAX_DE_19_PERCENT)
                     .primaryLedger(6000, "Versand"));
 
     // Rewired the system customers.
@@ -123,5 +116,5 @@ public class CustomerAndGsOfficeProvider {
         if ( specialSystemCustomers == null ) specialSystemCustomers = gen.makeSpecialCustomers(CAPITAL_ASSET, RETURNS);
         return specialSystemCustomers;
     }
-    
+
 }

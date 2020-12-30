@@ -97,7 +97,7 @@ public class ReportLineGenerator {
         line.setContractorPartNo("123.456");
 
         line.setAmount(getRandomLong());
-        double tax = GlobalConfig.DEFAULT_TAX.getTax();
+        double tax = GlobalConfig.DEFAULT_TAX.tax();
         double price = Math.abs(R.nextDouble() * R.nextInt(1500));
         line.setManufacturerCostPrice(price * 1.10);
         line.setContractorReferencePrice(price * 1.10);
@@ -144,7 +144,7 @@ public class ReportLineGenerator {
         reportLine.setCustomerId(getRandomLong());
 
         reportLine.setAmount(getRandomLong());
-        double tax = GlobalConfig.DEFAULT_TAX.getTax();
+        double tax = GlobalConfig.DEFAULT_TAX.tax();
         double price = Math.abs(R.nextDouble() * R.nextInt(1500));
         reportLine.setManufacturerCostPrice(price + 15);
         reportLine.setPrice(price);

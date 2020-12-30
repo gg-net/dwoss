@@ -16,16 +16,12 @@
  */
 package eu.ggnet.dwoss.misc.web.stub;
 
-import eu.ggnet.dwoss.mandator.api.value.Ledger;
-import eu.ggnet.dwoss.mandator.api.value.PostLedger;
-import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
-import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
-
 import javax.annotation.ManagedBean;
 import javax.enterprise.inject.Produces;
 
 import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.core.system.util.MapBuilder;
+import eu.ggnet.dwoss.mandator.api.value.*;
 
 import static eu.ggnet.dwoss.core.common.values.PositionType.*;
 import static eu.ggnet.dwoss.core.common.values.ReceiptOperation.*;
@@ -72,7 +68,7 @@ public class MandatorSupportStub {
     public static PostLedger pl = new PostLedger(
             PostLedger.add()
                     .positionTypes(UNIT)
-                    .taxTypes(GENERAL_SALES_TAX_DE_CORONA_16_PERCENT)
+                    .taxTypes(GENERAL_SALES_TAX_DE_19_PERCENT)
                     .primaryLedger(L_8401_SONDERPOSTEN_UNIT),
             PostLedger.add()
                     .positionTypes(UNIT)
@@ -84,7 +80,7 @@ public class MandatorSupportStub {
                     .primaryLedger(8337, "Reverse Charge"),
             PostLedger.add()
                     .positionTypes(SERVICE)
-                    .taxTypes(GENERAL_SALES_TAX_DE_CORONA_16_PERCENT)
+                    .taxTypes(GENERAL_SALES_TAX_DE_19_PERCENT)
                     .primaryLedger(8414, "Dienstleistung Store")
                     .alternativeLedger(L_8401_SONDERPOSTEN_UNIT)
                     .alternativeLedger(L_8403_DL_TECHNIK)
@@ -93,12 +89,12 @@ public class MandatorSupportStub {
                     .alternativeLedger(L_8415_HW_SW_STORE),
             PostLedger.add()
                     .positionTypes(PRODUCT_BATCH)
-                    .taxTypes(GENERAL_SALES_TAX_DE_CORONA_16_PERCENT)
+                    .taxTypes(GENERAL_SALES_TAX_DE_19_PERCENT)
                     .primaryLedger(L_8415_HW_SW_STORE)
                     .alternativeLedger(L_8418_ACER_TWO_YEAR_POST_LEDGER),
             PostLedger.add()
                     .positionTypes(SHIPPING_COST)
-                    .taxTypes(GENERAL_SALES_TAX_DE_CORONA_16_PERCENT)
+                    .taxTypes(GENERAL_SALES_TAX_DE_19_PERCENT)
                     .primaryLedger(L_8406_VERSANDKOSTEN)
     );
 

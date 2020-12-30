@@ -56,7 +56,7 @@ public class ShippingCostHelper {
         if ( positions.isEmpty() ) {
             doc.append(Position.builder().type(PositionType.SHIPPING_COST)
                     .name("Versandkosten").description("Versandkosten zu Vorgang: " + doc.getDossier().getIdentifier())
-                    .amount(1).price(costs).tax(doc.getTaxType().getTax())
+                    .amount(1).price(costs).tax(doc.getTaxType().tax())
                     .bookingAccount(Dl.local().lookup(CachedMandators.class).loadPostLedger().get(PositionType.SHIPPING_COST, doc.getTaxType()).orElse(null))
                     .build());
         } else {

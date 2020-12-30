@@ -28,7 +28,7 @@ import eu.ggnet.dwoss.redtape.ee.entity.*;
  */
 public class RedTapeSamples {
 
-    private final static double TAX = TaxType.GENERAL_SALES_TAX_DE_19_PERCENT.tax;
+    private final static double TAX = TaxType.GENERAL_SALES_TAX_DE_19_PERCENT.tax();
 
     private final static String LOREM_IPSUM = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor"
             + " invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et"

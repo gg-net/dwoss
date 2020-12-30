@@ -71,7 +71,7 @@ public class PriceEngine {
 
         PriceEngineResult per = new PriceEngineResult(uu, stock);
         TraceCollector log = new TraceCollector();
-        per.setTax(GlobalConfig.DEFAULT_TAX.getTax());
+        per.setTax(GlobalConfig.DEFAULT_TAX.tax());
         per.setWarrantyId(uu.getWarranty().ordinal());
         if ( uu.getWarranty().equals(Warranty.WARRANTY_TILL_DATE) ) {
             per.setWarrentyValid(uu.getWarrentyValid());

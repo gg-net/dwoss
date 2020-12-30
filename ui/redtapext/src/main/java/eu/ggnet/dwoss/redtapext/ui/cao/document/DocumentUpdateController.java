@@ -93,7 +93,7 @@ public class DocumentUpdateController {
                     Position p = Position.builder()
                             .amount(1)
                             .type(type)
-                            .tax(document.getTaxType().getTax())
+                            .tax(document.getTaxType().tax())
                             .description(pb.getDescription())
                             .name(pb.getName())
                             .uniqueUnitProductId(pb.getUniqueUnitProductId())

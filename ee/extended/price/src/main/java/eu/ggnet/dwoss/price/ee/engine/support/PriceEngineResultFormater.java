@@ -32,7 +32,7 @@ public class PriceEngineResultFormater {
         sb.append("<tr><td>Contractor Referenc Preis :</td><td>").append(per.getContractorReferencePrice()).append("</td></tr>");
         sb.append("<tr><td>calc HEK :</td><td>").append(per.getRetailerPrice()).append("</td></tr>");
         sb.append("<tr><td>calc EVK :</td><td>").append(per.getCustomerPrice()).append("</td></tr>");
-        sb.append("<tr><td>EVK (inc.Tax) :</td><td>").append(per.getCustomerPrice() * (1 + GlobalConfig.DEFAULT_TAX.getTax())).append("</td></tr>");
+        sb.append("<tr><td>EVK (inc.Tax) :</td><td>").append(per.getCustomerPrice() * (1 + GlobalConfig.DEFAULT_TAX.tax())).append("</td></tr>");
         sb.append("</table>");
         if ( per.isError() || per.isWarning() ) {
             sb.append("<p>ErrorLog : ").append(per.getRulesLog()).append("</p>");

@@ -133,7 +133,7 @@ public class UnitOverseerBean implements UnitOverseer {
                 .refurbishedId(uu.getRefurbishId())
                 .bookingAccount(postLedger.get(PositionType.UNIT, doc.getTaxType()).orElse(null))
                 .type(PositionType.UNIT)
-                .tax(doc.getTaxType().getTax())
+                .tax(doc.getTaxType().tax())
                 .uniqueUnitId(uu.getId())
                 .uniqueUnitProductId(uu.getProduct().getId())
                 .name(UniqueUnitFormater.toPositionName(uu))

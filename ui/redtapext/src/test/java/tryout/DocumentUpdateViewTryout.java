@@ -1,22 +1,21 @@
 package tryout;
 
-import eu.ggnet.dwoss.core.widget.Dl;
-import eu.ggnet.dwoss.core.common.values.PaymentCondition;
-import eu.ggnet.dwoss.core.common.values.DocumentType;
-import eu.ggnet.dwoss.core.common.values.PaymentMethod;
-import eu.ggnet.dwoss.core.common.values.ShippingCondition;
-
 import java.awt.Font;
 import java.util.Arrays;
 
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.*;
 
+import eu.ggnet.dwoss.core.common.values.*;
 import eu.ggnet.dwoss.core.widget.AbstractGuardian;
+import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.auth.AuthenticationException;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.dl.RemoteLookup;
 import eu.ggnet.dwoss.core.widget.saft.OkCancelWrap;
 import eu.ggnet.dwoss.customer.api.CustomerService;
-import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.mandator.api.Mandators;
+import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
@@ -25,10 +24,8 @@ import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateController;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateView;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;
-import eu.ggnet.saft.core.*;
-import eu.ggnet.dwoss.core.widget.dl.RemoteLookup;
-import eu.ggnet.dwoss.core.widget.auth.AuthenticationException;
-import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
 
 import tryout.stub.CustomerServiceStub;
 import tryout.stub.RedTapeWorkerStub;
@@ -89,7 +86,7 @@ public class DocumentUpdateViewTryout {
         Address address = new Address("Max Mustermann\nMusterstrass 11\n22222 Musterstadt");
         doc.setInvoiceAddress(address);
         doc.setShippingAddress(address);
-        doc.setTaxType(GENERAL_SALES_TAX_DE_CORONA_16_PERCENT);
+        doc.setTaxType(GENERAL_SALES_TAX_DE_19_PERCENT);
         doc.append(Position.builder()
                 .type(UNIT)
                 .amount(1)
@@ -159,7 +156,7 @@ public class DocumentUpdateViewTryout {
                 return new PostLedger(
                         PostLedger.add()
                                 .positionTypes(UNIT)
-                                .taxTypes(GENERAL_SALES_TAX_DE_CORONA_16_PERCENT)
+                                .taxTypes(GENERAL_SALES_TAX_DE_19_PERCENT)
                                 .primaryLedger(L_1000_STD_UNIT),
                         PostLedger.add()
                                 .positionTypes(UNIT)
@@ -171,18 +168,18 @@ public class DocumentUpdateViewTryout {
                                 .primaryLedger(3000, "Reverse Charge"),
                         PostLedger.add()
                                 .positionTypes(SERVICE)
-                                .taxTypes(GENERAL_SALES_TAX_DE_CORONA_16_PERCENT)
+                                .taxTypes(GENERAL_SALES_TAX_DE_19_PERCENT)
                                 .primaryLedger(2002, "Dienstleistung Store")
                                 .alternativeLedger(L_1000_STD_UNIT)
                                 .alternativeLedger(L_1002_VERSANDKOSTEN)
                                 .alternativeLedger(L_1001_HW_SW_STORE),
                         PostLedger.add()
                                 .positionTypes(PRODUCT_BATCH)
-                                .taxTypes(GENERAL_SALES_TAX_DE_CORONA_16_PERCENT)
+                                .taxTypes(GENERAL_SALES_TAX_DE_19_PERCENT)
                                 .primaryLedger(L_1001_HW_SW_STORE),
                         PostLedger.add()
                                 .positionTypes(SHIPPING_COST)
-                                .taxTypes(GENERAL_SALES_TAX_DE_CORONA_16_PERCENT)
+                                .taxTypes(GENERAL_SALES_TAX_DE_19_PERCENT)
                                 .primaryLedger(L_1002_VERSANDKOSTEN)
                 );
             }

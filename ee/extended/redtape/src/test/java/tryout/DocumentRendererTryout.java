@@ -48,7 +48,7 @@ public class DocumentRendererTryout {
         dos.setCustomerId(1);
 
         Document doc = new Document();
-        doc.setTaxType(TaxType.GENERAL_SALES_TAX_DE_CORONA_16_PERCENT);
+        doc.setTaxType(TaxType.GENERAL_SALES_TAX_DE_19_PERCENT);
         doc.setType(DocumentType.ORDER);
         doc.setActive(true);
         doc.setDirective(Document.Directive.WAIT_FOR_MONEY);

@@ -29,7 +29,7 @@ public class RedTapeAgentStub implements RedTapeAgent {
 
     private List<Dossier> dossiers = new ArrayList<>();
 
-    private double tax = (1 + GlobalConfig.DEFAULT_TAX.getTax());
+    private double tax = (1 + GlobalConfig.DEFAULT_TAX.tax());
 
     {
         // Dossier 1
@@ -107,7 +107,7 @@ public class RedTapeAgentStub implements RedTapeAgent {
         doc2.setTaxType(REVERSE_CHARGE);
         doc2.add(Condition.CONFIRMED);
         dos2.add(doc2);
-        doc2.append(Position.builder().type(PRODUCT_BATCH).amount(1000).price(221.45).tax(REVERSE_CHARGE.getTax()).name("Futurama eyePhone 3")
+        doc2.append(Position.builder().type(PRODUCT_BATCH).amount(1000).price(221.45).tax(REVERSE_CHARGE.tax()).name("Futurama eyePhone 3")
                 .description("The eyePhone, a fictional augmented reality-enbaled smart glasses product depicted in the episode "
                         + "\"Attack of the Killer App\" of the American animated sitcom Futurama.").build());
         doc2.setDirective(Directive.NONE);

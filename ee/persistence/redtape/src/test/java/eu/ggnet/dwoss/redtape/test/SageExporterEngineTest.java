@@ -103,7 +103,7 @@ public class SageExporterEngineTest {
         doc.setActual(date);
         dos.add(doc);
         doc.append(unit(doc.getTaxType(), new Ledger(1000, "Demo1")));
-        doc.append(Position.builder().type(SHIPPING_COST).amount(1).bookingAccount(new Ledger(2000, "Versand")).price(100).tax(doc.getTaxType().getTax()).name("Versandkosten").description("Versandkosten").build());
+        doc.append(Position.builder().type(SHIPPING_COST).amount(1).bookingAccount(new Ledger(2000, "Versand")).price(100).tax(doc.getTaxType().tax()).name("Versandkosten").description("Versandkosten").build());
 
         Dossier dos2 = new Dossier(PaymentMethod.DIRECT_DEBIT, true, 0);
         dos2.setIdentifier("DW0002");
@@ -143,7 +143,7 @@ public class SageExporterEngineTest {
                 .uniqueUnitId(1)
                 .uniqueUnitProductId(1)
                 .price(200)
-                .tax(taxType.tax)
+                .tax(taxType.tax())
                 .name("Gerät id 1")
                 .description("Ein Gerät")
                 .build();

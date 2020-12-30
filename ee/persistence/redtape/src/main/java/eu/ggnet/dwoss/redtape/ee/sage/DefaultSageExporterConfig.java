@@ -47,8 +47,8 @@ public class DefaultSageExporterConfig implements SageExporterConfig, Serializab
     @Override
     public boolean isCustomerLedgersDisabled() {
         return customerLedgersDisabled;
-    }    
-    
+    }
+
     @Override
     public String beleg(Document doc, UiCustomer customer) {
         String dossierIdentifier = doc.getDossier().getIdentifier() == null ? "NoDossierIdentifier" : doc.getDossier().getIdentifier().replace("_", "");
@@ -77,7 +77,7 @@ public class DefaultSageExporterConfig implements SageExporterConfig, Serializab
 
     @Override
     public String stCode(Document doc) {
-        return doc.getTaxType().taxCode;
+        return doc.getTaxType().taxCode();
     }
 
 }

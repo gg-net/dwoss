@@ -42,6 +42,8 @@ import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.core.common.values.PositionType;
 import eu.ggnet.dwoss.core.system.util.ValidationUtil;
+import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.core.widget.saft.VetoableOnOk;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;
@@ -51,10 +53,8 @@ import eu.ggnet.dwoss.redtape.ee.api.WarrantyHook;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.PositionListCell;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.ResultProducer;
-import eu.ggnet.dwoss.core.widget.auth.Guardian;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CHANGE_TAX;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_PRICE_INVOICES;
@@ -690,7 +690,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements VetoableOn
                 document.setTaxType(taxType);
                 final PostLedger ledgers = Dl.local().lookup(CachedMandators.class).loadPostLedger();
                 document.getPositions().values().forEach(p -> {
-                    p.setTax(taxType.tax);
+                    p.setTax(taxType.tax());
                     p.setBookingAccount(ledgers.get(p.getType(), taxType).orElse(null));
                 });
                 refreshAll();

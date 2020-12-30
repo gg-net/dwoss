@@ -40,7 +40,7 @@ public class PriceBlockerViewCask extends javax.swing.JPanel implements Vetoable
 
     private Converter<Double, String> stringConverter = new CurrencyConverter();
 
-    private Converter<Double, String> taxedConverter = new CurrencyConverter(GlobalConfig.DEFAULT_TAX.getTax());
+    private Converter<Double, String> taxedConverter = new CurrencyConverter(GlobalConfig.DEFAULT_TAX.tax());
 
     private class CurrencyConverter extends Converter<Double, String> {
 

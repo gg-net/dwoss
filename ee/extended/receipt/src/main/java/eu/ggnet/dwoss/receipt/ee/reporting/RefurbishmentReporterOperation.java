@@ -96,7 +96,7 @@ public class RefurbishmentReporterOperation implements RefurbishmentReporter {
             }
         }
 
-        double tax = (refilledPriceSum + refurbishedPriceSum) * GlobalConfig.DEFAULT_TAX.getTax();
+        double tax = (refilledPriceSum + refurbishedPriceSum) * GlobalConfig.DEFAULT_TAX.tax();
 
         CSheet summary = new CSheet("Summery", 5, 30, 15, 15, 15);
         SBlock headerAndDate = new SBlock();

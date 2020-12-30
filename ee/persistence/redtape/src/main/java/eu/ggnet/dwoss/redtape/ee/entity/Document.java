@@ -33,9 +33,9 @@ import eu.ggnet.dwoss.redtape.ee.entity.util.DocumentEquals;
 import eu.ggnet.dwoss.redtape.ee.format.DocumentFormater;
 
 import static eu.ggnet.dwoss.core.common.values.PositionType.COMMENT;
+import static eu.ggnet.dwoss.core.common.values.TaxType.GENERAL_SALES_TAX_DE_19_PERCENT;
 import static eu.ggnet.dwoss.redtape.ee.entity.util.DocumentEquals.Property.*;
 import static javax.persistence.CascadeType.*;
-import static eu.ggnet.dwoss.core.common.values.TaxType.GENERAL_SALES_TAX_DE_CORONA_16_PERCENT;
 
 /**
  * Represents a Document, like the paper in a real dossier.
@@ -371,7 +371,7 @@ public class Document extends BaseEntity implements Serializable, Comparable<Doc
 
     public Document() {
         actual = new Date();
-        taxType = GENERAL_SALES_TAX_DE_CORONA_16_PERCENT;
+        taxType = GENERAL_SALES_TAX_DE_19_PERCENT;
     }
 
     /**
@@ -814,7 +814,7 @@ public class Document extends BaseEntity implements Serializable, Comparable<Doc
     public boolean hasSingleTax() {
         // HINT: In the future, we may have documents with multiple taxes. This should be identified in the tax type and verified. For now, this is enought.
         if ( positions.isEmpty() ) return true;
-        double refTax = taxType.tax;
+        double refTax = taxType.tax();
         for (Position pos : positions.values()) {
             if ( pos.getType() == COMMENT ) continue; // Commet Tax is not relevant.
             if ( Double.compare(refTax, pos.getTax()) != 0 ) return false;
@@ -831,10 +831,10 @@ public class Document extends BaseEntity implements Serializable, Comparable<Doc
      * @throws IllegalStateException if the document has different tax positions.
      */
     public double getSingleTax() throws IllegalStateException {
-        if ( positions.isEmpty() ) return taxType.tax;
+        if ( positions.isEmpty() ) return taxType.tax();
         if ( !hasSingleTax() )
             throw new IllegalStateException("Document(id=" + id + ",identifier=" + identifier + ") has Positions with different taxes.  " + positions);
-        return taxType.tax;
+        return taxType.tax();
     }
 
     /**

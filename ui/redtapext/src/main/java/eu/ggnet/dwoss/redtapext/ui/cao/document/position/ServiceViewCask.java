@@ -130,7 +130,7 @@ public class ServiceViewCask extends javax.swing.JPanel implements Consumer<Posi
                     .description(template.getDescription())
                     .name(template.getName())
                     .price(template.getPrice())
-                    .tax(taxType.getTax())
+                    .tax(taxType.tax())
                     .type(template.getType())
                     .uniqueUnitProductId(template.getUniqueUnitProductId())
                     .build();

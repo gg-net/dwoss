@@ -363,8 +363,8 @@ public class DocumentSupporterOperation implements DocumentSupporter {
 
         // Building Terms 2
         StringBuilder terms2 = new StringBuilder();
-        if ( StringUtils.isNotBlank(document.getTaxType().getDocumentText()) )
-            terms2.append("<p>").append(document.getTaxType().getDocumentText()).append("</p>");
+        if ( StringUtils.isNotBlank(document.getTaxType().documentText()) )
+            terms2.append("<p>").append(document.getTaxType().documentText()).append("</p>");
         terms2.append("<p>").append(mandator.documentIntermix().getFreeTexts(FreeDocumentTemplateParameter.TERMS2, viewType, document.getType())).append("</p>");
 
         terms2.append("<p><b>");

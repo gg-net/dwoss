@@ -41,12 +41,12 @@ public class TaxChangePane extends StackPane implements ResultProducer<TaxType> 
         VBox p = new VBox(10);
         p.setAlignment(Pos.CENTER);
         for (TaxType taxType : TaxType.values()) {
-            Button button = new Button(taxType.description);
+            Button button = new Button(taxType.description());
             button.setOnAction(e -> {
                 result = taxType;
                 close();
             });
-            button.setTooltip(new Tooltip(taxType.detailedDescription));
+            button.setTooltip(new Tooltip(taxType.detailedDescription()));
             p.getChildren().add(button);
 
         }

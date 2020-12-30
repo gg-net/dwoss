@@ -161,7 +161,7 @@ public class SalesListingProducerOperation implements SalesListingProducer, Sale
                 UniqueUnitFormater.toSingleLineComment(uu),
                 uu.getPrice(PriceType.RETAILER),
                 uu.getPrice(PriceType.CUSTOMER),
-                (!uu.hasPrice(PriceType.CUSTOMER) ? null : TwoDigits.roundedApply(uu.getPrice(PriceType.CUSTOMER), GlobalConfig.DEFAULT_TAX.getTax(), 0)),
+                (!uu.hasPrice(PriceType.CUSTOMER) ? null : TwoDigits.roundedApply(uu.getPrice(PriceType.CUSTOMER), GlobalConfig.DEFAULT_TAX.tax(), 0)),
                 (su.getStock() == null ? su.getTransaction() : su.getStock().getName()),
                 uu.getMfgDate(),
                 uu.getInputDate(),
@@ -338,7 +338,7 @@ public class SalesListingProducerOperation implements SalesListingProducer, Sale
                     UniqueUnitFormater.toSingleLineComment(uu),
                     uu.getPrice(PriceType.RETAILER),
                     uu.getPrice(PriceType.CUSTOMER),
-                    (!uu.hasPrice(PriceType.CUSTOMER) ? null : TwoDigits.roundedApply(uu.getPrice(PriceType.CUSTOMER), GlobalConfig.DEFAULT_TAX.getTax(), 0)),};
+                    (!uu.hasPrice(PriceType.CUSTOMER) ? null : TwoDigits.roundedApply(uu.getPrice(PriceType.CUSTOMER), GlobalConfig.DEFAULT_TAX.tax(), 0)),};
                 rows.add(row);
             }
             if ( rows.isEmpty() ) continue;
@@ -441,7 +441,7 @@ public class SalesListingProducerOperation implements SalesListingProducer, Sale
 
                 double uuPrice = uu.getPrice(priceType);
                 elem.setCustomerPrice(uuPrice);
-                elem.setRoundedTaxedCustomerPrice(TwoDigits.roundedApply(uuPrice, GlobalConfig.DEFAULT_TAX.getTax(), 0.02));
+                elem.setRoundedTaxedCustomerPrice(TwoDigits.roundedApply(uuPrice, GlobalConfig.DEFAULT_TAX.tax(), 0.02));
 
                 // For the "ab € XXX" handler
                 if ( customerPrice == 0 ) {
@@ -456,7 +456,7 @@ public class SalesListingProducerOperation implements SalesListingProducer, Sale
                 line.add(elem);
             }
             line.setAmount(line.getUnits().size());
-            line.setCustomerPriceLabel((priceChanged ? "ab €" : "€") + df.format(TwoDigits.roundedApply(customerPrice, GlobalConfig.DEFAULT_TAX.getTax(), 0.02)));
+            line.setCustomerPriceLabel((priceChanged ? "ab €" : "€") + df.format(TwoDigits.roundedApply(customerPrice, GlobalConfig.DEFAULT_TAX.tax(), 0.02)));
             line.normaize();
             stackedLines.add(line);
         }

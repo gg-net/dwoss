@@ -1,41 +1,36 @@
 package eu.ggnet.dwoss.redtapext.op.itest;
 
-import eu.ggnet.dwoss.core.common.values.PositionType;
-import eu.ggnet.dwoss.core.common.values.TaxType;
-import eu.ggnet.dwoss.mandator.api.value.Ledger;
-import eu.ggnet.dwoss.core.common.values.DocumentType;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
-
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.inject.Inject;
 
 import org.jboss.arquillian.junit.Arquillian;
-import org.junit.*;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
+import eu.ggnet.dwoss.core.common.values.*;
 import eu.ggnet.dwoss.customer.api.CustomerMetaData;
 import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
+import eu.ggnet.dwoss.mandator.api.value.Ledger;
 import eu.ggnet.dwoss.receipt.ee.gen.ReceiptGeneratorOperation;
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.ee.api.UnitPositionHook;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
+import eu.ggnet.dwoss.redtape.ee.interactiveresult.Result;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
+import eu.ggnet.dwoss.redtapext.ee.reporting.RedTapeCloserManual;
 import eu.ggnet.dwoss.redtapext.op.itest.support.*;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.*;
 import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
-import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.dwoss.redtape.ee.interactiveresult.Result;
 
 import static eu.ggnet.dwoss.core.common.values.PositionType.PRODUCT_BATCH;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.*;
-
-import eu.ggnet.dwoss.redtapext.ee.reporting.RedTapeCloserManual;
+import static org.junit.Assert.assertFalse;
 
 /**
  *
@@ -57,7 +52,7 @@ public class RedTapeCloserOperationOfWarrantyIT extends ArquillianProjectArchive
                             .refurbishedId(p.getRefurbishedId())
                             .bookingAccount(new Ledger(1000, "DemoLedger"))
                             .type(PRODUCT_BATCH)
-                            .tax(TaxType.GENERAL_SALES_TAX_DE_CORONA_16_PERCENT.getTax())
+                            .tax(TaxType.GENERAL_SALES_TAX_DE_19_PERCENT.tax())
                             .uniqueUnitId(p.getUniqueUnitId())
                             .uniqueUnitProductId(eao.findByPartNo(WARRANTY_PART_NO).getId())
                             .name("Warranty Position")
@@ -70,13 +65,12 @@ public class RedTapeCloserOperationOfWarrantyIT extends ArquillianProjectArchive
 
     private final static String WARRANTY_PART_NO = WarrantyServiceStup.WARRANTY_PART_NO;
 
-
     @Inject
     private CustomerGeneratorOperation customerGenerator;
 
     @Inject
     private ReceiptGeneratorOperation receiptGenerator;
-    
+
     @EJB
     private RedTapeCloserManual redTapeCloser;
 

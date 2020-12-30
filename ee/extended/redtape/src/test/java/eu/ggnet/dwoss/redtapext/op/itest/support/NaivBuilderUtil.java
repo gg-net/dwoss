@@ -2,13 +2,13 @@ package eu.ggnet.dwoss.redtapext.op.itest.support;
 
 import java.util.Random;
 
-import eu.ggnet.dwoss.mandator.api.value.Ledger;
-import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.core.common.values.PositionType;
 import eu.ggnet.dwoss.core.common.values.TaxType;
+import eu.ggnet.dwoss.core.system.util.TwoDigits;
+import eu.ggnet.dwoss.mandator.api.value.Ledger;
+import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-import eu.ggnet.dwoss.core.system.util.TwoDigits;
 
 import static eu.ggnet.dwoss.core.common.values.PositionType.UNIT;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.CUSTOMER;
@@ -29,7 +29,7 @@ public class NaivBuilderUtil {
 
     private final static Ledger SHIPPING_LEDGER = new Ledger(1003, "ShippingCosts in Tests");
 
-    private static TaxType taxType = TaxType.GENERAL_SALES_TAX_DE_CORONA_16_PERCENT;
+    private static TaxType taxType = TaxType.GENERAL_SALES_TAX_DE_19_PERCENT;
 
     public static void overwriteTax(TaxType taxType) {
         NaivBuilderUtil.taxType = taxType;
@@ -49,7 +49,7 @@ public class NaivBuilderUtil {
                 .uniqueUnitId(uu.getId())
                 .uniqueUnitProductId(uu.getProduct().getId())
                 .price(uu.getPrice(CUSTOMER))
-                .tax(taxType.getTax())
+                .tax(taxType.tax())
                 .name(uu.getProduct().getName() + " | SN:" + uu.getIdentifier(UniqueUnit.Identifier.SERIAL))
                 .description(uu.getProduct().getDescription())
                 .build();
@@ -61,7 +61,7 @@ public class NaivBuilderUtil {
 
     public static Position comment(String title, String description) {
         return Position.builder()
-                .type(PositionType.COMMENT).tax(taxType.getTax()).name(title).description(description).build();
+                .type(PositionType.COMMENT).tax(taxType.tax()).name(title).description(description).build();
     }
 
     /**
@@ -80,7 +80,7 @@ public class NaivBuilderUtil {
                 .name("Service")
                 .amount(amount)
                 .price(price)
-                .tax(taxType.getTax())
+                .tax(taxType.tax())
                 .description("Service Description")
                 .build();
     }
@@ -102,7 +102,7 @@ public class NaivBuilderUtil {
                 .uniqueUnitProductId(product.getId())
                 .amount(amount)
                 .price(price)
-                .tax(taxType.getTax())
+                .tax(taxType.tax())
                 .description(product.getDescription())
                 .name(product.getName())
                 .build();
@@ -123,7 +123,7 @@ public class NaivBuilderUtil {
                 .bookingAccount(SHIPPING_LEDGER)
                 .amount(1)
                 .price(price)
-                .tax(taxType.getTax())
+                .tax(taxType.tax())
                 .description("Shipping costs")
                 .name("Shipping costs")
                 .build();

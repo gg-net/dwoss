@@ -66,7 +66,7 @@ public class DocumentFormater {
         String res = (doc.getType() == null) ? "<b>Dokumenttyp unbekannt</b>" : "<b>" + doc.getType().getName() + "</b>";
         res += (doc.getIdentifier() == null) ? "" : " <i>" + doc.getIdentifier() + "</i>";
         res += " von " + ((doc.getActual() != null) ? Utils.ISO_DATE.format(doc.getActual()) : "Kein Actual gesetzt") + "<br />";
-        res += "Steuertyp: " + doc.getTaxType().getName() + "<br />";
+        res += "Steuertyp: " + doc.getTaxType().description() + "<br />";
         res += (doc.getConditions().isEmpty() ? "" : toConditions(doc) + "<br />");
         if ( doc.getFlags().contains(Document.Flag.CUSTOMER_EXACTLY_BRIEFED) ) {
             res += "Aktuelle Version liegt dem Kunden vor.<br />";

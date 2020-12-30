@@ -48,7 +48,7 @@ public class PositionTest {
     @Test
     public void testEqualsContent() {
 
-        Position posUnit = Position.builder().amount(1).type(PositionType.UNIT).bookingAccount(L1).name("TestUnit").tax(GlobalConfig.DEFAULT_TAX.getTax()).price(50.0).description("TestUnit Description").uniqueUnitId(1).build();
+        Position posUnit = Position.builder().amount(1).type(PositionType.UNIT).bookingAccount(L1).name("TestUnit").tax(GlobalConfig.DEFAULT_TAX.tax()).price(50.0).description("TestUnit Description").uniqueUnitId(1).build();
 
         //copy and equality test
         Position posCopy = posUnit.partialClone();
