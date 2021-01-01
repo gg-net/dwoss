@@ -29,7 +29,6 @@ import org.slf4j.Logger;
 
 import eu.ggnet.dwoss.assembly.client.support.executor.Executor;
 import eu.ggnet.dwoss.core.widget.Progressor;
-import eu.ggnet.saft.core.UiCore;
 
 /**
  * Client side monitor manager.

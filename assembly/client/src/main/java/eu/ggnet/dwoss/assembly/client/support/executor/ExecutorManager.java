@@ -36,12 +36,19 @@ import eu.ggnet.dwoss.assembly.client.support.executor.Executor;
 @Singleton
 public class ExecutorManager {
 
+    /**
+     * Thread amount.
+     * <p>
+     * Is used in the Monitormanager, so needs to be enought to show multiple background progress.
+     */
+    private final static int THREAD_AMOUNT = 8;
+
     @Inject
     private Logger log;
 
     @Produces
     @Executor
-    private final ScheduledExecutorService ses = Executors.newScheduledThreadPool(1, new ThreadFactory() {
+    private final ScheduledExecutorService ses = Executors.newScheduledThreadPool(THREAD_AMOUNT, new ThreadFactory() {
 
         private final ThreadGroup group = new ThreadGroup("dwoss-global-scheduled-pool");
 
