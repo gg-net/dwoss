@@ -1,12 +1,5 @@
 package eu.ggnet.dwoss.redtapext.op.itest;
 
-import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.dwoss.core.system.util.TwoDigits;
-import eu.ggnet.dwoss.core.common.FileJacket;
-import eu.ggnet.dwoss.core.common.values.PositionType;
-import eu.ggnet.dwoss.core.common.values.DocumentType;
-import eu.ggnet.dwoss.core.common.values.AddressType;
-
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -20,6 +13,10 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import eu.ggnet.dwoss.core.common.FileJacket;
+import eu.ggnet.dwoss.core.common.UserInfoException;
+import eu.ggnet.dwoss.core.common.values.*;
+import eu.ggnet.dwoss.core.system.util.TwoDigits;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.receipt.ee.gen.ReceiptGeneratorOperation;
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
@@ -309,9 +306,9 @@ public class RedTapeOperationOrderInvoiceIT extends ArquillianProjectArchive {
         doc1.add(Document.Condition.PICKED_UP);
         doc1.setType(DocumentType.INVOICE);
         doc1 = redTapeWorker.update(doc1, null, "tester");
-        String format = new SimpleDateFormat("YY").format(new Date());
+        String format = new SimpleDateFormat("yy").format(new Date());
 
-        assertEquals("The Identifier of Invoice", "RS" + format + "_00001", doc1.getIdentifier());
+        assertEquals("The Identifier of Invoice ", "RS" + format + "_00001", doc1.getIdentifier());
         assertFalse("Document must not contain " + Document.Flag.CUSTOMER_BRIEFED, doc1.getFlags().contains(Document.Flag.CUSTOMER_BRIEFED));
         assertFalse("Document must not contain " + Document.Flag.CUSTOMER_EXACTLY_BRIEFED, doc1.getFlags().contains(Document.Flag.CUSTOMER_EXACTLY_BRIEFED));
 
