@@ -18,12 +18,13 @@ package eu.ggnet.dwoss.customer.ui.cap;
 
 import java.awt.event.ActionEvent;
 
+import javax.inject.Inject;
 import javax.swing.AbstractAction;
 
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.Progressor;
+import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
 import eu.ggnet.dwoss.customer.ee.CustomerIndexManager;
-import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.Saft;
 
 /**
  *
@@ -31,15 +32,24 @@ import eu.ggnet.saft.core.Ui;
  */
 public class RecreateSearchIndex extends AbstractAction {
 
+    @Inject
+    private Saft saft;
+
+    @Inject
+    private Progressor progressor;
+
+    @Inject
+    private RemoteDl remote;
+
     public RecreateSearchIndex() {
         super("Customer Suchindex neu erzeugen.");
     }
 
     @Override
     public void actionPerformed(ActionEvent event) {
-        Ui.exec(() -> {
-            Progressor.global().run(() -> Dl.remote().lookup(CustomerIndexManager.class).reindexSearch());
-            Ui.build().alert("Suchindex wurde neu erzeugt");
+        saft.exec(() -> {
+            progressor.run("Suchindex", () -> remote.lookup(CustomerIndexManager.class).reindexSearch());
+            saft.build().alert("Suchindex wurde neu erzeugt");
         });
     }
 }
