@@ -221,6 +221,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         sourceChoiceBox.setConverter(new StringConverter<Source>() {
             @Override
             public String toString(Source object) {
+                if ( object == null ) return null;
                 return object.getName();
             }
 
