@@ -34,11 +34,10 @@ import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker.Addresses;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateController;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateView;
-import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.dwoss.core.widget.saft.Reply;
 import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.saft.core.UiCore;
 
 /**
  *
@@ -83,25 +82,20 @@ public class DossierCreateAction extends AbstractAction {
                     docView.setController(new DocumentUpdateController(docView, doc));
                     docView.setCustomerValues(customer.id());
                     return OkCancelWrap.vetoResult(docView);
-                }).opt().filter(r -> handleFailure(r, doc))
-                        .map(Reply::getPayload)
-                        .ifPresent(this::handleSuccesses);
+                }).cf()
+                        .thenAccept(d -> handleSuccess(d))
+                        .handle(UiCore.global().handler(parent).andFinally(() -> Dl.remote().lookup(RedTapeWorker.class).revertCreate(doc)));
+
+//                        .opt().filter(r -> handleFailure(r, doc))
+//                        .map(Reply::getPayload)
+//                        .ifPresent(this::handleSuccesses);
             });
         });
     }
 
-    private void handleSuccesses(Document doc) {
+    private void handleSuccess(Document doc) {
         Document updatedDoc = Dl.remote().lookup(RedTapeWorker.class).update(doc, null, Dl.local().lookup(Guardian.class).getUsername());
         controller.getDossierTableController().getModel().add(updatedDoc.getDossier());
     }
 
-    private boolean handleFailure(Reply<?> reply, Document doc) {
-        if ( reply.hasSucceded() ) return true;
-        try {
-            Dl.remote().lookup(RedTapeWorker.class).revertCreate(doc);
-        } catch (UserInfoException ex) {
-            Ui.handle(ex);
-        }
-        return false;
-    }
 }

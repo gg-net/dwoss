@@ -16,15 +16,15 @@
  */
 package tryout;
 
-import eu.ggnet.dwoss.core.widget.Dl;
-
 import javax.swing.JLabel;
 
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.saft.OkCancelWrap;
 import eu.ggnet.dwoss.mandator.api.Mandators;
 import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.report.ui.cap.support.CreateNewReportView;
-import eu.ggnet.saft.core.*;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
 
 /**
  *
@@ -39,7 +39,7 @@ public class CreateNewReportViewTryout {
         Ui.exec(() -> {
             UiCore.startSwing(() -> new JLabel("Application"));
             Ui.build().swing().eval(() -> OkCancelWrap.vetoResult(new CreateNewReportView()))
-                    .opt().ifPresent(v -> System.out.println(v.getPayload().getParameter()));
+                    .opt().ifPresent(v -> System.out.println(v.getParameter()));
         });
     }
 

@@ -16,16 +16,15 @@
  */
 package eu.ggnet.dwoss.receipt.ui.cap;
 
-import eu.ggnet.dwoss.receipt.ui.cap.support.AddCommentCask;
-
 import java.awt.event.ActionEvent;
 
-import eu.ggnet.dwoss.uniqueunit.ee.op.AddUnitHistory;
-import eu.ggnet.dwoss.core.widget.Dl;
-import eu.ggnet.saft.core.Ui;
 import eu.ggnet.dwoss.core.widget.AccessableAction;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.core.widget.saft.OkCancelWrap;
+import eu.ggnet.dwoss.receipt.ui.cap.support.AddCommentCask;
+import eu.ggnet.dwoss.uniqueunit.ee.op.AddUnitHistory;
+import eu.ggnet.saft.core.Ui;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_COMMENT_UNIQUE_UNIT_HISTORY;
 
@@ -46,7 +45,7 @@ public class AddCommentAction extends AccessableAction {
                     .swing()
                     .eval(() -> OkCancelWrap.result(new AddCommentCask()))
                     .opt()
-                    .ifPresent(r -> Dl.remote().lookup(AddUnitHistory.class).addCommentHistory(r.getPayload().RefurbishId, r.getPayload().Comment, Dl.local().lookup(Guardian.class).getUsername()));
+                    .ifPresent(r -> Dl.remote().lookup(AddUnitHistory.class).addCommentHistory(r.RefurbishId, r.Comment, Dl.local().lookup(Guardian.class).getUsername()));
         });
     }
 

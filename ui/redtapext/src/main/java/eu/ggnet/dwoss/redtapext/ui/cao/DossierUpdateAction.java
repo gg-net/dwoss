@@ -25,16 +25,16 @@ import javax.swing.Action;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
+import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.core.widget.saft.OkCancelWrap;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateController;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateView;
-import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.dwoss.core.widget.saft.Reply;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.saft.core.UiCore;
 
 import static eu.ggnet.saft.core.ui.AlertType.ERROR;
 
@@ -69,16 +69,17 @@ public class DossierUpdateAction extends AbstractAction {
             return;
         }
 
-        Ui.exec(() -> {
-            Ui.build().parent(parent).swing().eval(() -> {
-                DocumentUpdateView view = new DocumentUpdateView(doc);
-                DocumentUpdateController controller = new DocumentUpdateController(view, doc);
-                view.setController(controller);
-                view.setCustomerValues(id);
-                return OkCancelWrap.vetoResult(view);
-            }).opt().filter(this::handleFailure).map(Reply::getPayload).ifPresent(this::handleSuccess);
-        });
+        Ui.build().parent(parent).swing().eval(() -> {
+            DocumentUpdateView view = new DocumentUpdateView(doc);
+            DocumentUpdateController controller = new DocumentUpdateController(view, doc);
+            view.setController(controller);
+            view.setCustomerValues(id);
+            return OkCancelWrap.vetoResult(view);
+        }).cf()
+                .thenAccept(d -> handleSuccess(d))
+                .handle(UiCore.global().handler(parent).andFinally(() -> revertCreate()));
 
+        //opt().filter(this::handleFailure).map(Reply::getPayload).ifPresent(this::handleSuccess);
     }
 
     private void handleSuccess(Document doc) {
@@ -86,15 +87,9 @@ public class DossierUpdateAction extends AbstractAction {
         redTapeController.reloadSelectionOnStateChange(result.getDossier());
     }
 
-    private boolean handleFailure(Reply<Document> reply) {
-        if ( reply.hasSucceded() ) return true;
-        try {
-            doc = Dl.remote().lookup(RedTapeWorker.class).revertCreate(doc);
-            redTapeController.reloadSelectionOnStateChange(doc.getDossier());
-        } catch (UserInfoException ex) {
-            Ui.handle(ex);
-        }
-        return false;
+    private void revertCreate() throws UserInfoException {
+        doc = Dl.remote().lookup(RedTapeWorker.class).revertCreate(doc);
+        redTapeController.reloadSelectionOnStateChange(doc.getDossier());
     }
 
 }

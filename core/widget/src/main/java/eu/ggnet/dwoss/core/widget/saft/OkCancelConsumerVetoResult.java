@@ -22,7 +22,7 @@ import javax.swing.JPanel;
 
 import eu.ggnet.saft.core.ui.ResultProducer;
 
-public class OkCancelConsumerVetoResult<V, U, T extends JPanel & ResultProducer<V> & VetoableOnOk & Consumer<U>> extends AbstractOkCancelPanelWrapper<T> implements ResultProducer<Reply<V>>, Consumer<U> {
+public class OkCancelConsumerVetoResult<V, U, T extends JPanel & ResultProducer<V> & VetoableOnOk & Consumer<U>> extends AbstractOkCancelPanelWrapper<T> implements ResultProducer<V>, Consumer<U> {
 
     private T panel;
 
@@ -33,8 +33,8 @@ public class OkCancelConsumerVetoResult<V, U, T extends JPanel & ResultProducer<
     }
 
     @Override
-    public Reply<V> getResult() {
-        return okPressed ? Reply.success(panel.getResult()) : Reply.failure("Cancel pressed");
+    public V getResult() {
+        return okPressed ? panel.getResult() : null;
     }
 
     @Override

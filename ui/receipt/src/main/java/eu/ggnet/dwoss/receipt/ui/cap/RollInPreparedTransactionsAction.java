@@ -21,7 +21,6 @@ import java.awt.event.ActionEvent;
 import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.core.widget.saft.OkCancelWrap;
-import eu.ggnet.dwoss.core.widget.saft.Reply;
 import eu.ggnet.dwoss.receipt.ui.cap.support.RollInPreparedTransactionViewCask;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.StockTransactionProcessor;
@@ -47,15 +46,13 @@ public class RollInPreparedTransactionsAction extends AccessableAction {
             Ui.build().title("Stock Transactionen einrollen ?").swing()
                     .eval(() -> Dl.remote().lookup(StockAgent.class).findStockTransactionEager(ROLL_IN, PREPARED), () -> OkCancelWrap.consumerVetoResult(new RollInPreparedTransactionViewCask()))
                     .opt()
-                    .filter(Reply::hasSucceded)
-                    .map(Reply::getPayload)
                     .ifPresent(sts -> Progressor.global().run(() -> Dl.remote().lookup(StockTransactionProcessor.class).rollIn(sts, Dl.local().lookup(Guardian.class).getUsername())));
         });
     }
-    
+
     /*
-     
-    Progressor.global().run("Title",() -> Dl.remote().lookup(MailSalesListingService.class).generateResellerXlsAndSendToSubscribedCustomers());    
+
+    Progressor.global().run("Title",() -> Dl.remote().lookup(MailSalesListingService.class).generateResellerXlsAndSendToSubscribedCustomers());
     Progressor.run(() -> Dl.remote().lookup(MailSalesListingService.class).generateResellerXlsAndSendToSubscribedCustomers());
 
      */

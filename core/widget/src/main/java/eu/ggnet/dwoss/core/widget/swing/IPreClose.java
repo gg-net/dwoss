@@ -16,10 +16,13 @@
  */
 package eu.ggnet.dwoss.core.widget.swing;
 
+import eu.ggnet.dwoss.core.widget.saft.OkCancelWrap;
+import eu.ggnet.dwoss.core.widget.saft.VetoableOnOk;
+
 /**
  * Simple Interface to allow sub components to disallow some opperations.
  *
- * @deprecated Use saft.
+ * @deprecated Use {@link VetoableOnOk} and the {@link OkCancelWrap} in saft.
  */
 @Deprecated
 public interface IPreClose {

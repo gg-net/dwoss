@@ -29,7 +29,6 @@ import eu.ggnet.dwoss.price.ee.Exporter;
 import eu.ggnet.dwoss.price.ee.Importer;
 import eu.ggnet.dwoss.price.ee.engine.PriceEngineResult.Change;
 import eu.ggnet.dwoss.price.ui.PriceBlockerViewCask;
-import eu.ggnet.dwoss.core.widget.saft.Reply;
 import eu.ggnet.saft.core.Ui;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_SET_UNIT_PRICE;
@@ -63,8 +62,6 @@ public class PriceBlockerAction extends AccessableAction {
                     .map(Reply::getPayload)
                     .ifPresent(priceEngineResult -> {
                         Ui.build().swing().eval(() -> OkCancelWrap.vetoResult(new PriceBlockerViewCask(sopoOptional.get(), priceEngineResult.getProductDescription(), priceEngineResult.getCustomerPrice(), priceEngineResult.getRetailerPrice()))).opt()
-                                .filter(Failure::handle)
-                                .map(Reply::getPayload)
                                 .ifPresent(payload -> {
                                     priceEngineResult.setCustomerPrice(payload.customerPrice);
                                     priceEngineResult.setRetailerPrice(payload.retailerPrice);

@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.core.widget.saft.OkCancelWrap;
-import eu.ggnet.dwoss.core.widget.saft.Reply;
 import eu.ggnet.dwoss.report.ee.ReportAgent;
 import eu.ggnet.dwoss.report.ui.cap.support.CreateNewReportView;
 import eu.ggnet.dwoss.report.ui.main.ReportController;
@@ -47,8 +46,6 @@ public class CreateNewReportAction extends AccessableAction {
         Ui.exec(() -> {
             Ui.build().swing().eval(() -> OkCancelWrap.vetoResult(new CreateNewReportView()))
                     .opt()
-                    .filter(Reply::hasSucceded)
-                    .map(Reply::getPayload)
                     .ifPresent(v -> {
                         LoggerFactory.getLogger(CreateNewReportAction.class).info("{}", v.getParameter());
                         Ui.build().fxml().show(() -> Progressor.global().run(() -> new In(Dl.remote().lookup(ReportAgent.class).prepareReport(v.getParameter(), v.loadUnreported()), false)), ReportController.class);

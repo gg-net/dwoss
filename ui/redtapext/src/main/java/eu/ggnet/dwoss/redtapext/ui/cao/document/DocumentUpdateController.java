@@ -23,11 +23,13 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.core.common.values.PositionType;
+import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.saft.OkCancelWrap;
 import eu.ggnet.dwoss.core.widget.swing.CloseType;
 import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
-import eu.ggnet.dwoss.core.widget.saft.OkCancelWrap;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
@@ -37,9 +39,6 @@ import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker.Addresses;
 import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.ShippingCostHelper;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.position.*;
-import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.dwoss.core.widget.saft.Reply;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 
 import static eu.ggnet.dwoss.core.common.values.PositionType.PRODUCT_BATCH;
@@ -122,7 +121,6 @@ public class DocumentUpdateController {
         return Ui.build().parent(view).title("Position bearbeiten").swing()
                 .eval(() -> new PositionAndTaxType(pos, document.getTaxType()), () -> OkCancelWrap.consumerVetoResult(new PositionUpdateCask()))
                 .opt()
-                .map(Reply::getPayload)
                 .orElse(null);
     }
 
@@ -143,7 +141,6 @@ public class DocumentUpdateController {
         document.append(Ui.build().parent(view).title("Diensleistung/Kleinteil hinzufügen o. bearbeiten").swing()
                 .eval(() -> OkCancelWrap.consumerVetoResult(new ServiceViewCask(document.getTaxType())))
                 .opt()
-                .map(Reply::getPayload)
                 .orElse(null));
     }
 
