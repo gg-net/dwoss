@@ -149,6 +149,7 @@ public class RedTapeWorkerOperation implements RedTapeWorker {
      */
     @Override
     public Document revertCreate(Document detached) throws UserInfoException {
+        L.info("revertCreate(document.id={})", detached.getId());
         Document original = new DocumentEao(redTapeEm).findById(detached.getId());
         if ( original.isActive() != detached.isActive() )
             throw new UserInfoException("Das Document wurde durch jemand anderen inzwischen geändert, bitte neu laden.\n"

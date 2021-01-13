@@ -36,8 +36,6 @@ import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateView;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.UiCore;
 
-import static eu.ggnet.saft.core.ui.AlertType.ERROR;
-
 /**
  *
  * @author pascal.perau
@@ -64,22 +62,17 @@ public class DossierUpdateAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if ( doc.getDossier().getId() == 0 ) {
-            Ui.build(parent).title("Fehler").alert().message("Sopo Aufträge können nicht bearbeitet werden.").show(ERROR);
-            return;
-        }
-
-        Ui.build().parent(parent).swing().eval(() -> {
-            DocumentUpdateView view = new DocumentUpdateView(doc);
-            DocumentUpdateController controller = new DocumentUpdateController(view, doc);
-            view.setController(controller);
-            view.setCustomerValues(id);
-            return OkCancelWrap.vetoResult(view);
-        }).cf()
+        Ui.build().parent(parent).swing()
+                .eval(() -> {
+                    DocumentUpdateView view = new DocumentUpdateView(doc);
+                    DocumentUpdateController controller = new DocumentUpdateController(view, doc);
+                    view.setController(controller);
+                    view.setCustomerValues(id);
+                    return OkCancelWrap.vetoResult(view);
+                })
+                .cf()
                 .thenAccept(d -> handleSuccess(d))
                 .handle(UiCore.global().handler(parent).andFinally(() -> revertCreate()));
-
-        //opt().filter(this::handleFailure).map(Reply::getPayload).ifPresent(this::handleSuccess);
     }
 
     private void handleSuccess(Document doc) {
@@ -87,6 +80,7 @@ public class DossierUpdateAction extends AbstractAction {
         redTapeController.reloadSelectionOnStateChange(result.getDossier());
     }
 
+    // cancel case
     private void revertCreate() throws UserInfoException {
         doc = Dl.remote().lookup(RedTapeWorker.class).revertCreate(doc);
         redTapeController.reloadSelectionOnStateChange(doc.getDossier());

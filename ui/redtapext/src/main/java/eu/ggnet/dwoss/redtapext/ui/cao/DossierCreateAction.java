@@ -23,6 +23,8 @@ import javax.swing.AbstractAction;
 
 import eu.ggnet.dwoss.core.common.values.CustomerFlag;
 import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.core.widget.saft.OkCancelWrap;
 import eu.ggnet.dwoss.customer.api.CustomerMetaData;
 import eu.ggnet.dwoss.customer.api.CustomerService;
@@ -34,9 +36,7 @@ import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker.Addresses;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateController;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateView;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.saft.core.UiCore;
 
 /**
@@ -76,20 +76,15 @@ public class DossierCreateAction extends AbstractAction {
             Addresses addresses = Dl.remote().lookup(RedTapeWorker.class).requestAdressesByCustomer(customer.id());
             doc.setInvoiceAddress(addresses.invoice);
             doc.setShippingAddress(addresses.shipping);
-            Ui.exec(() -> {
-                Ui.build().parent(controller.getView()).swing().eval(() -> {
-                    DocumentUpdateView docView = new DocumentUpdateView(doc);
-                    docView.setController(new DocumentUpdateController(docView, doc));
-                    docView.setCustomerValues(customer.id());
-                    return OkCancelWrap.vetoResult(docView);
-                }).cf()
-                        .thenAccept(d -> handleSuccess(d))
-                        .handle(UiCore.global().handler(parent).andFinally(() -> Dl.remote().lookup(RedTapeWorker.class).revertCreate(doc)));
-
-//                        .opt().filter(r -> handleFailure(r, doc))
-//                        .map(Reply::getPayload)
-//                        .ifPresent(this::handleSuccesses);
-            });
+            Ui.build(controller.getView()).swing()
+                    .eval(() -> {
+                        DocumentUpdateView docView = new DocumentUpdateView(doc);
+                        docView.setController(new DocumentUpdateController(docView, doc));
+                        docView.setCustomerValues(customer.id());
+                        return OkCancelWrap.vetoResult(docView);
+                    }).cf()
+                    .thenAccept(d -> handleSuccess(d))
+                    .handle(UiCore.global().handler(parent).andFinally(() -> Dl.remote().lookup(RedTapeWorker.class).revertCreate(doc)));
         });
     }
 
