@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao.dossierTable;
 
-import java.awt.Dialog;
-import java.awt.Dialog.ModalityType;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -39,21 +37,24 @@ import javafx.stage.Modality;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.core.common.Css;
 import eu.ggnet.dwoss.core.common.values.Warranty;
 import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.HtmlPane;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
 import eu.ggnet.dwoss.core.widget.swing.TableColumnChooserPopup;
 import eu.ggnet.dwoss.redtape.ee.api.LegacyRemoteBridge;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.redtape.ee.format.DossierFormater;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
-import eu.ggnet.dwoss.redtapext.ui.HtmlDialog;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.saft.core.Saft;
-import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiUtil;
 
 import static eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableView.FilterType.LEGACY;
+import static javafx.scene.control.ButtonBar.ButtonData.OK_DONE;
 
 /**
  * A JPanel for listings of Dossiers
@@ -86,6 +87,12 @@ public class DossierTableView extends javax.swing.JPanel {
 
     @Inject
     private Saft saft;
+
+    @Inject
+    private RemoteDl remote;
+
+    @Inject
+    private Guardian guardian;
 
     private DossierTableModel model;
 
@@ -126,8 +133,8 @@ public class DossierTableView extends javax.swing.JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Dossier dos = selectedDossier();
-                new HtmlDialog(SwingUtilities.getWindowAncestor(DossierTableView.this), Dialog.ModalityType.MODELESS)
-                        .setText(Dl.remote().lookup(RedTapeWorker.class).toDetailedHtml(dos.getId())).setVisible(true);
+                saft.build(DossierTableView.this).title("Details von " + dos.getIdentifier()).fx()
+                        .show(() -> Css.toHtml5WithStyle(remote.lookup(RedTapeWorker.class).toDetailedHtml(dos.getId())), () -> new HtmlPane());
             }
         });
         detailsItem.setText("Details");
@@ -135,9 +142,9 @@ public class DossierTableView extends javax.swing.JPanel {
         JMenuItem historyItem = new JMenuItem(new AbstractAction("Verlauf") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                HtmlDialog dialog = new HtmlDialog(SwingUtilities.getWindowAncestor(DossierTableView.this), ModalityType.MODELESS);
-                dialog.setText(DossierFormater.toHtmlHistory(selectedDossier()));
-                dialog.setVisible(true);
+                Dossier dos = selectedDossier();
+                saft.build(DossierTableView.this).title("Verlauf von " + dos.getIdentifier()).fx()
+                        .show(() -> Css.toHtml5WithStyle(DossierFormater.toHtmlHistory(dos)), () -> new HtmlPane());
             }
         });
         historyItem.setText("Verlauf");
@@ -145,7 +152,7 @@ public class DossierTableView extends javax.swing.JPanel {
         JMenuItem warrantyChangeItem = new JMenuItem(new AbstractAction("Garantie ändern") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Ui.build(DossierTableView.this).title("Garantieänderung").modality(Modality.WINDOW_MODAL).dialog().eval(() -> {
+                saft.build(DossierTableView.this).title("Garantieänderung").modality(Modality.WINDOW_MODAL).dialog().eval(() -> {
 
                     //prepare warranty combobox
                     ComboBox<Warranty> warrantyBox = new ComboBox<>(FXCollections.observableArrayList(Warranty.values()));
@@ -157,7 +164,7 @@ public class DossierTableView extends javax.swing.JPanel {
                                 if ( item == null || empty ) {
                                     setGraphic(null);
                                 } else {
-                                    setText(item.getName());
+                                    setText(item.description);
                                 }
                             }
                         };
@@ -171,21 +178,18 @@ public class DossierTableView extends javax.swing.JPanel {
                     );
 
                     ButtonType addButtonType = new ButtonType("Durchführen", ButtonData.OK_DONE);
-                    javafx.scene.control.Dialog<Dossier> dialog = new javafx.scene.control.Dialog<>();
+                    javafx.scene.control.Dialog<Warranty> dialog = new javafx.scene.control.Dialog<>();
                     dialog.getDialogPane().setContent(box);
-                    dialog.getDialogPane().getButtonTypes().add(addButtonType);
-                    dialog.setResultConverter(bType -> {
-                        if ( bType == addButtonType ) {
-                            if ( warrantyBox.getValue() != null ) {
-                                return controller.updateDossierWarranty(selectedDossier(), warrantyBox.getValue());
-                            }
-                        }
-                        Ui.build(DossierTableView.this).alert("Bitte Garantietyp wählen");
+                    dialog.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
+                    dialog.setResultConverter(pressed -> {
+                        if ( pressed.getButtonData() == OK_DONE ) return warrantyBox.getValue(); // Null implies cancel
                         return null;
                     });
                     return dialog;
-                }).cf().thenAcceptAsync((dos) -> {
+                }).cf().thenApplyAsync((warranty) -> {
                     L.debug("Finished warranty update, calling model/view updates");
+                    return UiUtil.exceptionRun(() -> remote.lookup(RedTapeWorker.class).updateWarranty(selectedDossier().getId(), warranty, guardian.getUsername()));
+                }, saft.executorService()).thenAcceptAsync(dos -> {
                     model.update(selectedDossier(), dos);
                     controller.selectionChanged(null);
                     controller.selectionChanged(dos);
@@ -407,7 +411,8 @@ public class DossierTableView extends javax.swing.JPanel {
         controller.selectionChanged(selectedDos);
         if ( evt.getClickCount() == 2 && table.getSelectedRow() != -1 && model != null ) {
             Dossier dos = selectedDossier();
-            new HtmlDialog(SwingUtilities.getWindowAncestor(this), Dialog.ModalityType.MODELESS).setText(Dl.remote().lookup(RedTapeWorker.class).toDetailedHtml(dos.getId())).setVisible(true);
+            saft.build(DossierTableView.this).title("Dossier " + dos.getIdentifier()).fx()
+                    .show(() -> Css.toHtml5WithStyle(remote.lookup(RedTapeWorker.class).toDetailedHtml(dos.getId())), () -> new HtmlPane());
         }
         if ( SwingUtilities.isRightMouseButton(evt) ) {
             dossierPopup.show(evt.getComponent(), evt.getX(), evt.getY());
@@ -431,9 +436,8 @@ public class DossierTableView extends javax.swing.JPanel {
 
     private void helpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpButtonActionPerformed
         if ( controller == null ) return;
-        HtmlDialog dialog = new HtmlDialog();
-        dialog.setText(controller.generateHelp());
-        dialog.setVisible(true);
+        saft.build(DossierTableView.this).title("Hilfe").fx()
+                .show(() -> Css.toHtml5WithStyle(controller.generateHelp()), () -> new HtmlPane());
     }//GEN-LAST:event_helpButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

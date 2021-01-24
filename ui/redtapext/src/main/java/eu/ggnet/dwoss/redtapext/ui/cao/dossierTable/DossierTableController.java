@@ -26,16 +26,12 @@ import javax.swing.SwingWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.core.common.values.Warranty;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.ee.api.LegacyRemoteBridge;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
-import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.IDossierSelectionHandler;
-import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.dwoss.core.widget.auth.Guardian;
 
 import static eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableController.IMAGE_NAME.*;
 
@@ -70,8 +66,7 @@ public class DossierTableController {
         private IMAGE_NAME(String fileName) {
             this.fileName = fileName;
         }
-        
-        
+
     }
 
     private final static Dossier[] T = new Dossier[0];
@@ -248,23 +243,6 @@ public class DossierTableController {
 
     public void selectionChanged(Dossier dos) {
         selectionHandler.selected(dos);
-    }
-
-    /**
-     * Updates the warranty type of all unit positions on the crucial document of the dossier.
-     *
-     * @param dos
-     * @param warranty
-     */
-    public Dossier updateDossierWarranty(Dossier dos, Warranty warranty) {
-        L.debug("Attempting to update warranty={} on dossier={}", warranty, dos);
-        Dossier updatedDos = null;
-        try {
-            updatedDos = Dl.remote().lookup(RedTapeWorker.class).updateWarranty(dos.getId(), warranty, Dl.local().lookup(Guardian.class).getUsername());
-        } catch (UserInfoException ex) {
-            Ui.handle(ex);
-        }
-        return updatedDos;
     }
 
     /**

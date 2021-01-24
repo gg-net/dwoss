@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -100,11 +100,11 @@ public class SalesProduct implements Serializable {
     public String getPartNo() {
         return partNo;
     }
-    
+
     public void setPartNo(String partNo) {
         this.partNo = partNo;
     }
-    
+
     /**
      * Get the value of description
      *
@@ -113,7 +113,7 @@ public class SalesProduct implements Serializable {
     public String getDescription() {
         return description;
     }
-    
+
     /**
      * Set the value of description
      *
@@ -124,7 +124,7 @@ public class SalesProduct implements Serializable {
         this.description = description;
         propertyChangeSupport.firePropertyChange(PROP_DESCRIPTION, oldDescription, description);
     }
-    
+
     /**
      * Get the value of price
      *
@@ -133,7 +133,7 @@ public class SalesProduct implements Serializable {
     public Double getPrice() {
         return price;
     }
-    
+
     /**
      * Set the value of price
      *
@@ -144,7 +144,7 @@ public class SalesProduct implements Serializable {
         this.price = price;
         propertyChangeSupport.firePropertyChange(PROP_PRICE, oldPrice, price);
     }
-    
+
     /**
      * Get the value of Name
      *
@@ -153,7 +153,7 @@ public class SalesProduct implements Serializable {
     public String getName() {
         return name;
     }
-    
+
     /**
      * Set the value of Name
      *
@@ -164,7 +164,7 @@ public class SalesProduct implements Serializable {
         this.name = Name;
         propertyChangeSupport.firePropertyChange(PROP_NAME, oldName, Name);
     }
-    
+
     /**
      * Get the value of uniqueUnitId
      *
@@ -173,7 +173,7 @@ public class SalesProduct implements Serializable {
     public long getUniqueUnitProductId() {
         return uniqueUnitProductId;
     }
-    
+
     /**
      * Set the value of uniqueUnitId
      *
@@ -184,7 +184,7 @@ public class SalesProduct implements Serializable {
         this.uniqueUnitProductId = uniqueUnitProductId;
         propertyChangeSupport.firePropertyChange(PROP_UNIQUEUNITID, oldUniqueUnitId, uniqueUnitProductId);
     }
-    
+
     /**
      * Add PropertyChangeListener.
      *
@@ -193,7 +193,7 @@ public class SalesProduct implements Serializable {
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         propertyChangeSupport.addPropertyChangeListener(listener);
     }
-    
+
     /**
      * Remove PropertyChangeListener.
      *
@@ -203,7 +203,7 @@ public class SalesProduct implements Serializable {
         propertyChangeSupport.removePropertyChangeListener(listener);
     }
     //</editor-fold>
-    
+
     @Override
     public String toString() {
         return "SalesProduct{" + "partNo=" + partNo + ", name=" + name + ", price=" + price + ", uniqueUnitProductId=" + uniqueUnitProductId + ", description=" + description + '}';
@@ -211,10 +211,10 @@ public class SalesProduct implements Serializable {
 
     public String toHtml() {
         StringBuilder builder = new StringBuilder();
-        builder.append("<html><h1>").append(partNo).append(" ").append(name).append("</h1><br>");
+        builder.append("<h1>").append(partNo).append(" ").append(name).append("</h1><br>");
         builder.append("Price: ").append(price).append("<br>");
         builder.append("Unique Unit Product Id: ").append(uniqueUnitProductId).append("<br>");
-        builder.append("Description: ").append(description).append("</html>");
+        builder.append("Description: ").append(description);
 
         return builder.toString();
     }
@@ -226,7 +226,7 @@ public class SalesProduct implements Serializable {
         hash = 97 * hash + Objects.hashCode(this.partNo);
         return hash;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if ( obj == null ) return false;

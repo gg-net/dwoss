@@ -70,8 +70,6 @@ public class RedTapeView extends JPanel {
 
     private final Logger L = LoggerFactory.getLogger(RedTapeView.class);
 
-    DossierTableView dossierTableView;
-
     private final PropertyChangeListener redTapeViewListener = new PropertyChangeListener() {
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
@@ -108,6 +106,9 @@ public class RedTapeView extends JPanel {
     @Inject
     private RedTapeController controller;
 
+    @Inject
+    private DossierTableView dossierTableView;
+
     private final JPopupMenu documentPopup;
 
     private final ObservableList<Position> positions = FXCollections.observableArrayList();
@@ -115,8 +116,6 @@ public class RedTapeView extends JPanel {
     /** Creates new form RedTapeBasic */
     public RedTapeView() {
         initComponents();
-        dossierTableView = new DossierTableView();
-        dossierTableViewPanel.add(dossierTableView, BorderLayout.CENTER);
 
         initFxComponents();
 
@@ -134,7 +133,9 @@ public class RedTapeView extends JPanel {
 
     @PostConstruct
     private void initCdi() {
-        // Init Controller 
+        dossierTableViewPanel.add(dossierTableView, BorderLayout.CENTER);
+
+        // Init Controller
         dossierTableView.setController(controller.getDossierTableController());
         controller.getDossierTableController().setView(dossierTableView);
 
@@ -144,7 +145,6 @@ public class RedTapeView extends JPanel {
 
         controller.setModel(model);
         controller.setView(this);
-        System.out.println("INIT Done");
     }
 
     private void initFxComponents() {
