@@ -134,7 +134,7 @@ public class RedTapeView extends JPanel {
 
     @PostConstruct
     private void initCdi() {
-        // Init Controller
+        // Init Controller 
         dossierTableView.setController(controller.getDossierTableController());
         controller.getDossierTableController().setView(dossierTableView);
 
