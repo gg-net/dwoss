@@ -16,10 +16,10 @@
  */
 package eu.ggnet.dwoss.core.widget.auth;
 
-import eu.ggnet.dwoss.rights.api.Authorisation;
+import eu.ggnet.dwoss.rights.api.AtomicRight;
 
 /**
- * This interface can be implement to make a Class accessible with a Specific {@link Authorisation}.
+ * This interface can be implement to make a Class accessible with a Specific {@link AtomicRight}.
  * <p>
  * @author Bastian Venz
  */
@@ -37,6 +37,6 @@ public interface Accessable {
      * <p>
      * @return the {@link Authorisation} which is needed to enable the implemented Class.
      */
-    Authorisation getNeededRight();
+    AtomicRight getNeededRight();
 
 }

@@ -23,9 +23,8 @@ import javafx.scene.Node;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import eu.ggnet.dwoss.rights.api.Authorisation;
 import eu.ggnet.dwoss.core.widget.auth.Accessable;
-
+import eu.ggnet.dwoss.rights.api.AtomicRight;
 
 /**
  * Class that wrappes multiple nodes to a specific authorisation to control accessability over these nodes.
@@ -36,7 +35,7 @@ public class NodeEnabler implements Accessable {
 
     private final Set<Node> nodes;
 
-    private final Authorisation authorisation;
+    private final AtomicRight authorisation;
 
     /**
      * Constructor, verifies if the supplied object has a method setEnabled(boolean)
@@ -44,7 +43,7 @@ public class NodeEnabler implements Accessable {
      * @param nodes       nodes to be accessable by a specific authorisation
      * @param neededRight authorisation instance to control accessibility to the given nodes
      */
-    public NodeEnabler(Authorisation neededRight, Node... nodes) {
+    public NodeEnabler(AtomicRight neededRight, Node... nodes) {
         this.authorisation = neededRight;
         this.nodes = new HashSet<>(Arrays.asList(nodes));
     }
@@ -59,7 +58,7 @@ public class NodeEnabler implements Accessable {
     }
 
     @Override
-    public Authorisation getNeededRight() {
+    public AtomicRight getNeededRight() {
         return authorisation;
     }
 
@@ -71,7 +70,7 @@ public class NodeEnabler implements Accessable {
         hash = 59 * hash + Objects.hashCode(this.authorisation);
         return hash;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if ( this == obj ) return true;
@@ -83,7 +82,7 @@ public class NodeEnabler implements Accessable {
         return true;
     }
     //</editor-fold>
-    
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);

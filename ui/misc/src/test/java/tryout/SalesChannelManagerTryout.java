@@ -1,29 +1,23 @@
 package tryout;
 
-import eu.ggnet.dwoss.core.widget.Dl;
-import eu.ggnet.dwoss.core.widget.auth.UserChangeListener;
-import eu.ggnet.dwoss.core.widget.auth.Accessable;
-import eu.ggnet.dwoss.core.widget.auth.Guardian;
-import eu.ggnet.dwoss.core.widget.auth.AuthenticationException;
-import eu.ggnet.dwoss.stock.ee.entity.Stock;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransactionType;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
-import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType;
-
 import java.util.*;
 
 import javax.persistence.LockModeType;
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.common.values.SalesChannel;
+import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.auth.*;
 import eu.ggnet.dwoss.misc.ee.SalesChannelHandler;
 import eu.ggnet.dwoss.misc.ui.cap.OpenSalesChannelManagerAction;
+import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
+import eu.ggnet.dwoss.stock.ee.entity.*;
 import eu.ggnet.dwoss.stock.ee.model.SalesChannelLine;
-import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.dwoss.rights.api.Authorisation;
-import eu.ggnet.saft.core.*;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
 
 import static eu.ggnet.dwoss.core.common.values.SalesChannel.CUSTOMER;
 import static eu.ggnet.dwoss.core.common.values.SalesChannel.RETAILER;
@@ -187,7 +181,7 @@ public class SalesChannelManagerTryout {
             }
 
             @Override
-            public Set<Authorisation> getRights() {
+            public Set<AtomicRight> getRights() {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
 
@@ -217,7 +211,7 @@ public class SalesChannelManagerTryout {
             }
 
             @Override
-            public void add(Object enableAble, Authorisation authorisation) {
+            public void add(Object enableAble, AtomicRight authorisation) {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
 
@@ -227,7 +221,7 @@ public class SalesChannelManagerTryout {
             }
 
             @Override
-            public boolean hasRight(Authorisation authorisation) {
+            public boolean hasRight(AtomicRight authorisation) {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
 

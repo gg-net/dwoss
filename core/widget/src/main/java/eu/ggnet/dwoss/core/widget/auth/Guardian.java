@@ -20,7 +20,7 @@ import java.util.Set;
 
 import javax.swing.Action;
 
-import eu.ggnet.dwoss.rights.api.Authorisation;
+import eu.ggnet.dwoss.rights.api.AtomicRight;
 
 /**
  * Simple Authentication Interface.
@@ -61,7 +61,7 @@ public interface Guardian {
      *
      * @return the active Rights or an empty Set.
      */
-    Set<Authorisation> getRights();
+    Set<AtomicRight> getRights();
 
     /**
      * Returns the Username or an empty String if no one is authenticated yet.
@@ -104,7 +104,7 @@ public interface Guardian {
      * The {@link Accessable} get called the method {@link Accessable#setEnabled(boolean)} with true
      * when the Rights are setted and the method {@link Accessable#getNeededRight()} return a {@link java.util.Set} of type {@link Authorisation}
      * containing.
-     * 
+     *
      * @param accessable which should be added in a intern List/Set.
      */
     public void add(Accessable accessable);
@@ -112,24 +112,24 @@ public interface Guardian {
     /**
      * Add a object which has a setEnabled Method, like {@link Action#setEnabled(boolean)}.
      * It will wrap this in a AccessEnabler which then control it.
-     * 
-     * @param enableAble the object, that has an setEnable method
+     *
+     * @param enableAble    the object, that has an setEnable method
      * @param authorisation the Authorisation which is responsible for the enable
      */
-    public void add(Object enableAble, Authorisation authorisation);
+    public void add(Object enableAble, AtomicRight authorisation);
 
     /**
      * This method remove a {@link Accessable} from an internal list.
-     * 
+     *
      * @param accessable the {@link Accessable} which should removed.
      */
     public void remove(Accessable accessable);
 
     /**
      * This method returns true if the current user have the given {@link Authorisation}.
-     * 
+     *
      * @param authorisation the given {@link Authorisation} which will be checked.
      * @return true if the current user have the given {@link Authorisation}.
      */
-    public boolean hasRight(Authorisation authorisation);
+    public boolean hasRight(AtomicRight authorisation);
 }

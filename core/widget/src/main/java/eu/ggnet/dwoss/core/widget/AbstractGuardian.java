@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;
-import eu.ggnet.dwoss.rights.api.Authorisation;
 
 /**
  * An Implementation which handles the AccessDependent and Rights Storage, but without an actual Authentication.
@@ -40,9 +39,9 @@ import eu.ggnet.dwoss.rights.api.Authorisation;
  */
 // Todo: I think all the hard dependecies to the rights api could be moved to the final implementation in the LookupAuthenctionGuardian.
 public abstract class AbstractGuardian implements Guardian {
-    
+
     private final Logger L = LoggerFactory.getLogger(AbstractGuardian.class);
-    
+
     private final List<UserChangeListener> userChangeListeners = new ArrayList<>();
 
     private final Set<Accessable> accessables = new HashSet<>();
@@ -58,8 +57,6 @@ public abstract class AbstractGuardian implements Guardian {
     public AbstractGuardian() {
         L.debug("New instance of {}", this);
     }
-    
-    
 
     @Override
     public Set<String> getOnceLoggedInUsernames() {
@@ -116,8 +113,8 @@ public abstract class AbstractGuardian implements Guardian {
      * @param dto is a {@link Operator} that will be setted.
      */
     protected void setRights(Operator dto) {
-        L.debug("setRights({})",dto);
-        L.debug("setRights(): accessables.size = {}, userChangeListeners.size = {}",accessables.size(), userChangeListeners.size());
+        L.debug("setRights({})", dto);
+        L.debug("setRights(): accessables.size = {}, userChangeListeners.size = {}", accessables.size(), userChangeListeners.size());
         operator = dto;
         quickRights.put(dto.quickLoginKey, dto);
         for (Accessable accessable : accessables) {
@@ -135,7 +132,7 @@ public abstract class AbstractGuardian implements Guardian {
             for (UserChangeListener listener : userChangeListeners) {
                 listener.loggedIn(dto.username);
             }
-        }        
+        }
     }
 
     /**
@@ -165,7 +162,7 @@ public abstract class AbstractGuardian implements Guardian {
      * @param atomicRight is the {@link AtomicRight} which is needed.
      */
     @Override
-    public void add(Object enableAble, Authorisation atomicRight) {
+    public void add(Object enableAble, AtomicRight atomicRight) {
         if ( atomicRight == null ) throw new NullPointerException("Supplied AtomicRight is null");
         AccessEnabler ae = new AccessEnabler(enableAble, atomicRight);
         add(ae);
@@ -198,12 +195,12 @@ public abstract class AbstractGuardian implements Guardian {
      * @return {@link Boolean#TRUE} if the current user have the given {@link AtomicRight}.
      */
     @Override
-    public boolean hasRight(Authorisation atomicRight) {
+    public boolean hasRight(AtomicRight atomicRight) {
         return rights.contains(atomicRight);
     }
 
     @Override
-    public Set<Authorisation> getRights() {
+    public Set<AtomicRight> getRights() {
         return new HashSet<>(rights);
     }
 

@@ -19,25 +19,25 @@ package eu.ggnet.dwoss.core.widget;
 import javax.swing.AbstractAction;
 
 import eu.ggnet.dwoss.core.widget.auth.Accessable;
-import eu.ggnet.dwoss.rights.api.Authorisation;
+import eu.ggnet.dwoss.rights.api.AtomicRight;
 
 /**
- * This class Implements {@link Accessable} and the {@link Authorisation} which is returned {@link Accessable#getNeededRight() } will be setted in the
+ * This class Implements {@link Accessable} and the {@link AtomicRight} which is returned {@link Accessable#getNeededRight() } will be setted in the
  * Constructor.
  * <p>
  * @author Bastian Venz
  */
 public abstract class AccessableAction extends AbstractAction implements Accessable {
 
-    private final Authorisation authorisation;
+    private final AtomicRight authorisation;
 
-    public AccessableAction(Authorisation atomicRight) {
+    public AccessableAction(AtomicRight atomicRight) {
         super(atomicRight.toName());
         this.authorisation = atomicRight;
     }
 
     @Override
-    public Authorisation getNeededRight() {
+    public AtomicRight getNeededRight() {
         return authorisation;
     }
 

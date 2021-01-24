@@ -7,11 +7,8 @@ package tryout.stub;
 
 import java.util.*;
 
-import eu.ggnet.dwoss.core.widget.auth.AuthenticationException;
-import eu.ggnet.dwoss.core.widget.auth.UserChangeListener;
-import eu.ggnet.dwoss.core.widget.auth.Guardian;
-import eu.ggnet.dwoss.core.widget.auth.Accessable;
-import eu.ggnet.dwoss.rights.api.Authorisation;
+import eu.ggnet.dwoss.core.widget.auth.*;
+import eu.ggnet.dwoss.rights.api.AtomicRight;
 
 /**
  *
@@ -46,7 +43,7 @@ public class GuardianStub implements Guardian {
     }
 
     @Override
-    public Set<Authorisation> getRights() {
+    public Set<AtomicRight> getRights() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -76,7 +73,7 @@ public class GuardianStub implements Guardian {
     }
 
     @Override
-    public void add(Object enableAble, Authorisation authorisation) {
+    public void add(Object enableAble, AtomicRight authorisation) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -86,7 +83,7 @@ public class GuardianStub implements Guardian {
     }
 
     @Override
-    public boolean hasRight(Authorisation authorisation) {
+    public boolean hasRight(AtomicRight authorisation) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     //</editor-fold>

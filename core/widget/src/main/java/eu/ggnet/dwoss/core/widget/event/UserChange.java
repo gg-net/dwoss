@@ -21,7 +21,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import eu.ggnet.dwoss.rights.api.Authorisation;
+import eu.ggnet.dwoss.rights.api.AtomicRight;
 
 /**
  * User Change Event.
@@ -32,9 +32,9 @@ public class UserChange {
 
     private final String username;
 
-    private final Set<Authorisation> allowedRights;
+    private final Set<AtomicRight> allowedRights;
 
-    public UserChange(String username, Set<Authorisation> allowedRights) {
+    public UserChange(String username, Set<AtomicRight> allowedRights) {
         this.username = Objects.requireNonNull(username);
         this.allowedRights = Objects.requireNonNull(allowedRights);
     }
@@ -53,7 +53,7 @@ public class UserChange {
      *
      * @return the allowed rights of the new user.
      */
-    public Set<Authorisation> allowedRights() {
+    public Set<AtomicRight> allowedRights() {
         return allowedRights;
     }
 

@@ -21,7 +21,7 @@ import java.lang.reflect.Method;
 import java.util.Objects;
 
 import eu.ggnet.dwoss.core.widget.auth.Accessable;
-import eu.ggnet.dwoss.rights.api.Authorisation;
+import eu.ggnet.dwoss.rights.api.AtomicRight;
 
 /**
  * A Helper wrapper, that checks if a supplied object has a method setEnabled(boolean).
@@ -34,7 +34,7 @@ public class AccessEnabler implements Accessable {
 
     private Method setEnabled;
 
-    private Authorisation ar;
+    private AtomicRight ar;
 
     /**
      * Constructor, verifies if the supplied object has a method setEnabled(boolean)
@@ -44,7 +44,7 @@ public class AccessEnabler implements Accessable {
      * @throws NullPointerException     if the supplied instance is null.
      * @throws IllegalArgumentException if no setEnabled method exists.
      */
-    public AccessEnabler(Object object, Authorisation ar) throws NullPointerException, IllegalArgumentException {
+    public AccessEnabler(Object object, AtomicRight ar) throws NullPointerException, IllegalArgumentException {
         if ( object == null ) throw new NullPointerException("Supplied Instance is null");
         try {
             setEnabled = object.getClass().getMethod("setEnabled", Boolean.TYPE);
@@ -91,7 +91,7 @@ public class AccessEnabler implements Accessable {
     }
 
     @Override
-    public Authorisation getNeededRight() {
+    public AtomicRight getNeededRight() {
         return ar;
     }
 

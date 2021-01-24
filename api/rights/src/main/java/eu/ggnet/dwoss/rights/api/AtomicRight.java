@@ -21,7 +21,7 @@ package eu.ggnet.dwoss.rights.api;
  *
  * @author oliver.guenther
  */
-public enum AtomicRight implements Authorisation {
+public enum AtomicRight {
 
     /**
      * Allows the import of Image Ids.
@@ -250,8 +250,18 @@ public enum AtomicRight implements Authorisation {
         this.description = description;
     }
 
-    @Override
+    /**
+     * Returns description
+     *
+     * @return description
+     * @deprecated use {@link AtomicRight#description() }.
+     */
+    @Deprecated
     public String toName() {
+        return description;
+    }
+
+    public String description() {
         return description;
     }
 

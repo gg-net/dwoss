@@ -30,11 +30,10 @@ import javafx.scene.control.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.assembly.client.support.MenuBuilder;
-import eu.ggnet.dwoss.rights.api.Authorisation;
 import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.auth.Accessable;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.dwoss.rights.api.AtomicRight;
 
 /**
  * Util to build javafx menuitems via CDI wrapping swing actions.
@@ -60,7 +59,7 @@ public class MenuBuilder {
         }
 
         @Override
-        public Authorisation getNeededRight() {
+        public AtomicRight getNeededRight() {
             return accessable.getNeededRight();
         }
     };
