@@ -30,7 +30,7 @@ import javafx.scene.control.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.AccessableMenuItem;
 import eu.ggnet.dwoss.core.widget.auth.Accessable;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
@@ -69,6 +69,9 @@ public class MenuBuilder {
     @Inject
     private Instance<Object> instance;
 
+    @Inject
+    private Guardian guardian;
+
     /**
      * Selects the class in the running CDI context.#
      * It the class is an {@link Action} it is wrapped into a {@link MenuItem}
@@ -79,7 +82,9 @@ public class MenuBuilder {
     public MenuItem item(Class<?> clazz) {
         L.debug("item(clazz={},qualifiers={}) starting", clazz);
         if ( MenuItem.class.isAssignableFrom(clazz) ) {
-            return (MenuItem)instance.select(clazz).get();
+            MenuItem item = (MenuItem)instance.select(clazz).get();
+            if ( item instanceof AccessableMenuItem ) guardian.add((AccessableMenuItem)item);
+            return item;
         } else if ( Action.class.isAssignableFrom(clazz) ) {
             Action action = (Action)instance.select(clazz).get();
             MenuItem item;
@@ -95,7 +100,7 @@ public class MenuBuilder {
 
             item.setOnAction((e) -> action.actionPerformed(new ActionEvent(action, ActionEvent.ACTION_PERFORMED, action.getValue(Action.NAME).toString())));
             // Remapping of old access rules.
-            if ( action instanceof Accessable ) Dl.local().lookup(Guardian.class).add(new MenuActionAccessable(item, (Accessable)action));
+            if ( action instanceof Accessable ) guardian.add(new MenuActionAccessable(item, (Accessable)action));
             return item;
         }
         throw new RuntimeException("Class " + clazz + " not supported");

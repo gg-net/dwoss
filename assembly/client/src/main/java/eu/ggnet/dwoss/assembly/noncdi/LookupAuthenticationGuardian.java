@@ -16,8 +16,6 @@ package eu.ggnet.dwoss.assembly.noncdi;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-
 import java.util.stream.Collectors;
 
 import org.openide.util.lookup.ServiceProvider;
@@ -35,6 +33,7 @@ import eu.ggnet.dwoss.rights.ee.op.Authentication;
 /**
  * Implementation of an IAuthenticator.
  */
+// TODO: As long as one call to Dl.local().lookup(Guardian.class) exists, this needs to be outside of CDI with the old serviceloader pattern.
 @ServiceProvider(service = Guardian.class)
 public class LookupAuthenticationGuardian extends AbstractGuardian implements Guardian, LocalSingleton {
 

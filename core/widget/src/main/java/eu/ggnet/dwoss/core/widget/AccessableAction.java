@@ -32,7 +32,7 @@ public abstract class AccessableAction extends AbstractAction implements Accessa
     private final AtomicRight authorisation;
 
     public AccessableAction(AtomicRight atomicRight) {
-        super(atomicRight.toName());
+        super(atomicRight.description());
         this.authorisation = atomicRight;
     }
 
