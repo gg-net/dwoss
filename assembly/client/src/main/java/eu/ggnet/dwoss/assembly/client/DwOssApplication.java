@@ -58,7 +58,6 @@ import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.core.widget.dl.RemoteLookup;
 import eu.ggnet.dwoss.mandator.spi.CachedMandators;
-import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
 import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeView;
 import eu.ggnet.dwoss.redtapext.ui.dbs.DossierFilterView;
 import eu.ggnet.dwoss.report.ui.RawReportView;
@@ -279,7 +278,7 @@ public class DwOssApplication extends Application {
     private void initOnceViews() {
         saft.registerOnceFx(SearchCask.ONCE_KEY, SearchCask.class);
         saft.registerOnceFx(RawReportView.ONCE_KEY, RawReportView.class);
-        saft.registerOnceSwing(RedTapeView.ONCE_KEY, () -> RedTapeController.build().getView());
+        saft.registerOnceSwing(RedTapeView.ONCE_KEY, RedTapeView.class);
         saft.registerOnceSwing(DossierFilterView.ONCE_KEY, () -> DossierFilterView.build());
     }
 
