@@ -18,10 +18,11 @@ package eu.ggnet.dwoss.redtapext.ui.cap;
 
 import java.awt.event.ActionEvent;
 
+import javax.inject.Inject;
 import javax.swing.AbstractAction;
 
 import eu.ggnet.dwoss.redtapext.ui.product.SalesProductViewCask;
-import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.Saft;
 
 /**
  * @author bastian.venz
@@ -31,14 +32,15 @@ import eu.ggnet.saft.core.Ui;
  */
 public class SalesProductAction extends AbstractAction {
 
+    @Inject
+    private Saft saft;
+
     public SalesProductAction() {
         super("Neuwarenartikel für Verkauf verwalten");
     }
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        Ui.exec(() -> {
-            Ui.build().title("Neuwarenartikel für Verkauf verwalten").swing().show(() -> new SalesProductViewCask());
-        });
+        saft.build().title("Neuwarenartikel für Verkauf verwalten").swing().show(SalesProductViewCask.class);
     }
 }

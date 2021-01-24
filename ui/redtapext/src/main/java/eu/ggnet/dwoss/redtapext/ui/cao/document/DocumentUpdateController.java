@@ -19,9 +19,9 @@ package eu.ggnet.dwoss.redtapext.ui.cao.document;
 import java.awt.Dialog;
 import java.awt.Window;
 import java.util.List;
+import java.util.Optional;
 
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.common.values.DocumentType;
@@ -40,9 +40,12 @@ import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.ShippingCostHelper;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.position.*;
 import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.core.impl.Swing;
 
 import static eu.ggnet.dwoss.core.common.values.PositionType.PRODUCT_BATCH;
 import static eu.ggnet.dwoss.core.common.values.PositionType.UNIT;
+import static eu.ggnet.saft.core.ui.UiParent.of;
 
 /**
  *
@@ -52,14 +55,14 @@ public class DocumentUpdateController {
 
     private final DocumentUpdateView view;
 
-    private final Window parent;
+    private final Optional<Window> parent;
 
     private final Document document;
 
     public DocumentUpdateController(DocumentUpdateView view, Document model) {
         this.view = view;
         this.document = model;
-        this.parent = SwingUtilities.getWindowAncestor(view);
+        parent = UiCore.global().core(Swing.class).unwrap(of(view));
     }
 
     /**
@@ -87,20 +90,22 @@ public class DocumentUpdateController {
                 createServicePosition();
                 break;
             case PRODUCT_BATCH:
-                SalesProduct pb = createProductBatchPosition(Dl.remote().lookup(RedTapeAgent.class).findAll(SalesProduct.class));
-                if ( pb != null ) {
-                    Position p = Position.builder()
-                            .amount(1)
-                            .type(type)
-                            .tax(document.getTaxType().tax())
-                            .description(pb.getDescription())
-                            .name(pb.getName())
-                            .uniqueUnitProductId(pb.getUniqueUnitProductId())
-                            .price((pb.getPrice() == null) ? 0. : pb.getPrice())
-                            .bookingAccount(Dl.local().lookup(CachedMandators.class).loadPostLedger().get(type, document.getTaxType()).orElse(null))
-                            .build();
-                    document.append(editPosition(p));
-                }
+                Ui.build(view).title("Artikel hinzufügen").swing()
+                        .eval(() -> Dl.remote().lookup(RedTapeAgent.class).findAll(SalesProduct.class), () -> OkCancelWrap.consumerVetoResult(new SalesProductChooserCask())).cf()
+                        .thenAccept(pb -> {
+                            Position p = Position.builder()
+                                    .amount(1)
+                                    .type(type)
+                                    .tax(document.getTaxType().tax())
+                                    .description(pb.getDescription())
+                                    .name(pb.getName())
+                                    .uniqueUnitProductId(pb.getUniqueUnitProductId())
+                                    .price((pb.getPrice() == null) ? 0. : pb.getPrice())
+                                    .bookingAccount(Dl.local().lookup(CachedMandators.class).loadPostLedger().get(type, document.getTaxType()).orElse(null))
+                                    .build();
+                            document.append(editPosition(p));
+                            view.refreshAll();
+                        });
                 break;
             case COMMENT:
                 document.append(createCommentPosition());
@@ -127,7 +132,7 @@ public class DocumentUpdateController {
     public Position createCommentPosition() {
         Position p = Position.builder().amount(1).type(PositionType.COMMENT).build();
         CommentCreateCask commentView = new CommentCreateCask(p);
-        OkCancelDialog<CommentCreateCask> dialog = new OkCancelDialog<>(parent, Dialog.ModalityType.DOCUMENT_MODAL, "Comment hinzufügen", commentView);
+        OkCancelDialog<CommentCreateCask> dialog = new OkCancelDialog<>(parent.orElse(null), Dialog.ModalityType.DOCUMENT_MODAL, "Comment hinzufügen", commentView);
         dialog.setLocationRelativeTo(view);
         dialog.setVisible(true);
         if ( dialog.getCloseType() == CloseType.OK ) {
@@ -144,24 +149,13 @@ public class DocumentUpdateController {
                 .orElse(null));
     }
 
-    public SalesProduct createProductBatchPosition(List<SalesProduct> products) {
-        SalesProductChooserCask spcView = new SalesProductChooserCask(products);
-        OkCancelDialog<SalesProductChooserCask> dialog = new OkCancelDialog<>(parent, Dialog.ModalityType.DOCUMENT_MODAL, "Artikel hinzufügen", spcView);
-        dialog.setLocationRelativeTo(view);
-        dialog.setVisible(true);
-        if ( dialog.getCloseType() == CloseType.OK ) {
-            return spcView.getProduct();
-        }
-        return null;
-    }
-
     public void editDocumentInvoiceAddress() {
         if ( view.getCustomerId() <= 0 ) {
             JOptionPane.showMessageDialog(view, "Ein Kunde muss ausgewählt sein.");
             return;
         }
         DocumentAdressUpdateView dauv = new DocumentAdressUpdateView(view.getCustomerId(), document.getInvoiceAddress().getDescription(), true);
-        OkCancelDialog<DocumentAdressUpdateView> dialog = new OkCancelDialog<>(parent, Dialog.ModalityType.DOCUMENT_MODAL, "Adressen ändern", dauv);
+        OkCancelDialog<DocumentAdressUpdateView> dialog = new OkCancelDialog<>(parent.orElse(null), Dialog.ModalityType.DOCUMENT_MODAL, "Adressen ändern", dauv);
         dialog.setLocationRelativeTo(view);
         dialog.setVisible(true);
         if ( dialog.getCloseType() == CloseType.OK ) {
@@ -180,7 +174,7 @@ public class DocumentUpdateController {
             return;
         }
         DocumentAdressUpdateView dauv = new DocumentAdressUpdateView(view.getCustomerId(), document.getShippingAddress().getDescription(), false);
-        OkCancelDialog<DocumentAdressUpdateView> dialog = new OkCancelDialog<>(parent, Dialog.ModalityType.DOCUMENT_MODAL, "Adressen ändern", dauv);
+        OkCancelDialog<DocumentAdressUpdateView> dialog = new OkCancelDialog<>(parent.orElse(null), Dialog.ModalityType.DOCUMENT_MODAL, "Adressen ändern", dauv);
         dialog.setLocationRelativeTo(view);
         dialog.setVisible(true);
         if ( dialog.getCloseType() == CloseType.OK ) {
@@ -212,7 +206,7 @@ public class DocumentUpdateController {
         String msg;
         String titel;
         if ( document.getPositions().size() == 1 && document.containsPositionType(PositionType.SHIPPING_COST) ) {
-            JOptionPane.showMessageDialog(parent, "Der Vorgang enthält nur Versandkosten.", "Nur Versandkosten?", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(parent.orElse(null), "Der Vorgang enthält nur Versandkosten.", "Nur Versandkosten?", JOptionPane.INFORMATION_MESSAGE);
             return false;
         } else if ( document.getDossier().isDispatch() ) {
             msg = "Sie haben einen Versandauftrag geändert.\nSollen die Versandkosten automatisch berechnet werden?";
@@ -224,7 +218,7 @@ public class DocumentUpdateController {
             return true;
         }
 
-        int confirmDialog = JOptionPane.showConfirmDialog(parent, msg, titel, JOptionPane.YES_NO_CANCEL_OPTION);
+        int confirmDialog = JOptionPane.showConfirmDialog(parent.orElse(null), msg, titel, JOptionPane.YES_NO_CANCEL_OPTION);
         switch (confirmDialog) {
             case JOptionPane.CANCEL_OPTION:
                 return false;

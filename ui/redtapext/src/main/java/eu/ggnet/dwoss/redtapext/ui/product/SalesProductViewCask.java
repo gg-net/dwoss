@@ -16,24 +16,25 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.product;
 
-import java.awt.Dialog;
 import java.awt.HeadlessException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import eu.ggnet.dwoss.redtapext.ui.HtmlDialog;
-import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
-import eu.ggnet.dwoss.core.widget.swing.PojoColumn;
-import eu.ggnet.dwoss.core.widget.swing.PojoTableModel;
+import eu.ggnet.dwoss.core.common.Css;
+import eu.ggnet.dwoss.core.common.UserInfoException;
+import eu.ggnet.dwoss.core.widget.HtmlPane;
+import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
+import eu.ggnet.dwoss.core.widget.swing.*;
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateView;
-import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.saft.core.Saft;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.ResultProducer;
 
@@ -57,29 +58,24 @@ public class SalesProductViewCask extends javax.swing.JPanel implements ResultPr
         }
     }
 
-    private final RedTapeAgent redTapeAgent;
+    @Inject
+    private RemoteDl remote;
 
-    private final RedTapeWorker redTapeWorker;
+    @Inject
+    private Saft saft;
 
     private SalesProductTableModel salesProductTableModel;
 
     private List<SalesProduct> salesProducts;
 
-    public SalesProductViewCask(RedTapeAgent salesProductOperation, RedTapeWorker redTapeWorker) {
-        initComponents();
-        this.redTapeAgent = salesProductOperation;
-        this.redTapeWorker = redTapeWorker;
-        salesProductTableModel = new SalesProductTableModel();
-        reloadListData();
-
-    }
-
     public SalesProductViewCask() {
-        this(Dl.remote().lookup(RedTapeAgent.class), Dl.remote().lookup(RedTapeWorker.class));
+        initComponents();
+        salesProductTableModel = new SalesProductTableModel();
     }
 
+    @PostConstruct //
     private void reloadListData() {
-        salesProducts = redTapeAgent.findAll(SalesProduct.class);
+        salesProducts = remote.lookup(RedTapeAgent.class).findAll(SalesProduct.class);
         salesProductTableModel = new SalesProductTableModel();
         for (SalesProduct salesProduct : salesProducts) {
             salesProductTableModel.add(salesProduct);
@@ -195,7 +191,7 @@ public class SalesProductViewCask extends javax.swing.JPanel implements ResultPr
         try {
             String showInputDialog = JOptionPane.showInputDialog("Bitte Artikelnummer zum erstellen eines Produktes eingeben.");
             if ( showInputDialog == null || showInputDialog.trim().isEmpty() ) return;
-            redTapeWorker.createSalesProduct(showInputDialog);
+            remote.lookup(RedTapeWorker.class).createSalesProduct(showInputDialog);
             reloadListData();
         } catch (HeadlessException | UserInfoException ex) {
             Ui.handle(ex);
@@ -215,28 +211,28 @@ public class SalesProductViewCask extends javax.swing.JPanel implements ResultPr
 
         if ( dialog.isCancel() ) return;
         sp.setPrice(dialog.getSubContainer().getSalesProduct().getPrice());
-        redTapeAgent.merge(sp);
+        remote.lookup(RedTapeAgent.class).merge(sp);
         reloadListData();
 
     }//GEN-LAST:event_editButtonActionPerformed
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
         if ( productTable.getSelectedRow() == -1 ) return;
-        redTapeAgent.remove(salesProductTableModel.getLines().get(productTable.getSelectedRow()));
+        remote.lookup(RedTapeAgent.class).remove(salesProductTableModel.getLines().get(productTable.getSelectedRow()));
         reloadListData();
     }//GEN-LAST:event_deleteButtonActionPerformed
 
     private void productTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_productTableMouseClicked
-        String s = (String)productTable.getValueAt(productTable.getSelectedRow(), 0);
-        SalesProduct salesProduct = null;
-        for (SalesProduct p : salesProducts) {
-            if ( p.getPartNo().equals(s) ) salesProduct = p;
-        }
         if ( evt.getClickCount() > 1 ) {
-            HtmlDialog dialog = new HtmlDialog(SwingUtilities.getWindowAncestor(this), Dialog.ModalityType.MODELESS);
-            dialog.setText(salesProduct.toHtml());
-            dialog.setVisible(true);
+            String partNo = (String)productTable.getValueAt(productTable.getSelectedRow(), 0);
+            for (SalesProduct p : salesProducts) {
+                if ( p.getPartNo().equals(partNo) ) {
+                    saft.build(this).title("Product: " + p.getPartNo()).fx().show(() -> Css.toHtml5WithStyle(p.toHtml()), () -> new HtmlPane());
+                    break;
+                }
+            }
         }
+
     }//GEN-LAST:event_productTableMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

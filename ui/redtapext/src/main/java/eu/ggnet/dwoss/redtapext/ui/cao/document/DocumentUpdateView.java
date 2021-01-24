@@ -551,7 +551,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements VetoableOn
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridheight = 16;
+        gridBagConstraints.gridheight = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 3.0;
         add(positionPanelFx, gridBagConstraints);
@@ -745,7 +745,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements VetoableOn
         return true;
     }
 
-    private void refreshAll() {
+    public void refreshAll() {
         Platform.runLater(() -> { // reload the ui.
             positions.clear();
             positions.addAll(document.getPositions().values());

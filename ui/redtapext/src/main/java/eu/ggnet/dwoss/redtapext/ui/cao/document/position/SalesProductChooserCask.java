@@ -16,39 +16,37 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao.document.position;
 
-import eu.ggnet.dwoss.redtapext.ui.HtmlDialog;
-import eu.ggnet.dwoss.core.widget.swing.IPreClose;
-import eu.ggnet.dwoss.core.widget.swing.CloseType;
-import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
-
-import java.awt.Dialog;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Consumer;
 
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
-
+import eu.ggnet.dwoss.core.common.Css;
+import eu.ggnet.dwoss.core.widget.HtmlPane;
+import eu.ggnet.dwoss.core.widget.saft.VetoableOnOk;
 import eu.ggnet.dwoss.core.widget.swing.PojoColumn;
 import eu.ggnet.dwoss.core.widget.swing.PojoTableModel;
 import eu.ggnet.dwoss.redtape.ee.entity.SalesProduct;
-
-import static eu.ggnet.dwoss.core.widget.swing.CloseType.OK;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.ResultProducer;
 
 /**
  *
  * @author pascal.perau
  */
-public class SalesProductChooserCask extends javax.swing.JPanel implements IPreClose {
+public class SalesProductChooserCask extends javax.swing.JPanel implements Consumer<List<SalesProduct>>, ResultProducer<SalesProduct>, VetoableOnOk {
 
     private List<SalesProduct> products;
 
     private SalesProduct product;
 
     /** Creates new form SalesProductChooserCask */
-    public SalesProductChooserCask(List<SalesProduct> products) {
+    public SalesProductChooserCask() {
         initComponents();
+    }
 
-        this.products = products;
+    @Override
+    public void accept(List<SalesProduct> products) {
+        this.products = Objects.requireNonNull(products, "products must not be null");
 
         PojoTableModel model = new PojoTableModel(products,
                 new PojoColumn("ArtikelNr", false, 50, String.class, "partNo"),
@@ -58,14 +56,15 @@ public class SalesProductChooserCask extends javax.swing.JPanel implements IPreC
         model.setTable(productTable);
     }
 
-    public SalesProduct getProduct() {
+    @Override
+    public SalesProduct getResult() {
         return product;
     }
 
     @Override
-    public boolean pre(CloseType type) {
-        if ( type == OK && productTable.getSelectedRow() == -1 ) {
-            JOptionPane.showMessageDialog(this, "Kein Artikel gewählt");
+    public boolean mayClose() {
+        if ( productTable.getSelectedRow() == -1 ) {
+            Ui.build(this).title("Keine Auswahl").alert("Keinen Artikel ausgewählt");
             return false;
         }
         return true;
@@ -118,9 +117,7 @@ public class SalesProductChooserCask extends javax.swing.JPanel implements IPreC
             if ( p.getPartNo().equals(s) ) product = p;
         }
         if ( evt.getClickCount() > 1 ) {
-            HtmlDialog dialog = new HtmlDialog(SwingUtilities.getWindowAncestor(this), Dialog.ModalityType.MODELESS);
-            dialog.setText(product.toHtml());
-            dialog.setVisible(true);
+            Ui.build(this).title("Product: " + product.getPartNo()).fx().show(() -> Css.toHtml5WithStyle(product.toHtml()), () -> new HtmlPane());
         }
     }//GEN-LAST:event_productTableMouseClicked
 
@@ -129,16 +126,4 @@ public class SalesProductChooserCask extends javax.swing.JPanel implements IPreC
     private javax.swing.JTable productTable;
     // End of variables declaration//GEN-END:variables
 
-    public static void main(String[] args) {
-        SalesProduct salesProduct1 = new SalesProduct("AS.ASASD.ASD", "Test SalesProduct", 10D, 1, "SalesProduct Test Descritpion");
-        SalesProduct salesProduct2 = new SalesProduct("AS.1234.ASD", "Test SalesProduct2", 1D, 2, "SalesProduct Test Descritpion2");
-
-        List<SalesProduct> products = new ArrayList<>();
-        products.add(salesProduct1);
-        products.add(salesProduct2);
-        SalesProductChooserCask view = new SalesProductChooserCask(products);
-        OkCancelDialog<SalesProductChooserCask> dialog = new OkCancelDialog<>("Sample", view);
-        dialog.setVisible(true);
-        System.out.println(view.getProduct());
-    }
 }
