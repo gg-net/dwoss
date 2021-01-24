@@ -88,8 +88,8 @@ public class RedTapeModel {
 
     public DossierTableModel getDossierTableModel() {
         return dossierTableModel;
-    }    
-    
+    }
+
     /**
      * Get the value of searchResult
      *

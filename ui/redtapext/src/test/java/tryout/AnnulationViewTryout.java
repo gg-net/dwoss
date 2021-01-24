@@ -16,18 +16,18 @@
  */
 package tryout;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
+import javax.persistence.LockModeType;
+
+import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.dl.RemoteLookup;
 import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.AfterInvoicePosition;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.annulation.CreditMemoView;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
-import eu.ggnet.dwoss.core.widget.Dl;
-import eu.ggnet.dwoss.core.widget.dl.RemoteLookup;
-
-import static org.mockito.Mockito.mock;
+import eu.ggnet.dwoss.stock.ee.entity.*;
 
 /**
  *
@@ -36,7 +36,6 @@ import static org.mockito.Mockito.mock;
 public class AnnulationViewTryout {
 
     public static void main(String[] args) {
-        StockAgent stockStub = mock(StockAgent.class);
         Dl.local().add(RemoteLookup.class, new RemoteLookup() {
             @Override
             public <T> boolean contains(Class<T> clazz) {
@@ -48,7 +47,100 @@ public class AnnulationViewTryout {
                 return null;
             }
         });
-        Dl.remote().add(StockAgent.class, stockStub);
+        Dl.remote().add(StockAgent.class, new StockAgent() {
+
+            @Override
+            public <T> List<T> findAll(Class<T> entityClass) {
+                return (List<T>)Arrays.asList(new Stock(0, "Hamburg"), new Stock(1, "Lübeck"));
+            }
+
+            //<editor-fold defaultstate="collapsed" desc="unused methods">
+            @Override
+            public StockUnit findStockUnitByUniqueUnitIdEager(Integer uniqueUnitId) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public StockUnit findStockUnitByRefurbishIdEager(String refurbishId) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public List<StockTransaction> findStockTransactionEager(StockTransactionType type, StockTransactionStatusType statusType) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public List<StockTransaction> findStockTransactionEager(StockTransactionType type, StockTransactionStatusType statusType, int start, int amount) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public List<StockUnit> findStockUnitsByRefurbishIdEager(List<String> refurbishIds) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public <T> T persist(T t) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public <T> T merge(T t) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public <T> void delete(T t) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public StockTransaction findOrCreateRollInTransaction(int stockId, String userName, String comment) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public <T> long count(Class<T> entityClass) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public <T> List<T> findAll(Class<T> entityClass, int start, int amount) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public <T> List<T> findAllEager(Class<T> entityClass) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public <T> List<T> findAllEager(Class<T> entityClass, int start, int amount) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public <T> T findById(Class<T> entityClass, Object id) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public <T> T findById(Class<T> entityClass, Object id, LockModeType lockModeType) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public <T> T findByIdEager(Class<T> entityClass, Object id) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public <T> T findByIdEager(Class<T> entityClass, Object id, LockModeType lockModeType) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+            //</editor-fold>
+        });
 
         Position p1 = Position.builder().amount(1).name("P1").price(12.).tax(1.19).build();
         Position p2 = Position.builder().amount(1).name("P2").price(20.).tax(1.19).build();

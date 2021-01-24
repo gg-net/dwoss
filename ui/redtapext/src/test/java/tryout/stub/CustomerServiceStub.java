@@ -7,11 +7,10 @@ import eu.ggnet.dwoss.core.common.values.PaymentMethod;
 import eu.ggnet.dwoss.core.common.values.ShippingCondition;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import eu.ggnet.dwoss.customer.api.*;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
-import eu.ggnet.dwoss.customer.ee.entity.Customer;
+import eu.ggnet.dwoss.customer.ee.entity.*;
 
 /**
  *
@@ -46,8 +45,22 @@ public class CustomerServiceStub implements CustomerService {
 
     @Override
     public List<UiCustomer> asUiCustomers(String search) {
-        // TODO: Returns random, make it work some day.
-        return customers.stream().map(Customer::toUiCustomer).collect(Collectors.toList());
+        // Injecting a virtual id.
+        List<UiCustomer> result = new ArrayList<>();
+        for (int i = 0; i < customers.size(); i++) {
+            Customer c = customers.get(i);
+            result.add(new UiCustomer(
+                    i,
+                    c.preferedContact().map(Contact::getTitle).orElse(""),
+                    c.preferedContact().map(Contact::getFirstName).orElse(""),
+                    c.preferedContact().map(Contact::getLastName).orElse(""),
+                    c.preferedCompany().map(Company::getName).orElse(null),
+                    c.toName(),
+                    c.getDefaultEmailCommunication().map(Communication::getIdentifier).orElse(null),
+                    0));
+
+        }
+        return result;
     }
 
     @Override

@@ -24,6 +24,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.swing.RowFilter.Entry;
 import javax.swing.*;
 import javax.swing.table.TableRowSorter;
@@ -39,17 +40,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.common.values.Warranty;
-import eu.ggnet.dwoss.redtapext.ui.HtmlDialog;
+import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.core.widget.swing.TableColumnChooserPopup;
 import eu.ggnet.dwoss.redtape.ee.api.LegacyRemoteBridge;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.redtape.ee.format.DossierFormater;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
+import eu.ggnet.dwoss.redtapext.ui.HtmlDialog;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.saft.core.Saft;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.dwoss.core.widget.auth.Guardian;
 
 import static eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableView.FilterType.LEGACY;
 
@@ -79,8 +81,11 @@ public class DossierTableView extends javax.swing.JPanel {
         private FilterType(String name) {
             this.description = name;
         }
-        
+
     }
+
+    @Inject
+    private Saft saft;
 
     private DossierTableModel model;
 
@@ -203,13 +208,13 @@ public class DossierTableView extends javax.swing.JPanel {
                 Dossier dos = entry.getModel().getDossier(entry.getIdentifier());
                 switch (type) {
                     case SALES_CLOSED:
-                        return  dos.getCrucialDirective() == Document.Directive.NONE;
+                        return dos.getCrucialDirective() == Document.Directive.NONE;
                     case SALES_OPEN:
-                        return  dos.getId() > 0 && dos.getCrucialDirective() != Document.Directive.NONE;
+                        return dos.getId() > 0 && dos.getCrucialDirective() != Document.Directive.NONE;
                     case ACCOUNTANCY_CLOSED:
-                        return  dos.getId() > 0 && dos.isClosed();
+                        return dos.getId() > 0 && dos.isClosed();
                     case ACCOUNTANCY_OPEN:
-                        return  dos.getId() > 0 && !dos.isClosed();
+                        return dos.getId() > 0 && !dos.isClosed();
                     case ALL:
                         return true;
                     default:

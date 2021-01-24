@@ -24,6 +24,8 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.*;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
@@ -31,11 +33,13 @@ import javax.swing.border.SoftBevelBorder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.core.common.Css;
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.common.values.CustomerFlag;
 import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
 import eu.ggnet.dwoss.core.widget.swing.CloseType;
 import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
 import eu.ggnet.dwoss.customer.api.CustomerService;
@@ -51,15 +55,13 @@ import eu.ggnet.dwoss.redtape.ee.format.DocumentFormater;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateTransition.Hint;
 import eu.ggnet.dwoss.redtapext.ee.state.*;
-import eu.ggnet.dwoss.redtapext.ui.HtmlDialog;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.IDossierSelectionHandler;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.StringAreaView;
 import eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableController;
 import eu.ggnet.dwoss.redtapext.ui.cao.jasper.DocumentJasperViewAction;
 import eu.ggnet.dwoss.redtapext.ui.cao.stateaction.*;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.impl.Swing;
 import eu.ggnet.saft.core.ui.UiParent;
 import eu.ggnet.statemachine.StateTransition;
@@ -73,11 +75,18 @@ import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_ANNULATION_INVOICE;
  */
 public class RedTapeController implements IDossierSelectionHandler {
 
+    @Inject
+    private RemoteDl remote;
+
+    @Inject
+    private Saft saft;
+
+    @Inject
+    private DossierTableController dossierTableController;
+
     private RedTapeModel model;
 
     private RedTapeView view;
-
-    private final DossierTableController dossierTableController;
 
     private Set<Action> accessDependentActions;
 
@@ -90,7 +99,7 @@ public class RedTapeController implements IDossierSelectionHandler {
     private static final Logger L = LoggerFactory.getLogger(RedTapeController.class);
 
     private boolean isShippingCostUiHelpEnabled() {
-        if ( shippingCostUiHelpEnabled == null ) shippingCostUiHelpEnabled = Dl.remote().contains(ShippingCostService.class);
+        if ( shippingCostUiHelpEnabled == null ) shippingCostUiHelpEnabled = remote.contains(ShippingCostService.class);
         return shippingCostUiHelpEnabled;
     }
 
@@ -109,8 +118,8 @@ public class RedTapeController implements IDossierSelectionHandler {
 
     public DossierTableController getDossierTableController() {
         return dossierTableController;
-    }    
-    
+    }
+
     private final PropertyChangeListener redTapeViewListener = new PropertyChangeListener() {
 
         @Override
@@ -233,20 +242,12 @@ public class RedTapeController implements IDossierSelectionHandler {
         }
     };
 
-    public static RedTapeController build() {
-        RedTapeView view = new RedTapeView();
-        RedTapeModel model = new RedTapeModel();
-        RedTapeController controller = new RedTapeController();
-        view.setController(controller);
-        view.setModel(model);
-        controller.setModel(model);
-        controller.setView(view);
-        return controller;
-    }
-
     public RedTapeController() {
         this.accessDependentActions = new HashSet<>();
-        this.dossierTableController = new DossierTableController();
+    }
+
+    @PostConstruct
+    private void initCdi() {
         dossierTableController.setSelectionHandler(this);
     }
 
@@ -270,7 +271,6 @@ public class RedTapeController implements IDossierSelectionHandler {
     public void setView(RedTapeView view) {
         if ( this.view != null ) this.view.removePropertyChangeListener(redTapeViewListener);
         this.view = view;
-        dossierTableController.setView(view.dossierTableView);
         this.view.addPropertyChangeListener(redTapeViewListener);
     }
 
@@ -291,7 +291,7 @@ public class RedTapeController implements IDossierSelectionHandler {
             if ( !closedLoader.cancel(false) )
                 JOptionPane.showMessageDialog(view, "Canceling of running loader not possible, call Olli!");
         }
-        view.dossierTableView.resetTableData((int)model.getPurchaseCustomer().id());
+        dossierTableController.getView().resetTableData((int)model.getPurchaseCustomer().id());
     }
 
     /**
@@ -382,7 +382,7 @@ public class RedTapeController implements IDossierSelectionHandler {
      * @param dos the {@link Dossier} entity.
      */
     public void openDossierDetailViewer(Dossier dos) {
-        Ui.build(view).fx().show(()-> Dl.remote().lookup(RedTapeWorker.class).toDetailedHtml(dos.getId()), () -> new HtmlPane());
+        Ui.build(view).fx().show(() -> Dl.remote().lookup(RedTapeWorker.class).toDetailedHtml(dos.getId()), () -> new HtmlPane());
     }
 
     /**
@@ -391,10 +391,11 @@ public class RedTapeController implements IDossierSelectionHandler {
      * @param doc the {@link Document} entity.
      */
     public void openDocumentViewer(Document doc) {
-        HtmlDialog dialog = new HtmlDialog(parent(), Dialog.ModalityType.MODELESS);
-        dialog.setText("<html>" + DocumentFormater.toHtmlDetailedWithPositions(doc) + "<br />"
-                + Dl.remote().lookup(CustomerService.class).asHtmlHighDetailed(model.getPurchaseCustomer().id()) + "</html>");
-        dialog.setVisible(true);
+        saft.build(view).title("Vorgang: " + doc.getIdentifier()).fx().show(() -> Css.toHtml5WithStyle(
+                DocumentFormater.toHtmlDetailedWithPositions(doc)
+                + "<br />"
+                + remote.lookup(CustomerService.class).asHtmlHighDetailed(model.getPurchaseCustomer().id())
+        ), () -> new HtmlPane());
     }
 
     @Override
@@ -515,7 +516,7 @@ public class RedTapeController implements IDossierSelectionHandler {
         return true;
     }
 
-    private Window parent() {        
+    private Window parent() {
         return UiCore.global().core(Swing.class).unwrap(UiParent.of(view)).orElse(null);
     }
 

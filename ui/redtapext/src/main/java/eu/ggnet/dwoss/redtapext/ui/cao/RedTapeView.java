@@ -24,6 +24,8 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.*;
@@ -41,6 +43,7 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.HtmlPane;
+import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
 import eu.ggnet.dwoss.customer.api.*;
 import eu.ggnet.dwoss.customer.spi.CustomerUiModifier;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
@@ -62,7 +65,7 @@ import eu.ggnet.saft.core.ui.Title;
 @Title("Kunden und Aufträge")
 @StoreLocation
 public class RedTapeView extends JPanel {
-    
+
     public final static String ONCE_KEY = "RedTape";
 
     private final Logger L = LoggerFactory.getLogger(RedTapeView.class);
@@ -75,7 +78,7 @@ public class RedTapeView extends JPanel {
             final RedTapeModel m = (RedTapeModel)evt.getSource();
             switch (evt.getPropertyName()) {
                 case RedTapeModel.PROP_CUSTOMER:
-                    customerDetailArea.setText(Dl.remote().lookup(CustomerService.class).asHtmlHighDetailed(m.getPurchaseCustomer().id()));
+                    customerDetailArea.setText(remote.lookup(CustomerService.class).asHtmlHighDetailed(m.getPurchaseCustomer().id()));
                     controller.fillToolBar();
                     break;
                 case RedTapeModel.PROP_DOCUMENTS:
@@ -96,8 +99,13 @@ public class RedTapeView extends JPanel {
         }
     };
 
+    @Inject
+    private RemoteDl remote;
+
+    @Inject
     private RedTapeModel model;
 
+    @Inject
     private RedTapeController controller;
 
     private final JPopupMenu documentPopup;
@@ -124,23 +132,25 @@ public class RedTapeView extends JPanel {
         newCustomerButton.setEnabled(Dl.local().lookup(CustomerUiModifier.class) != null);
     }
 
+    @PostConstruct
+    private void initCdi() {
+        // Init Controller
+        dossierTableView.setController(controller.getDossierTableController());
+        controller.getDossierTableController().setView(dossierTableView);
+
+        // Init Model
+        dossierTableView.setModel(model.getDossierTableModel());
+        model.addPropertyChangeListener(redTapeViewListener);
+
+        controller.setModel(model);
+        controller.setView(this);
+        System.out.println("INIT Done");
+    }
+
     private void initFxComponents() {
         final JFXPanel jfxp = new JFXPanel();
         positionFxPanel.add(jfxp, BorderLayout.CENTER);
         Platform.runLater(() -> RedTapeFxUtil.positionFxList(jfxp, positions));
-    }
-
-    /**
-     * Set the model for the view and all its values.
-     * <p>
-     * @param model
-     */
-    public void setModel(RedTapeModel model) {
-        if ( model == null ) throw new RuntimeException("Model is null");
-        if ( this.model != null ) this.model.removePropertyChangeListener(redTapeViewListener);
-        this.model = model;
-        dossierTableView.setModel(model.getDossierTableModel());
-        model.addPropertyChangeListener(redTapeViewListener);
     }
 
     /**
@@ -160,12 +170,6 @@ public class RedTapeView extends JPanel {
         }
         dossierButtonPanel.revalidate();
         dossierButtonPanel.repaint();
-    }
-
-    public void setController(RedTapeController controller) {
-        this.controller = controller;
-        dossierTableView.setController(controller.getDossierTableController());
-        controller.getDossierTableController().setView(dossierTableView);
     }
 
     public void setDocumentPopupActions(Action... action) {
