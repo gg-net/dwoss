@@ -663,14 +663,14 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             customerId.setPromptText("Kundennummer");
             customerId.setText(selectionModel == null ? "" : selectionModel.getSelectedItem().valueProperty.get());
 
-            ChoiceBox<ExternalSystem> externalSystemChoiceBox;
+            ComboBox<ExternalSystem> externalSystemComboBox;
             if ( selectionModel != null ) {
-                externalSystemChoiceBox = new ChoiceBox(FXCollections.observableArrayList(Arrays.asList(selectionModel.getSelectedItem().type)));
-                externalSystemChoiceBox.getSelectionModel().select(0);
+                externalSystemComboBox = new ComboBox(FXCollections.observableArrayList(Arrays.asList(selectionModel.getSelectedItem().type)));
+                externalSystemComboBox.getSelectionModel().select(0);
 
             } else {
                 // filter ExternalSystem types which are already contained in the listView
-                externalSystemChoiceBox = new ChoiceBox(Arrays.stream(ExternalSystem.values())
+                externalSystemComboBox = new ComboBox(Arrays.stream(ExternalSystem.values())
                         .filter(externalSystem
                                 -> !additionalCustomerIdsListView.getItems()
                                 .stream()
@@ -679,41 +679,29 @@ public class CustomerEnhanceController implements Initializable, FxController, C
                                 .contains(externalSystem))
                         .collect(Collectors.toCollection(FXCollections::observableArrayList)));
             }
-            externalSystemChoiceBox.setConverter(new StringConverter<ExternalSystem>() {
-                @Override
-                public String toString(ExternalSystem es) {
-                    return es.description();
-                }
 
-                @Override
-                public ExternalSystem fromString(String desc) {
-                    if ( desc == null ) return null;
-                    for (ExternalSystem es : ExternalSystem.values()) {
-                        if ( es.description().equals(desc) ) return es;
-                    }
-                    throw new IllegalArgumentException("No Instance of ExternalSystem for description " + desc);
-                }
-            });
+            externalSystemComboBox.setButtonCell(new ExternalSystemListCell());
+            externalSystemComboBox.setCellFactory(p -> new ExternalSystemListCell());
 
             GridPane grid = new GridPane();
             grid.setHgap(10);
             grid.setVgap(10);
             grid.setPadding(new Insets(20, 150, 10, 10));
             grid.add(new Label("ExternalSystem:"), 0, 0);
-            grid.add(externalSystemChoiceBox, 1, 0);
+            grid.add(externalSystemComboBox, 1, 0);
             grid.add(new Label("Kundennummer:"), 0, 1);
             grid.add(customerId, 1, 1);
             Node dialogAddButton = dialog.getDialogPane().lookupButton(addButtonType);
             dialogAddButton.setDisable(true);
             InvalidationListener addButtonDisabler = (javafx.beans.Observable observable) -> {
-                dialogAddButton.setDisable(externalSystemChoiceBox.getSelectionModel().isEmpty() || customerId.getText().isEmpty());
+                dialogAddButton.setDisable(externalSystemComboBox.getSelectionModel().isEmpty() || customerId.getText().isEmpty());
             };
-            externalSystemChoiceBox.getSelectionModel().selectedIndexProperty().addListener(addButtonDisabler);
+            externalSystemComboBox.getSelectionModel().selectedIndexProperty().addListener(addButtonDisabler);
             customerId.textProperty().addListener(addButtonDisabler);
             dialog.getDialogPane().setContent(grid);
             dialog.setResultConverter(dialogButton -> {
                 if ( dialogButton == addButtonType ) {
-                    return new AdditionalCustomerId((ExternalSystem)externalSystemChoiceBox.getSelectionModel().selectedItemProperty().get(), customerId.getText());
+                    return new AdditionalCustomerId(externalSystemComboBox.getSelectionModel().selectedItemProperty().get(), customerId.getText());
                 }
                 return null;
             });
@@ -733,4 +721,13 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     }
 
+    private class ExternalSystemListCell extends ListCell<ExternalSystem> {
+
+        @Override
+        protected void updateItem(ExternalSystem es, boolean empty) {
+            super.updateItem(es, empty);
+            if ( !empty ) setText(es.description());
+        }
+
+    }
 }
