@@ -5,15 +5,15 @@
  */
 package tryout.stub;
 
-import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 
 /**
  *
@@ -56,9 +56,16 @@ public class UniqueUnitAgentStub implements UniqueUnitAgent {
     public <T> List<T> findAll(Class<T> entityClass, int start, int limit) {
 
         if ( entityClass.equals(Product.class) ) {
-            if ( start + limit > AMOUNT ) {
-                return Collections.emptyList();
+            try {
+                if ( start + limit > AMOUNT ) {
+                    return Collections.emptyList();
+                }
+                Thread.sleep(SLOW * limit);
+                return (List<T>)(PGEN.generateProduct(limit));
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
             }
+
         }
         throw new UnsupportedOperationException(entityClass + " not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

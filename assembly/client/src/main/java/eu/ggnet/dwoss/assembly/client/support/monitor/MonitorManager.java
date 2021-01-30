@@ -41,7 +41,6 @@ import eu.ggnet.dwoss.core.widget.Progressor;
  *
  * @author oliver.guenther
  */
-//TODO: This class is a great candidate to replace Ui.progress() of Saft. Needs some stripping and a movement to core.widget.
 @Singleton
 public class MonitorManager implements Progressor.Displayer {
 

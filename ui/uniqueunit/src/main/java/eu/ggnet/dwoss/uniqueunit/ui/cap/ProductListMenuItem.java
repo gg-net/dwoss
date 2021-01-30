@@ -16,28 +16,30 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ui.cap;
 
-import java.awt.event.ActionEvent;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 
-import javax.swing.AbstractAction;
+import javafx.scene.control.MenuItem;
 
 import eu.ggnet.dwoss.uniqueunit.ui.product.ProductListController;
-import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.Saft;
 
 /**
  *
  * @author Bastian Venz
  */
-public class ProductListAction extends AbstractAction {
+public class ProductListMenuItem extends MenuItem {
 
-    public ProductListAction() {
+    @Inject
+    private Saft saft;
+
+    public ProductListMenuItem() {
         super("Artikelstamm öffnen");
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        Ui.exec(() -> {
-            Ui.build().fxml().show(ProductListController.class);
-        });
+    @PostConstruct
+    public void initCdi() {
+        setOnAction(e -> saft.build().fxml().show(ProductListController.class));
     }
 
 }

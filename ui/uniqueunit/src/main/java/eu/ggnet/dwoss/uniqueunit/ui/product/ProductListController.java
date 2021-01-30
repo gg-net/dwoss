@@ -6,8 +6,10 @@ import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
+import javax.inject.Inject;
+
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
@@ -26,10 +28,11 @@ import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.core.widget.Progressor;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ui.ProductTask;
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.ui.ClosedListener;
+import eu.ggnet.saft.core.Saft;
+import eu.ggnet.saft.core.ui.Bind;
 import eu.ggnet.saft.core.ui.FxController;
 
+import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
 import static javafx.scene.control.SelectionMode.MULTIPLE;
 
 /**
@@ -38,13 +41,9 @@ import static javafx.scene.control.SelectionMode.MULTIPLE;
  *
  * @author lucas.huelsen
  */
-public class ProductListController implements Initializable, FxController, ClosedListener {
-
-  //  public static final DataFormat PICO_PRODUCT_DATA_FORMAT = Optional.ofNullable(DataFormat.lookupMimeType(PicoProduct.MIME_TYPE)).orElse(new DataFormat(PicoProduct.MIME_TYPE));
+public class ProductListController implements Initializable, FxController {
 
     private static final Logger L = LoggerFactory.getLogger(ProductListController.class);
-
-    private final ProductTask LOADING_TASK = new ProductTask();
 
     // is used to filter the list of products
     private FilteredList<Product> filteredProducts;
@@ -93,6 +92,15 @@ public class ProductListController implements Initializable, FxController, Close
 
     @FXML
     private Button editButton;
+
+    @Inject
+    private Saft saft;
+
+    @Inject
+    private ProductTask productTask;
+
+    @Bind(SHOWING)
+    private final BooleanProperty showingProperty = new SimpleBooleanProperty();
 
     @FXML
     /**
@@ -146,11 +154,11 @@ public class ProductListController implements Initializable, FxController, Close
         setCellValues();
 
         progressBar.progressProperty()
-                .bind(LOADING_TASK.progressProperty());
+                .bind(productTask.progressProperty());
         progressBar.visibleProperty()
-                .bind(LOADING_TASK.runningProperty());
+                .bind(productTask.runningProperty());
 
-        filteredProducts = new FilteredList<>(LOADING_TASK.getPartialResults(), p -> true);
+        filteredProducts = new FilteredList<>(productTask.getPartialResults(), p -> true);
 
         // filteredList does not allow sorting so it needs to be wrapped in a sortedList
         SortedList<Product> sortedProducts = new SortedList<>(filteredProducts);
@@ -159,7 +167,13 @@ public class ProductListController implements Initializable, FxController, Close
         tableView.setItems(sortedProducts);
         editButton.disableProperty().bind(tableView.getSelectionModel().selectedItemProperty().isNull());
 
-        Progressor.global().submit(LOADING_TASK);
+        Progressor.global().submit(productTask);
+
+        showingProperty.addListener((ov, o, n) -> {
+            Platform.runLater(() -> {
+                if ( !n && productTask.isRunning() ) productTask.cancel();
+            });
+        });
     }
 
     /**
@@ -233,20 +247,13 @@ public class ProductListController implements Initializable, FxController, Close
         return onlyEol;
     }
 
-    @Override
-    public void closed() {
-        Platform.runLater(() -> {
-            if ( LOADING_TASK.isRunning() ) LOADING_TASK.cancel();
-        });
-    }
-
     @FXML
     private void create() {
-        Ui.build(tableView).alert("Not yet implemented");
+        saft.build(tableView).alert("Not yet implemented");
     }
 
     @FXML
     private void edit() {
-       Ui.build(tableView).alert("Not yet implemented");
+        saft.build(tableView).alert("Not yet implemented");
     }
 }

@@ -16,6 +16,7 @@
  */
 package eu.ggnet.dwoss.assembly.client.support.monitor;
 
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
 
 import javax.inject.Inject;
@@ -32,6 +33,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
 import eu.ggnet.dwoss.assembly.client.support.executor.Executor;
+import eu.ggnet.saft.core.Saft;
 
 import static java.lang.Double.MAX_VALUE;
 
@@ -49,6 +51,9 @@ public class MonitorPane extends BorderPane {
     @Inject
     @Executor
     private ScheduledExecutorService ses;
+
+    @Inject
+    private Saft saft;
 
     public MonitorPane() {
         taskList = FXCollections.observableArrayList();
@@ -83,19 +88,26 @@ public class MonitorPane extends BorderPane {
     /**
      * Allows submisson of task to be displayed and run on the global executor.
      *
-     * @param t the task to display
+     * @param task the task to display
      */
-    void submit(Task<?> t) {
+    void submit(Task<?> task) {
         // Remove Task from Tasklistview, if task is complete
-        EventHandler<WorkerStateEvent> e = (WorkerStateEvent event) -> Platform.runLater(() -> taskList.remove(t));
-        t.setOnSucceeded(e);
-        t.setOnFailed(e);
-        t.setOnCancelled(e);
+        EventHandler<WorkerStateEvent> e = (WorkerStateEvent event) -> Platform.runLater(() -> taskList.remove(task));
+        task.setOnSucceeded(e);
+        task.setOnFailed(e);
+        task.setOnCancelled(e);
 
         // Add Task to the UI
-        Platform.runLater(() -> taskList.add(t));
+        Platform.runLater(() -> taskList.add(task));
         // Start task
-        ses.execute(t);
+        ses.execute(task);
+        ses.submit(() -> {  // Exceptionrouter for task.
+            try {
+                task.get();
+            } catch (InterruptedException | ExecutionException ex) {
+                saft.handle(ex);
+            }
+        });
     }
 
 }
