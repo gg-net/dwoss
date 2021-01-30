@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,26 +16,43 @@
  */
 package eu.ggnet.dwoss.core.widget.swing;
 
-import eu.ggnet.dwoss.core.widget.swing.PojoUtil;
+import java.util.Objects;
+import java.util.function.Function;
 
 public class PojoColumn<T> {
 
     private String headline = "";
-    private boolean editable = false;
+
     private int preferredWidth = 10;
+
     private Class<?> clazz = Object.class;
+
     private String propertyName;
 
+    private Function<T, ?> accessor;
+
+    /**
+     *
+     * @param headline
+     * @param editable
+     * @param preferredWidth
+     * @param clazz
+     * @param propertyName
+     * @deprecated Use Function constructor.
+     */
+    @Deprecated
     public PojoColumn(String headline, boolean editable, int preferredWidth, Class<?> clazz, String propertyName) {
         this.headline = headline;
-        this.editable = editable;
         this.preferredWidth = preferredWidth;
         this.clazz = clazz;
         this.propertyName = propertyName;
     }
 
-    public boolean isEditable() {
-        return false;
+    public <R> PojoColumn(String headline, int preferredWidth, Class<R> clazz, Function<T, R> accessor) {
+        this.headline = Objects.requireNonNull(headline, "headline must not be null");
+        this.preferredWidth = preferredWidth;
+        this.clazz = clazz;
+        this.accessor = accessor;
     }
 
     public String getHeadline() {
@@ -47,7 +64,9 @@ public class PojoColumn<T> {
     }
 
     public Object getValue(T elem) {
-        return PojoUtil.getValue(propertyName, elem);
+        if ( propertyName != null ) return PojoUtil.getValue(propertyName, elem);
+        if ( accessor != null ) return accessor.apply(elem);
+        throw new IllegalStateException("Neither propertyName nor accessor are set");
     }
 
     public Class<?> getColumnClass() {

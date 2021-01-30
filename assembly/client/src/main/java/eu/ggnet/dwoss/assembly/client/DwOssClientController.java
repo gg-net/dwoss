@@ -47,7 +47,7 @@ import eu.ggnet.dwoss.misc.ui.toolbar.OpenDirectoryToolbarButton;
 import eu.ggnet.dwoss.price.ui.cap.*;
 import eu.ggnet.dwoss.price.ui.cap.build.PriceSubMenuBuilder.PriceSubMenu;
 import eu.ggnet.dwoss.receipt.ui.cap.*;
-import eu.ggnet.dwoss.receipt.ui.product.SpecListAction;
+import eu.ggnet.dwoss.receipt.ui.cap.OpenSpecListAction;
 import eu.ggnet.dwoss.redtapext.ui.cap.*;
 import eu.ggnet.dwoss.report.ui.cap.*;
 import eu.ggnet.dwoss.rights.ui.cap.NewRightsManagementAction;
@@ -219,7 +219,7 @@ public class DwOssClientController {
 
         Menu logistik = new Menu("Lager/Logistik");
         logistik.getItems().addAll(m.items(
-                OpenShipmentAction.class,
+                OpenShipmentListAction.class,
                 EditUnitAction.class,
                 ScrapUnitAction.class,
                 DeleteUnitAction.class
@@ -250,9 +250,9 @@ public class DwOssClientController {
         Menu artikelstamm = new Menu("Artikelstamm");
         artikelstamm.getItems().addAll(m.items(ProductListMenuItem.class,
                 UpdateProductAction.class,
-                CpuManagementAction.class,
-                GpuManagementAction.class,
-                SpecListAction.class,
+                OpenCpuListAction.class,
+                OpenGpuListAction.class,
+                OpenSpecListAction.class,
                 AddHistoryToUnitMenuItem.class
         ));
 

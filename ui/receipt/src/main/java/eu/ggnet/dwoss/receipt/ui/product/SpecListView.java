@@ -16,33 +16,30 @@
  */
 package eu.ggnet.dwoss.receipt.ui.product;
 
-import java.awt.Window;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 
-import eu.ggnet.dwoss.core.widget.swing.IView;
+import eu.ggnet.saft.core.ui.Title;
 
 /**
  *
  * @author pascal.perau
  */
-public class GpuListPanel extends javax.swing.JPanel implements IView {
+@Title("Brand-Familiy-Model-Series")
+public class SpecListView extends javax.swing.JPanel {
 
-    private GpuListController controller;
+    @Inject
+    private SpecListController controller;
 
-    private Window view;
-
-    /** Creates new form ListCpuPanel */
-    public GpuListPanel(GpuListController controller) {
+    /** Creates new form SpecListPanel */
+    public SpecListView() {
         initComponents();
-        if ( controller == null ) return;
-        this.controller = controller;
-        controller.setView(view);
-        gpuTable.setModel(controller.getModel());
-        controller.getModel().setTable(gpuTable);
     }
 
-    @Override
-    public void setParent(Window window) {
-        this.view = window;
+    @PostConstruct
+    private void initCdi() {
+        specTable.setModel(controller.getModel());
+        controller.getModel().setTable(specTable);
     }
 
     /** This method is called from within the constructor to
@@ -55,17 +52,15 @@ public class GpuListPanel extends javax.swing.JPanel implements IView {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        gpuTable = new javax.swing.JTable();
-        jLabel1 = new javax.swing.JLabel();
+        specTable = new javax.swing.JTable();
         filterField = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
         goButton = new javax.swing.JButton();
 
-        setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED, new java.awt.Color(204, 204, 255), java.awt.Color.black), "Gpu-Liste"));
-        setMinimumSize(new java.awt.Dimension(640, 360));
-        setName("");
-        setPreferredSize(new java.awt.Dimension(640, 360));
+        setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED, new java.awt.Color(204, 204, 255), java.awt.Color.black), "Produktliste"));
+        setMinimumSize(new java.awt.Dimension(380, 350));
 
-        gpuTable.setModel(new javax.swing.table.DefaultTableModel(
+        specTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -76,19 +71,21 @@ public class GpuListPanel extends javax.swing.JPanel implements IView {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        gpuTable.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                gpuTableMouseClicked(evt);
+        specTable.setMinimumSize(new java.awt.Dimension(310, 72));
+        jScrollPane1.setViewportView(specTable);
+
+        filterField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchActionPerformed(evt);
             }
         });
-        jScrollPane1.setViewportView(gpuTable);
 
         jLabel1.setText("Filter:");
 
-        goButton.setText("Los !");
+        goButton.setText("Los");
         goButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                goButtonActionPerformed(evt);
+                searchActionPerformed(evt);
             }
         });
 
@@ -96,14 +93,15 @@ public class GpuListPanel extends javax.swing.JPanel implements IView {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(filterField, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(filterField, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(goButton, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(183, Short.MAX_VALUE))
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 628, Short.MAX_VALUE)
+                .addComponent(goButton, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(445, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -113,26 +111,20 @@ public class GpuListPanel extends javax.swing.JPanel implements IView {
                     .addComponent(filterField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(goButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void goButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goButtonActionPerformed
-        if ( controller != null ) controller.filter(filterField.getText());
-    }//GEN-LAST:event_goButtonActionPerformed
-
-    private void gpuTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gpuTableMouseClicked
-        if ( evt.getClickCount() == 2 ) {
-            controller.editSelected();
-        }
-    }//GEN-LAST:event_gpuTableMouseClicked
+    private void searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchActionPerformed
+        controller.filter(filterField.getText());
+    }//GEN-LAST:event_searchActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField filterField;
     private javax.swing.JButton goButton;
-    private javax.swing.JTable gpuTable;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable specTable;
     // End of variables declaration//GEN-END:variables
 
 }

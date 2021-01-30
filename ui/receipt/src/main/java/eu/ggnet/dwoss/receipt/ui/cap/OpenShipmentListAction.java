@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,12 +16,13 @@
  */
 package eu.ggnet.dwoss.receipt.ui.cap;
 
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 
+import javax.inject.Inject;
+
 import eu.ggnet.dwoss.core.widget.AccessableAction;
-import eu.ggnet.dwoss.receipt.ui.shipment.ShipmentController;
-import eu.ggnet.dwoss.receipt.ui.shipment.ShipmentDialog;
+import eu.ggnet.dwoss.receipt.ui.shipment.ShipmentListView;
+import eu.ggnet.saft.core.Saft;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.READ_CREATE_UPDATE_DELETE_SHIPMENTS;
 
@@ -29,16 +30,17 @@ import static eu.ggnet.dwoss.rights.api.AtomicRight.READ_CREATE_UPDATE_DELETE_SH
  *
  * @author oliver.guenther
  */
-public class OpenShipmentAction extends AccessableAction {
+public class OpenShipmentListAction extends AccessableAction {
 
-    public OpenShipmentAction() {
+    @Inject
+    private Saft saft;
+
+    public OpenShipmentListAction() {
         super(READ_CREATE_UPDATE_DELETE_SHIPMENTS);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        EventQueue.invokeLater(() -> {
-            new ShipmentDialog(new ShipmentController()).setVisible(true);
-        });
+        saft.build().swing().show(ShipmentListView.class);
     }
 }

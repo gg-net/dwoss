@@ -16,25 +16,30 @@
  */
 package eu.ggnet.dwoss.receipt.ui.cap;
 
-import eu.ggnet.dwoss.receipt.ui.product.CpuListController;
-import eu.ggnet.dwoss.receipt.ui.product.CpuListPanel;
-
 import java.awt.event.ActionEvent;
 
+import javax.inject.Inject;
 import javax.swing.AbstractAction;
 
-import eu.ggnet.saft.core.Ui;
+import eu.ggnet.dwoss.receipt.ui.product.SpecListView;
+import eu.ggnet.saft.core.Saft;
 
-public class CpuManagementAction extends AbstractAction {
+/**
+ *
+ * @author oliver.guenther
+ */
+public class OpenSpecListAction extends AbstractAction {
 
-    public CpuManagementAction() {
-        super("Manage CPUs");
+    @Inject
+    private Saft saft;
+
+    public OpenSpecListAction() {
+        super("Modelle verwalten");
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.exec(() -> {
-            Ui.build().swing().show(() -> new CpuListPanel(new CpuListController()));
-        });
+        saft.build().swing().show(SpecListView.class);
     }
+
 }

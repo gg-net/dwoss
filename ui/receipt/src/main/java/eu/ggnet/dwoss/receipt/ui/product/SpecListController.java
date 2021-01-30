@@ -16,19 +16,20 @@
  */
 package eu.ggnet.dwoss.receipt.ui.product;
 
-import eu.ggnet.dwoss.core.widget.swing.PojoFilter;
-import eu.ggnet.dwoss.core.widget.swing.PojoTableModel;
-import eu.ggnet.dwoss.core.widget.swing.PojoColumn;
-
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import eu.ggnet.dwoss.receipt.ui.AbstractController;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
+import eu.ggnet.dwoss.core.common.values.ProductGroup;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
+import eu.ggnet.dwoss.core.widget.swing.*;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
-import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
-import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.spec.ee.entity.*;
 
 /*
  * To change this template, choose Tools | Templates
@@ -38,7 +39,7 @@ import eu.ggnet.dwoss.core.widget.Dl;
  *
  * @author pascal.perau
  */
-public class SpecListController extends AbstractController {
+public class SpecListController {
 
     private class SpecFilter implements PojoFilter<ProductSpec> {
 
@@ -64,20 +65,19 @@ public class SpecListController extends AbstractController {
 
     private PojoTableModel<ProductSpec> model;
 
-    public SpecListController() {
-        this(Dl.remote().lookup(SpecAgent.class));
-    }
+    @Inject
+    private RemoteDl remote;
 
-    public SpecListController(SpecAgent specAgent) {
-        specs = new ArrayList<>();
-        if ( specAgent != null ) specs = specAgent.findAll(ProductSpec.class);
-        this.model = new PojoTableModel(specs,
-                new PojoColumn<>("Warengruppe", true, 10, String.class, "model.family.series.group.note"),
-                new PojoColumn<>("Brand", true, 10, String.class, "model.family.series.brand.name"),
-                new PojoColumn<>("Serie", true, 15, String.class, "model.family.series.name"),
-                new PojoColumn<>("Familie", true, 15, String.class, "model.family.name"),
-                new PojoColumn<>("Modell", true, 25, String.class, "model.name"),
-                new PojoColumn<>("PartNo", true, 10, String.class, "partNo"));
+    @PostConstruct
+    private void initCdi() {
+        specs = remote.lookup(SpecAgent.class).findAll(ProductSpec.class);
+        this.model = new PojoTableModel<>(specs,
+                new PojoColumn<>("Warengruppe", 10, String.class, spec -> Optional.ofNullable(spec).map(ProductSpec::getModel).map(ProductModel::getFamily).map(ProductFamily::getSeries).map(ProductSeries::getGroup).map(ProductGroup::getNote).orElse("")),
+                new PojoColumn<>("Brand", 10, String.class, spec -> Optional.ofNullable(spec).map(ProductSpec::getModel).map(ProductModel::getFamily).map(ProductFamily::getSeries).map(ProductSeries::getBrand).map(TradeName::getDescription).orElse("")),
+                new PojoColumn<>("Serie", 15, String.class, spec -> Optional.ofNullable(spec).map(ProductSpec::getModel).map(ProductModel::getFamily).map(ProductFamily::getSeries).map(ProductSeries::getName).orElse("")),
+                new PojoColumn<>("Familie", 15, String.class, spec -> Optional.ofNullable(spec).map(ProductSpec::getModel).map(ProductModel::getFamily).map(ProductFamily::getName).orElse("")),
+                new PojoColumn<>("Modell", 25, String.class, spec -> Optional.ofNullable(spec).map(ProductSpec::getModel).map(ProductModel::getName).orElse("")),
+                new PojoColumn<>("PartNo", 10, String.class, ProductSpec::getPartNo));
         filter = new SpecFilter();
         model.setFilter(filter);
     }

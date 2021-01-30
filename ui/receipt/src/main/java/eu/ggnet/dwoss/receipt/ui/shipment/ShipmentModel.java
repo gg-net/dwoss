@@ -16,10 +16,6 @@
  */
 package eu.ggnet.dwoss.receipt.ui.shipment;
 
-import eu.ggnet.dwoss.core.widget.swing.PojoFilter;
-import eu.ggnet.dwoss.core.widget.swing.PojoTableModel;
-import eu.ggnet.dwoss.core.widget.swing.PojoColumn;
-
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -29,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.widget.swing.*;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
 
 public class ShipmentModel extends PojoTableModel<Shipment> {
@@ -56,7 +53,7 @@ public class ShipmentModel extends PojoTableModel<Shipment> {
             boolean st = !isStatus || t.getStatus() == status;
             return s && o && st;
         }
-        
+
         @Override
         public String toString() {
             return ToStringBuilder.reflectionToString(this);
@@ -68,10 +65,10 @@ public class ShipmentModel extends PojoTableModel<Shipment> {
 
     public ShipmentModel(final List<Shipment> lines) {
         super(lines,
-                new PojoColumn<Shipment>("ShipmentNamen", false, 5, String.class, "shipmentId"),
-                new PojoColumn<Shipment>("Besitzer", false, 5, TradeName.class, "contractor"),
-                new PojoColumn<Shipment>("Letzter Status", false, 10, Shipment.Status.class, "status"),
-                new PojoColumn<Shipment>("Datum", false, 20, Date.class, "date"));
+                new PojoColumn<>("ShipmentNamen", 5, String.class, Shipment::getShipmentId),
+                new PojoColumn<>("Besitzer", 5, TradeName.class, Shipment::getContractor),
+                new PojoColumn<>("Letzter Status", 10, Shipment.Status.class, Shipment::getStatus),
+                new PojoColumn<>("Datum", 20, Date.class, Shipment::getDate));
         filter = new ShipmentFilter();
         setFilter(filter);
     }
@@ -95,6 +92,16 @@ public class ShipmentModel extends PojoTableModel<Shipment> {
         filter.isOwner = enable;
         L.debug("Filter changed. {}", filter);
         fireTableDataChanged();
+    }
+
+    @Override
+    public Shipment add(Shipment shipment) {
+        L.info("add({})", shipment);
+        Shipment add = super.add(shipment);
+//        getLines().forEach(sm -> {
+//            System.out.println(" - " + sm.getShipmentId());
+//        });
+        return add;
     }
 
 }

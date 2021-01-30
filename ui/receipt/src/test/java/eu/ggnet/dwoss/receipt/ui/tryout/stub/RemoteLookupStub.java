@@ -31,7 +31,7 @@ public class RemoteLookupStub implements RemoteLookup {
 
     @Override
     public <T> T lookup(Class<T> clazz) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("No implementation for " + clazz);
     }
 
 }

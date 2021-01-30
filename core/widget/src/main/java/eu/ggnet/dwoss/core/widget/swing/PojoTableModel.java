@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,9 +16,7 @@
  */
 package eu.ggnet.dwoss.core.widget.swing;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import javax.swing.JTable;
 import javax.swing.RowFilter;
@@ -41,7 +39,7 @@ public class PojoTableModel<T> extends AbstractTableModel {
 
     public PojoTableModel(List<T> dataModel, PojoColumn<T>... columns) {
         this.dataModel = dataModel;
-        this.columns = new ArrayList<PojoColumn<T>>();
+        this.columns = new ArrayList<>();
         if ( columns != null && columns.length > 0 ) this.columns.addAll(Arrays.asList(columns));
     }
 
@@ -58,13 +56,12 @@ public class PojoTableModel<T> extends AbstractTableModel {
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return columns.get(columnIndex).isEditable();
+        return false;
     }
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-//        columns.get(columnIndex).setValue(rowIndex, aValue);
-        fireTableRowsUpdated(rowIndex, rowIndex);
+        throw new IllegalStateException("Pojotable is readonly");
     }
 
     @Override
@@ -87,14 +84,16 @@ public class PojoTableModel<T> extends AbstractTableModel {
         return dataModel;
     }
 
-    public void remove(T t) {
+    public T remove(T t) {
         dataModel.remove(t);
         fireTableDataChanged();
+        return t;
     }
 
-    public void add(T t) {
+    public T add(T t) {
         dataModel.add(t);
         fireTableRowsInserted(dataModel.size() - 1, dataModel.size() - 1);
+        return t;
     }
 
     public T getSelected() {
@@ -117,7 +116,7 @@ public class PojoTableModel<T> extends AbstractTableModel {
         for (int i = 0; i < columns.size(); i++) {
             table.getColumnModel().getColumn(i).setPreferredWidth(columns.get(i).getPreferredWidth());
         }
-        TableRowSorter<PojoTableModel<T>> rowSorter = new TableRowSorter<PojoTableModel<T>>(this);
+        TableRowSorter<PojoTableModel<T>> rowSorter = new TableRowSorter<>(this);
         rowSorter.setRowFilter(new RowFilter<PojoTableModel<T>, Integer>() {
             @Override
             public boolean include(RowFilter.Entry<? extends PojoTableModel<T>, ? extends Integer> entry) {

@@ -16,6 +16,12 @@
  */
 package eu.ggnet.dwoss.receipt.ui.shipment;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
@@ -23,43 +29,42 @@ import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.swing.ComboBoxController;
 import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
-import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.core.ui.*;
+
+import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
 
 /**
  *
  * @author pascal.perau
  */
-public class ShipmentDialog extends javax.swing.JDialog {
+@Title("Shipment")
+@StoreLocation
+public class ShipmentListView extends javax.swing.JPanel {
 
-    private ShipmentModel model;
-
-    private ShipmentController controller;
+    @Inject
+    private ShipmentListController controller;
 
     private ComboBoxController<Shipment.Status> filterStatus;
 
     private ComboBoxController<TradeName> filterOwner;
 
-    public ShipmentDialog(ShipmentController controller) {
-        this(UiCore.getMainFrame(), controller);
+    @Bind(SHOWING)
+    private final BooleanProperty showingProperty = new SimpleBooleanProperty();
+
+    public ShipmentListView() {
+        initComponents();
     }
 
-    public ShipmentDialog(java.awt.Window parent, ShipmentController controller) {
-        super(parent);
-        initComponents();
-        setModalityType(ModalityType.APPLICATION_MODAL);
-        this.model = controller.getModel();
-        this.controller = controller;
-        controller.setView(this);
+    @PostConstruct
+    private void initCdi() {
         try {
-            shipmentTable.setModel(model);
-            model.setTable(shipmentTable);
+            shipmentTable.setModel(controller.getModel());
+            controller.getModel().setTable(shipmentTable);
         } catch (ArrayIndexOutOfBoundsException e) {
-            LoggerFactory.getLogger(ShipmentDialog.class).error("Exception happend were we expected it. So bug is found, now we need to fix it, {}, {}", e.getClass().getName(), e.getMessage());
+            LoggerFactory.getLogger(ShipmentListView.class).error("Exception happend were we expected it. So bug is found, now we need to fix it, {}, {}", e.getClass().getName(), e.getMessage());
         }
         filterStatus = new ComboBoxController<>(filterStatusbox, Shipment.Status.values());
         filterOwner = new ComboBoxController<>(filterOwnerbox, Dl.local().lookup(CachedMandators.class).loadContractors().all().toArray());
-        if ( parent != null ) setLocationRelativeTo(parent);
-        UiCore.global().locationStorage().loadLocation(this.getClass(), this);
     }
 
     /** This method is called from within the constructor to
@@ -90,15 +95,8 @@ public class ShipmentDialog extends javax.swing.JDialog {
         jScrollPane1 = new javax.swing.JScrollPane();
         shipmentTable = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Shipments");
         setMinimumSize(new java.awt.Dimension(400, 400));
         setName("Shipments"); // NOI18N
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
-            }
-        });
 
         createButton.setFont(createButton.getFont());
         createButton.setText("Neu");
@@ -120,7 +118,7 @@ public class ShipmentDialog extends javax.swing.JDialog {
         editButton.setText("Bearbeiten");
         editButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editButtonActionPerformed(evt);
+                editSelectedShipmentAction(evt);
             }
         });
 
@@ -251,8 +249,8 @@ public class ShipmentDialog extends javax.swing.JDialog {
         });
         jScrollPane1.setViewportView(shipmentTable);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -262,8 +260,8 @@ public class ShipmentDialog extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(deleteButton, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)
-                            .addComponent(editButton, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE))
+                            .addComponent(deleteButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(editButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(exitButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -292,44 +290,42 @@ public class ShipmentDialog extends javax.swing.JDialog {
                             .addComponent(exitButton))))
                 .addContainerGap())
         );
-
-        pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void createButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createButtonActionPerformed
-        controller.createShipment();
+        controller.createShipment(this);
     }//GEN-LAST:event_createButtonActionPerformed
 
-    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
-        controller.editShipment();
-    }//GEN-LAST:event_editButtonActionPerformed
+    private void editSelectedShipmentAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editSelectedShipmentAction
+        controller.editShipment(this);
+    }//GEN-LAST:event_editSelectedShipmentAction
 
     private void inclusionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inclusionButtonActionPerformed
-        controller.inclusion();
+        controller.inclusion(this);
     }//GEN-LAST:event_inclusionButtonActionPerformed
 
     private void filterShipmentIdKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_filterShipmentIdKeyReleased
-        model.filterShipmentId(filterShipmentField.getText(), filterShipmentIdEnableBox.isSelected());
+        controller.getModel().filterShipmentId(filterShipmentField.getText(), filterShipmentIdEnableBox.isSelected());
     }//GEN-LAST:event_filterShipmentIdKeyReleased
 
     private void filterStatusAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterStatusAction
-        model.filterStatus(filterStatus.getSelected(), filterStatusEnableBox.isSelected());
+        controller.getModel().filterStatus(filterStatus.getSelected(), filterStatusEnableBox.isSelected());
     }//GEN-LAST:event_filterStatusAction
 
     private void filterStatusEnableBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterStatusEnableBoxActionPerformed
-        model.filterStatus(filterStatus.getSelected(), filterStatusEnableBox.isSelected());
+        controller.getModel().filterStatus(filterStatus.getSelected(), filterStatusEnableBox.isSelected());
     }//GEN-LAST:event_filterStatusEnableBoxActionPerformed
 
     private void filterShipmentIdEnableBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterShipmentIdEnableBoxActionPerformed
-        model.filterShipmentId(filterShipmentField.getText(), filterShipmentIdEnableBox.isSelected());
+        controller.getModel().filterShipmentId(filterShipmentField.getText(), filterShipmentIdEnableBox.isSelected());
     }//GEN-LAST:event_filterShipmentIdEnableBoxActionPerformed
 
     private void filterOwnerEnableBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterOwnerEnableBoxActionPerformed
-        model.filterOwner(filterOwner.getSelected(), filterOwnerEnableBox.isSelected());
+        controller.getModel().filterOwner(filterOwner.getSelected(), filterOwnerEnableBox.isSelected());
     }//GEN-LAST:event_filterOwnerEnableBoxActionPerformed
 
     private void filterOwnerboxAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterOwnerboxAction
-        model.filterOwner(filterOwner.getSelected(), filterOwnerEnableBox.isSelected());
+        controller.getModel().filterOwner(filterOwner.getSelected(), filterOwnerEnableBox.isSelected());
     }//GEN-LAST:event_filterOwnerboxAction
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
@@ -337,16 +333,12 @@ public class ShipmentDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_deleteButtonActionPerformed
 
     private void shipmentTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_shipmentTableMouseClicked
-        if ( evt.getClickCount() == 2 ) controller.inclusion();
+        if ( evt.getClickCount() == 2 ) controller.inclusion(this);
     }//GEN-LAST:event_shipmentTableMouseClicked
 
     private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed
-        this.setVisible(false);
+        showingProperty.set(false);
     }//GEN-LAST:event_exitButtonActionPerformed
-
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        UiCore.global().locationStorage().storeLocation(this.getClass(), this);
-    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments

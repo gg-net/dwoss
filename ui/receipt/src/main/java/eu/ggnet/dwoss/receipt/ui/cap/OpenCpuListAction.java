@@ -14,29 +14,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.receipt.ui.product;
+package eu.ggnet.dwoss.receipt.ui.cap;
 
 import java.awt.event.ActionEvent;
 
+import javax.inject.Inject;
 import javax.swing.AbstractAction;
 
-import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
-import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.dwoss.receipt.ui.product.CpuListView;
+import eu.ggnet.saft.core.Saft;
 
-/**
- *
- * @author oliver.guenther
- */
-public class SpecListAction extends AbstractAction {
+public class OpenCpuListAction extends AbstractAction {
 
-    public SpecListAction() {
-        super("Modelle verwalten");
+    @Inject
+    private Saft saft;
+
+    public OpenCpuListAction() {
+        super("Manage CPUs");
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        OkCancelDialog<SpecListPanel> dialog = new OkCancelDialog<>(UiCore.getMainFrame(), "Brand-Familiy-Model-Series", new SpecListPanel(new SpecListController()));
-        dialog.setVisible(true);
+        saft.build().swing().show(CpuListView.class);
     }
-
 }

@@ -16,28 +16,25 @@
  */
 package eu.ggnet.dwoss.receipt.ui.product;
 
-import eu.ggnet.dwoss.core.widget.swing.PojoFilter;
-import eu.ggnet.dwoss.core.widget.swing.PojoTableModel;
-import eu.ggnet.dwoss.core.widget.swing.PojoColumn;
-
-import java.util.*;
+import java.awt.Window;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import javax.swing.SwingUtilities;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 
-import eu.ggnet.dwoss.core.widget.swing.CloseType;
-import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
-import eu.ggnet.dwoss.receipt.ui.AbstractController;
+import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
+import eu.ggnet.dwoss.core.widget.swing.*;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Gpu;
-import eu.ggnet.dwoss.core.widget.Dl;
 
 /**
  *
  * @author pascal.perau
  */
-public class GpuListController extends AbstractController {
+public class GpuListController {
 
     private class GpuFilter implements PojoFilter<Gpu> {
 
@@ -60,22 +57,21 @@ public class GpuListController extends AbstractController {
 
     private PojoTableModel<Gpu> model;
 
-    GpuFilter filter;
+    private GpuFilter filter;
 
-    public GpuListController() {
-        this(Dl.remote().lookup(SpecAgent.class));
-    }
+    @Inject
+    private RemoteDl remote;
 
-    public GpuListController(SpecAgent specAgent) {
-        allGpus = new ArrayList<>();
-        if ( specAgent != null ) allGpus = specAgent.findAll(Gpu.class);
-        this.model = new PojoTableModel(allGpus,
-                new PojoColumn<Gpu>("Hersteller", true, 50, String.class, "manufacturer.note"),
-                new PojoColumn<Gpu>("Serie", true, 75, String.class, "series.note"),
-                new PojoColumn<Gpu>("Typ", true, 50, EnumSet.class, "types"),
-                new PojoColumn<Gpu>("Modell", true, 75, String.class, "model"),
-                new PojoColumn<Gpu>("Name", true, 100, String.class, "name"),
-                new PojoColumn<Gpu>("EV", true, 20, Double.class, "economicValue"));
+    @PostConstruct
+    private void initCdi() {
+        allGpus = remote.lookup(SpecAgent.class).findAll(Gpu.class);
+        this.model = new PojoTableModel<>(allGpus,
+                new PojoColumn<>("Hersteller", 50, String.class, gpu -> gpu.getManufacturer().getNote()),
+                new PojoColumn<>("Serie", 75, String.class, gpu -> gpu.getSeries().getNote()),
+                new PojoColumn<>("Typ", 50, Set.class, Gpu::getTypes),
+                new PojoColumn<>("Modell", 75, String.class, Gpu::getModel),
+                new PojoColumn<>("Name", 100, String.class, Gpu::getName),
+                new PojoColumn<>("EV", 20, Double.class, Gpu::getEconomicValue));
         filter = new GpuFilter();
         model.setFilter(filter);
     }
@@ -98,10 +94,10 @@ public class GpuListController extends AbstractController {
     /**
      * Open EditCpuPanel via table selection
      */
-    public void editSelected() {
+    public void editSelected(Window window) {
         EditGpuPanel gpuPanel = new EditGpuPanel(allGpus);
         gpuPanel.setGpu(model.getSelected());
-        OkCancelDialog<EditGpuPanel> dialog = new OkCancelDialog<>(SwingUtilities.getWindowAncestor(this.view), "GPU bearbeiten", gpuPanel);
+        OkCancelDialog<EditGpuPanel> dialog = new OkCancelDialog<>(window, "GPU bearbeiten", gpuPanel);
         dialog.setVisible(true);
         if ( dialog.getCloseType() == CloseType.OK ) {
             model.remove(model.getSelected());

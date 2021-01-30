@@ -16,17 +16,38 @@
  */
 package eu.ggnet.dwoss.receipt.ui.tryout.stub;
 
-import java.util.EnumSet;
+import java.util.*;
 
+import eu.ggnet.dwoss.core.common.values.ReceiptOperation;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers.Key;
 import eu.ggnet.dwoss.mandator.api.value.*;
-import eu.ggnet.dwoss.mandator.api.Mandators;
+import eu.ggnet.dwoss.mandator.spi.CachedMandators;
+
+import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.*;
 
 /**
  *
  * @author oliver.guenther
  */
-public class MandatorsStub implements Mandators {
+public class MandatorsStub implements CachedMandators {
+
+    private final static Set<TradeName> CONTRACTORS = EnumSet.of(AMAZON, EBAY, ACER, APPLE, INGRAM_MICRO);
+
+    private final static Set<TradeName> BRANDS = EnumSet.of(APPLE, ACER, PACKARD_BELL, LENOVO, HP);
+
+    private final Map<Key, Long> RECEIPT_CUSTOMERS;
+
+    {
+        RECEIPT_CUSTOMERS = new HashMap<>();
+        long i = 0;
+        for (TradeName contractor : CONTRACTORS) {
+            for (ReceiptOperation ro : ReceiptOperation.values()) {
+                RECEIPT_CUSTOMERS.put(Key.of(contractor, ro), i);
+                i++;
+            }
+        }
+    }
 
     @Override
     public Mandator loadMandator() {
@@ -40,7 +61,7 @@ public class MandatorsStub implements Mandators {
 
     @Override
     public ReceiptCustomers loadReceiptCustomers() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new ReceiptCustomers(RECEIPT_CUSTOMERS);
     }
 
     @Override
@@ -50,7 +71,7 @@ public class MandatorsStub implements Mandators {
 
     @Override
     public Contractors loadContractors() {
-        return new Contractors(EnumSet.allOf(TradeName.class), EnumSet.allOf(TradeName.class));
+        return new Contractors(CONTRACTORS, BRANDS);
     }
 
     @Override

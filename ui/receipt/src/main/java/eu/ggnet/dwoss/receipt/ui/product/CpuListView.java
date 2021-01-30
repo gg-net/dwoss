@@ -18,24 +18,35 @@ package eu.ggnet.dwoss.receipt.ui.product;
 
 import java.awt.Window;
 
-import eu.ggnet.dwoss.core.widget.swing.IView;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
+import eu.ggnet.saft.core.Saft;
+import eu.ggnet.saft.core.impl.Swing;
+
+import static eu.ggnet.saft.core.ui.UiParent.of;
 
 /**
  *
  * @author pascal.perau
  */
-public class CpuListPanel extends javax.swing.JPanel implements IView<Window> {
+public class CpuListView extends javax.swing.JPanel {
 
+    @Inject
     private CpuListController controller;
+
+    @Inject
+    private Saft saft;
 
     private Window view;
 
     /** Creates new form ListCpuPanel */
-    public CpuListPanel(CpuListController controller) {
+    public CpuListView() {
         initComponents();
-        if ( controller == null ) return;
-        this.controller = controller;
-        controller.setView(view);
+    }
+
+    @PostConstruct
+    private void initCdi() {
         cpuTable.setModel(controller.getModel());
         controller.getModel().setTable(cpuTable);
     }
@@ -57,7 +68,7 @@ public class CpuListPanel extends javax.swing.JPanel implements IView<Window> {
 
         setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED, new java.awt.Color(204, 204, 255), java.awt.Color.black), "Cpu-Liste"));
         setMinimumSize(new java.awt.Dimension(640, 360));
-        setName("");
+        setName(""); // NOI18N
         setPreferredSize(new java.awt.Dimension(640, 360));
 
         cpuTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -108,7 +119,7 @@ public class CpuListPanel extends javax.swing.JPanel implements IView<Window> {
                     .addComponent(filterField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(searchButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 302, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -118,7 +129,7 @@ public class CpuListPanel extends javax.swing.JPanel implements IView<Window> {
 
     private void cpuTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cpuTableMouseClicked
         if ( evt.getClickCount() == 2 ) {
-            controller.editSelected();
+            controller.editSelected(saft.core(Swing.class).unwrap(of(this)).orElse(null));
         }
     }//GEN-LAST:event_cpuTableMouseClicked
 
@@ -129,10 +140,5 @@ public class CpuListPanel extends javax.swing.JPanel implements IView<Window> {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton searchButton;
     // End of variables declaration//GEN-END:variables
-
-    @Override
-    public void setParent(Window window) {
-        this.view = window;
-    }
 
 }

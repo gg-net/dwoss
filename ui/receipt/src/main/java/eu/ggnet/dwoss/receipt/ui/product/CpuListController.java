@@ -16,28 +16,23 @@
  */
 package eu.ggnet.dwoss.receipt.ui.product;
 
-import eu.ggnet.dwoss.core.widget.swing.PojoFilter;
-import eu.ggnet.dwoss.core.widget.swing.PojoTableModel;
-import eu.ggnet.dwoss.core.widget.swing.PojoColumn;
-
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import javax.swing.SwingUtilities;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 
-import eu.ggnet.dwoss.core.widget.swing.CloseType;
-import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
-import eu.ggnet.dwoss.receipt.ui.AbstractController;
+import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
+import eu.ggnet.dwoss.core.widget.swing.*;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Cpu;
-import eu.ggnet.dwoss.core.widget.Dl;
 
 /**
  *
  * @author pascal.perau
  */
-public class CpuListController extends AbstractController {
+public class CpuListController {
 
     private class CpuFilter implements PojoFilter<Cpu> {
 
@@ -56,28 +51,28 @@ public class CpuListController extends AbstractController {
         }
     }
 
+    @Inject
+    private RemoteDl remote;
+
     private List<Cpu> cpus;
 
     private PojoTableModel<Cpu> model;
 
     private CpuFilter filter;
 
-    public CpuListController() {
-        this(Dl.remote().lookup(SpecAgent.class));
-    }
-
-    public CpuListController(SpecAgent specAgent) {
+    @PostConstruct
+    private void initCdi() {
         cpus = new ArrayList<>();
-        if ( specAgent != null ) cpus = specAgent.findAll(Cpu.class);
+        cpus = remote.lookup(SpecAgent.class).findAll(Cpu.class);
         this.model = new PojoTableModel(cpus,
-                new PojoColumn<Cpu>("Hersteller", true, 50, String.class, "manufacturer.note"),
-                new PojoColumn<Cpu>("Serie", true, 75, String.class, "series.note"),
-                new PojoColumn<Cpu>("Modell", true, 75, String.class, "model"),
-                new PojoColumn<Cpu>("Typ", true, 50, EnumSet.class, "types"),
-                new PojoColumn<Cpu>("Kerne", true, 50, Integer.class, "cores"),
-                new PojoColumn<Cpu>("Frequenz", true, 50, Double.class, "frequency"),
-                new PojoColumn<Cpu>("Name", true, 100, String.class, "name"),
-                new PojoColumn<Cpu>("EV", true, 20, Double.class, "economicValue"));
+                new PojoColumn<Cpu>("Hersteller", 50, String.class, cpu -> cpu.getManufacturer().getNote()),
+                new PojoColumn<Cpu>("Serie", 75, String.class, cpu -> cpu.getSeries().getNote()),
+                new PojoColumn<>("Modell", 75, String.class, Cpu::getModel),
+                new PojoColumn<Cpu>("Typ", 50, Set.class, cpu -> cpu.getTypes()),
+                new PojoColumn<>("Kerne", 50, Integer.class, Cpu::getCores),
+                new PojoColumn<>("Frequenz", 50, Double.class, Cpu::getFrequency),
+                new PojoColumn<>("Name", 100, String.class, Cpu::getName),
+                new PojoColumn<>("EV", 20, Double.class, Cpu::getEconomicValue));
         filter = new CpuFilter();
         model.setFilter(filter);
     }
@@ -100,10 +95,10 @@ public class CpuListController extends AbstractController {
     /**
      * Open EditCpuPanel via table selection
      */
-    public void editSelected() {
+    public void editSelected(java.awt.Window parent) {
         EditCpuPanel cpuPanel = new EditCpuPanel(cpus);
         cpuPanel.setCpu(model.getSelected());
-        OkCancelDialog<EditCpuPanel> dialog = new OkCancelDialog<>(SwingUtilities.getWindowAncestor(this.view), "CPU bearbeiten", cpuPanel);
+        OkCancelDialog<EditCpuPanel> dialog = new OkCancelDialog<>(parent, "CPU bearbeiten", cpuPanel);
         dialog.setVisible(true);
         if ( dialog.getCloseType() == CloseType.OK ) {
             model.remove(model.getSelected());

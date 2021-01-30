@@ -16,26 +16,25 @@
  */
 package eu.ggnet.dwoss.receipt.ui.cap;
 
-import eu.ggnet.dwoss.receipt.ui.product.GpuListController;
-import eu.ggnet.dwoss.receipt.ui.product.GpuListPanel;
-
 import java.awt.event.ActionEvent;
 
+import javax.inject.Inject;
 import javax.swing.AbstractAction;
 
-import eu.ggnet.saft.core.Ui;
+import eu.ggnet.dwoss.receipt.ui.product.GpuListView;
+import eu.ggnet.saft.core.Saft;
 
-public class GpuManagementAction extends AbstractAction {
+public class OpenGpuListAction extends AbstractAction {
 
-    public GpuManagementAction() {
+    @Inject
+    private Saft saft;
+
+    public OpenGpuListAction() {
         super("Manage GPUs");
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.exec(() -> {
-            Ui.build().swing().show(() -> new GpuListPanel(new GpuListController())); 
-        });
-
+        saft.build().swing().show(GpuListView.class);
     }
 }
