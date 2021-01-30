@@ -54,6 +54,7 @@ import eu.ggnet.dwoss.rights.ui.cap.NewRightsManagementAction;
 import eu.ggnet.dwoss.search.ui.SearchCask;
 import eu.ggnet.dwoss.search.ui.cap.OpenSearchAction;
 import eu.ggnet.dwoss.stock.ui.cap.*;
+import eu.ggnet.dwoss.uniqueunit.ui.cap.AddHistoryToUnitMenuItem;
 import eu.ggnet.dwoss.uniqueunit.ui.cap.ProductListMenuItem;
 import eu.ggnet.saft.core.UiCore;
 
@@ -252,7 +253,7 @@ public class DwOssClientController {
                 CpuManagementAction.class,
                 GpuManagementAction.class,
                 SpecListAction.class,
-                AddCommentAction.class
+                AddHistoryToUnitMenuItem.class
         ));
 
         artikelstamm.getItems().addAll(m.item(SalesProductAction.class), artikelstamm_imageIds);

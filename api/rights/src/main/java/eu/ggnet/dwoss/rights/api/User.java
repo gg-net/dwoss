@@ -34,11 +34,12 @@ public interface User extends Serializable {
     };
 
     Optional<Long> getId();
-    
+
     Optional<Integer> getOptLock();
 
     String getUsername();
-    
+
+    // TODO: Wieso zur Hölle ist das hier geleandet. Macht keinen Sinn.
     Optional<String> getPassword();
 
     List<AtomicRight> getRights();

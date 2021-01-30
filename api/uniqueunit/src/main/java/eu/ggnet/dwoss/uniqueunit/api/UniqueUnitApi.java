@@ -18,6 +18,8 @@ package eu.ggnet.dwoss.uniqueunit.api;
 
 import javax.ejb.Remote;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
+
 /**
  * Main Api entrence point.
  *
@@ -30,4 +32,23 @@ public interface UniqueUnitApi {
 
     String findAsHtml(long id, String username);
 
+    /**
+     * Adds a history to a unique unit.
+     *
+     * @param uniqueUnitId the id of the unique unit.
+     * @param history      the history to add
+     * @param arranger     the arranger, which added it.
+     * @throws UserInfoException If history, arranger are null or blank, or no unit with the supplied id is found.
+     */
+    void addHistory(long uniqueUnitId, String history, String arranger) throws UserInfoException;
+
+    /**
+     * Adds a history to a unique unit identified by the supplied refurbishId.
+     *
+     * @param refurbishId the refurbishid of the unique unit.
+     * @param history     the history to add, must not be blank or null.
+     * @param arranger    the arranger which added it, must not be blank or null.
+     * @throws UserInfoException If history, arranger are null or blank, or no unit with the supplied refurbishid is found.
+     */
+    void addHistoryByRefurbishId(String refurbishId, String history, String arranger) throws UserInfoException;
 }

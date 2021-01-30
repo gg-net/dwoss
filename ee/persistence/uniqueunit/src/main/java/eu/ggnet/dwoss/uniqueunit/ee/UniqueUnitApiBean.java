@@ -23,9 +23,14 @@ import javax.ejb.Stateless;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.redtape.api.DossierViewer;
 import eu.ggnet.dwoss.report.api.ReportApiLocal;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
+import eu.ggnet.dwoss.rights.api.UserApiLocal;
 import eu.ggnet.dwoss.stock.api.StockApiLocal;
 import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
@@ -33,7 +38,6 @@ import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnitHistory;
 import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
-import eu.ggnet.dwoss.rights.api.UserApiLocal;
 
 /**
  *
@@ -41,6 +45,8 @@ import eu.ggnet.dwoss.rights.api.UserApiLocal;
  */
 @Stateless
 public class UniqueUnitApiBean implements UniqueUnitApi {
+
+    private final static Logger L = LoggerFactory.getLogger(UniqueUnitApiBean.class);
 
     @Inject
     private UniqueUnitEao eao;
@@ -112,6 +118,25 @@ public class UniqueUnitApiBean implements UniqueUnitApi {
             // Both are thrown in findByName, if user is missing.
         }
         return re;
+    }
+
+    @Override
+    public void addHistory(long uniqueUnitId, String history, String arranger) throws UserInfoException {
+        if ( history == null || history.isBlank() ) throw new UserInfoException("history darf nicht null oder leer sein");
+        if ( arranger == null || arranger.isBlank() ) throw new UserInfoException("arranger dar nicht null oder leer sein");
+        UniqueUnit uu = eao.findById(uniqueUnitId);
+        if ( uu == null ) throw new UserInfoException("Keine Unit mit der Id " + uniqueUnitId + " gefunden");
+        uu.addHistory(history + " - " + arranger);
+    }
+
+    @Override
+    public void addHistoryByRefurbishId(String refurbishId, String history, String arranger) throws UserInfoException {
+        if ( history == null || history.isBlank() ) throw new UserInfoException("history darf nicht null oder leer sein");
+        if ( arranger == null || arranger.isBlank() ) throw new UserInfoException("arranger dar nicht null oder leer sein");
+        if ( refurbishId == null || refurbishId.isBlank() ) throw new UserInfoException("refurbishId darf nicht null oder leer sein");
+        UniqueUnit uu = eao.findByIdentifier(UniqueUnit.Identifier.REFURBISHED_ID, refurbishId);
+        if ( uu == null ) throw new UserInfoException("Keine Unit mit der Refurbishid " + refurbishId + " gefunden");
+        uu.addHistory(history + " - " + arranger);
     }
 
 }

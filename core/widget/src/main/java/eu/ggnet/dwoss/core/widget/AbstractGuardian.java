@@ -16,10 +16,6 @@
  */
 package eu.ggnet.dwoss.core.widget;
 
-import eu.ggnet.dwoss.core.widget.auth.Accessable;
-import eu.ggnet.dwoss.core.widget.auth.Guardian;
-import eu.ggnet.dwoss.core.widget.auth.UserChangeListener;
-
 import java.util.*;
 
 import javax.swing.Action;
@@ -28,13 +24,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.dwoss.rights.api.Operator;
+import eu.ggnet.dwoss.core.widget.auth.*;
+import eu.ggnet.dwoss.rights.api.*;
 
 /**
  * An Implementation which handles the AccessDependent and Rights Storage, but without an actual Authentication.
  * Extends this class and in {@link AccessCos#login(java.lang.String, java.lang.String) } call setRights.
- * <p/>
+ * <p>
  * @author oliver.guenther
  */
 // Todo: I think all the hard dependecies to the rights api could be moved to the final implementation in the LookupAuthenctionGuardian.
@@ -48,9 +44,9 @@ public abstract class AbstractGuardian implements Guardian {
 
     private final Set<AtomicRight> rights = new HashSet<>();
 
-    private Operator operator;
+    private User user;
 
-    private final Map<Integer, Operator> quickRights = new HashMap<>();
+    private final Map<Integer, User> quickUser = new HashMap<>();
 
     private final Set<String> allUsers = new HashSet<>();
 
@@ -61,15 +57,15 @@ public abstract class AbstractGuardian implements Guardian {
     @Override
     public Set<String> getOnceLoggedInUsernames() {
         Set<String> loggedInUsernames = new HashSet<>();
-        for (Operator op : quickRights.values()) {
-            loggedInUsernames.add(op.username);
+        for (User op : quickUser.values()) {
+            loggedInUsernames.add(op.getUsername());
         }
         return loggedInUsernames;
     }
 
     @Override
     public void logout() {
-        this.operator = null;
+        this.user = null;
         for (Accessable accessable : accessables) {
             accessable.setEnabled(false);
         }
@@ -79,15 +75,15 @@ public abstract class AbstractGuardian implements Guardian {
     }
 
     @Override
-    public boolean quickAuthenticate(int userId) {
-        if ( !quickRights.containsKey(userId) ) return false;
-        setRights(quickRights.get(userId));
+    public boolean quickAuthenticate(int quickLogin) {
+        if ( !quickUser.containsKey(quickLogin) ) return false;
+        setUserAndQuickLogin(quickUser.get(quickLogin), quickLogin);
         return true;
     }
 
     @Override
     public String getUsername() {
-        return (operator == null ? "" : operator.username);
+        return (user == null ? "" : user.getUsername());
     }
 
     @Override
@@ -111,26 +107,40 @@ public abstract class AbstractGuardian implements Guardian {
      * This method set the Current {@link AtomicRight}'s to the given one and Enables/Disables all {@link Accessable} components.
      * <p>
      * @param dto is a {@link Operator} that will be setted.
+     * @deprecated Use {@link AbstractGuardian#setUserAndQuickLogin(eu.ggnet.dwoss.rights.api.User, java.lang.Integer) }.
      */
+    @Deprecated
     protected void setRights(Operator dto) {
-        L.debug("setRights({})", dto);
-        L.debug("setRights(): accessables.size = {}, userChangeListeners.size = {}", accessables.size(), userChangeListeners.size());
-        operator = dto;
-        quickRights.put(dto.quickLoginKey, dto);
+        Objects.requireNonNull(dto, "operator must not be null");
+        setUserAndQuickLogin(new User.Builder().setUsername(dto.username).addAllRights(dto.rights()).build(), dto.quickLoginKey);
+    }
+
+    /**
+     * This method uses all information of the user and the optional quickLogin to internal use it in the Guardian.
+     * <p>
+     *
+     * @param user       the user, must not be null
+     * @param quickLogin the quicklogin, may be null.
+     * @throws NullPointerException if user is null.
+     */
+    protected void setUserAndQuickLogin(User user, Integer quickLogin) throws NullPointerException {
+        L.debug("setUserAndQuickLogin(user={},quickLogin={}) accessables.size = {}, userChangeListeners.size = {} ", user, quickLogin);
+        this.user = Objects.requireNonNull(user, "user must not be null");
+        if ( quickLogin != null && quickLogin.intValue() > 0 ) quickUser.put(quickLogin, user);
         for (Accessable accessable : accessables) {
             accessable.setEnabled(false);
         }
         rights.clear();
-        rights.addAll(dto.rights());
+        rights.addAll(user.getRights());
         for (Accessable accessable : accessables) {
-            for (AtomicRight atomicRight : dto.rights()) {
+            for (AtomicRight atomicRight : user.getRights()) {
                 if ( accessable.getNeededRight().equals(atomicRight) )
                     accessable.setEnabled(true);
             }
         }
-        if ( !StringUtils.isBlank(dto.username) ) {
+        if ( !StringUtils.isBlank(user.getUsername()) ) {
             for (UserChangeListener listener : userChangeListeners) {
-                listener.loggedIn(dto.username);
+                listener.loggedIn(user.getUsername());
             }
         }
     }

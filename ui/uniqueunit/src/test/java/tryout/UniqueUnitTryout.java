@@ -16,7 +16,6 @@
  */
 package tryout;
 
-import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -30,21 +29,21 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.stage.Stage;
 
-import eu.ggnet.dwoss.core.widget.*;
+import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.Progressor;
 import eu.ggnet.dwoss.core.widget.Progressor.Displayer;
-import eu.ggnet.dwoss.core.widget.auth.AuthenticationException;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.core.widget.cdi.WidgetProducers;
 import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
-import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.dwoss.rights.api.Operator;
+import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.ui.ProductTask;
+import eu.ggnet.dwoss.uniqueunit.ui.cap.AddHistoryToUnitMenuItem;
 import eu.ggnet.dwoss.uniqueunit.ui.cap.ProductListMenuItem;
 import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.impl.Fx;
 
-import tryout.stub.UniqueUnitAgentStub;
+import tryout.stub.*;
 
 /**
  *
@@ -93,21 +92,16 @@ public class UniqueUnitTryout {
 
             RemoteDl remote = instance.select(RemoteDl.class).get();
             remote.add(UniqueUnitAgent.class, new UniqueUnitAgentStub());
+            remote.add(UniqueUnitApi.class, new UniqueUnitApiStub());
 
-            Dl.local().add(Guardian.class, new AbstractGuardian() {
-                {
-                    setRights(new Operator("hans", 123, Arrays.asList(AtomicRight.values())));
-                }
-
-                @Override
-                public void login(String user, char[] pass) throws AuthenticationException {
-                }
-            });
+            Dl.local().add(Guardian.class, new GuardianStub());
 
             UiUtil.startup(stage, () -> {
 
                 Menu m = new Menu("UniqueUnit MenuItems");
-                m.getItems().addAll(instance.select(ProductListMenuItem.class).get()
+                m.getItems().addAll(
+                        instance.select(ProductListMenuItem.class).get(),
+                        instance.select(AddHistoryToUnitMenuItem.class).get()
                 );
 
                 return new MenuBar(m);
