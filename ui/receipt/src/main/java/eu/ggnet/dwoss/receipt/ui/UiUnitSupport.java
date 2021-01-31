@@ -24,18 +24,19 @@ import javax.swing.*;
 
 import org.apache.commons.lang3.StringUtils;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.common.values.ReceiptOperation;
+import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.receipt.ee.UnitProcessor;
 import eu.ggnet.dwoss.receipt.ui.unit.*;
 import eu.ggnet.dwoss.stock.api.PicoStock;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.*;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.dwoss.core.widget.Dl;
-import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.stock.spi.ActiveStock;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
+import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.core.ui.UiParent;
 
 /**
  * Ui support for the unit Operations.
@@ -59,7 +60,7 @@ public class UiUnitSupport {
         public String toString() {
             return "UnitAndModel{" + "unitModel=" + unitModel + ", uniqueUnit=" + uniqueUnit + '}';
         }
-        
+
     }
 
     public class StockCellRenderer extends DefaultListCellRenderer {
@@ -86,9 +87,11 @@ public class UiUnitSupport {
      * @param productShipment  the productShipment the unit is comming from.
      * @param parent           the parent window to center the dialog
      */
-    public void createUnit(StockTransaction stockTransaction, Shipment productShipment, Window parent) {
+    public void createUnit(StockTransaction stockTransaction, Shipment productShipment, UiParent parent) {
 
-        UnitAndModel result = createEditUnit(parent, null, null, null, productShipment);
+        // Parent muss ja zurück.
+//        UnitAndModel result = createEditUnit(parent, null, null, null, productShipment);
+        UnitAndModel result = createEditUnit(null, null, null, null, productShipment);
         if ( result == null ) return;
 
         unitProcessor.receipt(

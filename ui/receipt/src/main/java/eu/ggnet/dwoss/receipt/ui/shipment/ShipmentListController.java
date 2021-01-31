@@ -17,24 +17,25 @@
 package eu.ggnet.dwoss.receipt.ui.shipment;
 
 import java.awt.EventQueue;
-import java.awt.Window;
-import java.util.Optional;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
+import eu.ggnet.dwoss.receipt.ui.shipment.ShipmentInclusionView.In;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
+import eu.ggnet.dwoss.stock.ee.entity.Shipment.Status;
 import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
 import eu.ggnet.dwoss.stock.spi.ActiveStock;
 import eu.ggnet.saft.core.Saft;
-import eu.ggnet.saft.core.impl.Swing;
+import eu.ggnet.saft.core.ui.UiParent;
 
-import static eu.ggnet.saft.core.ui.UiParent.of;
+import static javafx.stage.Modality.WINDOW_MODAL;
 
 public class ShipmentListController {
 
@@ -56,41 +57,68 @@ public class ShipmentListController {
         return model;
     }
 
-    public void editShipment(JPanel parent) {
-        saft.build(parent).title("Shipment bearbeiten").fx().eval(() -> model.getSelected(), ShipmentEditView.class).cf()
+    public void editShipment(UiParent parent) {
+        saft.build().parent(parent).title("Shipment bearbeiten").fx().eval(() -> model.getSelected(), ShipmentEditView.class).cf()
                 .thenApplyAsync(model::remove, EventQueue::invokeLater)
                 .thenApplyAsync(remote.lookup(StockAgent.class)::merge, saft.executorService()::submit)
                 .thenApplyAsync(model::add, EventQueue::invokeLater)
                 .handle(saft.handler(parent));
     }
 
+    private StockTransaction findOrCreateStockTransaction() {
+        return remote.lookup(StockAgent.class).findOrCreateRollInTransaction(
+                Dl.local().lookup(ActiveStock.class).getActiveStock().id,
+                guardian.getUsername(),
+                "Roll in through Inclusion");
+    }
+
     /**
      * Starts the Inclusion.
      *
-     * @param row
+     * @param parent ui parent.
      */
-    public void inclusion(JPanel parent) {
-        Shipment shipment = model.getSelected();
-        if ( shipment == null ) return;
-        StockTransaction stockTransaction = remote.lookup(StockAgent.class).findOrCreateRollInTransaction(Dl.local().lookup(ActiveStock.class).getActiveStock().id,
-                guardian.getUsername(),
-                "Roll in through Inclusion");
+    public void inclusion(UiParent parent) {
+        CompletableFuture
+                .runAsync(() -> {
+                    if ( model.getSelected() == null ) {
+                        saft.build().parent(parent).alert("Kein Shipment ausgewählt");
+                        throw new CancellationException("No Shipment selected");
+                    }
+                })
+                .thenCompose((Void v) -> saft.build().parent(parent).modality(WINDOW_MODAL).swing().eval(() -> new In(model.getSelected(), findOrCreateStockTransaction()), ShipmentInclusionView.class).cf())
+                .thenApplyAsync((Status st) -> {
+                    Shipment shipment = model.getSelected();
+                    model.remove(shipment);
+                    shipment.setStatus(st);
+                    return shipment;
+                }, EventQueue::invokeLater)
+                .thenApplyAsync(remote.lookup(StockAgent.class)::merge, saft.executorService()::submit)
+                .thenApplyAsync(model::add, EventQueue::invokeLater);
 
-        Optional<Window> optWindow = saft.core(Swing.class).unwrap(of(parent));
-        ShipmentInclusionViewCask sip = new ShipmentInclusionViewCask(optWindow.orElse(null), shipment, stockTransaction);
-        optWindow.ifPresent(w -> sip.setLocationRelativeTo(w));
-        sip.setVisible(true);
-        if ( sip.inclusionClosed() ) shipment.setStatus(Shipment.Status.CLOSED);
-        else if ( sip.inclusionAborted() ) shipment.setStatus(Shipment.Status.OPENED);
-        else return;
-
-        model.remove(shipment);
-        shipment = remote.lookup(StockAgent.class).merge(shipment);
-        model.add(shipment);
+//        Shipment shipment = model.getSelected();
+//        if ( shipment == null ) {
+//            saft.build().parent(parent).alert("Kein Shipment ausgewählt");
+//            return;
+//        }
+//        StockTransaction stockTransaction = remote.lookup(StockAgent.class).findOrCreateRollInTransaction(Dl.local().lookup(ActiveStock.class).getActiveStock().id,
+//                guardian.getUsername(),
+//                "Roll in through Inclusion");
+//
+//        Optional<Window> optWindow = saft.core(Swing.class).unwrap(parent);
+//        ShipmentInclusionViewCask sip = new ShipmentInclusionViewCask(optWindow.orElse(null), shipment, stockTransaction);
+//        optWindow.ifPresent(w -> sip.setLocationRelativeTo(w));
+//        sip.setVisible(true);
+//        if ( sip.inclusionClosed() ) shipment.setStatus(Shipment.Status.CLOSED);
+//        else if ( sip.inclusionAborted() ) shipment.setStatus(Shipment.Status.OPENED);
+//        else return;
+//
+//        model.remove(shipment);
+//        shipment = remote.lookup(StockAgent.class).merge(shipment);
+//        model.add(shipment);
     }
 
-    public void createShipment(JPanel parent) {
-        saft.build(parent).title("Shipment anlegen").fx().eval(ShipmentEditView.class).cf()
+    public void createShipment(UiParent parent) {
+        saft.build().parent(parent).title("Shipment anlegen").fx().eval(ShipmentEditView.class).cf()
                 .thenApply(remote.lookup(StockAgent.class)::persist)
                 .thenApplyAsync(model::add, EventQueue::invokeLater)
                 .handle(saft.handler(parent));

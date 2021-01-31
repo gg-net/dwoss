@@ -32,6 +32,7 @@ import eu.ggnet.dwoss.stock.ee.entity.Shipment;
 import eu.ggnet.saft.core.ui.*;
 
 import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
+import static eu.ggnet.saft.core.ui.UiParent.of;
 
 /**
  *
@@ -293,15 +294,15 @@ public class ShipmentListView extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void createButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createButtonActionPerformed
-        controller.createShipment(this);
+        controller.createShipment(of(this));
     }//GEN-LAST:event_createButtonActionPerformed
 
     private void editSelectedShipmentAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editSelectedShipmentAction
-        controller.editShipment(this);
+        controller.editShipment(of(this));
     }//GEN-LAST:event_editSelectedShipmentAction
 
     private void inclusionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inclusionButtonActionPerformed
-        controller.inclusion(this);
+        controller.inclusion(of(this));
     }//GEN-LAST:event_inclusionButtonActionPerformed
 
     private void filterShipmentIdKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_filterShipmentIdKeyReleased
@@ -333,7 +334,7 @@ public class ShipmentListView extends javax.swing.JPanel {
     }//GEN-LAST:event_deleteButtonActionPerformed
 
     private void shipmentTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_shipmentTableMouseClicked
-        if ( evt.getClickCount() == 2 ) controller.inclusion(this);
+        if ( evt.getClickCount() == 2 ) controller.inclusion(of(this));
     }//GEN-LAST:event_shipmentTableMouseClicked
 
     private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed

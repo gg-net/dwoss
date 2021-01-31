@@ -16,53 +16,86 @@
  */
 package eu.ggnet.dwoss.receipt.ui.shipment;
 
-import java.awt.Window;
+import java.util.Objects;
+import java.util.function.Consumer;
 
+import javax.inject.Inject;
+
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+
+import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
 import eu.ggnet.dwoss.receipt.ee.UnitProcessor;
 import eu.ggnet.dwoss.receipt.ui.UiUnitSupport;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
+import eu.ggnet.dwoss.stock.ee.entity.Shipment.Status;
 import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
-import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.saft.core.ui.*;
+
+import static eu.ggnet.dwoss.stock.ee.entity.Shipment.Status.CLOSED;
+import static eu.ggnet.dwoss.stock.ee.entity.Shipment.Status.OPENED;
+import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
+import static eu.ggnet.saft.core.ui.UiParent.of;
 
 /**
  *
  * @author pascal.perau
  */
-public class ShipmentInclusionViewCask extends javax.swing.JDialog {
+@Title("Geräteaufnahme")
+public class ShipmentInclusionView extends javax.swing.JPanel implements Consumer<ShipmentInclusionView.In>, ResultProducer<Shipment.Status> {
 
-    private final Shipment productShipment;
+    // TODO: Records Candidate
+    public static class In {
 
-    private final StockTransaction stockTransaction;
+        private final Shipment shipment;
 
-    private final UiUnitSupport controller;
+        private final StockTransaction stockTransaction;
 
-    private boolean inclusionAborted;
+        public In(Shipment shipment, StockTransaction stockTransaction) {
+            this.shipment = shipment;
+            this.stockTransaction = stockTransaction;
+        }
 
-    private boolean inclusionClosed;
+        public Shipment shipment() {
+            return shipment;
+        }
 
-    public ShipmentInclusionViewCask(java.awt.Window parent, Shipment shipment, StockTransaction stockTransaction) {
-        this(parent, shipment, stockTransaction, Dl.remote().lookup(UnitProcessor.class));
+        public StockTransaction stockTransaction() {
+            return stockTransaction;
+        }
+
+        @Override
+        public String toString() {
+            return "In{" + "shipment=" + shipment + ", stockTransaction=" + stockTransaction + '}';
+        }
+
     }
+
+    @Inject
+    private RemoteDl remote;
+
+    private ShipmentInclusionView.In in;
+
+    private Shipment.Status resultStatus = null;
+
+    @Bind(SHOWING)
+    private BooleanProperty showingProperty = new SimpleBooleanProperty();
 
     /** Creates new form ShipmentInclusion */
-    public ShipmentInclusionViewCask(Window parent, Shipment shipment, StockTransaction stockTransaction, UnitProcessor unitProcessor) {
-        super(parent);
-        setModalityType(ModalityType.APPLICATION_MODAL);
-        this.productShipment = shipment;
-        this.stockTransaction = stockTransaction;
+    public ShipmentInclusionView() {
         initComponents();
-        inclusionShipField.setText(shipment.getShipmentId());
-        inclusionOwnerField.setText(shipment.getContractor().toString());
-        this.controller = new UiUnitSupport(unitProcessor);
-
     }
 
-    public boolean inclusionAborted() {
-        return inclusionAborted;
+    @Override
+    public void accept(In in) {
+        this.in = Objects.requireNonNull(in, "in must not be null");
+        inclusionShipField.setText(in.shipment().getShipmentId());
+        inclusionOwnerField.setText(in.shipment().getContractor().getDescription());
     }
 
-    public boolean inclusionClosed() {
-        return inclusionClosed;
+    @Override
+    public Status getResult() {
+        return resultStatus;
     }
 
     /** This method is called from within the constructor to
@@ -82,8 +115,6 @@ public class ShipmentInclusionViewCask extends javax.swing.JDialog {
         inclusionShipField = new javax.swing.JTextField();
         inclusionOwnerField = new javax.swing.JTextField();
         cancelButton = new javax.swing.JButton();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         inclusionShipLabel.setText("Shipment ID:");
 
@@ -121,8 +152,8 @@ public class ShipmentInclusionViewCask extends javax.swing.JDialog {
             }
         });
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
@@ -130,7 +161,7 @@ public class ShipmentInclusionViewCask extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(inclusionUnittButton, javax.swing.GroupLayout.DEFAULT_SIZE, 485, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(inclusionOkButton, javax.swing.GroupLayout.PREFERRED_SIZE, 160, Short.MAX_VALUE)
+                        .addComponent(inclusionOkButton, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(inclusionCancelButton, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -165,26 +196,24 @@ public class ShipmentInclusionViewCask extends javax.swing.JDialog {
                     .addComponent(cancelButton))
                 .addContainerGap())
         );
-
-        pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void inclusionUnittButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inclusionUnittButtonActionPerformed
-        if ( controller != null ) controller.createUnit(stockTransaction, productShipment, this);
+        new UiUnitSupport(remote.lookup(UnitProcessor.class)).createUnit(in.stockTransaction(), in.shipment(), of(this));
     }//GEN-LAST:event_inclusionUnittButtonActionPerformed
 
     private void inclusionOkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inclusionOkButtonActionPerformed
-        this.setVisible(false);
-        this.inclusionClosed = true;
+        resultStatus = CLOSED;
+        showingProperty.set(false);
     }//GEN-LAST:event_inclusionOkButtonActionPerformed
 
     private void inclusionCancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inclusionCancelButtonActionPerformed
-        this.setVisible(false);
-        this.inclusionAborted = true;
+        resultStatus = OPENED;
+        showingProperty.set(false);
     }//GEN-LAST:event_inclusionCancelButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        this.setVisible(false);
+        showingProperty.set(false);
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
