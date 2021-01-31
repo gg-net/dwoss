@@ -16,6 +16,7 @@
  */
 package eu.ggnet.dwoss.receipt.ui;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
@@ -30,16 +31,27 @@ import eu.ggnet.dwoss.stock.ee.entity.Stock;
  */
 public class StockDialog extends javax.swing.JDialog {
 
+    private static class StockCellRenderer extends DefaultListCellRenderer {
+
+        @Override
+        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            JLabel label = (JLabel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            if ( value == null ) return label;
+            if ( value instanceof Stock ) label.setText(((Stock)value).getName());
+            return label;
+        }
+    }
+
     private boolean ok = false;
 
     /** Creates new form ComboBoxDialog */
-    public StockDialog(java.awt.Window parent, Stock[] ts, ListCellRenderer cellrenderer) {
+    public StockDialog(java.awt.Window parent, Stock[] ts) {
         super(parent);
         setModalityType(ModalityType.APPLICATION_MODAL);
         initComponents();
         setLocationRelativeTo(parent);
         selectionBox.setModel(new DefaultComboBoxModel<>(ts));
-        selectionBox.setRenderer(cellrenderer);
+        selectionBox.setRenderer(new StockCellRenderer());
         // Close the dialog when Esc is pressed
         String cancelName = "cancel";
         InputMap inputMap = getRootPane().getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);

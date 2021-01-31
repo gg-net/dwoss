@@ -17,7 +17,6 @@
 package eu.ggnet.dwoss.receipt.ee;
 
 import javax.ejb.Stateless;
-import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
@@ -25,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.redtape.ee.api.LegacyLocalBridge;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
 import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
@@ -54,9 +52,6 @@ public class UnitSupporterOperation implements UnitSupporter {
     @Inject
     private Mandator mandator;
 
-    @Inject
-    private Instance<LegacyLocalBridge> bridgeInstance;
-
     /**
      * Returns true if supplied refurbishId is available, meaning not jet in the database.
      *
@@ -66,11 +61,7 @@ public class UnitSupporterOperation implements UnitSupporter {
     @Override
     public boolean isRefurbishIdAvailable(String refurbishId) {
         UniqueUnit uniqueUnit = new UniqueUnitEao(uuEm).findByIdentifier(UniqueUnit.Identifier.REFURBISHED_ID, refurbishId);
-        if ( uniqueUnit != null ) return false;
-        if ( bridgeInstance.isUnsatisfied() ) return true;
-        LegacyLocalBridge bridge = bridgeInstance.get();
-        L.info("Using LegacyBridge ({})", bridge.localName());
-        return bridge.isUnitIdentifierAvailable(refurbishId);
+        return uniqueUnit != null;
     }
 
     @Override

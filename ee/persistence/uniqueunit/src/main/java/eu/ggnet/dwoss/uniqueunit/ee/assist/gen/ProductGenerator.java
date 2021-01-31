@@ -5,18 +5,14 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ee.assist.gen;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.*;
+
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
-
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
 
 /**
  * A class that allows to create products with random predefined values.
@@ -32,15 +28,15 @@ public class ProductGenerator {
 
     private final LocalDateTime now = LocalDateTime.now();
 
+    private final List<Date> dates = new ArrayList<>(Arrays.asList(Date.from(now.minusDays(1).toInstant(ZoneOffset.UTC)), Date.from(now.plusDays(1).toInstant(ZoneOffset.UTC)), Date.from(now.toInstant(ZoneOffset.UTC))));
+
+    private final List<PriceType> priceTypes = new ArrayList<>(Arrays.asList(PriceType.values()));
+
     private final List<ProductGroup> productGroups = new ArrayList<>(Arrays.asList(ProductGroup.values()));
 
     private final List<TradeName> tradeNames = new ArrayList<>(Arrays.asList(TradeName.values()));
 
     private final List<String> names = new ArrayList<>(Arrays.asList("A41515", "D85412", "B5458", "F65487", "S45656", "P464", "I4445", "V5461", "C4785"));
-
-    private final List<Date> dates = new ArrayList<>(Arrays.asList(Date.from(now.minusDays(1).toInstant(ZoneOffset.UTC)), Date.from(now.plusDays(1).toInstant(ZoneOffset.UTC)), Date.from(now.toInstant(ZoneOffset.UTC))));
-
-    private final List<PriceType> priceTypes = new ArrayList<>(Arrays.asList(PriceType.values()));
 
     /**
      * Generate a specific amount of products with random data.

@@ -16,7 +16,10 @@
  */
 package eu.ggnet.dwoss.receipt.ui.tryout.stub;
 
+import java.util.List;
+
 import eu.ggnet.dwoss.receipt.ee.UnitSupporter;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 
 /**
  *
@@ -24,20 +27,25 @@ import eu.ggnet.dwoss.receipt.ee.UnitSupporter;
  */
 public class UnitSupporterStub implements UnitSupporter {
 
+    private final List<UniqueUnit> units;
+
+    public UnitSupporterStub(List<UniqueUnit> units) {
+        this.units = units;
+    }
+
     @Override
     public boolean isRefurbishIdAvailable(String refurbishId) {
-        return true;
+        return units.stream().filter(uu -> refurbishId.equals(uu.getRefurbishId())).findAny().isPresent();
     }
 
     @Override
     public boolean isSerialAvailable(String serial) {
-        return true;
+        return units.stream().filter(uu -> serial.equals(uu.getSerial())).findAny().isPresent();
     }
 
     @Override
     public String findRefurbishIdBySerial(String serial) {
-        if ( serial.length() < 10 ) return serial;
-        return serial.substring(0, 10);
+        return units.stream().filter(uu -> serial.equals(uu.getSerial())).map(UniqueUnit::getRefurbishId).findAny().orElse(null);
     }
 
 }

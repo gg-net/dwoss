@@ -16,14 +16,18 @@
  */
 package eu.ggnet.dwoss.receipt.ui.tryout.stub;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 import javax.enterprise.inject.Alternative;
-import javax.persistence.LockModeType;
 
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
+import eu.ggnet.dwoss.core.common.values.ReceiptOperation;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
-import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
+import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers.Key;
+import eu.ggnet.dwoss.mandator.spi.CachedMandators;
+import eu.ggnet.dwoss.receipt.ee.*;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.assist.SpecPu;
 import eu.ggnet.dwoss.spec.ee.entity.Desktop.Hdd;
@@ -32,10 +36,14 @@ import eu.ggnet.dwoss.spec.ee.entity.Desktop.Os;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec.Extra;
 import eu.ggnet.dwoss.spec.ee.entity.*;
 import eu.ggnet.dwoss.spec.ee.entity.piece.*;
+import eu.ggnet.dwoss.stock.ee.StockAgent;
+import eu.ggnet.dwoss.stock.ee.entity.*;
+import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
+import eu.ggnet.dwoss.uniqueunit.ee.assist.gen.UniqueUnitGenerator;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.*;
 
 import static eu.ggnet.dwoss.core.common.values.ProductGroup.*;
-import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.ACER;
-import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.PACKARD_BELL;
+import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.*;
 
 /**
  * Stubclass for offline usage and testing.
@@ -45,15 +53,19 @@ import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.PACKARD_BELL
 @Alternative
 public class ProductProcessorStub implements ProductProcessor {
 
-    private Set<ProductSeries> serieses;
+    private final Set<ProductSeries> serieses;
 
-    private List<Gpu> gpus;
+    private final List<Gpu> gpus;
 
-    private List<Cpu> cpus;
+    private final List<Cpu> cpus;
 
-    private Map<String, ProductSpec> specs;
+    private final Map<String, ProductSpec> specs;
 
-    private SpecOfflineConstructor soc = SpecOfflineConstructor.getInstance();
+    private final SpecOfflineConstructor soc = SpecOfflineConstructor.getInstance();
+
+    private final List<Shipment> shipments;
+
+    private final List<Stock> stocks;
 
     public Desktop desktop;
 
@@ -63,8 +75,30 @@ public class ProductProcessorStub implements ProductProcessor {
 
     public Monitor monitor;
 
+    private final Random R = new Random();
+
+    private final List<Product> products;
+
+    private final List<UniqueUnit> uniqueUnits;
+
+    private final List<StockUnit> stockUnits;
+
+    private final LocalDateTime now = LocalDateTime.now();
+
+    private final List<Date> dates = new ArrayList<>(Arrays.asList(Date.from(now.minusDays(1).toInstant(ZoneOffset.UTC)), Date.from(now.plusDays(1).toInstant(ZoneOffset.UTC)), Date.from(now.toInstant(ZoneOffset.UTC))));
+
+    private final List<PriceType> priceTypes = new ArrayList<>(Arrays.asList(PriceType.values()));
+
+    private final static List<TradeName> CONTRACTORS = Arrays.asList(AMAZON, EBAY, ACER, APPLE, INGRAM_MICRO);
+
+    private final static Set<TradeName> BRANDS = EnumSet.of(APPLE, ACER, PACKARD_BELL, LENOVO, HP);
+
+    private final Map<Key, Long> RECEIPT_CUSTOMERS;
+
+    public String editAbleRefurbishId;
+
     public ProductProcessorStub() {
-        cpus = new ArrayList<Cpu>();
+        cpus = new ArrayList<>();
         cpus.add(new Cpu(Cpu.Series.ATHLON, EnumSet.of(Cpu.Type.MOBILE), "A123"));
         cpus.add(new Cpu(Cpu.Series.ATHLON, EnumSet.of(Cpu.Type.MOBILE), "B22"));
         cpus.add(new Cpu(Cpu.Series.ATHLON, EnumSet.of(Cpu.Type.MOBILE), "B22"));
@@ -83,7 +117,7 @@ public class ProductProcessorStub implements ProductProcessor {
         cpus.add(new Cpu(Cpu.Series.CORE_I5, "650", Cpu.Type.DESKTOP, 3.2, 2));
         cpus.add(new Cpu(Cpu.Series.CORE_I3, "2130", Cpu.Type.DESKTOP, 3.4, 2));
 
-        gpus = new ArrayList<Gpu>();
+        gpus = new ArrayList<>();
         gpus.add(new Gpu(Gpu.Type.MOBILE, Gpu.Series.RADEON_HD_5000, "Mobility Radeon™ HD 540v Series"));
         gpus.add(new Gpu(Gpu.Type.MOBILE, Gpu.Series.RADEON_HD_4000, "Mobility Radeon™ HD 4000"));
         gpus.add(new Gpu(Gpu.Type.DESKTOP, Gpu.Series.RADEON_HD_5000, "5850 Graphics"));
@@ -98,7 +132,7 @@ public class ProductProcessorStub implements ProductProcessor {
         gpus.add(new Gpu(Gpu.Type.MOBILE, Gpu.Series.INTEL_GRAPHICS, "HD Graphics"));
         gpus.add(new Gpu(Gpu.Type.DESKTOP, Gpu.Series.GEFORCE_400, "460"));
 
-        serieses = new HashSet<ProductSeries>();
+        serieses = new HashSet<>();
 
         // ACER Series
         ProductSeries veriton = soc.newProductSeries(ACER, DESKTOP, "Veriton");
@@ -107,6 +141,7 @@ public class ProductProcessorStub implements ProductProcessor {
         ProductSeries travelmate = soc.newProductSeries(ACER, NOTEBOOK, "TravelMate");
         ProductSeries tablet = soc.newProductSeries(ACER, MISC, "Tablet");
         ProductSeries monitor_a = soc.newProductSeries(ACER, MONITOR, "A Series");
+        ProductSeries allInOneS = soc.newProductSeries(ACER, ALL_IN_ONE, "All In One");
 
         // PB Series
         ProductSeries imedia = soc.newProductSeries(PACKARD_BELL, DESKTOP, "iMedia");
@@ -126,6 +161,7 @@ public class ProductProcessorStub implements ProductProcessor {
         serieses.add(dot);
         serieses.add(tablet);
         serieses.add(monitor_a);
+        serieses.add(allInOneS);
 
         //ACER families
         ProductFamily veriton_n = soc.newProductFamily();
@@ -141,6 +177,7 @@ public class ProductProcessorStub implements ProductProcessor {
         ProductFamily predator = soc.newProductFamily();
         ProductFamily tablet_A = soc.newProductFamily();
         ProductFamily monitor_A23 = soc.newProductFamily();
+        ProductFamily allInOneF = soc.newProductFamily();
 
         veriton_m.setName("Veriton M");
         veriton_n.setName("Veriton N");
@@ -155,6 +192,7 @@ public class ProductProcessorStub implements ProductProcessor {
         travelmate_timelinex.setName("TravelMate TimelineX");
         tablet_A.setName("Tablet Iconia A");
         monitor_A23.setName("A230");
+        allInOneF.setName("All In One");
 
         veriton.addFamily(veriton_m);
         veriton.addFamily(veriton_n);
@@ -169,6 +207,7 @@ public class ProductProcessorStub implements ProductProcessor {
         travelmate.addFamily(travelmate_timelinex);
         tablet.addFamily(tablet_A);
         monitor_a.addFamily(monitor_A23);
+        allInOneS.addFamily(allInOneF);
 
         ProductModel g7700 = soc.newProductModel();
         ProductModel m1 = soc.newProductModel();
@@ -178,6 +217,8 @@ public class ProductProcessorStub implements ProductProcessor {
         ProductModel l2 = soc.newProductModel();
         ProductModel a500 = soc.newProductModel();
         ProductModel monitor_a231Bwsx = soc.newProductModel();
+        ProductModel p6 = soc.newProductModel();
+        ProductModel all = soc.newProductModel();
 
         g7700.setName("Aspire Predator G7700");
         m1.setName("Veriton M480G");
@@ -187,6 +228,8 @@ public class ProductProcessorStub implements ProductProcessor {
         l2.setName("Veriton L670");
         a500.setName("Iconia A500");
         monitor_a231Bwsx.setName("A231Bwsx");
+        p6.setName("TravelMate P648");
+        all.setName("All-In-One 1000");
 
         predator.addModel(g7700);
         veriton_m.addModel(m1);
@@ -196,6 +239,8 @@ public class ProductProcessorStub implements ProductProcessor {
         veriton_l.addModel(l2);
         tablet_A.addModel(a500);
         monitor_A23.addModel(monitor_a231Bwsx);
+        travelmate_family.addModel(p6);
+        allInOneF.addModel(all);
 
         specs = new HashMap<>();
 
@@ -217,6 +262,7 @@ public class ProductProcessorStub implements ProductProcessor {
         specs.put(monitor.getPartNo(), monitor);
 
         desktop = new Desktop();
+        desktop.setModel(m3);
         desktop.setPartNo("PP.XXXXX.AAA");
         desktop.setOs(Desktop.Os.WINDOWS_7_HOME_PREMIUM_64);
         desktop.setMemory(6144);
@@ -233,6 +279,7 @@ public class ProductProcessorStub implements ProductProcessor {
         specs.put(desktop.getPartNo(), desktop);
 
         notebook = new Notebook();
+        notebook.setModel(m3);
         notebook.setPartNo("LX.12345.AAB");
         notebook.setDisplay(new Display(Display.Size._18_4, Display.Resolution.FULL_HD, Display.Type.CRYSTAL_BRIGHT, Display.Ration.SIXTEEN_TO_NINE));
         notebook.setOs(Os.WINDOWS_7_HOME_PREMIUM_64);
@@ -246,6 +293,7 @@ public class ProductProcessorStub implements ProductProcessor {
         specs.put(notebook.getPartNo(), notebook);
 
         allInOne = new AllInOne();
+        allInOne.setModel(all);
         allInOne.setPartNo("PB.XXXXA.123");
         allInOne.setDisplay(new Display(Display.Size._18_4, Display.Resolution.FULL_HD, Display.Type.CRYSTAL_BRIGHT, Display.Ration.SIXTEEN_TO_NINE));
         allInOne.setOs(Os.WINDOWS_7_HOME_PREMIUM_64);
@@ -258,65 +306,82 @@ public class ProductProcessorStub implements ProductProcessor {
         allInOne.setColor(BasicSpec.Color.ORANGE);
 
         specs.put(allInOne.getPartNo(), allInOne);
+
+        // Stock
+        shipments = new ArrayList<>();
+        for (int i = 0; i < 30; i++) {
+            shipments.add(new Shipment("Test-SH-" + i,
+                    TradeName.values()[R.nextInt(TradeName.values().length)],
+                    TradeName.getManufacturers().toArray(new TradeName[0])[R.nextInt(TradeName.getManufacturers().size())],
+                    Shipment.Status.values()[R.nextInt(Shipment.Status.values().length)]));
+        }
+        stocks = Arrays.asList(new Stock(1, "Hamburg"), new Stock(2, "Lübeck"));
+
+        //Mandators
+        RECEIPT_CUSTOMERS = new HashMap<>();
+        long i = 0;
+        for (TradeName contractor : CONTRACTORS) {
+            for (ReceiptOperation ro : ReceiptOperation.values()) {
+                RECEIPT_CUSTOMERS.put(Key.of(contractor, ro), i);
+                i++;
+            }
+        }
+
+        // UniqueUnit
+        UniqueUnitGenerator uug = new UniqueUnitGenerator();
+        products = new ArrayList<>();
+        uniqueUnits = new ArrayList<>();
+        stockUnits = new ArrayList<>();
+
+        for (ProductSpec spec : specs.values()) {
+            System.out.println(spec.getPartNo());
+            Product p = new Product(
+                    spec.getModel().getFamily().getSeries().getGroup(),
+                    spec.getModel().getFamily().getSeries().getBrand(),
+                    spec.getPartNo(),
+                    spec.getModel().getName()
+            );
+            p.setGtin(R.nextInt(15000));
+            p.setEol(dates.get(R.nextInt(dates.size())));
+            p.setPrice(priceTypes.get(R.nextInt(priceTypes.size())), R.nextInt(9999), "");
+            products.add(p);
+            for (int j = 0; j < 10; j++) {
+                UniqueUnit uu = uug.makeUniqueUnit(CONTRACTORS.get(R.nextInt(CONTRACTORS.size())), p);
+                uu.setProduct(p);
+                uniqueUnits.add(uu);
+                if ( R.nextInt(10) <= 7 ) {
+                    StockUnit su = new StockUnit(uu.getRefurbishId(), uu.getProduct().getName(), uu.getId());
+                    su.setStock(stocks.get(R.nextInt(stocks.size())));
+                    editAbleRefurbishId = su.getRefurbishId();
+                    stockUnits.add(su);
+                }
+            }
+        }
+
     }
 
-    public SpecAgent getSpecAgentStub() {
-        return new SpecAgent() {
-            @Override
-            public ProductSpec findProductSpecByPartNoEager(String partNo) {
-                return specs.get(partNo);
-            }
+    public SpecAgent specAgent() {
+        return new SpecAgentStub(serieses, gpus, cpus, specs);
+    }
 
-            @Override
-            public <T> long count(Class<T> entityClass) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
+    public StockAgent stockAgent() {
+        return new StockAgentStub(shipments, stocks, stockUnits);
+    }
 
-            @Override
-            public <T> List<T> findAll(Class<T> entityClass) {
-                if ( entityClass.equals(Cpu.class) ) return (List<T>)cpus;
-                if ( entityClass.equals(Gpu.class) ) return (List<T>)gpus;
-                if ( entityClass.equals(ProductSeries.class) ) return (List<T>)new ArrayList<>(serieses);
-                if ( entityClass.equals(ProductSpec.class) ) return (List<T>)new ArrayList(specs.values());
-                return null;
-            }
+    public CachedMandators cachedMandators() {
+        return new MandatorsStub(CONTRACTORS, BRANDS, RECEIPT_CUSTOMERS);
+    }
 
-            @Override
-            public <T> List<T> findAll(Class<T> entityClass, int start, int amount) {
-                return findAll(entityClass);
-            }
+    public UnitSupporter unitSupporter() {
+        return new UnitSupporterStub(uniqueUnits);
+    }
 
-            @Override
-            public <T> List<T> findAllEager(Class<T> entityClass) {
-                return findAll(entityClass);
-            }
+    public UnitProcessor unitProcessor() {
+        return new UnitProcessorStub(uniqueUnits, stockUnits);
+    }
 
-            @Override
-            public <T> List<T> findAllEager(Class<T> entityClass, int start, int amount) {
-                return findAll(entityClass);
-            }
-
-            @Override
-            public <T> T findById(Class<T> entityClass, Object id) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public <T> T findById(Class<T> entityClass, Object id, LockModeType lockModeType) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public <T> T findByIdEager(Class<T> entityClass, Object id) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public <T> T findByIdEager(Class<T> entityClass, Object id, LockModeType lockModeType) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-        };
-
+    public UniqueUnitAgent uniqueUnitAgent() {
+        return new UniqueUnitAgentStub(uniqueUnits, products);
     }
 
     @Override

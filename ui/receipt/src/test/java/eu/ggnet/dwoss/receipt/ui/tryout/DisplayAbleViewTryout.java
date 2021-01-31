@@ -20,8 +20,8 @@ import javax.swing.UIManager;
 
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
-import eu.ggnet.dwoss.receipt.ui.tryout.stub.ProductProcessorStub;
 import eu.ggnet.dwoss.receipt.ui.product.DisplayAbleView;
+import eu.ggnet.dwoss.receipt.ui.tryout.stub.ProductProcessorStub;
 import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
 
 /**
@@ -33,7 +33,7 @@ public class DisplayAbleViewTryout {
     public static void main(String[] args) throws Exception {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         ProductProcessorStub receipt = new ProductProcessorStub();
-        DisplayAbleView view = new DisplayAbleView(receipt.getSpecAgentStub(), ProductGroup.NOTEBOOK);
+        DisplayAbleView view = new DisplayAbleView(receipt.specAgent(), ProductGroup.NOTEBOOK);
         view.setSpec(receipt.allInOne);
         OkCancelDialog<DisplayAbleView> create = new OkCancelDialog<>("Spezifikationen", view);
         create.setVisible(true);

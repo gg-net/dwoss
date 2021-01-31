@@ -1,32 +1,26 @@
 package eu.ggnet.dwoss.receipt.ui.tryout.stub;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.LockModeType;
 
-import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.*;
 
 // TODO: Rename and move to subs
 public class StockAgentStub implements StockAgent {
 
-    private List<Shipment> shipments;
+    private final List<Shipment> shipments;
 
-    private List<Stock> stocks;
+    private final List<Stock> stocks;
 
-    private final Random R = new Random();
+    private final List<StockUnit> stockUnits;
 
-    public StockAgentStub() {
-        shipments = new ArrayList<>();
-        for (int i = 0; i < 30; i++) {
-            shipments.add(new Shipment("Test-SH-" + i,
-                    TradeName.values()[R.nextInt(TradeName.values().length)],
-                    TradeName.getManufacturers().toArray(new TradeName[0])[R.nextInt(TradeName.getManufacturers().size())],
-                    Shipment.Status.values()[R.nextInt(Shipment.Status.values().length)]));
-        }
-        stocks = Arrays.asList(new Stock(1, "Hamburg"), new Stock(2, "Lübeck"));
-
+    public StockAgentStub(List<Shipment> shipments, List<Stock> stocks, List<StockUnit> stockUnits) {
+        this.shipments = shipments;
+        this.stocks = stocks;
+        this.stockUnits = stockUnits;
     }
 
     @Override

@@ -20,8 +20,8 @@ import javax.swing.UIManager;
 
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
-import eu.ggnet.dwoss.receipt.ui.tryout.stub.ProductProcessorStub;
 import eu.ggnet.dwoss.receipt.ui.product.DesktopView;
+import eu.ggnet.dwoss.receipt.ui.tryout.stub.ProductProcessorStub;
 import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
 
 /**
@@ -33,7 +33,7 @@ public class DesktopViewTryout {
     public static void main(String[] args) throws Exception {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         ProductProcessorStub receipt = new ProductProcessorStub();
-        DesktopView view = new DesktopView(receipt.getSpecAgentStub(), ProductGroup.DESKTOP);
+        DesktopView view = new DesktopView(receipt.specAgent(), ProductGroup.DESKTOP);
         view.setSpec(receipt.desktop);
         OkCancelDialog<DesktopView> create = new OkCancelDialog<>("Spezifikationen", view);
         create.setVisible(true);

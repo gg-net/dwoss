@@ -16,11 +16,10 @@
  */
 package eu.ggnet.dwoss.receipt.ui;
 
-import java.awt.Component;
 import java.awt.Window;
 import java.util.Objects;
 
-import javax.swing.*;
+import javax.swing.JOptionPane;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -61,17 +60,6 @@ public class UiUnitSupport {
             return "UnitAndModel{" + "unitModel=" + unitModel + ", uniqueUnit=" + uniqueUnit + '}';
         }
 
-    }
-
-    public class StockCellRenderer extends DefaultListCellRenderer {
-
-        @Override
-        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            JLabel label = (JLabel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-            if ( value == null ) return label;
-            if ( value instanceof Stock ) label.setText(((Stock)value).getName());
-            return label;
-        }
     }
 
     private final UnitProcessor unitProcessor;
@@ -197,7 +185,7 @@ public class UiUnitSupport {
                 "Gerät steht nicht auf " + localStock.shortDescription + ", welches als Standort angegeben ist. Gerätestandort ändern ?",
                 "Standortabweichung", JOptionPane.YES_NO_OPTION);
         if ( option == JOptionPane.YES_OPTION ) {
-            StockDialog dialog = new StockDialog(parent, Dl.remote().lookup(StockAgent.class).findAll(Stock.class).toArray(new Stock[0]), new StockCellRenderer());
+            StockDialog dialog = new StockDialog(parent, Dl.remote().lookup(StockAgent.class).findAll(Stock.class).toArray(new Stock[0]));
             dialog.setSelection(localStock);
             dialog.setVisible(true);
             if ( dialog.isOk() ) return unitProcessor.transfer(uniqueUnit, dialog.getSelection().getId(), account);

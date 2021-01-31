@@ -18,12 +18,15 @@ package eu.ggnet.dwoss.receipt.ui.tryout;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.se.SeContainer;
 import javax.enterprise.inject.se.SeContainerInitializer;
 import javax.swing.*;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.core.widget.cdi.WidgetProducers;
@@ -40,6 +43,9 @@ import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.stock.api.PicoStock;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.spi.ActiveStock;
+import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.impl.Swing;
 
@@ -65,15 +71,15 @@ public class ReceiptTryout {
         UiCore.initGlobal(saft); // Transition.
 
         RemoteDl remote = instance.select(RemoteDl.class).get();
-        ProductProcessorStub pps = new ProductProcessorStub();
-        remote.add(ProductProcessor.class, pps);
-        remote.add(SpecAgent.class, pps.getSpecAgentStub());
-        remote.add(StockAgent.class, new StockAgentStub());
-        remote.add(Mandators.class, new MandatorsStub());
-        remote.add(UnitProcessor.class, new UnitProcessorStub());
-        remote.add(UnitSupporter.class, new UnitSupporterStub());
+        ProductProcessorStub pp = new ProductProcessorStub();
+        remote.add(ProductProcessor.class, pp);
+        remote.add(SpecAgent.class, pp.specAgent());
+        remote.add(StockAgent.class, pp.stockAgent());
+        remote.add(Mandators.class, pp.cachedMandators());
+        remote.add(UnitProcessor.class, pp.unitProcessor());
+        remote.add(UnitSupporter.class, pp.unitSupporter());
 
-        Dl.local().add(CachedMandators.class, new MandatorsStub());
+        Dl.local().add(CachedMandators.class, pp.cachedMandators());
         Dl.local().add(RemoteLookup.class, new RemoteLookupStub());
         Dl.local().add(Guardian.class, new GuardianStub());
 
@@ -89,23 +95,47 @@ public class ReceiptTryout {
             receipt.add(instance.select(OpenGpuListAction.class).get());
             receipt.add(instance.select(OpenSpecListAction.class).get());
             receipt.add(instance.select(OpenShipmentListAction.class).get());
+            receipt.add(instance.select(EditUnitAction.class).get());
             menubar.add(receipt);
 
             JButton openShipmentUpdateView = new JButton("Open ShipmentUpdateView");
             openShipmentUpdateView.addActionListener(a -> saft.build().fx().eval(ShipmentEditView.class).cf().thenAccept(System.out::println));
 
+            JButton editOneUnit = new JButton("Eine SopoNr bearbeiten");
+            editOneUnit.addActionListener(e -> {
+                UiUnitSupport uiUnitSupport = new UiUnitSupport(remote.lookup(UnitProcessor.class));
+                try {
+                    uiUnitSupport.editUnit(pp.editAbleRefurbishId);
+                } catch (UserInfoException ex) {
+                    saft.handle(ex);
+                }
+            });
+
             JPanel buttonPanel = new JPanel(new FlowLayout());
             buttonPanel.add(openShipmentUpdateView);
+            buttonPanel.add(editOneUnit);
+
+            DefaultListModel<String> model = new DefaultListModel<>();
+            model.addAll(prepareHelper(pp.uniqueUnitAgent()));
+            JList<String> list = new JList<>(model);
 
             JPanel main = new JPanel(new BorderLayout());
             main.add(menubar, BorderLayout.NORTH);
-            main.add(buttonPanel, BorderLayout.CENTER);
+            main.add(new JScrollPane(list), BorderLayout.CENTER);
+            main.add(buttonPanel, BorderLayout.SOUTH);
 
             return main;
         });
 
         saft.core(Swing.class).initMain(mainFrame);
 
+    }
+
+    public static List<String> prepareHelper(UniqueUnitAgent agent) {
+        List<String> info = new ArrayList<>();
+        agent.findAll(Product.class).forEach(p -> info.add(p.getPartNo() + " - " + p.getName()));
+        agent.findAll(UniqueUnit.class).forEach(uu -> info.add(uu.getRefurbishId() + "|" + uu.getSerial()));
+        return info;
     }
 
 }
