@@ -75,6 +75,10 @@ public enum ReceiptOperation implements Serializable {
         return description;
     }
 
+    public String description() {
+        return description;
+    }
+
     public boolean isBackedByCustomer() {
         return backedByCustomer;
     }

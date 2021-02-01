@@ -65,7 +65,7 @@ public class ProductProcessorStub implements ProductProcessor {
 
     private final List<Shipment> shipments;
 
-    private final List<Stock> stocks;
+    public final List<Stock> stocks;
 
     public Desktop desktop;
 

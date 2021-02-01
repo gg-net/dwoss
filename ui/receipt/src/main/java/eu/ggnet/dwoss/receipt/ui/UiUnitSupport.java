@@ -21,14 +21,13 @@ import java.util.Objects;
 
 import javax.swing.JOptionPane;
 
-import org.apache.commons.lang3.StringUtils;
-
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.common.values.ReceiptOperation;
 import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.receipt.ee.UnitProcessor;
-import eu.ggnet.dwoss.receipt.ui.unit.*;
+import eu.ggnet.dwoss.receipt.ui.unit.UnitView;
+import eu.ggnet.dwoss.receipt.ui.unit.UnitView.In;
 import eu.ggnet.dwoss.stock.api.PicoStock;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.*;
@@ -43,24 +42,6 @@ import eu.ggnet.saft.core.ui.UiParent;
  * @author oliver.guenther
  */
 public class UiUnitSupport {
-
-    private final static class UnitAndModel {
-
-        private final UnitModel unitModel;
-
-        private final UniqueUnit uniqueUnit;
-
-        public UnitAndModel(UnitModel unitModel, UniqueUnit uniqueUnit) {
-            this.unitModel = unitModel;
-            this.uniqueUnit = uniqueUnit;
-        }
-
-        @Override
-        public String toString() {
-            return "UnitAndModel{" + "unitModel=" + unitModel + ", uniqueUnit=" + uniqueUnit + '}';
-        }
-
-    }
 
     private final UnitProcessor unitProcessor;
 
@@ -79,16 +60,16 @@ public class UiUnitSupport {
 
         // Parent muss ja zurück.
 //        UnitAndModel result = createEditUnit(parent, null, null, null, productShipment);
-        UnitAndModel result = createEditUnit(null, null, null, null, productShipment);
+        UnitView.Out result = createEditUnit(null, null, null, null, productShipment);
         if ( result == null ) return;
 
         unitProcessor.receipt(
-                result.uniqueUnit,
-                result.unitModel.getProduct(),
+                result.uniqueUnit(),
+                result.product(),
                 productShipment,
                 stockTransaction,
-                result.unitModel.getOperation(),
-                result.unitModel.getOperationComment(),
+                result.receiptOperation(),
+                result.comment(),
                 Dl.local().lookup(Guardian.class).getUsername()
         );
     }
@@ -114,14 +95,14 @@ public class UiUnitSupport {
         if ( eu.stockUnit != null )
             uu = optionalChangeStock(eu.uniqueUnit, eu.stockUnit, Dl.local().lookup(ActiveStock.class).getActiveStock(), parent, Dl.local().lookup(Guardian.class).getUsername());
 
-        UnitAndModel result = createEditUnit(parent, uu, eu.operation, eu.partNo, null);
+        UnitView.Out result = createEditUnit(parent, uu, eu.operation, eu.partNo, null);
         if ( result == null ) return;
 
         unitProcessor.update(
-                result.uniqueUnit,
-                result.unitModel.getProduct(),
-                result.unitModel.getOperation(),
-                result.unitModel.getOperationComment(),
+                result.uniqueUnit(),
+                result.product(),
+                result.receiptOperation(),
+                result.comment(),
                 Dl.local().lookup(Guardian.class).getUsername()
         );
     }
@@ -136,39 +117,21 @@ public class UiUnitSupport {
      * @param shipment         the shipment (Only needed in Create)
      * @return a tuple of the modified unit and the ui model for supplementary information or null if the manipulation has been canceled.
      */
-    private UnitAndModel createEditUnit(final Window parent,
+    private UnitView.Out createEditUnit(final Window parent,
                                         final UniqueUnit inUnit,
                                         final ReceiptOperation receiptOperation,
                                         final String partNo,
                                         final Shipment shipment) {
-        UnitModel model = new UnitModel();
-        if ( inUnit != null ) model.setContractor(inUnit.getContractor()); // Only on Edit
-        if ( receiptOperation != null ) model.setOperation(receiptOperation); // Only on Edit
-
-        UnitController controller = new UnitController();
-        controller.setModel(model);
-
         UnitView view = new UnitView(parent);
-        view.setModel(model);
-        view.setController(controller);
-        controller.setView(view);
-
-        if ( shipment != null ) view.setShipment(shipment); // Only on Create
-
-        if ( inUnit != null ) { // Only on Edit
-            view.setUnit(inUnit);
-            if ( inUnit.getProduct() == null ) view.setPartNo(partNo); // Extra on Edit
+        if ( shipment != null ) { // implizit create
+            view.accept(new In.Create(shipment));
+        } else {
+            view.accept(new In.Edit(inUnit, receiptOperation, partNo));
         }
-
-        controller.init();
         view.setVisible(true);
         if ( view.isCancel() ) return null; // HINT JDK8 OptionalPattern
-        // This would normaly be in the controller, but the design of the UnitView Controller is a little bit stupid
-        UniqueUnit uniqueUnit = view.getUnit();
-        if ( !StringUtils.isBlank(model.getOperationComment()) ) {
-            uniqueUnit.setInternalComment(uniqueUnit.getInternalComment() + ", " + model.getOperation() + ":" + model.getOperationComment());
-        }
-        return new UnitAndModel(model, uniqueUnit);
+
+        return view.getResult();
     }
 
     private UniqueUnit optionalChangeStock(UniqueUnit uniqueUnit, StockUnit stockUnit, PicoStock localStock, Window parent, String account) {

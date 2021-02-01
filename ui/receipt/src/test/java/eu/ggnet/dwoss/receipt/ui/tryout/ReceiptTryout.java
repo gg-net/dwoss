@@ -40,7 +40,6 @@ import eu.ggnet.dwoss.receipt.ui.cap.*;
 import eu.ggnet.dwoss.receipt.ui.shipment.ShipmentEditView;
 import eu.ggnet.dwoss.receipt.ui.tryout.stub.*;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
-import eu.ggnet.dwoss.stock.api.PicoStock;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.spi.ActiveStock;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
@@ -78,13 +77,14 @@ public class ReceiptTryout {
         remote.add(Mandators.class, pp.cachedMandators());
         remote.add(UnitProcessor.class, pp.unitProcessor());
         remote.add(UnitSupporter.class, pp.unitSupporter());
+        remote.add(UniqueUnitAgent.class, pp.uniqueUnitAgent());
 
         Dl.local().add(CachedMandators.class, pp.cachedMandators());
         Dl.local().add(RemoteLookup.class, new RemoteLookupStub());
         Dl.local().add(Guardian.class, new GuardianStub());
 
         StockSpiStub su = new StockSpiStub();
-        su.setActiveStock(new PicoStock(0, "Demostock"));
+        su.setActiveStock(pp.stocks.get(0).toPicoStock());
         Dl.local().add(ActiveStock.class, su);
 
         JFrame mainFrame = UiUtil.startup(() -> {
@@ -128,7 +128,6 @@ public class ReceiptTryout {
         });
 
         saft.core(Swing.class).initMain(mainFrame);
-
     }
 
     public static List<String> prepareHelper(UniqueUnitAgent agent) {

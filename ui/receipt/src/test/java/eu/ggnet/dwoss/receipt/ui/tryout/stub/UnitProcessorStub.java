@@ -16,7 +16,8 @@
  */
 package eu.ggnet.dwoss.receipt.ui.tryout.stub;
 
-import java.util.*;
+import java.util.List;
+import java.util.Random;
 
 import javax.enterprise.inject.Alternative;
 
@@ -24,7 +25,8 @@ import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.common.values.ReceiptOperation;
 import eu.ggnet.dwoss.receipt.ee.UnitProcessor;
 import eu.ggnet.dwoss.stock.ee.entity.*;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.*;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 
 /**
  *
@@ -37,6 +39,8 @@ public class UnitProcessorStub implements UnitProcessor {
 
     private final List<StockUnit> stockUnits;
 
+    private final static Random R = new Random();
+
     public UnitProcessorStub(List<UniqueUnit> uniqueUnits, List<StockUnit> stockUnits) {
         this.uniqueUnits = uniqueUnits;
         this.stockUnits = stockUnits;
@@ -44,12 +48,12 @@ public class UnitProcessorStub implements UnitProcessor {
 
     @Override
     public void receipt(UniqueUnit recieptUnit, Product product, Shipment shipment, StockTransaction transaction, ReceiptOperation operation, String operationComment, String arranger) throws IllegalArgumentException {
-        System.out.println("Receipt of " + recieptUnit);
+        System.out.println("UnitProcessorStub.receipt(" + recieptUnit + ")");
     }
 
     @Override
     public void update(UniqueUnit uniqueUnit, Product product, ReceiptOperation updateOperation, String operationComment, String arranger) throws IllegalArgumentException {
-        System.out.println("Update of" + uniqueUnit);
+        System.out.println("UnitProcessorStub.update(" + uniqueUnit + ")");
     }
 
     @Override
@@ -58,12 +62,12 @@ public class UnitProcessorStub implements UnitProcessor {
                 .findAny().orElseThrow(() -> new UserInfoException("Keine UniqeuUnit mit SopoNr/Seriennummer: " + refurbishedIdOrSerial));
         StockUnit stockUnit = stockUnits.stream().filter(su -> uniqueUnit.getRefurbishId().equals(su.getRefurbishId()))
                 .findAny().orElseThrow(() -> new UserInfoException("Keine StockUnit mit SopoNr/Seriennummer: " + refurbishedIdOrSerial));
-        return new EditableUnit(uniqueUnit, stockUnit, ReceiptOperation.SALEABLE, uniqueUnit.getProduct().getPartNo());
-
+        return new EditableUnit(uniqueUnit, stockUnit, ReceiptOperation.values()[R.nextInt(ReceiptOperation.values().length)], uniqueUnit.getProduct().getPartNo());
     }
 
     @Override
     public UniqueUnit transfer(UniqueUnit uniqueUnit, int stockId, String arranger) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("UnitProcessorStub.transfer(" + uniqueUnit + ")");
+        return uniqueUnit;
     }
 }

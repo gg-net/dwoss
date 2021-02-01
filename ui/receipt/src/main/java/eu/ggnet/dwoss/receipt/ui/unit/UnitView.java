@@ -17,45 +17,209 @@
 package eu.ggnet.dwoss.receipt.ui.unit;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Consumer;
 
 import javax.swing.*;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.SystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.common.UserInfoException;
+import eu.ggnet.dwoss.core.common.values.ReceiptOperation;
 import eu.ggnet.dwoss.core.common.values.Warranty;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.swing.ComboBoxController;
 import eu.ggnet.dwoss.core.widget.swing.NamedEnumCellRenderer;
-import eu.ggnet.dwoss.receipt.ui.CheckBoxTableNoteModel;
-import eu.ggnet.dwoss.receipt.ui.SwingTraversalUtil;
-import eu.ggnet.dwoss.receipt.ui.unit.UnitModel.Survey;
+import eu.ggnet.dwoss.mandator.spi.CachedMandators;
+import eu.ggnet.dwoss.receipt.ee.UnitSupporter;
+import eu.ggnet.dwoss.receipt.ui.*;
+import eu.ggnet.dwoss.receipt.ui.unit.chain.ChainLink;
+import eu.ggnet.dwoss.receipt.ui.unit.chain.ChainLink.Result;
+import eu.ggnet.dwoss.receipt.ui.unit.chain.Chains;
+import eu.ggnet.dwoss.receipt.ui.unit.model.*;
+import eu.ggnet.dwoss.spec.ee.SpecAgent;
+import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
+import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Equipment;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.StaticComment;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.StaticInternalComment;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.core.ui.ResultProducer;
 
+import static eu.ggnet.dwoss.core.common.values.ReceiptOperation.IN_SALE;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.REFURBISHED_ID;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.SERIAL;
+import static javax.swing.JOptionPane.*;
 
 /**
  *
  * @author bastian.venz, oliver.guenther
  */
-public class UnitView extends javax.swing.JDialog {
+public class UnitView extends javax.swing.JDialog implements Consumer<UnitView.In>, ResultProducer<UnitView.Out> {
 
-    CheckBoxTableNoteModel<Equipment> equipmentModel = new CheckBoxTableNoteModel(Arrays.asList(Equipment.class.getEnumConstants()), "Ausstattung");
+    /**
+     * Input Consumer class.
+     */
+    public static interface In {
 
-    CheckBoxTableNoteModel<StaticComment> commentModel = new CheckBoxTableNoteModel(Arrays.asList(StaticComment.class.getEnumConstants()), "Bemerkungen");
+        public static final class Create implements UnitView.In {
 
-    CheckBoxTableNoteModel<StaticInternalComment> internalCommentModel = new CheckBoxTableNoteModel(Arrays.asList(StaticInternalComment.class.getEnumConstants()), "Interne Bemerkungen");
+            private final Shipment shipment;
+
+            public Create(Shipment shipment) {
+                this.shipment = Objects.requireNonNull(shipment, "shipment must not be null");
+            }
+
+            public Shipment shipment() {
+                return shipment;
+            }
+
+        }
+
+        public static final class Edit implements UnitView.In {
+
+            private final UniqueUnit uniqueUnit;
+
+            private final ReceiptOperation receiptOperation;
+
+            // TODO: Verify, if the case still exists, that a uniqueUnit has no product
+            private final String partNo;
+
+            public Edit(UniqueUnit uniqueUnit, ReceiptOperation receiptOperation, String partNo) {
+                this.uniqueUnit = Objects.requireNonNull(uniqueUnit, "uniqueUnit must not be null");
+                this.receiptOperation = Objects.requireNonNull(receiptOperation, "receiptOperation must not be null");
+                this.partNo = Objects.requireNonNull(partNo, "partNo must not be null");
+            }
+
+            public UniqueUnit uniqueUnit() {
+                return uniqueUnit;
+            }
+
+            public ReceiptOperation receiptOperation() {
+                return receiptOperation;
+            }
+
+            // TODO: Verify, if the case still exists, that a uniqueUnit has no product
+            public String partNo() {
+                return partNo;
+            }
+
+        }
+
+    }
+
+    /**
+     * Result Object, name may be optimzed
+     */
+    public static class Out {
+
+        private final UniqueUnit uniqueUnit;
+
+        private final Product product;
+
+        private final ReceiptOperation receiptOperation;
+
+        private final String comment;
+
+        // Wenn shipment und stocktransaction null, dann edit, sonst create.
+        public Out(UniqueUnit uniqueUnit, Product product, ReceiptOperation receiptOperation, String comment) {
+            this.uniqueUnit = Objects.requireNonNull(uniqueUnit, "uniqueunit must not be null");
+            this.product = Objects.requireNonNull(product, "product must not be null");
+            this.receiptOperation = Objects.requireNonNull(receiptOperation, "receiptOperation must not be null");
+            this.comment = Objects.requireNonNull(comment, "comment must not be null");
+        }
+
+        public UniqueUnit uniqueUnit() {
+            return uniqueUnit;
+        }
+
+        public Product product() {
+            return product;
+        }
+
+        public ReceiptOperation receiptOperation() {
+            return receiptOperation;
+        }
+
+        public String comment() {
+            return comment;
+        }
+
+    }
+
+    private class OperationAction extends AbstractAction {
+
+        private final ReceiptOperation operation;
+
+        public OperationAction(ReceiptOperation operation) {
+            super(operation.description());
+            this.operation = operation;
+            setEnabled(false);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String comment = showInputDialog(UnitView.this, "Unit in den Process " + operation + " übergeben ?", "Frage", OK_CANCEL_OPTION);
+            if ( comment == null ) return;
+            model.setOperation(operation);
+            model.setOperationComment(comment);
+            setCancel(false);
+            setVisible(false);
+        }
+    }
+
+    private class SaleableAction extends AbstractAction {
+
+        public SaleableAction() {
+            super("In den Verkauf");
+            setEnabled(false);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if ( showConfirmDialog(UnitView.this, "Unit zum Verkauf freigeben ?", "Frage", YES_NO_OPTION) != YES_OPTION ) return;
+            model.setOperation(ReceiptOperation.SALEABLE);
+            setCancel(false);
+            setVisible(false);
+        }
+    }
+
+    private class InSaleAction extends AbstractAction {
+
+        public InSaleAction() {
+            super("Änderungen übernehmen");
+            setEnabled(false);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            model.setOperation(ReceiptOperation.IN_SALE);
+            setCancel(false);
+            setVisible(false);
+        }
+    }
+
+    private static final Logger L = LoggerFactory.getLogger(UnitView.class);
+
+    private final ReentrantLock lock = new ReentrantLock();
+
+    private CheckBoxTableNoteModel<Equipment> equipmentModel = new CheckBoxTableNoteModel(Arrays.asList(Equipment.class.getEnumConstants()), "Ausstattung");
+
+    private CheckBoxTableNoteModel<StaticComment> commentModel = new CheckBoxTableNoteModel(Arrays.asList(StaticComment.class.getEnumConstants()), "Bemerkungen");
+
+    private CheckBoxTableNoteModel<StaticInternalComment> internalCommentModel = new CheckBoxTableNoteModel(Arrays.asList(StaticInternalComment.class.getEnumConstants()), "Interne Bemerkungen");
 
     private ComboBoxController<UniqueUnit.Condition> conditionController;
 
@@ -64,8 +228,6 @@ public class UnitView extends javax.swing.JDialog {
     private UniqueUnit unit;
 
     private UnitModel model;
-
-    private UnitController controller;
 
     private boolean cancel = true;
 
@@ -79,7 +241,7 @@ public class UnitView extends javax.swing.JDialog {
             // ShortCut
             if ( Objects.equals(model.getMetaUnit().getMfgDate().getValue(), mfgDateChooser.getDate()) ) return;
             model.getMetaUnit().getMfgDate().setValue(mfgDateChooser.getDate());
-            controller.validateMfgDate();
+            validateMfgDate();
         }
     };
 
@@ -92,7 +254,7 @@ public class UnitView extends javax.swing.JDialog {
             if ( Objects.equals(model.getMetaUnit().getWarrentyTill(), warrantyTillChooser.getDate()) ) return;
             model.getMetaUnit().setWarrentyTillSetted(((Warranty)warrantyTypeChooser.getSelectedItem()) == Warranty.WARRANTY_TILL_DATE);
             model.getMetaUnit().setWarrentyTill(warrantyTillChooser.getDate());
-            controller.updateActions();
+            updateActions();
         }
     };
 
@@ -101,6 +263,8 @@ public class UnitView extends javax.swing.JDialog {
         initComponents();
         setModalityType(ModalityType.APPLICATION_MODAL);
         setLocationRelativeTo(window);
+        this.model = new UnitModel();
+
         UiCore.global().locationStorage().loadLocation(this.getClass(), this);
         // Setting the change also in the subcomponent. FocusListener does not work completely.
         mfgDateChooser.addPropertyChangeListener(mfgProperty);
@@ -140,33 +304,93 @@ public class UnitView extends javax.swing.JDialog {
         contractorBox.setModel(new DefaultComboBoxModel(TradeName.getManufacturers().toArray()));
     }
 
-    public UnitModel getModel() {
-        return model;
+    @Override
+    public void accept(In in) {
+        /*
+        Der Workflow aus 2008 ist blöd, aber ihn komplett zu ersetzen, dauert zu lange.
+        getUnit erzeugt im Zweifel eine instance und speichert bereits dinge.
+         */
+
+        if ( Objects.requireNonNull(in, "in must not be null") instanceof In.Create ) {
+            var create = (In.Create)in;
+            unitShipField.setText(create.shipment().getShipmentId());
+            unitOwnerField.setText(create.shipment().getContractor().toString());
+            model.setContractor(create.shipment().getContractor());
+            model.setMode(create.shipment().getDefaultManufacturer());
+            contractorBox.setSelectedItem(create.shipment().getDefaultManufacturer());
+        } else if ( in instanceof In.Edit ) {
+            var edit = (In.Edit)in;
+            model.setContractor(edit.uniqueUnit().getContractor());
+            model.setOperation(edit.receiptOperation());
+            model.setEditMode(true);
+            setUnit(edit.uniqueUnit());
+            if ( edit.uniqueUnit().getProduct() == null ) {
+                setPartNo(edit.partNo()); // TODO: Verify, if this case still exists.
+            } else {
+                model.setMode(edit.uniqueUnit().getProduct().getTradeName().getManufacturer());
+            }
+        } else {
+            throw new IllegalArgumentException("in is neither of type create nor edit. Should never happen");
+        }
+
+        updateMode();
+        updateChains();
+        validateAll();
+        if ( model.getOperation() == IN_SALE ) { // This Unit is not available so only changes to the unit, but no followupaction ist allowed.
+            addClosingAction(new InSaleAction());
+        } else {
+            addClosingAction(new SaleableAction());
+            Dl.local().lookup(CachedMandators.class).loadReceiptCustomers().enabledOperations(model.getContractor())
+                    .stream().forEach(r -> addClosingAction(new OperationAction(r)));
+        }
+
     }
 
-    public void setModel(UnitModel model) {
-        this.model = model;
+    @Override
+    public Out getResult() {
+        if ( cancel ) return null;
+        // Modify internal comment on getResult. Cannot be done on setUnit, because setUnit is used internally. Old Workflow
+        UniqueUnit uniqueUnit = getUnit();
+        if ( !StringUtils.isBlank(model.getOperationComment()) ) {
+            uniqueUnit.setInternalComment(uniqueUnit.getInternalComment() + ", " + model.getOperation() + ":" + model.getOperationComment());
+        }
+        return new UnitView.Out(uniqueUnit, model.getProduct(), model.getOperation(), model.getOperationComment());
     }
 
-    public UnitController getController() {
-        return controller;
+    public boolean isCancel() {
+        return cancel;
     }
 
-    public void setController(UnitController controller) {
-        this.controller = controller;
-    }
-    
-    public void setShipment(Shipment shipment) {
-        unitShipField.setText(shipment.getShipmentId());
-        unitOwnerField.setText(shipment.getContractor().toString());
-        model.setContractor(shipment.getContractor());
-        model.setMode(shipment.getDefaultManufacturer());
-        contractorBox.setSelectedItem(shipment.getDefaultManufacturer());
-        controller.updateChains();
+    private UniqueUnit getUnit() {
+        if ( unit == null ) {
+            unit = new UniqueUnit();
+        }
+        model.getMetaUnit().loadTo(unit);
+        unit.setCondition(conditionController.getSelected());
+        unit.setWarranty(warrantyController.getSelected());
+        unit.setEquipments(equipmentModel.getMarked());
+        unit.setComments(commentModel.getMarked());
+        unit.setInternalComments(internalCommentModel.getMarked());
+        unit.setContractor(model.getContractor());
+
+        if ( !StringUtils.isBlank(commentArea.getText()) ) {
+            unit.setComment(commentArea.getText().replaceAll(System.lineSeparator(), " ").replaceAll("\\t", " "));
+        } else {
+            unit.setComment(commentArea.getText());
+        }
+        if ( !StringUtils.isBlank(internalCommentArea.getText()) ) {
+            unit.setInternalComment(internalCommentArea.getText().replaceAll(System.lineSeparator(), " ").replaceAll("\\t", " "));
+        } else {
+            unit.setInternalComment(internalCommentArea.getText());
+        }
+        if ( warrantyController.getSelected().equals(Warranty.WARRANTY_TILL_DATE) ) {
+            unit.setWarrentyValid(warrantyTillChooser.getDate());
+        }
+        return unit;
     }
 
     // TODO: set to model or at lest update the unitMetaModel
-    public void setUnit(UniqueUnit unit) {
+    private void setUnit(UniqueUnit unit) {
         if ( unit == null ) return;
         this.unit = unit;
         refurbishedIdField.setEditable(false);
@@ -187,54 +411,27 @@ public class UnitView extends javax.swing.JDialog {
         if ( unit.getWarranty().equals(Warranty.WARRANTY_TILL_DATE) ) warrantyTillChooser.setDate(unit.getWarrentyValid());
     }
 
-    public UniqueUnit getUnit() {
-        if ( unit == null ) {
-            unit = new UniqueUnit();
-        }
-        model.getMetaUnit().loadTo(unit);
-        unit.setCondition(conditionController.getSelected());
-        unit.setWarranty(warrantyController.getSelected());
-        unit.setEquipments(equipmentModel.getMarked());
-        unit.setComments(commentModel.getMarked());
-        unit.setInternalComments(internalCommentModel.getMarked());
-        unit.setContractor(model.getContractor());
-
-        if ( !StringUtils.isBlank(commentArea.getText()) ) {
-            unit.setComment(commentArea.getText().replaceAll(SystemUtils.LINE_SEPARATOR, " ").replaceAll("\\t", " "));
-        } else {
-            unit.setComment(commentArea.getText());
-        }
-        if ( !StringUtils.isBlank(internalCommentArea.getText()) ) {
-            unit.setInternalComment(internalCommentArea.getText().replaceAll(SystemUtils.LINE_SEPARATOR, " ").replaceAll("\\t", " "));
-        } else {
-            unit.setInternalComment(internalCommentArea.getText());
-        }
-        if ( warrantyController.getSelected().equals(Warranty.WARRANTY_TILL_DATE) ) {
-            unit.setWarrentyValid(warrantyTillChooser.getDate());
-        }
-        return unit;
-    }
-
-    public void setPartNo(String partNo) {
+    private void setPartNo(String partNo) {
         partNoField.setText(partNo);
         model.getMetaUnit().getPartNo().setValue(partNo);
-        controller.validatePartNoAndLoadDetails();
+        validatePartNoAndLoadDetails();
     }
 
-    void addOperationAction(Action action) {
+    private void addOperationAction(Action action) {
         operationButtonPanel.add(new JButton(action));
     }
 
-    public boolean isCancel() {
-        return cancel;
+    private void addClosingAction(Action action) {
+        model.addAction(action);
+        addOperationAction(action);
     }
 
     /**
      * Reloads the validation statuses of refurbishId, serial, partNo and mfg date from the model.
      */
-    void updateValidationStatus() {
+    private void updateValidationStatus() {
         StringBuilder sb = new StringBuilder("Last Update:\n");
-        UnitModel.MetaUnit mu = model.getMetaUnit();
+        MetaUnit mu = model.getMetaUnit();
         updateValidationStatus(refurbishedIdField, mu.getRefurbishId().getSurvey(), sb);
         updateValidationStatus(partNoField, mu.getPartNo().getSurvey(), sb);
         updateValidationStatus(mfgDateChooser, mu.getMfgDate().getSurvey(), sb);
@@ -242,7 +439,7 @@ public class UnitView extends javax.swing.JDialog {
         lastMessage = sb.toString();
     }
 
-    private void updateValidationStatus(JComponent component, Survey vs, StringBuilder sb) {
+    private void updateValidationStatus(JComponent component, UnitSurvey vs, StringBuilder sb) {
         EventQueue.invokeLater(() -> {
             component.setToolTipText(vs.getMessage());
             component.setForeground(vs.getStatus().color);
@@ -250,10 +447,204 @@ public class UnitView extends javax.swing.JDialog {
         sb.append("- ").append(component.getName()).append(": ").append(vs.getStatus()).append(" : ").append(vs.getMessage()).append("\n");
     }
 
+    private void updateChains() {
+        L.debug("updateChains called with {}", model.getMode());
+        MetaUnit metaUnit = model.getMetaUnit();
+        Chains chains = Chains.getInstance(model.getMode());
+        metaUnit.getRefurbishId().setChain(chains.newRefubishIdChain(model.getContractor(), Dl.remote().lookup(UnitSupporter.class), model.isEditMode()));
+        metaUnit.getSerial().setChain(chains.newSerialChain(Dl.remote().lookup(UnitSupporter.class), (model.isEditMode() ? metaUnit.getRefurbishId().getValue() : null)));
+        metaUnit.getPartNo().setChain(chains.newPartNoChain(Dl.remote().lookup(SpecAgent.class), Dl.local().lookup(CachedMandators.class).loadContractors().allowedBrands()));
+        metaUnit.getMfgDate().setChain(chains.newMfgDateChain());
+    }
+
+    private void updateActions() {
+        final boolean enabled = model.getMetaUnit().isOkOrWarn();
+        final java.util.List<Action> updateActions = changedActions(enabled);
+        if ( updateActions == null ) return;
+        EventQueue.invokeLater(() -> {
+            for (Action action : updateActions) {
+                action.setEnabled(enabled);
+            }
+        });
+    }
+
+    private void createOrEditPart(String partNo) throws UserInfoException {
+        UiProductSupport.createOrEditPart(model.getMode(), partNo, this);
+        validatePartNoAndLoadDetails();
+    }
+
+    private void editRefurbishedId(String refurbishId) {
+        String newRefurbishId = JOptionPane.showInputDialog(this, "SopoNr:", refurbishId);
+        if ( newRefurbishId == null ) return;
+        // TODO: Push this through the Validation Chain.
+        newRefurbishId = newRefurbishId.trim();
+        if ( newRefurbishId.equals("") ) return;
+        if ( newRefurbishId.equals(refurbishId) ) return;
+        if ( Dl.remote().lookup(UnitSupporter.class).isRefurbishIdAvailable(refurbishId) ) {
+            model.getMetaUnit().getRefurbishId().setValue(refurbishId);
+            updateMetaUnit();
+        } else {
+            JOptionPane.showMessageDialog(this, "SopoNr nicht verfügbar", "Fehler", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void validateRefurbishedId() {
+        final MetaValue<String> value = model.getMetaUnit().getRefurbishId();
+
+        new SwingWorker<String, Object>() {
+            @Override
+            protected String doInBackground() throws Exception {
+                L.debug("Validating refurbishId : {}", value.getValue());
+                return validateValue(value.getValue(), value.getChain(), value.getSurvey());
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    model.getMetaUnit().getRefurbishId().setValue(get());
+                } catch (InterruptedException | ExecutionException ex) {
+                    Ui.handle(ex);
+                } finally {
+                    updateMetaUnit();
+                }
+            }
+        }.execute();
+    }
+
+    private void validatePartNoAndLoadDetails() {
+        new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                MetaValue<String> value = model.getMetaUnit().getPartNo();
+                L.debug("Validating partNo : {}", value.getValue());
+                value.setValue(validateValue(value.getValue(), value.getChain(), value.getSurvey()));
+
+                if ( value.getSurvey().isOkOrWarn() ) {
+                    L.debug("Loading Details for PartNo: {}", value.getValue());
+                    // Load details for update.
+                    model.setProduct(Dl.remote().lookup(UniqueUnitAgent.class).findProductByPartNo(value.getValue()));
+                    model.setProductSpecDescription(SpecFormater.toHtml(Dl.remote().lookup(SpecAgent.class).findProductSpecByPartNoEager(value.getValue())));
+                } else {
+                    L.debug("Removeing PartNo Details.");
+                    model.setProduct(null);
+                    model.setProductSpecDescription("");
+                }
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    get();
+                } catch (InterruptedException | ExecutionException ex) {
+                    Ui.handle(ex);
+                } finally {
+                    updateMetaUnit();
+                    updateProduct();
+                }
+            }
+        }.execute();
+    }
+
+    private void validateSerial() {
+        new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                MetaValue<String> value = model.getMetaUnit().getSerial();
+                L.debug("Validating serial : {}", value.getValue());
+                value.setValue(validateValue(value.getValue(), value.getChain(), value.getSurvey()));
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    get();
+                } catch (InterruptedException | ExecutionException ex) {
+                    Ui.handle(ex);
+                } finally {
+                    updateMetaUnit();
+                }
+            }
+        }.execute();
+    }
+
+    private void validateMfgDate() {
+        new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                MetaValue<Date> value = model.getMetaUnit().getMfgDate();
+                L.debug("Validating mfgDate : {}", value.getValue());
+                value.setValue(validateValue(value.getValue(), value.getChain(), value.getSurvey()));
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    get();
+                } catch (InterruptedException | ExecutionException ex) {
+                    Ui.handle(ex);
+                } finally {
+                    updateMetaUnit();
+                }
+            }
+        }.execute();
+    }
+
+    private void validateAll() {
+        validateRefurbishedId();
+        validateSerial();
+        validatePartNoAndLoadDetails();
+        validateMfgDate();
+    }
+
+    private <T> T validateValue(T value, java.util.List<ChainLink<T>> chain, UnitSurvey validationStatus) {
+        lock.lock();
+        try {
+            validationStatus.validating("Wert wird geprüft");
+            updateValidationStatus();
+
+            Result<T> result = Chains.execute(chain, value);
+
+            L.debug("After Chain (optionals={}, metaunit.partno.isSet={}, metaunit.mfgDate.isSet={}) : {}",
+                    result.hasOptionals(), model.getMetaUnit().getPartNo().isSet(), model.getMetaUnit().getMfgDate().isSet(), result);
+
+            if ( result.hasOptionals() && result.optional.partNo != null && !model.getMetaUnit().getPartNo().isSet() ) {
+                model.getMetaUnit().getPartNo().setValue(result.optional.partNo);
+                validatePartNoAndLoadDetails();
+            }
+
+            if ( result.hasOptionals() && result.optional.mfgDate != null && !model.getMetaUnit().getMfgDate().isSet() ) {
+                model.getMetaUnit().getMfgDate().setValue(result.optional.mfgDate);
+                validateMfgDate();
+            }
+
+            validationStatus.setStatus(result.valid, result.message);
+            updateValidationStatus();
+
+            updateActions();
+            return result.value;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    private java.util.List<Action> changedActions(boolean enabled) {
+        java.util.List<Action> updateActions = null;
+        for (Action action : model.getActions()) {
+            if ( enabled != action.isEnabled() ) {
+                if ( updateActions == null ) updateActions = new ArrayList<>();
+                updateActions.add(action);
+            }
+        }
+        return updateActions;
+    }
+
     /**
      * Reloads the values of refurbishId, serial, partNo and mfg date from the model.
      */
-    void updateMetaUnit() {
+    private void updateMetaUnit() {
         if ( !Objects.equals(refurbishedIdField.getText(), model.getMetaUnit().getRefurbishId().getValue()) )
             refurbishedIdField.setText(model.getMetaUnit().getRefurbishId().getValue());
 
@@ -270,14 +661,14 @@ public class UnitView extends javax.swing.JDialog {
             warrantyTillChooser.setDate(model.getMetaUnit().getWarrentyTill());
     }
 
-    void setCancel(boolean cancel) {
+    private void setCancel(boolean cancel) {
         this.cancel = cancel;
     }
 
     /**
      * Updates the Product and the Description from the Model;
      */
-    void updateProduct() {
+    private void updateProduct() {
         Set<UniqueUnit.Equipment> equipment = UniqueUnit.Equipment.getEquipments();
         if ( model.getProduct() != null ) equipment.retainAll(UniqueUnit.Equipment.getEquipments(model.getProduct().getGroup()));
         if ( unit != null ) equipment.addAll(unit.getEquipments());
@@ -285,7 +676,7 @@ public class UnitView extends javax.swing.JDialog {
         detailArea.setText(model.getProductSpecDescription());
     }
 
-    void updateMode() {
+    private void updateMode() {
         contractorBox.setSelectedItem(model.getMode());
     }
 
@@ -700,24 +1091,24 @@ public class UnitView extends javax.swing.JDialog {
 
     private void contractorBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contractorBoxActionPerformed
         model.setMode((TradeName)contractorBox.getSelectedItem());
-        controller.updateChains();
-        controller.validateAll();
+        updateChains();
+        validateAll();
     }//GEN-LAST:event_contractorBoxActionPerformed
 
     private void warrantyTypeChooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_warrantyTypeChooserActionPerformed
         if ( warrantyTypeChooser.getSelectedItem() != null && warrantyTypeChooser.getSelectedItem().equals(Warranty.WARRANTY_TILL_DATE) ) {
             warrantyTillChooser.setEnabled(true);
             model.getMetaUnit().setWarrentyTillSetted(true);
-            controller.updateActions();
+            updateActions();
         } else {
             warrantyTillChooser.setEnabled(false);
             model.getMetaUnit().setWarrentyTillSetted(false);
-            controller.updateActions();
+            updateActions();
         }
     }//GEN-LAST:event_warrantyTypeChooserActionPerformed
 
     private void editRefurbishedIdButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editRefurbishedIdButtonActionPerformed
-        controller.editRefurbishedId(refurbishedIdField.getText());
+        editRefurbishedId(refurbishedIdField.getText());
     }//GEN-LAST:event_editRefurbishedIdButtonActionPerformed
 
     private void serialFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_serialFieldFocusLost
@@ -725,7 +1116,7 @@ public class UnitView extends javax.swing.JDialog {
         // Shortcut. Rethink if ok. Better pick from model
         if ( unit != null && serial.equals(unit.getIdentifier(SERIAL)) ) return;
         model.getMetaUnit().getSerial().setValue(serial);
-        controller.validateSerial();
+        validateSerial();
     }//GEN-LAST:event_serialFieldFocusLost
 
     private void refurbishedIdFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_refurbishedIdFieldFocusLost
@@ -733,22 +1124,22 @@ public class UnitView extends javax.swing.JDialog {
         // Shortcut. Rethink if ok. Better pick from model
         if ( unit != null && refurbishedId.equals(unit.getIdentifier(REFURBISHED_ID)) ) return;
         model.getMetaUnit().getRefurbishId().setValue(refurbishedId);
-        controller.validateRefurbishedId();
+        validateRefurbishedId();
     }//GEN-LAST:event_refurbishedIdFieldFocusLost
 
     private void partNoFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_partNoFieldFocusLost
         final String partNo = partNoField.getText();
         model.getMetaUnit().getPartNo().setValue(partNo);
-        controller.validatePartNoAndLoadDetails();
+        validatePartNoAndLoadDetails();
     }//GEN-LAST:event_partNoFieldFocusLost
 
     private void editProductButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editProductButtonActionPerformed
         try {
-            controller.createOrEditPart(partNoField.getText());
+            createOrEditPart(partNoField.getText());
         } catch (UserInfoException ex) {
             Ui.handle(ex);
         }
-        controller.validateRefurbishedId();
+        validateRefurbishedId();
     }//GEN-LAST:event_editProductButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

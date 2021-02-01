@@ -42,7 +42,8 @@ public class UniqueUnitAgentStub implements UniqueUnitAgent {
 
     @Override
     public Product findProductByPartNo(String partNo) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if ( partNo == null ) return null;
+        return products.stream().filter(p -> partNo.equals(p.getPartNo())).findAny().orElse(null);
     }
 
     @Override
@@ -76,7 +77,7 @@ public class UniqueUnitAgentStub implements UniqueUnitAgent {
 
     @Override
     public <T> List<T> findAllEager(Class<T> entityClass) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return findAll(entityClass);
     }
 
     @Override
@@ -86,22 +87,25 @@ public class UniqueUnitAgentStub implements UniqueUnitAgent {
 
     @Override
     public <T> T findById(Class<T> entityClass, Object id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        // Allways return the first
+        if ( entityClass.equals(UniqueUnit.class) ) return (T)uniqueUnits.get(0);
+        if ( entityClass.equals(Product.class) ) return (T)products.get(0);
+        throw new UnsupportedOperationException("UniqueUnitAgentStub.findById(" + entityClass + ") not implemented");
     }
 
     @Override
     public <T> T findById(Class<T> entityClass, Object id, LockModeType lockModeType) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return findById(entityClass, id);
     }
 
     @Override
     public <T> T findByIdEager(Class<T> entityClass, Object id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return findById(entityClass, id);
     }
 
     @Override
     public <T> T findByIdEager(Class<T> entityClass, Object id, LockModeType lockModeType) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return findById(entityClass, id);
     }
 
 }

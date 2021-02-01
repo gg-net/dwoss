@@ -28,7 +28,7 @@ import eu.ggnet.dwoss.mandator.api.Mandators;
 import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
 import eu.ggnet.dwoss.receipt.ui.UiProductSupport;
-import eu.ggnet.dwoss.receipt.ui.unit.UnitModel;
+import eu.ggnet.dwoss.receipt.ui.unit.model.UnitModel;
 import eu.ggnet.dwoss.receipt.ui.unit.chain.ChainLink;
 import eu.ggnet.dwoss.receipt.ui.unit.chain.Chains;
 import eu.ggnet.dwoss.receipt.ui.unit.chain.partno.ProductSpecMatches;
@@ -38,6 +38,7 @@ import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
 import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.receipt.ui.unit.model.MetaValue;
 import eu.ggnet.saft.core.Ui;
 
 /**
@@ -53,9 +54,9 @@ public class DesktopBundleView extends AbstractView<DesktopBundle> implements IP
 
     private final SpecAgent specAgent;
 
-    private final UnitModel.MetaValue<String> partNo1 = new UnitModel.MetaValue<>();
+    private final MetaValue<String> partNo1 = new MetaValue<>();
 
-    private final UnitModel.MetaValue<String> partNo2 = new UnitModel.MetaValue<>();
+    private final MetaValue<String> partNo2 = new MetaValue<>();
 
     private final List<ChainLink<String>> product1Chain;
 
@@ -142,7 +143,7 @@ public class DesktopBundleView extends AbstractView<DesktopBundle> implements IP
         updateView();
     }
 
-    private ProductSpec validatePartNoAndLoad(UnitModel.MetaValue<String> partNo) {
+    private ProductSpec validatePartNoAndLoad(MetaValue<String> partNo) {
         L.debug("Validating partNo : {}", partNo.getValue());
         partNo.getSurvey().validating("Wert wird geprüft");
         updateValidationStatus();

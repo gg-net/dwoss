@@ -22,10 +22,12 @@ import java.util.Set;
 
 import javax.validation.*;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.system.util.ValidationUtil;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
-import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
 import eu.ggnet.dwoss.receipt.ui.product.AbstractView;
 import eu.ggnet.dwoss.receipt.ui.product.SimpleView;
@@ -34,8 +36,6 @@ import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
 import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
-import eu.ggnet.dwoss.core.system.util.ValidationUtil;
-import eu.ggnet.dwoss.core.widget.Dl;
 
 /**
  * Support Class for creation or edit of Products.
@@ -49,6 +49,7 @@ public class UiProductSupport {
 
     // UnitController und EditPRoductAction
     public static ProductSpec createOrEditPart(TradeName manufacturer, String partNo, Window parent) throws UserInfoException {
+        // Hier parent von saft.
         return createOrEditPart(manufacturer, partNo, null, null, parent);
     }
 
