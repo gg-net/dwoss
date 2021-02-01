@@ -31,7 +31,7 @@ import eu.ggnet.dwoss.customer.ui.CustomerTaskService;
 import eu.ggnet.dwoss.mail.ui.cap.SendResellerListToSubscribedCustomersMenuItem;
 import eu.ggnet.dwoss.misc.ui.AboutController;
 import eu.ggnet.dwoss.price.ui.PriceBlockerViewCask;
-import eu.ggnet.dwoss.receipt.ui.UiUnitSupport;
+import eu.ggnet.dwoss.receipt.ui.UiProductSupport;
 import eu.ggnet.dwoss.redtapext.ui.ReactivePicoUnitDetailViewCask;
 import eu.ggnet.dwoss.report.ui.RawReportView;
 import eu.ggnet.dwoss.rights.ui.UserManagementController;
@@ -56,7 +56,7 @@ public class DwOssMain {
         cc.addPackages(true, CustomerTaskService.class); // customer.ui
         cc.addPackages(true, SendResellerListToSubscribedCustomersMenuItem.class); // mail.ui
         cc.addPackages(true, PriceBlockerViewCask.class); // price.ui
-        cc.addPackages(true, UiUnitSupport.class); // receipt.ui
+        cc.addPackages(true, UiProductSupport.class); // receipt.ui
         cc.addPackages(true, RawReportView.class); // report.ui
         cc.addPackages(true, UserManagementController.class); // rights.ui
         cc.addPackages(true, StockUpiImpl.class); // stock.ui
