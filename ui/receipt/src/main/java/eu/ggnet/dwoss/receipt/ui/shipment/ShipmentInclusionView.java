@@ -24,18 +24,21 @@ import javax.inject.Inject;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
+import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
 import eu.ggnet.dwoss.receipt.ee.UnitProcessor;
-import eu.ggnet.dwoss.receipt.ui.UiUnitSupport;
+import eu.ggnet.dwoss.receipt.ui.unit.UnitView;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment.Status;
 import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
+import eu.ggnet.saft.core.Saft;
+import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.core.ui.*;
 
 import static eu.ggnet.dwoss.stock.ee.entity.Shipment.Status.CLOSED;
 import static eu.ggnet.dwoss.stock.ee.entity.Shipment.Status.OPENED;
 import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
-import static eu.ggnet.saft.core.ui.UiParent.of;
 
 /**
  *
@@ -73,6 +76,9 @@ public class ShipmentInclusionView extends javax.swing.JPanel implements Consume
 
     @Inject
     private RemoteDl remote;
+
+    @Inject
+    private Saft saft;
 
     private ShipmentInclusionView.In in;
 
@@ -199,7 +205,19 @@ public class ShipmentInclusionView extends javax.swing.JPanel implements Consume
     }// </editor-fold>//GEN-END:initComponents
 
     private void inclusionUnittButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inclusionUnittButtonActionPerformed
-        new UiUnitSupport(remote.lookup(UnitProcessor.class)).createUnit(in.stockTransaction(), in.shipment(), of(this));
+        saft.build().parent(this).swing().eval(() -> new eu.ggnet.dwoss.receipt.ui.unit.UnitView.In.Create(in.shipment()), UnitView.class).cf()
+                .thenAccept(result -> {
+                    remote.lookup(UnitProcessor.class).receipt(
+                            result.uniqueUnit(),
+                            result.product(),
+                            in.shipment(),
+                            in.stockTransaction(),
+                            result.receiptOperation(),
+                            result.comment(),
+                            Dl.local().lookup(Guardian.class).getUsername()
+                    );
+                })
+                .handle(UiCore.global().handler(this));
     }//GEN-LAST:event_inclusionUnittButtonActionPerformed
 
     private void inclusionOkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inclusionOkButtonActionPerformed

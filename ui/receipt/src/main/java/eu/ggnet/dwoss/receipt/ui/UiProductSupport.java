@@ -36,6 +36,9 @@ import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
 import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
+import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.core.impl.Swing;
+import eu.ggnet.saft.core.ui.UiParent;
 
 /**
  * Support Class for creation or edit of Products.
@@ -48,8 +51,12 @@ public class UiProductSupport {
     private static final Validator VALIDATOR = Validation.buildDefaultValidatorFactory().getValidator();
 
     // UnitController und EditPRoductAction
+    public static ProductSpec createOrEditPart(TradeName manufacturer, String partNo, UiParent parent) throws UserInfoException {
+        Window w = UiCore.global().core(Swing.class).unwrap(parent).orElse(null);
+        return createOrEditPart(manufacturer, partNo, null, null, w);
+    }
+
     public static ProductSpec createOrEditPart(TradeName manufacturer, String partNo, Window parent) throws UserInfoException {
-        // Hier parent von saft.
         return createOrEditPart(manufacturer, partNo, null, null, parent);
     }
 

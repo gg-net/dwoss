@@ -16,16 +16,23 @@
  */
 package eu.ggnet.dwoss.receipt.ui.unit;
 
-import java.awt.*;
+import java.awt.EventQueue;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 
+import javax.inject.Inject;
 import javax.swing.*;
+
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.scene.control.*;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -36,6 +43,7 @@ import eu.ggnet.dwoss.core.common.values.ReceiptOperation;
 import eu.ggnet.dwoss.core.common.values.Warranty;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
 import eu.ggnet.dwoss.core.widget.swing.ComboBoxController;
 import eu.ggnet.dwoss.core.widget.swing.NamedEnumCellRenderer;
 import eu.ggnet.dwoss.mandator.spi.CachedMandators;
@@ -54,20 +62,25 @@ import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Equipment;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.StaticComment;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.StaticInternalComment;
+import eu.ggnet.saft.core.Saft;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.saft.core.ui.ResultProducer;
+import eu.ggnet.saft.core.ui.*;
 
 import static eu.ggnet.dwoss.core.common.values.ReceiptOperation.IN_SALE;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.REFURBISHED_ID;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.SERIAL;
-import static javax.swing.JOptionPane.*;
+import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
+import static eu.ggnet.saft.core.ui.UiParent.of;
+import static javafx.scene.control.ButtonType.NO;
+import static javafx.scene.control.ButtonType.YES;
 
 /**
  *
  * @author bastian.venz, oliver.guenther
  */
-public class UnitView extends javax.swing.JDialog implements Consumer<UnitView.In>, ResultProducer<UnitView.Out> {
+@Title("Aufnahme")
+@StoreLocation
+public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In>, ResultProducer<UnitView.Out> {
 
     /**
      * Input Consumer class.
@@ -138,7 +151,7 @@ public class UnitView extends javax.swing.JDialog implements Consumer<UnitView.I
             this.uniqueUnit = Objects.requireNonNull(uniqueUnit, "uniqueunit must not be null");
             this.product = Objects.requireNonNull(product, "product must not be null");
             this.receiptOperation = Objects.requireNonNull(receiptOperation, "receiptOperation must not be null");
-            this.comment = Objects.requireNonNull(comment, "comment must not be null");
+            this.comment = comment; // can be null.
         }
 
         public UniqueUnit uniqueUnit() {
@@ -153,6 +166,11 @@ public class UnitView extends javax.swing.JDialog implements Consumer<UnitView.I
             return receiptOperation;
         }
 
+        /**
+         * Returns comment, may be null
+         *
+         * @return comment, may be null
+         */
         public String comment() {
             return comment;
         }
@@ -171,12 +189,20 @@ public class UnitView extends javax.swing.JDialog implements Consumer<UnitView.I
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            String comment = showInputDialog(UnitView.this, "Unit in den Process " + operation + " übergeben ?", "Frage", OK_CANCEL_OPTION);
-            if ( comment == null ) return;
-            model.setOperation(operation);
-            model.setOperationComment(comment);
-            setCancel(false);
-            setVisible(false);
+            saft.exec(() -> {
+                Optional<String> result = saft.build(UnitView.this).title("Übergabe in " + operation).dialog()
+                        .eval(() -> {
+                            TextInputDialog dialog = new TextInputDialog();
+                            dialog.setHeaderText("Unit in den Prozess " + operation + " übergeben ?");
+                            dialog.setContentText("Kommentar:");
+                            return dialog;
+                        }).opt();
+                if ( result.isEmpty() ) return;
+                model.setOperation(operation);
+                model.setOperationComment(result.get());
+                cancel = false;
+                showingProperty.set(false);
+            });
         }
     }
 
@@ -189,10 +215,19 @@ public class UnitView extends javax.swing.JDialog implements Consumer<UnitView.I
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if ( showConfirmDialog(UnitView.this, "Unit zum Verkauf freigeben ?", "Frage", YES_NO_OPTION) != YES_OPTION ) return;
-            model.setOperation(ReceiptOperation.SALEABLE);
-            setCancel(false);
-            setVisible(false);
+            saft.exec(() -> {
+                Optional<ButtonType> result = saft.build(UnitView.this).title("Zum Verkauf").dialog()
+                        .eval(() -> {
+                            Alert alert = new Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
+                            alert.setHeaderText("Unit zum Verkauf freigeben ?");
+                            alert.getButtonTypes().setAll(YES, NO);
+                            return alert;
+                        }).opt();
+                if ( result.isEmpty() || result.get().equals(NO) ) return;
+                model.setOperation(ReceiptOperation.SALEABLE);
+                cancel = false;
+                showingProperty.set(false);
+            });
         }
     }
 
@@ -206,14 +241,23 @@ public class UnitView extends javax.swing.JDialog implements Consumer<UnitView.I
         @Override
         public void actionPerformed(ActionEvent e) {
             model.setOperation(ReceiptOperation.IN_SALE);
-            setCancel(false);
-            setVisible(false);
+            cancel = false;
+            showingProperty.set(false);
         }
     }
 
     private static final Logger L = LoggerFactory.getLogger(UnitView.class);
 
+    @Bind(SHOWING)
+    private final BooleanProperty showingProperty = new SimpleBooleanProperty();
+
     private final ReentrantLock lock = new ReentrantLock();
+
+    @Inject
+    private Saft saft;
+
+    @Inject
+    private RemoteDl remote;
 
     private CheckBoxTableNoteModel<Equipment> equipmentModel = new CheckBoxTableNoteModel(Arrays.asList(Equipment.class.getEnumConstants()), "Ausstattung");
 
@@ -258,14 +302,10 @@ public class UnitView extends javax.swing.JDialog implements Consumer<UnitView.I
         }
     };
 
-    public UnitView(Window window) {
-        super(window);
+    public UnitView() {
         initComponents();
-        setModalityType(ModalityType.APPLICATION_MODAL);
-        setLocationRelativeTo(window);
         this.model = new UnitModel();
 
-        UiCore.global().locationStorage().loadLocation(this.getClass(), this);
         // Setting the change also in the subcomponent. FocusListener does not work completely.
         mfgDateChooser.addPropertyChangeListener(mfgProperty);
         mfgDateChooser.getDateEditor().getUiComponent().addPropertyChangeListener(mfgProperty);
@@ -469,23 +509,29 @@ public class UnitView extends javax.swing.JDialog implements Consumer<UnitView.I
     }
 
     private void createOrEditPart(String partNo) throws UserInfoException {
-        UiProductSupport.createOrEditPart(model.getMode(), partNo, this);
+        UiProductSupport.createOrEditPart(model.getMode(), partNo, of(this));
         validatePartNoAndLoadDetails();
     }
 
+    // TODO: Wird das überhaupt verwendet ?
     private void editRefurbishedId(String refurbishId) {
-        String newRefurbishId = JOptionPane.showInputDialog(this, "SopoNr:", refurbishId);
-        if ( newRefurbishId == null ) return;
-        // TODO: Push this through the Validation Chain.
-        newRefurbishId = newRefurbishId.trim();
-        if ( newRefurbishId.equals("") ) return;
-        if ( newRefurbishId.equals(refurbishId) ) return;
-        if ( Dl.remote().lookup(UnitSupporter.class).isRefurbishIdAvailable(refurbishId) ) {
-            model.getMetaUnit().getRefurbishId().setValue(refurbishId);
-            updateMetaUnit();
-        } else {
-            JOptionPane.showMessageDialog(this, "SopoNr nicht verfügbar", "Fehler", JOptionPane.ERROR_MESSAGE);
-        }
+        saft.build(this).title("SopoNr bearbeiten").dialog()
+                .eval(() -> {
+                    TextInputDialog dialog = new TextInputDialog(refurbishId);
+                    dialog.setContentText("SopoNr:");
+                    return dialog;
+                }).cf()
+                .thenAccept((String id) -> {
+                    // TODO: Push this through the Validation Chain.
+                    var tid = id.trim();
+                    if ( tid.equals("") || tid.equals(refurbishId) ) throw new CancellationException("refurbishid is empty or unchanege");
+                    if ( remote.lookup(UnitSupporter.class).isRefurbishIdAvailable(tid) ) {
+                        model.getMetaUnit().getRefurbishId().setValue(tid);
+                        updateMetaUnit();
+                    } else {
+                        saft.build(this).alert().message("SopoNr nicht verfügbar").show(AlertType.ERROR);
+                    }
+                }).handle(saft.handler(this));
     }
 
     private void validateRefurbishedId() {
@@ -661,10 +707,6 @@ public class UnitView extends javax.swing.JDialog implements Consumer<UnitView.I
             warrantyTillChooser.setDate(model.getMetaUnit().getWarrentyTill());
     }
 
-    private void setCancel(boolean cancel) {
-        this.cancel = cancel;
-    }
-
     /**
      * Updates the Product and the Description from the Model;
      */
@@ -731,14 +773,7 @@ public class UnitView extends javax.swing.JDialog implements Consumer<UnitView.I
         operationButtonPanel = new javax.swing.JPanel();
         cancelButton = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Gerät bearbeiten/aufnehmen");
         setMinimumSize(new java.awt.Dimension(1080, 700));
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
-            }
-        });
 
         unitWritePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED, new java.awt.Color(204, 204, 255), new java.awt.Color(51, 51, 51))));
         unitWritePanel.setMinimumSize(new java.awt.Dimension(500, 400));
@@ -1046,8 +1081,8 @@ public class UnitView extends javax.swing.JDialog implements Consumer<UnitView.I
             }
         });
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
@@ -1073,20 +1108,14 @@ public class UnitView extends javax.swing.JDialog implements Consumer<UnitView.I
                         .addComponent(cancelButton)
                         .addContainerGap())))
         );
-
-        pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        this.setVisible(false);
+        showingProperty.set(false);
     }//GEN-LAST:event_cancelButtonActionPerformed
 
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        UiCore.global().locationStorage().storeLocation(this.getClass(), this);
-    }//GEN-LAST:event_formWindowClosing
-
     private void messagesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_messagesButtonActionPerformed
-        JOptionPane.showMessageDialog(this, lastMessage);
+        saft.build(this).alert(lastMessage);
     }//GEN-LAST:event_messagesButtonActionPerformed
 
     private void contractorBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contractorBoxActionPerformed
