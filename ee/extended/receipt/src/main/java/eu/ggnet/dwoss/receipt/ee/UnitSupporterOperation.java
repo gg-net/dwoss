@@ -61,7 +61,7 @@ public class UnitSupporterOperation implements UnitSupporter {
     @Override
     public boolean isRefurbishIdAvailable(String refurbishId) {
         UniqueUnit uniqueUnit = new UniqueUnitEao(uuEm).findByIdentifier(UniqueUnit.Identifier.REFURBISHED_ID, refurbishId);
-        return uniqueUnit != null;
+        return uniqueUnit == null;
     }
 
     @Override
