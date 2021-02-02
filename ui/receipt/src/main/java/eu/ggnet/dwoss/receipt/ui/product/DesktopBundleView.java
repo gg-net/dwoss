@@ -21,24 +21,23 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.swing.IPreClose;
 import eu.ggnet.dwoss.mandator.api.Mandators;
 import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
 import eu.ggnet.dwoss.receipt.ui.UiProductSupport;
-import eu.ggnet.dwoss.receipt.ui.unit.model.UnitModel;
 import eu.ggnet.dwoss.receipt.ui.unit.chain.ChainLink;
 import eu.ggnet.dwoss.receipt.ui.unit.chain.Chains;
 import eu.ggnet.dwoss.receipt.ui.unit.chain.partno.ProductSpecMatches;
+import eu.ggnet.dwoss.receipt.ui.unit.model.MetaValue;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.entity.DesktopBundle;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
 import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
-import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.dwoss.core.widget.Dl;
-import eu.ggnet.dwoss.receipt.ui.unit.model.MetaValue;
 import eu.ggnet.saft.core.Ui;
 
 /**
@@ -111,7 +110,7 @@ public class DesktopBundleView extends AbstractView<DesktopBundle> implements IP
     public DesktopBundle getSpec() {
         return spec;
     }
-    
+
     private void updateActions() {
         // TODO: Disable/Enable the OK Button based on the Validation.
     }
@@ -303,7 +302,7 @@ public class DesktopBundleView extends AbstractView<DesktopBundle> implements IP
     private void desktopEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_desktopEditButtonActionPerformed
         try {
             partNo1.setValue(desktopPartNoField.getText());
-            productSupport.createOrEditPart(mustBrand.getManufacturer(), partNo1.getValue(), mustBrand, mustGroup1, parent);
+            UiProductSupport.createOrEditPart(new SimpleView.CreateOrEdit(mustBrand.getManufacturer(), partNo1.getValue(), new SimpleView.Enforce(mustBrand, mustGroup1)), parent);
             validateAndUpdateDesktop();
         } catch (UserInfoException ex) {
             Ui.handle(ex);
@@ -313,7 +312,7 @@ public class DesktopBundleView extends AbstractView<DesktopBundle> implements IP
     private void monitorEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_monitorEditButtonActionPerformed
         try {
             partNo2.setValue(monitorPartNoField.getText());
-            productSupport.createOrEditPart(mustBrand.getManufacturer(), partNo2.getValue(), mustBrand, mustGroup2, parent);
+            UiProductSupport.createOrEditPart(new SimpleView.CreateOrEdit(mustBrand.getManufacturer(), partNo2.getValue(), new SimpleView.Enforce(mustBrand, mustGroup2)), parent);
             validateAndUpdateMonitor();
         } catch (UserInfoException ex) {
             Ui.handle(ex);

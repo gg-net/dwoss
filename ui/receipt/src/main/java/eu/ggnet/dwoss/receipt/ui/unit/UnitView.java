@@ -49,6 +49,7 @@ import eu.ggnet.dwoss.core.widget.swing.NamedEnumCellRenderer;
 import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.receipt.ee.UnitSupporter;
 import eu.ggnet.dwoss.receipt.ui.*;
+import eu.ggnet.dwoss.receipt.ui.product.SimpleView;
 import eu.ggnet.dwoss.receipt.ui.unit.chain.ChainLink;
 import eu.ggnet.dwoss.receipt.ui.unit.chain.ChainLink.Result;
 import eu.ggnet.dwoss.receipt.ui.unit.chain.Chains;
@@ -506,11 +507,6 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
                 action.setEnabled(enabled);
             }
         });
-    }
-
-    private void createOrEditPart(String partNo) throws UserInfoException {
-        UiProductSupport.createOrEditPart(model.getMode(), partNo, of(this));
-        validatePartNoAndLoadDetails();
     }
 
     // TODO: Wird das überhaupt verwendet ?
@@ -1164,7 +1160,8 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
 
     private void editProductButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editProductButtonActionPerformed
         try {
-            createOrEditPart(partNoField.getText());
+            UiProductSupport.createOrEditPart(new SimpleView.CreateOrEdit(model.getMode(), partNoField.getText()), of(this));
+            validatePartNoAndLoadDetails();
         } catch (UserInfoException ex) {
             Ui.handle(ex);
         }

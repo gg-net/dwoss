@@ -97,6 +97,10 @@ public class ProductProcessorStub implements ProductProcessor {
 
     public String editAbleRefurbishId;
 
+    public final String editAbleProductPartNo;
+
+    public final TradeName editAbleProductManufacturer;
+
     public ProductProcessorStub() {
         cpus = new ArrayList<>();
         cpus.add(new Cpu(Cpu.Series.ATHLON, EnumSet.of(Cpu.Type.MOBILE), "A123"));
@@ -307,6 +311,8 @@ public class ProductProcessorStub implements ProductProcessor {
 
         specs.put(allInOne.getPartNo(), allInOne);
 
+        editAbleProductPartNo = notebook.getPartNo();
+        editAbleProductManufacturer = notebook.getModel().getFamily().getSeries().getBrand().getManufacturer();
         // Stock
         shipments = new ArrayList<>();
         for (int i = 0; i < 30; i++) {
@@ -334,7 +340,6 @@ public class ProductProcessorStub implements ProductProcessor {
         stockUnits = new ArrayList<>();
 
         for (ProductSpec spec : specs.values()) {
-            System.out.println(spec.getPartNo());
             Product p = new Product(
                     spec.getModel().getFamily().getSeries().getGroup(),
                     spec.getModel().getFamily().getSeries().getBrand(),

@@ -22,11 +22,10 @@ import javafx.scene.control.TextInputDialog;
 
 import eu.ggnet.dwoss.core.widget.AccessableAction;
 import eu.ggnet.dwoss.core.widget.Dl;
-import eu.ggnet.dwoss.core.widget.saft.Failure;
-import eu.ggnet.dwoss.core.widget.saft.ReplyUtil;
+import eu.ggnet.dwoss.core.widget.saft.*;
 import eu.ggnet.dwoss.receipt.ui.UiProductSupport;
+import eu.ggnet.dwoss.receipt.ui.product.SimpleView;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
-import eu.ggnet.dwoss.core.widget.saft.Reply;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.UiCore;
 
@@ -54,7 +53,7 @@ public class UpdateProductAction extends AccessableAction {
                     .map(s -> ReplyUtil.wrap(() -> Dl.remote().lookup(UniqueUnitAgent.class).findProductByPartNo(s)))
                     .filter(Failure::handle)
                     .map(Reply::getPayload)
-                    .map(p -> ReplyUtil.wrap(() -> UiProductSupport.createOrEditPart(p.getTradeName().getManufacturer(), p.getPartNo(), UiCore.getMainFrame())))
+                    .map(p -> ReplyUtil.wrap(() -> UiProductSupport.createOrEditPart(new SimpleView.CreateOrEdit(p.getTradeName().getManufacturer(), p.getPartNo()), UiCore.getMainFrame())))
                     .filter(Failure::handle);
         });
     }
