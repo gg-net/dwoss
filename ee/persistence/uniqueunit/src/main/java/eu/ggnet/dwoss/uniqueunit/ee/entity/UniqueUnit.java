@@ -16,11 +16,6 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ee.entity;
 
-import eu.ggnet.dwoss.core.common.values.SalesChannel;
-import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
-import eu.ggnet.dwoss.core.common.values.Warranty;
-import eu.ggnet.dwoss.core.common.values.ProductGroup;
-
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.*;
@@ -31,11 +26,14 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
 import eu.ggnet.dwoss.core.common.INoteModel;
-import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
-import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
+import eu.ggnet.dwoss.core.common.values.*;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.system.persistence.EagerAble;
 import eu.ggnet.dwoss.core.system.util.TwoDigits;
 import eu.ggnet.dwoss.core.system.util.Utils;
-import eu.ggnet.dwoss.core.system.persistence.EagerAble;
+import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
+import eu.ggnet.dwoss.uniqueunit.api.SimpleUniqueUnit;
+import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
 
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Equipment.*;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.REFURBISHED_ID;
@@ -145,7 +143,7 @@ public class UniqueUnit implements Serializable, EagerAble {
         public String getNote() {
             return note;
         }
-        
+
         public static Set<Equipment> getEquipments() {
             return getEquipments(null);
         }
@@ -266,7 +264,7 @@ public class UniqueUnit implements Serializable, EagerAble {
         public String getNote() {
             return note;
         }
-        
+
     }
 
     /**
@@ -320,7 +318,7 @@ public class UniqueUnit implements Serializable, EagerAble {
         public String getNote() {
             return note;
         }
-                
+
     }
 
     /**
@@ -423,138 +421,138 @@ public class UniqueUnit implements Serializable, EagerAble {
     private SalesChannel salesChannel = SalesChannel.UNKNOWN;
 
     public UniqueUnit() {
-    }    
+    }
 
     //<editor-fold defaultstate="collapsed" desc="getter/setter">
     public int getId() {
         return id;
     }
-    
+
     public short getOptLock() {
         return optLock;
     }
-    
+
     public Date getInputDate() {
         return inputDate;
     }
-    
+
     public void setInputDate(Date inputDate) {
         this.inputDate = inputDate;
     }
-    
+
     public Warranty getWarranty() {
         return warranty;
     }
-    
+
     public void setWarranty(Warranty warranty) {
         this.warranty = warranty;
     }
-    
+
     public Date getWarrentyValid() {
         return warrentyValid;
     }
-    
+
     public void setWarrentyValid(Date warrentyValid) {
         this.warrentyValid = warrentyValid;
     }
-    
+
     public SalesChannel getSalesChannel() {
         return salesChannel;
     }
-    
+
     public void setSalesChannel(SalesChannel salesChannel) {
         this.salesChannel = salesChannel;
     }
-    
+
     public Condition getCondition() {
         return condition;
     }
-    
+
     public void setCondition(Condition condition) {
         this.condition = condition;
     }
-    
+
     public TradeName getContractor() {
         return contractor;
     }
-    
+
     public void setContractor(TradeName contractor) {
         this.contractor = contractor;
     }
-    
+
     public Date getMfgDate() {
         return mfgDate;
     }
-    
+
     public void setMfgDate(Date mfgDate) {
         this.mfgDate = mfgDate;
     }
-    
+
     public String getComment() {
         return comment;
     }
-    
+
     public void setComment(String comment) {
         this.comment = comment;
     }
-    
+
     public String getInternalComment() {
         return internalComment;
     }
-    
+
     public void setInternalComment(String internalComment) {
         this.internalComment = internalComment;
     }
-    
+
     public long getShipmentId() {
         return shipmentId;
     }
-    
+
     public void setShipmentId(long shipmentId) {
         this.shipmentId = shipmentId;
     }
-    
+
     public Set<Equipment> getEquipments() {
         return equipments;
     }
-    
+
     public void setEquipments(Set<Equipment> equipments) {
         this.equipments = equipments;
     }
-    
+
     public Set<Flag> getFlags() {
         return flags;
     }
-    
+
     public void setFlags(Set<Flag> flags) {
         this.flags = flags;
     }
-    
+
     public Set<StaticComment> getComments() {
         return comments;
     }
-    
+
     public void setComments(Set<StaticComment> comments) {
         this.comments = comments;
     }
-    
+
     public Set<StaticInternalComment> getInternalComments() {
         return internalComments;
     }
-    
+
     public void setInternalComments(Set<StaticInternalComment> internalComments) {
         this.internalComments = internalComments;
     }
-    
+
     public Product getProduct() {
         return product;
     }
-    
+
     public String getShipmentLabel() {
         return shipmentLabel;
     }
     //</editor-fold>
-    
+
     public void setPrice(PriceType type, double price, String comment) {
         price = TwoDigits.round(price);
         if ( TwoDigits.equals(getPrice(type), price) ) {
@@ -715,6 +713,17 @@ public class UniqueUnit implements Serializable, EagerAble {
                 + ", contractor=" + contractor + ", mfgDate=" + formatedMfgDate + ", shipmentId=" + shipmentId + ", shipmentLabel=" + shipmentLabel
                 + ", salesChannel=" + getPrices() + ", inputDate=" + formatedInputDate + ", warranty=" + warranty + ", comment=" + comment
                 + ", internalComment=" + internalComment + '}';
+    }
+
+    public SimpleUniqueUnit toSimple() {
+        return new eu.ggnet.dwoss.uniqueunit.api.SimpleUniqueUnit.Builder()
+                .id(id)
+                .productId(product.getId())
+                .refurbishedId(getRefurbishId())
+                .contractor(getContractor())
+                .shortDescription(UniqueUnitFormater.toPositionName(this))
+                .detailedDiscription(UniqueUnitFormater.toDetailedDiscriptionLine(this))
+                .build();
     }
 
     // TODO: Remove and extend BaseEntity if DWOSS-323 is solved

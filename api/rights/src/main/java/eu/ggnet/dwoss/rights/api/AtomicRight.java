@@ -162,7 +162,7 @@ public enum AtomicRight {
     /**
      * Allows to delete a UniqueUnit.
      */
-    DELETE_UNIQUE_UNIT("Gerät Löschen"),
+    DELETE_UNIT("Gerät(e) löschen"),
     /**
      * Allows to do anything with Shipment.
      */
@@ -174,7 +174,7 @@ public enum AtomicRight {
     /**
      * Allows to Update a Unique Unit to make it a Scrap Unique Unit.
      */
-    UPDATE_UNIQUE_UNIT_TO_SCRAP_UNIT("Gerät verschrotten"),
+    SCRAP_UNIT("Gerät(e) verschrotten"),
     /**
      * Allow to Create or Update of a Product.
      */

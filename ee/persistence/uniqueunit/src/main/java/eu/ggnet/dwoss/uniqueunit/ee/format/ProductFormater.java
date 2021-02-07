@@ -37,12 +37,12 @@ public class ProductFormater {
      */
     public static String toNameWithPartNo(Product product) {
         if ( product == null ) return "ProductSpecification ist null";
-        return product.getTradeName().getName() + " " + product.getName() + " (" + product.getPartNo() + ")";
+        return product.getTradeName().getDescription() + " " + product.getName() + " (" + product.getPartNo() + ")";
     }
 
     public static String toName(Product product) {
         if ( product == null ) return "ProductSpecification ist null";
-        return product.getTradeName().getName() + " " + product.getName();
+        return product.getTradeName().getDescription() + " " + product.getName();
     }
 
     public static String toDetailedName(Product product) {

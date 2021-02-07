@@ -28,7 +28,7 @@ import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenDependencies;
 
 import eu.ggnet.dwoss.mandator.sample.datasource.SampleDataSourceDefinition;
-import eu.ggnet.dwoss.receipt.ee.UnitDestroyer;
+import eu.ggnet.dwoss.receipt.ee.UnitProcessor;
 import eu.ggnet.dwoss.receipt.itest.ReceiptGeneratorOperationIT;
 
 import static org.jboss.shrinkwrap.api.Filters.exclude;
@@ -44,8 +44,8 @@ public class ArquillianProjectArchive {
     @Deployment
     public static WebArchive createDeployment() {
         // Compile Safe Packages.
-        Package projectPackage = UnitDestroyer.class.getPackage();
-        Package itestPackage = ReceiptGeneratorOperationIT.class.getPackage();
+        Package receipt_ee = UnitProcessor.class.getPackage();
+        Package receipt_itest = ReceiptGeneratorOperationIT.class.getPackage();
 
         File[] libs = Maven.resolver()
                 .loadPomFromFile("pom.xml")
@@ -55,7 +55,7 @@ public class ArquillianProjectArchive {
                 .addDependency(MavenDependencies.createDependency("org.assertj:assertj-core", RUNTIME, false)) // AssertJ Fluent Assertions
                 .resolve().withTransitivity().asFile();
         WebArchive war = ShrinkWrap.create(WebArchive.class, "receipt-persistence-test.war")
-                .addPackages(true, exclude(itestPackage), projectPackage)
+                .addPackages(true, exclude(receipt_itest), receipt_ee)
                 .addClass(Coordinate.class) // Need this cause of the maven resolver is part of the deployment
                 .addClass(ArquillianProjectArchive.class) // The local deployer configuration
                 .addClass(SampleDataSourceDefinition.class) // Alle Datasources. More than we need.

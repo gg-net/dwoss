@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.redtape.itest.stub;
 
+import java.util.List;
+
 import eu.ggnet.dwoss.uniqueunit.api.SimpleUniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApiLocal;
 
@@ -28,6 +30,16 @@ public class UniqueUnitApiLocalStub implements UniqueUnitApiLocal {
     @Override
     public SimpleUniqueUnit findByRefurbishedId(String refurbishId) {
         return null;
+    }
+
+    @Override
+    public SimpleUniqueUnit findById(long uniqueUnitId) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<SimpleUniqueUnit> findByIds(List<Long> uniqueUnitIds) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

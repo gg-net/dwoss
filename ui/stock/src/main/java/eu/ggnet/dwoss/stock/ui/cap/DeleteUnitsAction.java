@@ -35,7 +35,7 @@ import eu.ggnet.dwoss.stock.ui.ScrapResultController;
 import eu.ggnet.saft.core.Saft;
 import eu.ggnet.saft.core.UiUtil;
 
-import static eu.ggnet.dwoss.rights.api.AtomicRight.DELETE_UNIQUE_UNIT;
+import static eu.ggnet.dwoss.rights.api.AtomicRight.DELETE_UNIT;
 
 /**
  * Scraps multiple units.
@@ -54,7 +54,7 @@ public class DeleteUnitsAction extends AccessableAction {
     private Guardian guardian;
 
     public DeleteUnitsAction() {
-        super(DELETE_UNIQUE_UNIT);
+        super(DELETE_UNIT);
     }
 
     @Override

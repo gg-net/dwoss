@@ -29,8 +29,9 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.core.system.util.Utils;
+import eu.ggnet.dwoss.stock.api.SimpleStockUnit;
+import eu.ggnet.dwoss.stock.api.StockApi;
 import eu.ggnet.dwoss.stock.api.StockApi.Scraped;
-import eu.ggnet.dwoss.stock.api.*;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.emo.StockTransactionEmo;
@@ -53,9 +54,6 @@ public class StockApiScrapDeleteIT extends ArquillianProjectArchive {
     @Inject
     @Stocks
     private EntityManager em;
-
-    @Inject
-    private StockApiLocal localApi;
 
     @Inject
     private StockEventObserver observer;

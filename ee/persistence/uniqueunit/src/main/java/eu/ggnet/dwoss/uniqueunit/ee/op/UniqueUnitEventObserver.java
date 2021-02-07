@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,10 +24,15 @@ import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.stock.api.event.DeleteEvent;
+import eu.ggnet.dwoss.stock.api.event.ScrapEvent;
 import eu.ggnet.dwoss.uniqueunit.api.event.SalesChannelChange;
 import eu.ggnet.dwoss.uniqueunit.api.event.UnitHistory;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
+import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
+
+import static eu.ggnet.dwoss.core.common.values.SalesChannel.UNKNOWN;
 
 /**
  * Listener for Events targeting UniqueUnits.
@@ -35,13 +40,16 @@ import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
  * @author oliver.guenther
  */
 @Stateless
-public class UnitListenerOperation {
+public class UniqueUnitEventObserver {
 
-    private final static Logger L = LoggerFactory.getLogger(UnitListenerOperation.class);
+    private final static Logger L = LoggerFactory.getLogger(UniqueUnitEventObserver.class);
 
     @Inject
     @UniqueUnits
     private EntityManager em;
+
+    @Inject
+    private UniqueUnitEao uueao;
 
     /**
      * Listens for UnitHistoies.
@@ -66,4 +74,29 @@ public class UnitListenerOperation {
         if ( uu != null ) uu.setSalesChannel(change.newChannel());
         else L.warn("No UniqueUnit for Event " + change);
     }
+
+    public void onScrap(@Observes ScrapEvent event) {
+        L.debug("onScrap({})", event);
+        for (long uniqueUnitId : event.uniqueUnitIds()) {
+            UniqueUnit uu = uueao.findById((int)uniqueUnitId);
+            if ( uu != null ) {
+                uu.addHistory("Verschrottung auf Grund " + event.comment() + " durch " + event.arranger());
+                uu.setInternalComment(uu.getInternalComment() + ", verschrottet");
+                uu.setSalesChannel(UNKNOWN);
+            }
+        }
+    }
+
+    public void onDelete(@Observes DeleteEvent event) {
+        L.debug("onDelete({})", event);
+        for (long uniqueUnitId : event.uniqueUnitIds()) {
+            UniqueUnit uu = uueao.findById((int)uniqueUnitId);
+            if ( uu != null ) {
+                uu.addHistory("Löschung auf Grund " + event.comment() + " durch " + event.arranger());
+                uu.setInternalComment(uu.getInternalComment() + ", geloscht");
+                uu.setSalesChannel(UNKNOWN);
+            }
+        }
+    }
+
 }

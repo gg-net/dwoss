@@ -16,16 +16,18 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ee;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import eu.ggnet.dwoss.uniqueunit.api.SimpleUniqueUnit;
-import eu.ggnet.dwoss.uniqueunit.api.SimpleUniqueUnit.Builder;
 import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApiLocal;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier;
-import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
 
 /**
  * Local Api implementation.
@@ -40,18 +42,25 @@ public class UniqueUnitApiLocalBean implements UniqueUnitApiLocal {
 
     @Override
     public SimpleUniqueUnit findByRefurbishedId(String refurbishId) {
-        Builder suBuilder = new SimpleUniqueUnit.Builder();
         UniqueUnit uu = eao.findByIdentifier(Identifier.REFURBISHED_ID, refurbishId);
-        if ( uu == null ) {
-            uu = eao.findByRefurbishedIdInHistory(refurbishId);
-            suBuilder.lastRefurbishId(refurbishId);
-        }
-        if ( uu == null ) return null;
-        return suBuilder
-                .id(uu.getId())
-                .refurbishedId(uu.getRefurbishId())
-                .shortDescription(UniqueUnitFormater.toPositionName(uu))
-                .build();
+        if ( uu != null ) return uu.toSimple();
+        uu = eao.findByRefurbishedIdInHistory(refurbishId);
+        if ( uu != null ) return new SimpleUniqueUnit.Builder().mergeFrom(uu.toSimple()).lastRefurbishId(refurbishId).build();
+        return null;
+    }
+
+    @Override
+    public SimpleUniqueUnit findById(long uniqueUnitId) {
+        UniqueUnit uu = eao.findById((int)uniqueUnitId);
+        if ( uu != null ) return uu.toSimple();
+        return null;
+    }
+
+    @Override
+    public List<SimpleUniqueUnit> findByIds(List<Long> uniqueUnitIds) {
+        if ( uniqueUnitIds == null || uniqueUnitIds.isEmpty() ) return Collections.emptyList();
+        return eao.findByIds(uniqueUnitIds.stream().mapToInt(l -> l.intValue()).boxed().collect(Collectors.toList()))
+                .stream().map(UniqueUnit::toSimple).collect(Collectors.toList());
     }
 
 }

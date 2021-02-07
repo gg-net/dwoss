@@ -35,7 +35,7 @@ import eu.ggnet.dwoss.stock.ui.ScrapResultController;
 import eu.ggnet.saft.core.Saft;
 import eu.ggnet.saft.core.UiUtil;
 
-import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_UNIQUE_UNIT_TO_SCRAP_UNIT;
+import static eu.ggnet.dwoss.rights.api.AtomicRight.SCRAP_UNIT;
 
 /**
  * Scraps multiple units.
@@ -54,7 +54,7 @@ public class ScrapUnitsAction extends AccessableAction {
     private Guardian guardian;
 
     public ScrapUnitsAction() {
-        super(UPDATE_UNIQUE_UNIT_TO_SCRAP_UNIT);
+        super(SCRAP_UNIT);
     }
 
     @Override

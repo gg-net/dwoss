@@ -19,27 +19,36 @@ package eu.ggnet.dwoss.redtape.ee.emo;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
+import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.PaymentMethod;
+import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.eao.DocumentEao;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
-import eu.ggnet.dwoss.core.common.values.DocumentType;
-import eu.ggnet.dwoss.core.common.values.PaymentMethod;
 
 /**
  * Entity Manipulation Object for Dossier.
  *
  * @author oliver.guenther
  */
+@Stateless
 public class DossierEmo {
 
     private final static NumberFormat _00000_ = new DecimalFormat("00000");
 
+    @Inject
+    @RedTapes
     private EntityManager em;
 
     public DossierEmo(EntityManager em) {
         this.em = em;
+    }
+
+    public DossierEmo() {
     }
 
     /**
