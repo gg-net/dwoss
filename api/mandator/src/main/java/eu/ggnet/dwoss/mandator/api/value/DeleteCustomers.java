@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,13 +22,14 @@ import java.util.Optional;
 
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 
-
 /**
  * Contains SystemCustomers which are used for the delete operation based on the Contractor.
  * <p>
  * @author oliver.guenther
+ * @deprecated As of 2021, delete units will not have corresponding redtape dossier. don'T need that.
  */
-public class DeleteCustomers  implements Serializable{
+@Deprecated
+public class DeleteCustomers implements Serializable {
 
     private final Map<TradeName, Long> contractorCustomers;
 

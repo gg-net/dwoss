@@ -16,6 +16,7 @@
  */
 package eu.ggnet.dwoss.stock.api;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +25,8 @@ import javax.ejb.Remote;
 import org.inferred.freebuilder.FreeBuilder;
 
 import eu.ggnet.dwoss.core.common.UserInfoException;
+import eu.ggnet.dwoss.stock.api.event.DeleteEvent;
+import eu.ggnet.dwoss.stock.api.event.ScrapEvent;
 
 /**
  * Stock Api.
@@ -34,10 +37,17 @@ import eu.ggnet.dwoss.core.common.UserInfoException;
 public interface StockApi {
 
     @FreeBuilder
-    public static interface Scraped {
+    public static interface Scraped extends Serializable {
 
         class Builder extends StockApi_Scraped_Builder {
         }
+
+        /**
+         * A uniqueunit id if one was found, otherwise 0.
+         *
+         * @return uniqueunit id if one was found, otherwise 0.
+         */
+        long uniqueUnitId();
 
         /**
          * Retruns a description of the scraped unit.
@@ -107,7 +117,9 @@ public interface StockApi {
      * <li>StockUnit is not on a StockTransaction
      * <li>StockUnit is not on a LogicTransaction
      * </ul>
+     * Fires an {@link ScrapEvent} with all successful scraped units.
      *
+     * @see ScrapEvent
      * @param stockUnitIds a list of stockUnitids, must not be null.
      * @param reason       a reason for the scrap, must not be blank.
      * @param arranger     a reason for the scrap, must not be blank.
@@ -120,7 +132,9 @@ public interface StockApi {
     /**
      * Deleting units identifiered by the supplied stockUnitIds.
      * Same rules as in {@link StockApi#scrap(java.util.List, java.lang.String, java.lang.String) }, but no Dossier will be created.
+     * Fires an {@link DeleteEvent} with all successful scraped units.
      *
+     * @see DeleteEvent
      * @param stockUnitIds a list stockids, must not be null.
      * @param reason       a reason for the scrap, must not be blank.
      * @param arranger     a reason for the scrap, must not be blank.
