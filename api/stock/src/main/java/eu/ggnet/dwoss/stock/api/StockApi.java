@@ -17,8 +17,11 @@
 package eu.ggnet.dwoss.stock.api;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.Remote;
+
+import org.inferred.freebuilder.FreeBuilder;
 
 import eu.ggnet.dwoss.core.common.UserInfoException;
 
@@ -29,6 +32,34 @@ import eu.ggnet.dwoss.core.common.UserInfoException;
  */
 @Remote
 public interface StockApi {
+
+    @FreeBuilder
+    public static interface Scraped {
+
+        class Builder extends StockApi_Scraped_Builder {
+        }
+
+        /**
+         * Retruns a description of the scraped unit.
+         *
+         * @return a description of the scraped unit.
+         */
+        String description();
+
+        /**
+         * Returns true if scraped was successful.
+         *
+         * @return true if scraped was successful.
+         */
+        boolean successful();
+
+        /**
+         * Returns a comment, may be blank but never null.
+         *
+         * @return a comment, may be blank but never null.
+         */
+        String comment();
+    }
 
     /**
      * Returns all available stocks.
@@ -44,6 +75,55 @@ public interface StockApi {
      * @return a stock unit or null if none.
      */
     SimpleStockUnit findByUniqueUnitId(long uniqueUnitId);
+
+    /**
+     * Returns a stock unit based on the refurbish id.
+     *
+     * @param refurbishId the refurbish id
+     * @return a stockunit or null if none.
+     */
+    SimpleStockUnit findByRefurbishId(String refurbishId);
+
+    /**
+     * Returns a map with the assosiated simple stock units to the supplied refurbishids.
+     * All errors or missmatches are handled:
+     * <ul>
+     * <li>if the supplied param is null, an empty map is returned
+     * <li>if the list contains a null element, the map will contain a null elemet as key
+     * <li>if a refurbishid does not match a unit, the value in the map will be null
+     * </ul>
+     *
+     * @param refurbishIds the refurbishids.
+     * @return a map with the assosiated simple stock units to the supplied refurbishids, never null.
+     */
+    Map<String, SimpleStockUnit> findByRefurbishIds(List<String> refurbishIds);
+
+    /**
+     * Scrapping units identifiered by the supplied stockUnitIds.
+     * The units wont be available for sale after that action. There will be a comment in the unique unit and a dossier representing the scrap.
+     *
+     * @param stockUnitIds a list stockids, must not be null.
+     * @param reason       a reason for the scrap, must not be blank.
+     * @param arranger     a reason for the scrap, must not be blank.
+     * @return result of the scrapping.
+     * @throws UserInfoException    if reason or arranger is blank.
+     * @throws NullPointerException if reason or arranger is blank.
+     */
+    List<Scraped> scrap(List<Long> stockUnitIds, String reason, String arranger) throws NullPointerException, UserInfoException;
+
+    /**
+     * Deleting units identifiered by the supplied stockUnitIds.
+     * This is for the very seldom case, that a unit was added to the system wrongfully.
+     * The units wont be available for sale after that action. There will be a comment in the unique unit.
+     *
+     * @param stockUnitIds a list stockids, must not be null.
+     * @param reason       a reason for the scrap, must not be blank.
+     * @param arranger     a reason for the scrap, must not be blank.
+     * @return result of the scrapping.
+     * @throws UserInfoException    if reason or arranger is blank.
+     * @throws NullPointerException if reason or arranger is blank.
+     */
+    List<Scraped> delete(List<Long> stockUnitIds, String reason, String arranger) throws NullPointerException, UserInfoException;
 
     /**
      * Prepares the transfer of multiple units.

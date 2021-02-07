@@ -58,14 +58,14 @@ public class UiProductSupport {
         simpleDialog.setVisible(true);
         if ( simpleDialog.isCancel() ) return null;
         ProductSpec spec = simpleView.getProductSpec();
-        if ( simpleView.isEdit() ) spec = Dl.remote().lookup(ProductProcessor.class).refresh(spec, simpleView.getSelectedModel().get());
+        if ( simpleView.isEdit() ) spec = Dl.remote().lookup(ProductProcessor.class).refresh(spec, simpleView.getSelectedModel().get()); // Sollte in Simpleview passieren
         AbstractView productView = AbstractView.newView(spec, simpleView.getSelectedModel().get().getFamily().getSeries().getBrand());
-        if ( simpleView.isEdit() ) productView.setGtin(Dl.remote().lookup(UniqueUnitAgent.class).findById(Product.class, spec.getProductId()).getGtin());
+        if ( simpleView.isEdit() ) productView.setGtin(Dl.remote().lookup(UniqueUnitAgent.class).findById(Product.class, spec.getProductId()).getGtin()); // Sollte im accept passieren.
         OkCancelDialog productDialog = new OkCancelDialog(parent, "Artikeldetailkonfiguration", productView);
         productDialog.setVisible(true);
         if ( productDialog.isCancel() ) return null;
-        validate(simpleView.getSelectedModel().get());
-        validate(productView.getSpec());
+        validate(simpleView.getSelectedModel().get());  // preclose
+        validate(productView.getSpec());    // preclose
         if ( simpleView.isEdit() ) return Dl.remote().lookup(ProductProcessor.class).update(productView.getSpec(), productView.getGtin());
         // TODO: In Case of a Bundle autoupdate the name of the model.
         else return Dl.remote().lookup(ProductProcessor.class).create(productView.getSpec(), simpleView.getSelectedModel().get(), productView.getGtin());

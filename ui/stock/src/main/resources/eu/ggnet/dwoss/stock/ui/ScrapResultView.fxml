@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.stock.ui.ScrapResultController">
+    <top>
+        <Label text="Ergebniss der Verschrottung" BorderPane.alignment="TOP_LEFT">
+            <BorderPane.margin>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </BorderPane.margin>
+        </Label>
+    </top>
+    <center>
+        <TableView fx:id="resultTableView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <BorderPane.margin>
+                <Insets left="5.0" right="5.0" />
+            </BorderPane.margin>
+        </TableView>
+    </center>
+    <bottom>
+        <Button fx:id="closeButton" mnemonicParsing="false" text="Schließen" BorderPane.alignment="BOTTOM_RIGHT">
+            <BorderPane.margin>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </BorderPane.margin>
+        </Button>
+    </bottom>
+</BorderPane>
