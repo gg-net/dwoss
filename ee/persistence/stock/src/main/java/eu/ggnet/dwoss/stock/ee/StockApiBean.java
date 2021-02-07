@@ -75,15 +75,6 @@ public class StockApiBean implements StockApi {
     }
 
     @Override
-    public List<Scraped> scrap(List<Long> stockIds, String reason, String arranger) throws NullPointerException, UserInfoException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public List<Scraped> delete(List<Long> stockUnitIds, String reason, String arranger) throws NullPointerException, UserInfoException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public Map<String, SimpleStockUnit> findByRefurbishIds(List<String> refurbishIds) {
         if ( refurbishIds == null ) return Collections.emptyMap();
         SubMonitor m = mf.newSubMonitor("Lade Geräte via RefurbishId", refurbishIds.size() + 1);
@@ -99,4 +90,13 @@ public class StockApiBean implements StockApi {
         return result;
     }
 
+    @Override
+    public List<Scraped> scrap(List<Long> stockIds, String reason, String arranger) throws NullPointerException, UserInfoException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Scraped> delete(List<Long> stockUnitIds, String reason, String arranger) throws NullPointerException, UserInfoException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

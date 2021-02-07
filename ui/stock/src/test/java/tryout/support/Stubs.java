@@ -23,8 +23,7 @@ import java.util.stream.IntStream;
 import eu.ggnet.dwoss.stock.api.StockApi;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.StockTransactionProcessor;
-import eu.ggnet.dwoss.stock.ee.entity.Stock;
-import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
+import eu.ggnet.dwoss.stock.ee.entity.*;
 
 /**
  *
@@ -44,10 +43,10 @@ public class Stubs {
         stockUnits = IntStream.range(1, 20).mapToObj(i -> new StockUnit(R.nextInt(10000) + "", "Gerät " + i, i))
                 .map((StockUnit su) -> {
                     su.setStock(R.nextBoolean() == true ? luebeck : hamburg);
+                    su.setLogicTransaction(R.nextInt(10) >= 7 ? null : new LogicTransaction());
                     return su;
                 })
                 .collect(Collectors.toList());
-
     }
 
     public StockAgent stockAgent() {

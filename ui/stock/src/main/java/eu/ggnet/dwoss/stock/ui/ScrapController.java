@@ -93,7 +93,9 @@ public class ScrapController implements FxController, Consumer<Map<String, Simpl
                     s.append(" - ");
                     if ( item.getValue() == null ) s.append("nicht verschrottbar, kein Gerät gefunden");
                     else if ( item.getValue().stockTransaction().isPresent() )
-                        s.append("nicht verschrottbar, Gerät auf einer Transaktion/Umfuhr");
+                        s.append("nicht verschrottbar, Gerät auf einer Umfuhr oder RollIn (Stock Transaktion)");
+                    else if ( item.getValue().onLogicTransaction() )
+                        s.append("nicht verschrottbar, Gerät auf einem offenen Kundenauftrag (Logischer Transaktion)");
                     else s.append("verschrottbar");
                     setText(s.toString());
                 }
@@ -113,7 +115,12 @@ public class ScrapController implements FxController, Consumer<Map<String, Simpl
     @Override
     public void accept(Map<String, SimpleStockUnit> in) {
         unitsListView.getItems().addAll(in.entrySet());
-        resultIds = in.values().stream().filter(v -> v != null).filter(v -> v.stockTransaction().isEmpty()).map(v -> v.id()).collect(Collectors.toList());
+        resultIds = in.values().stream()
+                .filter(v -> v != null)
+                .filter(v -> v.stockTransaction().isEmpty())
+                .filter(v -> !v.onLogicTransaction())
+                .map(v -> v.id())
+                .collect(Collectors.toList());
     }
 
     @Override

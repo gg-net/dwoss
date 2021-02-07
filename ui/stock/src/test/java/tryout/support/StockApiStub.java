@@ -55,7 +55,7 @@ public class StockApiStub implements StockApi {
         if ( reason == null || reason.isBlank() ) throw new UserInfoException("reason is blank");
         if ( arranger == null || arranger.isBlank() ) throw new UserInfoException("arranger is blank");
         System.out.println("StockApiStub.delete():" + stockUnitIds);
-        return stockUnitIds.stream().map(id -> new Scraped.Builder().description("StockUnit(" + id + ")").comment("Ein Kommentar").successful(R.nextBoolean()).build()).collect(Collectors.toList());
+        return stockUnitIds.stream().map(id -> new Scraped.Builder().description("StockUnit(" + id + ")").comment("Ein Kommentar").successful(true).build()).collect(Collectors.toList());
     }
 
     @Override

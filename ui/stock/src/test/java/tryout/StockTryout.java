@@ -17,7 +17,8 @@
 package tryout;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,6 +38,7 @@ import eu.ggnet.dwoss.stock.api.StockApi;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.StockTransactionProcessor;
 import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
+import eu.ggnet.dwoss.stock.ui.ScrapResultController;
 import eu.ggnet.dwoss.stock.ui.StockUpiImpl;
 import eu.ggnet.dwoss.stock.ui.cap.*;
 import eu.ggnet.saft.core.*;
@@ -88,8 +90,8 @@ public class StockTryout {
 
         JFrame f = UiUtil.startup(() -> {
 
+            // Top
             JMenuBar menubar = new JMenuBar();
-
             JMenu stock = new JMenu("Lager/Logistik");
             menubar.add(stock);
 
@@ -97,20 +99,30 @@ public class StockTryout {
             stock.add(instance.select(ScrapUnitsAction.class).get());
             stock.add(instance.select(DeleteUnitsAction.class).get());
 
-            JButton b = new JButton("Press to close");
-            b.setPreferredSize(new Dimension(200, 50));
-            b.addActionListener(e -> {
-                saft.closeWindowOf(b);
-            });
-
+            // Center
             DefaultListModel<String> model = new DefaultListModel<>();
             model.addAll(prepareHelper(stubs));
             JList<String> list = new JList<>(model);
 
+            // Bottom
+            JButton showScrapResult = new JButton("ScrapResult anzeigen");
+            showScrapResult.addActionListener(e -> saft.build().fxml().show(() -> {
+                return Arrays.asList(
+                        new StockApi.Scraped.Builder().description("SopoNr 1234").successful(true).comment("Kommentar 1").build(),
+                        new StockApi.Scraped.Builder().description("SopoNr 3333").successful(false).comment("Kommentar 2").build()
+                );
+            }, ScrapResultController.class));
+            JButton close = new JButton("Applikation beenden");
+            close.addActionListener(e -> saft.closeWindowOf(close));
+
+            JPanel buttons = new JPanel(new FlowLayout());
+            buttons.add(showScrapResult);
+            buttons.add(close);
+
             JPanel p = new JPanel(new BorderLayout());
             p.add(menubar, BorderLayout.NORTH);
             p.add(new JScrollPane(list), BorderLayout.CENTER);
-            p.add(b, BorderLayout.SOUTH);
+            p.add(buttons, BorderLayout.SOUTH);
 
             return p;
 
@@ -120,7 +132,7 @@ public class StockTryout {
 
     public static List<String> prepareHelper(Stubs stubs) {
         return stubs.stockAgent().findAll(StockUnit.class).stream()
-                .map(su -> su.getRefurbishId())
+                .map(su -> su.getRefurbishId() + " | " + su.getStock().getName() + " | " + (su.getLogicTransaction() == null ? "" : "auf LT"))
                 .collect(Collectors.toList());
     }
 

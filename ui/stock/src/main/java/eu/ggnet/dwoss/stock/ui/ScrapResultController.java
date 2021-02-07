@@ -53,8 +53,8 @@ public class ScrapResultController implements FxController, Consumer<List<StockA
         TableColumn<StockApi.Scraped, String> descriptionColumn = new TableColumn<>("Beschreibung");
         descriptionColumn.setCellValueFactory(item -> new ReadOnlyStringWrapper(item.getValue().description()).getReadOnlyProperty());
         TableColumn<StockApi.Scraped, Boolean> successColumn = new TableColumn<>("Verschrottung erfolgreich");
-        successColumn.setCellValueFactory(item -> new ReadOnlyBooleanWrapper(item.getValue().successful()).getReadOnlyProperty());
-        successColumn.setCellFactory(p -> new CheckBoxTableCell<>());
+        successColumn.setCellValueFactory(item -> new SimpleBooleanProperty(item.getValue().successful())); // Only a R/W Property works fine with the default CheckBoxTableCell.
+        successColumn.setCellFactory(item -> new CheckBoxTableCell<>());
 
         TableColumn<StockApi.Scraped, String> commentColumn = new TableColumn<>("Kommentar");
         commentColumn.setCellValueFactory(item -> new ReadOnlyStringWrapper(item.getValue().comment()).getReadOnlyProperty());

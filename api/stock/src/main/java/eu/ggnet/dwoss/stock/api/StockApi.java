@@ -101,27 +101,32 @@ public interface StockApi {
     /**
      * Scrapping units identifiered by the supplied stockUnitIds.
      * The units wont be available for sale after that action. There will be a comment in the unique unit and a dossier representing the scrap.
+     * A unit can only be scrapped if:
+     * <ul>
+     * <li>StockUnit exists
+     * <li>StockUnit is not on a StockTransaction
+     * <li>StockUnit is not on a LogicTransaction
+     * </ul>
      *
-     * @param stockUnitIds a list stockids, must not be null.
+     * @param stockUnitIds a list of stockUnitids, must not be null.
      * @param reason       a reason for the scrap, must not be blank.
      * @param arranger     a reason for the scrap, must not be blank.
-     * @return result of the scrapping.
-     * @throws UserInfoException    if reason or arranger is blank.
-     * @throws NullPointerException if reason or arranger is blank.
+     * @return result of the scrapping, containings successful or unsuccessful scrapes.
+     * @throws UserInfoException    if reason or arranger is blank, list is empty.
+     * @throws NullPointerException if list is null.
      */
     List<Scraped> scrap(List<Long> stockUnitIds, String reason, String arranger) throws NullPointerException, UserInfoException;
 
     /**
      * Deleting units identifiered by the supplied stockUnitIds.
-     * This is for the very seldom case, that a unit was added to the system wrongfully.
-     * The units wont be available for sale after that action. There will be a comment in the unique unit.
+     * Same rules as in {@link StockApi#scrap(java.util.List, java.lang.String, java.lang.String) }, but no Dossier will be created.
      *
      * @param stockUnitIds a list stockids, must not be null.
      * @param reason       a reason for the scrap, must not be blank.
      * @param arranger     a reason for the scrap, must not be blank.
-     * @return result of the scrapping.
-     * @throws UserInfoException    if reason or arranger is blank.
-     * @throws NullPointerException if reason or arranger is blank.
+     * @return result of the deletion, containings successful or unsuccessful deletes.
+     * @throws UserInfoException    if reason or arranger is blank, list is empty.
+     * @throws NullPointerException if list is null.
      */
     List<Scraped> delete(List<Long> stockUnitIds, String reason, String arranger) throws NullPointerException, UserInfoException;
 
