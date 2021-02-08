@@ -133,7 +133,7 @@ public class Display extends BaseEntity implements Serializable {
         RETINA_DISPLAY("Retina Display", 2304, 1440),
         UWHD("UWHD", 2560, 1080),
         UWQHD("UWQHD", 3440, 1440),
-        APPLE_5K(5120, 2880),
+        APPLE_5K("5K", 5120, 2880),
         IPAD_PRO(2732, 2048),
         WVGA("WVGA", 854, 480),
         QHD_1440P("QHD", 2160, 1440),
@@ -142,9 +142,7 @@ public class Display extends BaseEntity implements Serializable {
         IPHONE_X("iPhone X", 2436, 1125),
         UNKNOWN_3(1792, 828),
         UNKNOWN_4(2688, 1242),
-        FIVE_K("5K", 5120, 2880),
-        UNKNOWN_6(1280, 960),
-        UNKNOWN_7(4096, 2304);
+        UNKNOWN_6(1280, 960);
 
         private final String description;
 
