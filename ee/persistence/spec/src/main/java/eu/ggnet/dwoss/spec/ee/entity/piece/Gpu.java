@@ -57,7 +57,7 @@ public class Gpu extends BaseEntity implements Serializable {
          * Manufacturer nVidia.
          */
         NVIDIA("nVidia", Arrays.asList(GEFORCE_ULP, GEFORCE_8000, GEFORCE_9000, GEFORCE_100, GEFORCE_200, GEFORCE_300, GEFORCE_400,
-                GEFORCE_500, GEFORCE_600, GEFORCE_700, GEFORCE_800, QUADRO_2000, QUADRO_600, GEFORCE_900, QUADRO_4000, GEFORCE_10, GEFORCE_TITAN, GEFORCE_MX)),
+                GEFORCE_500, GEFORCE_600, GEFORCE_700, GEFORCE_800, QUADRO_2000, QUADRO_600, GEFORCE_900, QUADRO_4000, GEFORCE_10, GEFORCE_TITAN, GEFORCE_MX, GEFORCE_RTX)),
         /**
          * Manufacturer Apple.
          */
@@ -128,7 +128,8 @@ public class Gpu extends BaseEntity implements Serializable {
         A8("Radeon A8"),
         GEFORCE_TITAN("GeForce Titan Series"),
         GEFORCE_10("GeForce 10 Series"),
-        GEFORCE_MX("GeForce MX Series");
+        GEFORCE_MX("GeForce MX Series"),
+        GEFORCE_RTX("GeForce RTX Series");
 
         String note;
 
