@@ -59,7 +59,7 @@ import static javafx.scene.input.MouseButton.PRIMARY;
 @Title("Suche")
 @Frame
 public class SearchCask extends BorderPane implements ClosedListener {
-    
+
     public final static String ONCE_KEY = "Search";
 
     private final Service<List<ShortSearchResult>> searchService;
@@ -181,7 +181,10 @@ public class SearchCask extends BorderPane implements ClosedListener {
 
     @Override
     public void closed() {
-        if ( searchService != null && searchService.isRunning() ) Platform.runLater(() ->  searchService.cancel());
+        if ( searchService == null ) return;
+        Platform.runLater(() -> { // The isRunning() must be called in the Fx Thread.
+            if ( searchService.isRunning() ) searchService.cancel();
+        });
     }
 
     // TODO: optional on hide: pause search
