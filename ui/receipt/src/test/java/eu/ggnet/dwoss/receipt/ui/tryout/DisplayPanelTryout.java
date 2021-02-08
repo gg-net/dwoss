@@ -18,7 +18,6 @@ package eu.ggnet.dwoss.receipt.ui.tryout;
 
 import javax.swing.UIManager;
 
-import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.core.widget.swing.CloseType;
 import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
 import eu.ggnet.dwoss.receipt.ui.product.DisplayPanel;
@@ -39,7 +38,7 @@ public class DisplayPanelTryout {
 //        display.setLed(true);
         Display display = new Display(null, null, null, null);
         System.out.println(display);
-        DisplayPanel view = new DisplayPanel(ProductGroup.TABLET_SMARTPHONE);
+        DisplayPanel view = new DisplayPanel();
         view.setDisplay(display);
         OkCancelDialog<DisplayPanel> create = new OkCancelDialog<>(" ", view);
         create.setVisible(true);

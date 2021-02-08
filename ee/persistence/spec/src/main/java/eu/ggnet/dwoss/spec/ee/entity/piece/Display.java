@@ -22,162 +22,66 @@ import java.util.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import eu.ggnet.dwoss.core.common.INoteModel;
-import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 
-import static eu.ggnet.dwoss.spec.ee.entity.piece.Display.Resolution.*;
-import static eu.ggnet.dwoss.spec.ee.entity.piece.Display.Size.*;
+import static eu.ggnet.dwoss.spec.ee.entity.piece.Display.Resolution.values;
+import static eu.ggnet.dwoss.spec.ee.entity.piece.Display.Size.values;
 
 @Entity
 @NamedQuery(name = "Display.bySizeResolutionTypeRation", query = "select d from Display d where d.size = ?1 and d.resolution = ?2 and d.type = ?3 and d.ration = ?4")
 @SuppressWarnings("PersistenceUnitPresent")
 public class Display extends BaseEntity implements Serializable {
 
-    static {
-        Map<ProductGroup, List<Size>> m = new EnumMap<>(ProductGroup.class);
-        m.put(ProductGroup.MONITOR, Arrays.asList(_15, _17, _19, _20, _22));
-        m.put(ProductGroup.NOTEBOOK, Arrays.asList(_15));
-        m.put(ProductGroup.ALL_IN_ONE, Arrays.asList(_15));
-        m.put(ProductGroup.TABLET_SMARTPHONE, Arrays.asList(_7_9, _9_7, _15));
-        R_4_3 = m;
-        m = new EnumMap<>(ProductGroup.class);
-        m.put(ProductGroup.MONITOR, Arrays.asList(_19, _22, _24));
-        m.put(ProductGroup.NOTEBOOK, Arrays.asList(_12_1, _13_3, _14, _15_4, _17, _17_3));
-        m.put(ProductGroup.ALL_IN_ONE, Arrays.asList(_17_3));
-        m.put(ProductGroup.TABLET_SMARTPHONE, Arrays.asList(_3_5, _5, _10_1, _12, _12_1));
-        R_16_10 = m;
-        m = new EnumMap<>(ProductGroup.class);
-        m.put(ProductGroup.MONITOR, Arrays.asList(_17, _18_5, _20_1, _21_5, _23, _23_6, _24, _26, _27, _28, _32, _37, _42, _10_1, _4, _4_7, _12_9, _35, _4_5, _12_5, _23_8));
-        m.put(ProductGroup.NOTEBOOK, Arrays.asList(_8_9, _10_1, _11_6, _13_3, _14, _14_1, _15_6, _16, _17, _17_3, _18_4, _12, _4, _4_7, _27, _12_9, _35, _4_5, _12_5));
-        m.put(ProductGroup.ALL_IN_ONE, Arrays.asList(_18_5, _19_5, _20_1, _21_5, _23, _24, _27, _28, _10_1, _4_7, _12_9, _35, _4, _4_5, _12_5, _23_8, _17_3));
-        m.put(ProductGroup.TABLET_SMARTPHONE, Arrays.asList(_4, _5, _5_5, _5_7, _6, _7, _7_9, _8, _10_1, _11_6, _12, _4_7, _27, _12_9, _35, _4_5, _12_5));
-        R_16_9 = m;
-        m = new EnumMap<>(ProductGroup.class);
-        m.put(ProductGroup.MONITOR, new ArrayList<>());
-        m.put(ProductGroup.NOTEBOOK, new ArrayList<>());
-        m.put(ProductGroup.ALL_IN_ONE, new ArrayList<>());
-        m.put(ProductGroup.TABLET_SMARTPHONE, Arrays.asList(_3_5));
-        R_3_2 = m;
-        m = new EnumMap<>(ProductGroup.class);
-        m.put(ProductGroup.MONITOR, Arrays.asList(_25, _29, _34));
-        m.put(ProductGroup.NOTEBOOK, Arrays.asList(_25, _29));
-        m.put(ProductGroup.ALL_IN_ONE, Arrays.asList(_25, _29));
-        m.put(ProductGroup.TABLET_SMARTPHONE, new ArrayList<>());
-        R_21_9 = m;
-    }
-
-    private final static Map<ProductGroup, List<Size>> R_4_3;
-
-    private final static Map<ProductGroup, List<Size>> R_16_10;
-
-    private final static Map<ProductGroup, List<Size>> R_16_9;
-
-    private final static Map<ProductGroup, List<Size>> R_3_2;
-
-    private final static Map<ProductGroup, List<Size>> R_21_9;
-
     /**
      * The Ration of a Display.
      */
     public static enum Ration implements INoteModel {
 
-        FOUR_TO_THREE(
-                "4:3",
-                R_4_3,
-                EnumSet.of(VGA, SVGA, XGA, SXGA, SXGA_PLUS, UXGA, QXGA)),
-        SIXTEEN_TO_TEN(
-                "16:10",
-                R_16_10,
-                EnumSet.of(RETINA_4, WSVGA, WXGA, WXGA_PLUS, WSXGA, WSXGA_PLUS, WUXGA, WQXGA, RETINA_PRO15, RETINA_DISPLAY, WVGA, QHD_1440P)),
-        SIXTEEN_TO_NINE(
-                "16:9",
-                R_16_9,
-                EnumSet.of(WSVGA, RETINA_5SC, WXGA, HD, WSXGA, HD_720P, FULL_HD, QWXGA, WQHD, RETINA_DISPLAY, UHD, APPLE_5K, WUXGA, IPHONE_6, IPAD_PRO, WVGA, QHD_1440P, FOUR_K)),
-        THREE_TO_TWO(
-                "3:2",
-                R_3_2,
-                EnumSet.of(RETINA_4)),
-        TWENTY_ONE_TO_NINE(
-                "21:9",
-                R_21_9,
-                EnumSet.of(UWHD, UWQHD));
+        FOUR_TO_THREE(4, 3),
+        SIXTEEN_TO_TEN(16, 10),
+        SIXTEEN_TO_NINE(16, 9),
+        THREE_TO_TWO(3, 2),
+        TWENTY_ONE_TO_NINE(21, 9),
+        THIRTEEN_TO_SIX(13, 6, "iPhone X");
 
-        private final String note;
+        private final int horizontal;
 
-        private final Map<ProductGroup, List<Size>> sizes;
+        private final int vertical;
 
-        private final EnumSet<Resolution> resolutions;
+        private final String description;
 
-        private Ration(String note, Map<ProductGroup, List<Size>> sizes, EnumSet<Resolution> resolutions) {
-            this.note = note;
-            this.sizes = sizes;
-            this.resolutions = resolutions;
+        private Ration(int horizontal, int vertical, String description) {
+            this.horizontal = horizontal;
+            this.vertical = vertical;
+            this.description = description;
         }
 
-        public static Set<Ration> getRelevantRations(ProductGroup pg) {
-            Set<Ration> relevantRations = EnumSet.noneOf(Ration.class);
-            for (Ration ration : values()) {
-                if ( ration.sizes.get(pg) == null || ration.sizes.get(pg).isEmpty() ) continue;
-                relevantRations.add(ration);
-            }
-            return relevantRations;
+        private Ration(int horizontal, int vertical) {
+            this(horizontal, vertical, null);
         }
 
         @Override
         public String getNote() {
-            return note;
+            return horizontal + ":" + vertical + (description != null ? " " + description : "");
         }
-        
+
         /**
-         * Returns all possible sizes.
-         * <p>
-         * @return all possible sizes.
+         * Returns Ration ordered by horizontal() + vertical().
+         *
+         * @return Ration ordered by horizontal() + vertical().
          */
-        public Set<Size> getSizes() {
-            Set<Size> result = EnumSet.noneOf(Size.class);
-            for (List<Size> s : sizes.values()) {
-                result.addAll(s);
-            }
+        public static List<Ration> orderedValues() {
+            var result = new ArrayList<Ration>(Arrays.asList(values()));
+            result.sort(Comparator.comparingInt(r -> r.horizontal + r.vertical));
             return result;
         }
 
-        /**
-         * Returns possible sizes for a specific product group.
-         * <p>
-         * @param group the group as filter
-         * @return possible sizes for a specific product group.
-         */
-        public List<Size> getSizes(ProductGroup group) {
-            return sizes.get(group);
-        }
-
-        /**
-         * Returns all possilbe resolutions.
-         * <p>
-         * @return all possilbe resolutions.
-         */
-        public EnumSet<Resolution> getResolutions() {
-            return EnumSet.copyOf(resolutions);
-        }
-
-        /**
-         * Returns a set of resolutions up to the supplied maximum resolution.
-         * <p>
-         * @param maxResolution the maximum resolution
-         * @return a set of resolutions up to the supplied maximum resolution
-         */
-        public EnumSet<Resolution> getResolutions(Resolution maxResolution) {
-            EnumSet<Resolution> result = getResolutions();
-            result.retainAll(EnumSet.range(Resolution.values()[0], maxResolution));
-            return result;
-        }
     }
 
     public static enum Type implements INoteModel {
@@ -195,54 +99,95 @@ public class Display extends BaseEntity implements Serializable {
         public String getNote() {
             return note;
         }
-        
+
     }
 
+    // TODO: Noch nach werten umbauen.
     public static enum Resolution implements INoteModel {
 
-        VGA("VGA (640x480)"),
-        SVGA("SVGA (800x600)"),
-        WSVGA("WSVGA (1024x600)"),
-        XGA("XGA (1024x768)"),
-        WXGA("WXGA (1280x800)"),
-        WXGA_PLUS("WXGA+ (1440x900)"),
-        SXGA("SXGA (1280x1024)"),
-        HD("HD (1366x768)"),
-        WSXGA("WSXGA/HD+ (1600x900)"),
-        SXGA_PLUS("SXGA+ (1400x1050)"),
-        WSXGA_PLUS("WSXGA+ (1680x1050)"),
-        FULL_HD("Full HD (1920x1080)"),
-        WUXGA("WUXGA (1920x1200)"),
-        UXGA("UXGA (1600x1200)"),
-        QWXGA("QWXGA (2048×1152)"),
-        QXGA("QXGA (2048x1536)"),
-        WQXGA("WQXGA (2560×1600)"),
-        RETINA_PRO15("Retina Pro15 (2880x1800)"),
-        WQHD("WQHD (2560x1440)"),
-        RETINA_4("(960x640)"),
-        RETINA_5SC("(1136x640)"),
-        HVGA("HVGA (480x320)"),
-        IPHONE_6("1334x750"),
-        HD_720P("HD 720p (1280x720)"),
-        UHD("UHD (3840x2160)"),
-        RETINA_DISPLAY("Retina Display (2304x1440)"),
-        UWHD("2560 x 1080"),
-        UWQHD("3440 x 1440"),
-        APPLE_5K("5120 x 2880"),
-        IPAD_PRO("2732 x 2048"),
-        WVGA("854 x 480"),
-        QHD_1440P("QHD (2160 x 1440)"),
-        FOUR_K("Real 4K (4096 x 2306)");
+        VGA("VGA", 640, 480),
+        SVGA("SVGA", 800, 600),
+        WSVGA("WSVGA", 1024, 600),
+        XGA("XGA", 1024, 768),
+        WXGA("WXGA", 1280, 800),
+        WXGA_PLUS("WXGA+", 1440, 900),
+        SXGA("SXGA", 1280, 1024),
+        HD("HD", 1366, 768),
+        WSXGA("WSXGA/HD+", 1600, 900),
+        SXGA_PLUS("SXGA+", 1400, 1050),
+        WSXGA_PLUS("WSXGA+", 1680, 1050),
+        FULL_HD("Full HD", 1920, 1080),
+        WUXGA("WUXGA", 1920, 1200),
+        UXGA("UXGA", 1600, 1200),
+        QWXGA("QWXGA", 2048, 1152),
+        QXGA("QXGA", 2048, 1536),
+        WQXGA("WQXGA", 2560, 1600),
+        RETINA_PRO15("Retina Pro15", 2880, 1800),
+        WQHD("WQHD", 2560, 1440),
+        RETINA_4("Retina 4", 960, 640),
+        RETINA_5SC("Retina 55C", 1136, 640),
+        HVGA("HVGA", 480, 320),
+        IPHONE_6(1334, 750),
+        HD_720P("HD 720p", 1280, 720),
+        UHD("UHD", 3840, 2160),
+        RETINA_DISPLAY("Retina Display", 2304, 1440),
+        UWHD("UWHD", 2560, 1080),
+        UWQHD("UWQHD", 3440, 1440),
+        APPLE_5K(5120, 2880),
+        IPAD_PRO(2732, 2048),
+        WVGA("WVGA", 854, 480),
+        QHD_1440P("QHD", 2160, 1440),
+        FOUR_K("Real 4K", 4096, 2306),
+        UNKNOWN_1(2224, 1668),
+        IPHONE_X("iPhone X", 2436, 1125),
+        UNKNOWN_3(1792, 828),
+        UNKNOWN_4(2688, 1242),
+        FIVE_K("5K", 5120, 2880),
+        UNKNOWN_6(1280, 960),
+        UNKNOWN_7(4096, 2304);
 
-        private final String note;
+        private final String description;
 
-        private Resolution(String note) {
-            this.note = note;
+        private final int height;
+
+        private final int width;
+
+        private Resolution(int width, int height) {
+            this(null, width, height);
+        }
+
+        private Resolution(String description, int width, int height) {
+            this.description = description;
+            this.height = height;
+            this.width = width;
         }
 
         @Override
         public String getNote() {
-            return note;
+            return "(" + width + "x" + height + ")" + (description != null ? " " + description : "");
+        }
+
+        public String description() {
+            return description;
+        }
+
+        public int height() {
+            return height;
+        }
+
+        public int width() {
+            return width;
+        }
+
+        /**
+         * Returns Resolution ordered by height() + width().
+         *
+         * @return Resolution ordered by height() + width().
+         */
+        public static List<Resolution> orderedValues() {
+            var result = new ArrayList<Resolution>(Arrays.asList(values()));
+            result.sort(Comparator.comparingInt(r -> r.height + r.width));
+            return result;
         }
 
     }
@@ -252,71 +197,68 @@ public class Display extends BaseEntity implements Serializable {
      */
     public static enum Size implements INoteModel {
 
-        _10_1(10.1, WUXGA),
-        _11_6(11.6, FULL_HD),
-        _13_3(13.3, WQHD),
-        _14(14, FULL_HD),
-        _15(15, UHD),
-        _15_4(15.4, RETINA_PRO15),
-        _15_6(15.6, FULL_HD),
-        _16(16, HD),
-        _17(17, UHD),
-        _17_3(17.3, UHD),
-        _18_4(18.4, FULL_HD),
-        _18_5(18.5, FULL_HD),
-        _19(19, FULL_HD),
-        _20_1(20.1, FULL_HD),
-        _21_5(21.5, FULL_HD),
-        _22(22, WSXGA_PLUS),
-        _23(23, FULL_HD),
-        _24(24, FULL_HD),
-        _26(26, WUXGA),
-        _27(27, APPLE_5K),
-        _32(32, WUXGA),
-        _14_1(14.1, HD),
-        _8_9(8.9, WSVGA),
-        _12_1(12.1, WSXGA),
-        _37(37, WUXGA),
-        _42(42, WUXGA),
-        _7(7, WXGA),
-        _23_6(23.6, FULL_HD),
-        _20(20, UXGA),
-        _8(8, FULL_HD),
-        _7_9(7.9, QXGA),
-        _9_7(9.7, QXGA),
-        _19_5(19.5, FULL_HD),
-        _3_5(3.5, RETINA_4),
-        _4(4, RETINA_5SC),
-        _5_7(5.7, HD_720P),
-        _4_7(4.7, IPHONE_6),
-        _5_5(5.5, FULL_HD),
-        _5(5, FULL_HD),
-        _28(28, UHD),
-        _12(12, RETINA_DISPLAY),
-        _25(25, UWHD),
-        _29(29, UWHD),
-        _34(34, UWQHD),
-        _12_9(12.9, IPAD_PRO),
-        _35(35, UHD),
-        _4_5(4.5, WVGA),
-        _12_5(12.5, FULL_HD),
-        _23_8(23.8, FULL_HD),
-        _6(6, FULL_HD),
-        _55(55, FOUR_K);
+        _10_1(10.1),
+        _11_6(11.6),
+        _13_3(13.3),
+        _14(14),
+        _15(15),
+        _15_4(15.4),
+        _15_6(15.6),
+        _16(16),
+        _17(17),
+        _17_3(17.3),
+        _18_4(18.4),
+        _18_5(18.5),
+        _19(19),
+        _20_1(20.1),
+        _21_5(21.5),
+        _22(22),
+        _23(23),
+        _24(24),
+        _26(26),
+        _27(27),
+        _32(32),
+        _14_1(14.1),
+        _8_9(8.9),
+        _12_1(12.1),
+        _37(37),
+        _42(42),
+        _7(7),
+        _23_6(23.6),
+        _20(20),
+        _8(8),
+        _7_9(7.9),
+        _9_7(9.7),
+        _19_5(19.5),
+        _3_5(3.5),
+        _4(4),
+        _5_7(5.7),
+        _4_7(4.7),
+        _5_5(5.5),
+        _5(5),
+        _28(28),
+        _12(12),
+        _25(25),
+        _29(29),
+        _34(34),
+        _12_9(12.9),
+        _35(35),
+        _4_5(4.5),
+        _12_5(12.5),
+        _23_8(23.8),
+        _6(6),
+        _55(55),
+        _10_5(10.5),
+        _5_8(5.8),
+        _6_1(6.1),
+        _6_5(6.5);
 
         private final double size;
 
-        private final Resolution maxResolution;
-
         private final static DecimalFormat DF = new DecimalFormat("0.00");
 
-        private Size(double size, Resolution maxResolution) {
+        private Size(double size) {
             this.size = size;
-            this.maxResolution = maxResolution;
-        }
-
-        public Resolution getMaxResolution() {
-            return maxResolution;
         }
 
         public double getValue() {
@@ -326,6 +268,17 @@ public class Display extends BaseEntity implements Serializable {
         @Override
         public String getNote() {
             return size + "\" (" + DF.format(size * 2.54) + " cm)";
+        }
+
+        /**
+         * Returns sizes ordered by getValue().
+         *
+         * @return sizes ordered by getValue()
+         */
+        public static List<Size> orderedValues() {
+            var result = new ArrayList<Size>(Arrays.asList(values()));
+            result.sort(Comparator.comparingDouble(Size::getValue));
+            return result;
         }
     }
 
@@ -378,51 +331,51 @@ public class Display extends BaseEntity implements Serializable {
     public long getId() {
         return id;
     }
-    
+
     public Double getEconomicValue() {
         return economicValue;
     }
-    
+
     public void setEconomicValue(Double economicValue) {
         this.economicValue = economicValue;
     }
-    
+
     public Size getSize() {
         return size;
     }
-    
+
     public void setSize(Size displaySize) {
         this.size = displaySize;
     }
-    
+
     public Resolution getResolution() {
         return resolution;
     }
-    
+
     public void setResolution(Resolution resolutionType) {
         this.resolution = resolutionType;
     }
-    
+
     public Type getType() {
         return type;
     }
-    
+
     public void setType(Type displayType) {
         this.type = displayType;
     }
-    
+
     public Ration getRation() {
         return ration;
     }
-    
+
     public void setRation(Ration displayRation) {
         this.ration = displayRation;
     }
-    
+
     public boolean isLed() {
         return led;
     }
-    
+
     public void setLed(boolean led) {
         this.led = led;
     }
@@ -443,9 +396,4 @@ public class Display extends BaseEntity implements Serializable {
         return ToStringBuilder.reflectionToString(this);
     }
 
-    @Null(message = "ViolationMessage is not null, but '${validatedValue}'")
-    public String getValidationViolations() {
-        if ( resolution.ordinal() > size.getMaxResolution().ordinal() ) return "resolution > size.maxResolution";
-        return null;
-    }
 }

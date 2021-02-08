@@ -40,11 +40,11 @@ public class DisplayAbleView extends AbstractView<DisplayAbleDesktop> {
 
     /** Creates new form DesktopView */
     public DisplayAbleView(ProductGroup group) {
-        this(new DesktopView(group), new DisplayPanel(group));
+        this(new DesktopView(group), new DisplayPanel());
     }
 
     public DisplayAbleView(SpecAgent specAgent, ProductGroup group) {
-        this(new DesktopView(specAgent, group), new DisplayPanel(group));
+        this(new DesktopView(specAgent, group), new DisplayPanel());
     }
 
     @Override

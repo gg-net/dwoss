@@ -18,7 +18,6 @@ package eu.ggnet.dwoss.receipt.ui.product;
 
 import eu.ggnet.dwoss.core.widget.swing.ComboBoxController;
 import eu.ggnet.dwoss.core.widget.swing.NamedEnumCellRenderer;
-import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Display;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Display.Ration;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Display.Resolution;
@@ -30,32 +29,27 @@ import eu.ggnet.dwoss.spec.ee.entity.piece.Display.Resolution;
  */
 public class DisplayPanel extends javax.swing.JPanel {
 
-    private ProductGroup productGroup;
-
     private Display original;
 
-    private ComboBoxController<Display.Size> sizes;
+    private final ComboBoxController<Display.Size> sizes;
 
-    private ComboBoxController<Display.Ration> rations;
+    private final ComboBoxController<Display.Ration> rations;
 
-    private ComboBoxController<Resolution> resolutions;
+    private final ComboBoxController<Resolution> resolutions;
 
-    private ButtonGroupController<Display.Type> typeGroup;
+    private final ButtonGroupController<Display.Type> typeGroup;
 
     /**
      * Creates new form PartsDisplayDataPanel
-     *
-     * @param productGroup the ProductGroup
      */
-    public DisplayPanel(ProductGroup productGroup) {
-        this.productGroup = productGroup;
+    public DisplayPanel() {
         initComponents();
         displaySizeBox.setRenderer(new NamedEnumCellRenderer());
-        sizes = new ComboBoxController<>(displaySizeBox, Display.Size.values());
+        sizes = new ComboBoxController<>(displaySizeBox, Display.Size.orderedValues());
         displayRatioBox.setRenderer(new NamedEnumCellRenderer());
-        rations = new ComboBoxController<>(displayRatioBox, Display.Ration.getRelevantRations(productGroup));
+        rations = new ComboBoxController<>(displayRatioBox, Display.Ration.orderedValues());
         displayMaxResBox.setRenderer(new NamedEnumCellRenderer());
-        resolutions = new ComboBoxController<>(displayMaxResBox, Resolution.values());
+        resolutions = new ComboBoxController<>(displayMaxResBox, Resolution.orderedValues());
         typeGroup = new ButtonGroupController<>(displayMatButton, displayCrystalBrightButton, Display.Type.MATT, Display.Type.CRYSTAL_BRIGHT);
         typeGroup.setSelected(Display.Type.CRYSTAL_BRIGHT);
         rations.setSelected(Ration.SIXTEEN_TO_NINE);
@@ -88,16 +82,6 @@ public class DisplayPanel extends javax.swing.JPanel {
         }
         if ( display.equalsContent(original) ) return original;
         else return display;
-    }
-
-    private void filterSizes() {
-        sizes.replaceElements(rations.getSelected().getSizes(productGroup));
-        setMaxResolution();
-    }
-
-    private void setMaxResolution() {
-        resolutions.replaceElements(rations.getSelected().getResolutions(sizes.getSelected().getMaxResolution()));
-        resolutions.setSelected(sizes.getSelected().getMaxResolution());
     }
 
     /**
@@ -133,21 +117,11 @@ public class DisplayPanel extends javax.swing.JPanel {
 
         displayRatioBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         displayRatioBox.setNextFocusableComponent(displaySizeBox);
-        displayRatioBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                displayRatioBoxActionPerformed(evt);
-            }
-        });
 
         jLabel2.setText("Max. Auflösung:");
 
         displaySizeBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         displaySizeBox.setNextFocusableComponent(displayMaxResBox);
-        displaySizeBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                displaySizeBoxActionPerformed(evt);
-            }
-        });
 
         jLabel1.setText("Display Größe:");
 
@@ -218,14 +192,6 @@ public class DisplayPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void displayRatioBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_displayRatioBoxActionPerformed
-        filterSizes();
-        setMaxResolution();
-    }//GEN-LAST:event_displayRatioBoxActionPerformed
-
-    private void displaySizeBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_displaySizeBoxActionPerformed
-        setMaxResolution();
-    }//GEN-LAST:event_displaySizeBoxActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JRadioButton displayCrystalBrightButton;
     private javax.swing.JCheckBox displayLedCheck;
