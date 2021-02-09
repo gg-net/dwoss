@@ -175,10 +175,6 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView, 
         // TODO: put in some background thread.
         allSeries = remote.lookup(SpecAgent.class).findAll(ProductSeries.class);
         brandBox.setModel(new DefaultComboBoxModel<>(manufacturer.getBrands().toArray()));
-//        updateSeries();
-//        updateFamily();
-//        updateModel();
-
         partNoField.setText(in.partNo());
 
         // TODO: Put in background.
@@ -215,10 +211,10 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView, 
                 brandBox.setSelectedItem(e.brand());
                 groupBox.setSelectedItem(e.group());
             });
+            updateSeries();
+            updateFamily();
+            updateModel();
         }
-        updateSeries();
-        updateFamily();
-        updateModel();
     }
 
     public TradeName getManufacturer() {
