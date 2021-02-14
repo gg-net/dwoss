@@ -17,11 +17,14 @@
 package eu.ggnet.dwoss.receipt.ui.cap;
 
 import java.awt.event.ActionEvent;
+import java.util.Optional;
+import java.util.concurrent.CompletionException;
 
 import javax.inject.Inject;
 
 import javafx.scene.control.TextInputDialog;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.widget.AccessableAction;
 import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
 import eu.ggnet.dwoss.receipt.ui.ProductUiBuilder;
@@ -61,6 +64,7 @@ public class UpdateProductAction extends AccessableAction {
                     return dialog;
                 }).cf()
                 .thenApply(partNo -> remote.lookup(UniqueUnitAgent.class).findProductByPartNo(partNo))
+                .thenApply(p -> Optional.ofNullable(p).orElseThrow(() -> new CompletionException(new UserInfoException("Kein Produkt gefunden"))))
                 .thenCompose(p -> productUiBuilder.createOrEditPart(() -> new SimpleView.CreateOrEdit(p.getTradeName().getManufacturer(), p.getPartNo())))
                 .handle(saft.handler());
     }

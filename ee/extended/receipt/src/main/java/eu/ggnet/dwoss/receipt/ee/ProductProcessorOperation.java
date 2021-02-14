@@ -281,7 +281,7 @@ public class ProductProcessorOperation implements ProductProcessor {
             bundle.setMonitor(specEao.findById(bundle.getMonitor().getId()));
         }
 
-        L.info("Persisting {} including model change={}", SpecFormater.toDetailedName(spec), (model == spec.getModel()));
+        L.info("create({}) persiting including model change={}", SpecFormater.toDetailedName(spec), (model == spec.getModel()));
         specEm.persist(spec);
         specEm.flush(); // Ensuring Id generation.
         ProductEao productEao = new ProductEao(uuEm);
@@ -293,26 +293,13 @@ public class ProductProcessorOperation implements ProductProcessor {
         product.setName(spec.getModel().getName());
         product.setDescription(SpecFormater.toSingleLine(spec));
         product.setGtin(sam.gtin());
-        L.debug("persisting {}", product);
         if ( !uuEm.contains(product) ) {
             uuEm.persist(product);
             uuEm.flush(); // Ensuring Id generation
         }
-
-        L.debug("creating weak reference ProductSpec.productId=Product.id value ({})", product.getId());
+        L.debug("create({}) overwriting uniqueunti.Product.id={}", SpecFormater.toDetailedName(spec), product.getId());
         spec.setProductId(product.getId());
 
-        return spec;
-    }
-
-    // TODO: Old, delete, if everything works out
-    private ProductSpec refresh(ProductSpec spec, ProductModel model) throws IllegalArgumentException {
-        if ( spec.getProductId() == null ) throw new IllegalArgumentException("ProductSpec has no productId, violation ! " + spec);
-        if ( spec.getModel().equals(model) ) return spec;
-        // 1. Validation
-        L.debug("refreshing {}", spec);
-        spec = new ProductSpecEao(specEm).findById(spec.getId());
-        spec.setModel(new ProductModelEao(specEm).findById(model.getId()));
         return spec;
     }
 
@@ -337,7 +324,7 @@ public class ProductProcessorOperation implements ProductProcessor {
             display = displayEao.find(display.getSize(), display.getResolution(), display.getType(), display.getRation());
             if ( display != null ) monitor.setDisplay(display);
         }
-        L.info("updateing {}", SpecFormater.toDetailedName(spec));
+        L.info("update({}) merging", SpecFormater.toDetailedName(spec));
         spec = specEm.merge(spec);
         // 4. overwrite Product
         product.setGroup(spec.getModel().getFamily().getSeries().getGroup());
@@ -346,7 +333,7 @@ public class ProductProcessorOperation implements ProductProcessor {
         product.setName(spec.getModel().getName());
         product.setDescription(SpecFormater.toSingleLine(spec));
         product.setGtin(sam.gtin());
-        L.debug("updateing {}", product);
+        L.debug("update({}) overwriting uniqueunti.Product.id={}", SpecFormater.toDetailedName(spec), product.getId());
         return spec;
     }
 
