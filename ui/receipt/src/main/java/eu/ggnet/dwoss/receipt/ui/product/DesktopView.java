@@ -236,10 +236,7 @@ public class DesktopView extends AbstractView {
         this(Dl.remote().lookup(SpecAgent.class), productGroup);
     }
 
-    /**
-     * Creates new form DesktopView
-     */
-    public DesktopView(SpecAgent specAgent, ProductGroup productGroup) {
+    private DesktopView(SpecAgent specAgent, ProductGroup productGroup) {
         this.specAgent = Objects.requireNonNull(specAgent, "SpecAgent must not be null");
         initComponents();
         basicView = new BasicView();

@@ -16,7 +16,8 @@
  */
 package eu.ggnet.dwoss.receipt.ui.tryout;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,8 +35,9 @@ import eu.ggnet.dwoss.core.widget.dl.RemoteLookup;
 import eu.ggnet.dwoss.mandator.api.Mandators;
 import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.receipt.ee.*;
-import eu.ggnet.dwoss.receipt.ui.UiProductSupport;
+import eu.ggnet.dwoss.receipt.ui.ProductUiBuilder;
 import eu.ggnet.dwoss.receipt.ui.cap.*;
+import eu.ggnet.dwoss.receipt.ui.product.SimpleView.CreateOrEdit;
 import eu.ggnet.dwoss.receipt.ui.shipment.ShipmentEditView;
 import eu.ggnet.dwoss.receipt.ui.tryout.stub.ProductProcessorStub.EditProduct;
 import eu.ggnet.dwoss.receipt.ui.tryout.stub.*;
@@ -59,7 +61,7 @@ public class ReceiptTryout {
         SeContainerInitializer ci = SeContainerInitializer.newInstance();
         ci.addPackages(ReceiptTryout.class);
         ci.addPackages(WidgetProducers.class);
-        ci.addPackages(true, UiProductSupport.class); // receipt.ui
+        ci.addPackages(true, ProductUiBuilder.class); // receipt.ui
         ci.disableDiscovery();
         SeContainer container = ci.initialize();
         Instance<Object> instance = container.getBeanManager().createInstance();
@@ -114,7 +116,9 @@ public class ReceiptTryout {
             for (EditProduct ep : pp.editProducts) {
                 JMenuItem m = new JMenuItem(ep.description());
                 m.addActionListener(e -> {
-                    UpdateProductAction.editPart(ep.manufacturer(), ep.partNo());
+                    instance.select(ProductUiBuilder.class).get()
+                            .createOrEditPart(() -> new CreateOrEdit(ep.manufacturer(), ep.partNo()))
+                            .handle(saft.handler());
                 });
                 editProduct.add(m);
             }

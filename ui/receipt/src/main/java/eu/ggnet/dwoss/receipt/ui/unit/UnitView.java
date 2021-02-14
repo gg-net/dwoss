@@ -38,7 +38,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.common.values.ReceiptOperation;
 import eu.ggnet.dwoss.core.common.values.Warranty;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
@@ -63,8 +62,7 @@ import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Equipment;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.StaticComment;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.StaticInternalComment;
-import eu.ggnet.saft.core.Saft;
-import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.ui.*;
 
 import static eu.ggnet.dwoss.core.common.values.ReceiptOperation.IN_SALE;
@@ -259,6 +257,9 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
 
     @Inject
     private RemoteDl remote;
+
+    @Inject
+    private ProductUiBuilder productUiBuilder;
 
     private CheckBoxTableNoteModel<Equipment> equipmentModel = new CheckBoxTableNoteModel(Arrays.asList(Equipment.class.getEnumConstants()), "Ausstattung");
 
@@ -1159,13 +1160,10 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
     }//GEN-LAST:event_partNoFieldFocusLost
 
     private void editProductButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editProductButtonActionPerformed
-        try {
-            UiProductSupport.createOrEditPart(new SimpleView.CreateOrEdit(model.getMode(), partNoField.getText()), of(this));
-            validatePartNoAndLoadDetails();
-        } catch (UserInfoException ex) {
-            Ui.handle(ex);
-        }
-        validateRefurbishedId();
+        productUiBuilder.createOrEditPart(() -> new SimpleView.CreateOrEdit(model.getMode(), partNoField.getText()), of(this))
+                .thenAccept(p -> validatePartNoAndLoadDetails())
+                .thenAccept(p -> validateRefurbishedId())
+                .handle(UiCore.global().handler(this));
     }//GEN-LAST:event_editProductButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

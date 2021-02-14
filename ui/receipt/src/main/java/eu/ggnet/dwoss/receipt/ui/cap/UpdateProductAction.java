@@ -17,19 +17,17 @@
 package eu.ggnet.dwoss.receipt.ui.cap;
 
 import java.awt.event.ActionEvent;
-import java.util.concurrent.CompletionException;
+
+import javax.inject.Inject;
 
 import javafx.scene.control.TextInputDialog;
 
-import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.widget.AccessableAction;
-import eu.ggnet.dwoss.core.widget.Dl;
-import eu.ggnet.dwoss.core.widget.saft.*;
-import eu.ggnet.dwoss.receipt.ui.UiProductSupport;
+import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
+import eu.ggnet.dwoss.receipt.ui.ProductUiBuilder;
 import eu.ggnet.dwoss.receipt.ui.product.SimpleView;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.UiUtil;
+import eu.ggnet.saft.core.Saft;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_PRODUCT;
 
@@ -40,28 +38,31 @@ import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_PRODUCT;
  */
 public class UpdateProductAction extends AccessableAction {
 
+    @Inject
+    private Saft saft;
+
+    @Inject
+    private ProductUiBuilder productUiBuilder;
+
+    @Inject
+    private RemoteDl remote;
+
     public UpdateProductAction() {
         super(UPDATE_PRODUCT);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.exec(() -> {
-            // TODO: in a complete correct case, the manufacturer should be selectable (In Case of a two manufactures have overlapping partnos)
-            Ui.build().title("Bitte Artikelnummer des Herstellers eingeben").dialog().eval(() -> {
-                TextInputDialog dialog = new TextInputDialog();
-                dialog.setContentText("Bitte Artikelnummer des Herstellers eingeben:");
-                return dialog;
-            }).opt()
-                    .map(s -> ReplyUtil.wrap(() -> Dl.remote().lookup(UniqueUnitAgent.class).findProductByPartNo(s)))
-                    .filter(Failure::handle)
-                    .map(Reply::getPayload)
-                    .ifPresent(p -> editPart(p.getTradeName().getManufacturer(), p.getPartNo()));
-        });
+        // TODO: in a complete correct case, the manufacturer should be selectable (In Case of a two manufactures have overlapping partnos)
+        saft.build().title("Bitte Artikelnummer des Herstellers eingeben").dialog()
+                .eval(() -> {
+                    TextInputDialog dialog = new TextInputDialog();
+                    dialog.setContentText("Bitte Artikelnummer des Herstellers eingeben:");
+                    return dialog;
+                }).cf()
+                .thenApply(partNo -> remote.lookup(UniqueUnitAgent.class).findProductByPartNo(partNo))
+                .thenCompose(p -> productUiBuilder.createOrEditPart(() -> new SimpleView.CreateOrEdit(p.getTradeName().getManufacturer(), p.getPartNo())))
+                .handle(saft.handler());
     }
 
-    // Only here to be used in the tryout
-    public static void editPart(TradeName manufacturer, String partNo) throws CompletionException {
-        UiUtil.exceptionRun(() -> UiProductSupport.createOrEditPart(new SimpleView.CreateOrEdit(manufacturer, partNo)));
-    }
 }
