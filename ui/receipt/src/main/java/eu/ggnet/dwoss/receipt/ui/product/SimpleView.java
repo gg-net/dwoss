@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.receipt.ui.product;
 
-import java.awt.Window;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.*;
@@ -27,6 +26,9 @@ import java.util.stream.Collectors;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+
 import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.core.common.UserInfoException;
@@ -35,14 +37,20 @@ import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
 import eu.ggnet.dwoss.core.widget.saft.*;
-import eu.ggnet.dwoss.core.widget.swing.*;
 import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
+import eu.ggnet.dwoss.receipt.ee.ProductProcessor.SpecAndModel;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.entity.*;
 import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
+import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.*;
 
-public class SimpleView extends javax.swing.JPanel implements IPreClose, IView, Consumer<SimpleView.CreateOrEdit> {
+import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
+
+@Title("Artikelkonfiguration")
+public class SimpleView extends javax.swing.JPanel implements Consumer<SimpleView.CreateOrEdit>, ResultProducer<SpecAndModel> {
 
     public static class Enforce {
 
@@ -145,9 +153,12 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView, 
 
     private List<ProductSeries> allSeries;
 
-    private Window parent;
-
     private boolean edit = false;
+
+    private boolean cancel = true;
+
+    @Bind(SHOWING)
+    private final BooleanProperty showingProperty = new SimpleBooleanProperty();
 
     // Inject
     private RemoteDl remote = Dl.remote();
@@ -217,10 +228,6 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView, 
         }
     }
 
-    public TradeName getManufacturer() {
-        return manufacturer;
-    }
-
     public boolean isEdit() {
         return edit;
     }
@@ -230,30 +237,23 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView, 
      *
      * @return a ProductSpec.
      */
+    // Resultproducer
     public ProductSpec getProductSpec() {
         return spec;
     }
 
     @Override
-    public void setParent(Window parent) {
-        this.parent = parent;
-    }
+    public SpecAndModel getResult() {
+        if ( cancel ) return null;
 
-    // TODO: Describe somethere, that in the Editmode the Model is not set to the spec, but must be done in an active transaction.
-    // merge productSpec. merge model. set Model. commit
-    @Override
-    public boolean pre(CloseType type) {
-        if ( type != CloseType.OK ) return true;
-        if ( !getSelectedModel().isPresent() ) {
-            Ui.build(this).alert("Model nicht ausgewählt oder nicht hinzugefügt");
-            return false;
-        }
-        // The new ProductSpec Mode
         if ( spec == null ) {
             spec = ProductSpec.newInstance(getGroup());
             spec.setPartNo(partNoField.getText());
         }
-        return true;
+        // TODO: The gtin should be on the product spec, not on the product. thats why we need this workaround here.
+        // Load gtin if in edit mode.
+        long gtin = spec.getId() > 0 ? Dl.remote().lookup(UniqueUnitAgent.class).findById(Product.class, spec.getProductId()).getGtin() : 0;
+        return new SpecAndModel(spec, getSelectedModel().get(), gtin);
     }
 
     private TradeName getBrand() {
@@ -398,6 +398,8 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView, 
         jScrollPane1 = new javax.swing.JScrollPane();
         htmlInfoPane = new javax.swing.JTextPane();
         addSeriesButton = new javax.swing.JButton();
+        okButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -616,6 +618,29 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView, 
         gridBagConstraints.gridy = 4;
         gridBagConstraints.ipadx = 14;
         add(addSeriesButton, gridBagConstraints);
+
+        okButton.setText("Ok");
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        add(okButton, gridBagConstraints);
+
+        cancelButton.setText("Abbrechen");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 7;
+        add(cancelButton, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void brandBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_brandBoxActionPerformed
@@ -668,9 +693,8 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView, 
         // TODO: Add Model to local list in a better way
         // TODO: And show the active backgroundprogress.
         JOptionPane.showMessageDialog(this, "Modell " + model.getName() + " wurde hinzugefügt.\nAktualisiere Lokale Liste.");
-        parent.setEnabled(false);
+        // TODO: Put in background and add loadingblock
         allSeries = remote.lookup(SpecAgent.class).findAll(ProductSeries.class);
-        parent.setEnabled(true);
         updateSeries();
         updateFamily();
         updateModel();
@@ -701,9 +725,8 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView, 
         // TODO: Add Family to local list in a better way
         // TODO: And show the active backgroundprogress.
         JOptionPane.showMessageDialog(this, "Familie " + family.getName() + " wurde hinzugefügt.\nAktualisiere Lokale Liste.");
-        parent.setEnabled(false);
+        // TODO: Put in background and add loadingblock
         allSeries = remote.lookup(SpecAgent.class).findAll(ProductSeries.class);
-        parent.setEnabled(true);
         updateSeries();
         updateFamily();
         updateModel();
@@ -747,9 +770,8 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView, 
         if ( !Failure.handle(reply) ) return;
         ProductSeries series = reply.getPayload();
         JOptionPane.showMessageDialog(this, "Serie " + series.getName() + " wurde hinzugefügt.\nAktualisiere Lokale Liste.");
-        parent.setEnabled(false);
+        // TODO: Put in background and add loadingblock
         allSeries = remote.lookup(SpecAgent.class).findAll(ProductSeries.class);
-        parent.setEnabled(true);
         updateSeries();
         updateFamily();
         updateModel();
@@ -757,11 +779,25 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView, 
         enableAddButtons();
     }//GEN-LAST:event_addSeriesButtonActionPerformed
 
+    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
+        if ( !getSelectedModel().isPresent() ) {
+            Ui.build(this).alert("Model nicht ausgewählt oder nicht hinzugefügt");
+        } else {
+            cancel = false;
+            showingProperty.set(false);
+        }
+    }//GEN-LAST:event_okButtonActionPerformed
+
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        showingProperty.set(false);
+    }//GEN-LAST:event_cancelButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addFamilyButton;
     private javax.swing.JButton addModelButton;
     private javax.swing.JButton addSeriesButton;
     private javax.swing.JComboBox brandBox;
+    private javax.swing.JButton cancelButton;
     private javax.swing.JButton editButton;
     private javax.swing.JComboBox<String> familyBox;
     private javax.swing.JComboBox groupBox;
@@ -774,6 +810,7 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView, 
     private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JComboBox<String> modelBox;
+    private javax.swing.JButton okButton;
     private javax.swing.JTextField partNoField;
     private javax.swing.JComboBox<String> seriesBox;
     // End of variables declaration//GEN-END:variables

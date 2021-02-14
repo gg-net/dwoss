@@ -16,10 +16,6 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ee.entity;
 
-import eu.ggnet.dwoss.core.common.values.SalesChannel;
-import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
-import eu.ggnet.dwoss.core.common.values.ProductGroup;
-
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -30,10 +26,11 @@ import javax.validation.constraints.Null;
 
 import org.apache.commons.lang3.builder.ToStringExclude;
 
-import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
+import eu.ggnet.dwoss.core.common.values.ProductGroup;
+import eu.ggnet.dwoss.core.common.values.SalesChannel;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.system.persistence.*;
 import eu.ggnet.dwoss.core.system.util.TwoDigits;
-import eu.ggnet.dwoss.core.system.persistence.EagerAble;
-import eu.ggnet.dwoss.core.system.persistence.AbstractBidirectionalListWrapper;
 
 import static javax.persistence.CascadeType.*;
 
@@ -128,6 +125,7 @@ public class Product extends BaseEntity implements Serializable, EagerAble, Comp
     /**
      * Global Trade Item Number, was EAN.
      */
+    // TODO: Add validation for GTIN
     private long gtin;
 
     @NotNull
@@ -161,87 +159,87 @@ public class Product extends BaseEntity implements Serializable, EagerAble, Comp
     public long getId() {
         return id;
     }
-    
+
     public short getOptLock() {
         return optLock;
     }
-    
+
     public Set<Flag> getFlags() {
         return flags;
     }
-    
+
     public void setFlags(Set<Flag> flags) {
         this.flags = flags;
     }
-    
+
     public int getImageId() {
         return imageId;
     }
-    
+
     public void setImageId(int imageId) {
         this.imageId = imageId;
     }
-    
+
     public long getGtin() {
         return gtin;
     }
-    
+
     public void setGtin(long gtin) {
         this.gtin = gtin;
     }
-    
+
     public SalesChannel getSalesChannel() {
         return salesChannel;
     }
-    
+
     public void setSalesChannel(SalesChannel salesChannel) {
         this.salesChannel = salesChannel;
     }
-    
+
     public String getName() {
         return name;
     }
-    
+
     public void setName(String name) {
         this.name = name;
     }
-    
+
     public String getDescription() {
         return description;
     }
-    
+
     public void setDescription(String description) {
         this.description = description;
     }
-    
+
     public TradeName getTradeName() {
         return tradeName;
     }
-    
+
     public void setTradeName(TradeName tradeName) {
         this.tradeName = tradeName;
     }
-    
+
     public ProductGroup getGroup() {
         return group;
     }
-    
+
     public void setGroup(ProductGroup group) {
         this.group = group;
     }
-    
+
     public String getPartNo() {
         return partNo;
     }
-    
+
     public void setPartNo(String partNo) {
         this.partNo = partNo;
     }
-    
+
     public Date getEol() {
         return eol;
     }
-    
+
     public void setEol(Date eol) {
         this.eol = eol;
     }
@@ -316,6 +314,7 @@ public class Product extends BaseEntity implements Serializable, EagerAble, Comp
      * <p>
      * @return null if the instance is valid, or a string representing the error.
      */
+    // TODO: Add validation for GTIN
     @Null(message = "ViolationMessage is not null, but '${validatedValue}'")
     public String getViolationMessage() {
         if ( tradeName == null ) return null;

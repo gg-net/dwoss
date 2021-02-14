@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.receipt.ee;
 
+import java.util.Objects;
+
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -236,33 +238,12 @@ public class ProductProcessorOperation implements ProductProcessor {
         return family;
     }
 
-    /**
-     * Creates a new ProductSpec and the relating Product and SopoProduct.
-     * <p>
-     * The process has multiple steps:
-     * <ol>
-     * <li>Merge the ProductModel and set it in the Spec</li>
-     * <li>If Spec is a DisplayAble its assumed the Display is either existent or new.<br />
-     * In case it exists, the existent value will be set in the Spec</li>
-     * <li>If Spec is a Desktop its assumed that the Cpu and Gpu are existent, and they are merged and set.</li>
-     * <li>The Spec is persisted</li>
-     * <li>A Product is created and persisted</li>
-     * <li>The Spec.productId is set to Product.id (WeakReference)</li>
-     * <li>A SopoProduct is searched. If found, it is updated, else a new one is created</li>
-     * </ol>
-     *
-     * @param spec  the spec to persist, must not be null
-     * @param model the model for the spec, must not be null or new
-     * @param gtin  the value of gtin
-     * @throws IllegalArgumentException if Cpu or Gpu in a Desktop are new.
-     *
-     * @return the eu.ggnet.dwoss.spec.entity.ProductSpec
-     */
-    // TODO: Check if the model as parameter is still needed.
     @Override
-    public ProductSpec create(ProductSpec spec, ProductModel model, long gtin) throws IllegalArgumentException {
-        if ( model == null ) throw new NullPointerException("Model is null");
-        if ( spec == null ) throw new NullPointerException("ProductSpec is null");
+    public ProductSpec create(SpecAndModel sam) throws IllegalArgumentException {
+        Objects.requireNonNull(sam, "Spec and Model must not be null");
+        ProductSpec spec = sam.spec();
+        ProductModel model = sam.model();
+
         // Hint: Normally the column unique option should do that, but HSQLDB somehow lost it.
         if ( new ProductEao(uuEm).findByPartNo(spec.getPartNo()) != null )
             throw new IllegalArgumentException("PartNo=" + spec.getPartNo() + " exists allready, but create is calles");
@@ -311,7 +292,7 @@ public class ProductProcessorOperation implements ProductProcessor {
         product.setPartNo(spec.getPartNo());
         product.setName(spec.getModel().getName());
         product.setDescription(SpecFormater.toSingleLine(spec));
-        product.setGtin(gtin);
+        product.setGtin(sam.gtin());
         L.debug("persisting {}", product);
         if ( !uuEm.contains(product) ) {
             uuEm.persist(product);
@@ -324,16 +305,8 @@ public class ProductProcessorOperation implements ProductProcessor {
         return spec;
     }
 
-    /**
-     * Return a refreshed ProductSpec with the selected model added.
-     *
-     * @param spec  the spec to be refreshed.
-     * @param model the model to be assosiated, must not be null, but may be equal to spec.getModel
-     * @return
-     * @throws IllegalArgumentException
-     */
-    @Override
-    public ProductSpec refresh(ProductSpec spec, ProductModel model) throws IllegalArgumentException {
+    // TODO: Old, delete, if everything works out
+    private ProductSpec refresh(ProductSpec spec, ProductModel model) throws IllegalArgumentException {
         if ( spec.getProductId() == null ) throw new IllegalArgumentException("ProductSpec has no productId, violation ! " + spec);
         if ( spec.getModel().equals(model) ) return spec;
         // 1. Validation
@@ -343,38 +316,19 @@ public class ProductProcessorOperation implements ProductProcessor {
         return spec;
     }
 
-    /**
-     * Updates an existing ProductSpec and the relating Product and SopoProduct.
-     * <p>
-     * The process has multiple steps:
-     * <ol>
-     * <li>Validate and throw IllegalArgumentException:
-     * <ul>
-     * <li>if the ProductSpec.productId == null</li>
-     * <li>if there does not exist a Product with ProductSpec.productId</li>
-     * <li>if there does not exist a SopoProduct with Product.partNo (unchanged)</li>
-     * </ul>
-     * </li>
-     * <li>If Spec is a DisplayAble its assumed the Display is either existent or new.<br />
-     * In case it exists, the existent value will be set in the Spec</li>
-     * <li>if the supplied ProductModel is different from ProductSpec.getModel it is merged and set</li>
-     * <li>Overwrite all changes in Product</li>
-     * <li>Overwrite all changes in SopoProduct</li>
-     * <li> If PartNo change propagate to all matching SopoUnits</li>
-     * </ol>
-     *
-     * @param spec the spec to be updated, must not be null and not new
-     * @param gtin the value of gtin
-     * @throws IllegalArgumentException if spec.productId == null
-     * @return the eu.ggnet.dwoss.spec.entity.ProductSpec
-     */
     @Override
-    public ProductSpec update(ProductSpec spec, long gtin) throws IllegalArgumentException {
+    public ProductSpec update(SpecAndModel sam) throws IllegalArgumentException {
+        Objects.requireNonNull(sam, "Spec and Model must not be null");
+        ProductSpec spec = sam.spec();
+        ProductModel model = sam.model();
+
         // 1. Validation
         if ( spec.getProductId() == null ) throw new IllegalArgumentException("ProductSpec has no productId, violation ! " + spec);
         ProductEao productEao = new ProductEao(uuEm);
         Product product = productEao.findById(spec.getProductId());
         if ( product == null ) throw new IllegalArgumentException("ProductSpec.productId=" + spec.getProductId() + " does not have a Product");
+        // Allways Update model
+        spec.setModel(new ProductModelEao(specEm).findById(model.getId()));
         // 2. + 3. Update Spec
         if ( spec instanceof DisplayAble && ((DisplayAble)spec).getDisplay().getId() == 0 ) {
             DisplayAble monitor = (DisplayAble)spec;
@@ -391,7 +345,7 @@ public class ProductProcessorOperation implements ProductProcessor {
         product.setPartNo(spec.getPartNo());
         product.setName(spec.getModel().getName());
         product.setDescription(SpecFormater.toSingleLine(spec));
-        product.setGtin(gtin);
+        product.setGtin(sam.gtin());
         L.debug("updateing {}", product);
         return spec;
     }

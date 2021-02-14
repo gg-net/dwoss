@@ -36,8 +36,8 @@ import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.receipt.ee.*;
 import eu.ggnet.dwoss.receipt.ui.UiProductSupport;
 import eu.ggnet.dwoss.receipt.ui.cap.*;
-import eu.ggnet.dwoss.receipt.ui.product.SimpleView;
 import eu.ggnet.dwoss.receipt.ui.shipment.ShipmentEditView;
+import eu.ggnet.dwoss.receipt.ui.tryout.stub.ProductProcessorStub.EditProduct;
 import eu.ggnet.dwoss.receipt.ui.tryout.stub.*;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
@@ -110,19 +110,19 @@ public class ReceiptTryout {
                 }
             });
 
-            JButton editOneProduct = new JButton("Artikel " + pp.editAbleProductPartNo + " bearbeiten");
-            editOneProduct.addActionListener(e -> {
-                try {
-                    UiProductSupport.createOrEditPart(new SimpleView.CreateOrEdit(pp.editAbleProductManufacturer, pp.editAbleProductPartNo), ((Window)null));
-                } catch (UserInfoException ex) {
-                    saft.handle(ex);
-                }
-            });
+            JMenu editProduct = new JMenu("Artikel direkt bearbeiten");
+            for (EditProduct ep : pp.editProducts) {
+                JMenuItem m = new JMenuItem(ep.description());
+                m.addActionListener(e -> {
+                    UpdateProductAction.editPart(ep.manufacturer(), ep.partNo());
+                });
+                editProduct.add(m);
+            }
+            menubar.add(editProduct);
 
             JPanel buttonPanel = new JPanel(new FlowLayout());
             buttonPanel.add(openShipmentUpdateView);
             buttonPanel.add(editOneUnit);
-            buttonPanel.add(editOneProduct);
 
             DefaultListModel<String> model = new DefaultListModel<>();
             model.addAll(prepareHelper(pp.uniqueUnitAgent()));

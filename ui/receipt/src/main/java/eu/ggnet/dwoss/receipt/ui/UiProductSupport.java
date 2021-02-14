@@ -16,24 +16,15 @@
  */
 package eu.ggnet.dwoss.receipt.ui;
 
-import java.awt.Window;
-import java.util.ArrayList;
-import java.util.Set;
+import javafx.stage.Modality;
 
-import javax.validation.*;
-
-import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.dwoss.core.system.util.ValidationUtil;
 import eu.ggnet.dwoss.core.widget.Dl;
-import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
+import eu.ggnet.dwoss.core.widget.saft.OkCancelWrap;
 import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
+import eu.ggnet.dwoss.receipt.ee.ProductProcessor.SpecAndModel;
 import eu.ggnet.dwoss.receipt.ui.product.AbstractView;
 import eu.ggnet.dwoss.receipt.ui.product.SimpleView;
-import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
-import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
-import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.saft.core.impl.Swing;
+import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.UiParent;
 
 /**
@@ -44,37 +35,26 @@ import eu.ggnet.saft.core.ui.UiParent;
  */
 public class UiProductSupport {
 
-    private static final Validator VALIDATOR = Validation.buildDefaultValidatorFactory().getValidator();
-
-    public static ProductSpec createOrEditPart(SimpleView.CreateOrEdit in, UiParent parent) throws UserInfoException {
-        Window w = UiCore.global().core(Swing.class).unwrap(parent).orElse(null);
-        return createOrEditPart(in, w);
+    public static void createOrEditPart(SimpleView.CreateOrEdit in, UiParent parent) {
+        Ui.build().parent(parent).modality(Modality.WINDOW_MODAL)
+                .swing().eval(() -> in, SimpleView.class).cf()
+                .thenCompose((SpecAndModel sam) -> Ui.build().parent(parent).title("Artikeldetailconfiguration").modality(Modality.WINDOW_MODAL)
+                .swing().eval(() -> sam, () -> OkCancelWrap.consumerVetoResult(AbstractView.newView(sam))).cf())
+                .thenAccept((SpecAndModel sam) -> {
+                    if ( sam.spec().getId() > 0 ) Dl.remote().lookup(ProductProcessor.class).update(sam);
+                    else Dl.remote().lookup(ProductProcessor.class).create(sam);
+                });
     }
 
-    public static ProductSpec createOrEditPart(SimpleView.CreateOrEdit in, Window parent) throws UserInfoException {
-        SimpleView simpleView = new SimpleView();
-        simpleView.accept(in);
-        OkCancelDialog<SimpleView> simpleDialog = new OkCancelDialog<>(parent, "Artikelkonfiguration", simpleView);
-        simpleDialog.setVisible(true);
-        if ( simpleDialog.isCancel() ) return null;
-        ProductSpec spec = simpleView.getProductSpec();
-        if ( simpleView.isEdit() ) spec = Dl.remote().lookup(ProductProcessor.class).refresh(spec, simpleView.getSelectedModel().get()); // Sollte in Simpleview passieren
-        AbstractView productView = AbstractView.newView(spec, simpleView.getSelectedModel().get().getFamily().getSeries().getBrand());
-        if ( simpleView.isEdit() ) productView.setGtin(Dl.remote().lookup(UniqueUnitAgent.class).findById(Product.class, spec.getProductId()).getGtin()); // Sollte im accept passieren.
-        OkCancelDialog productDialog = new OkCancelDialog(parent, "Artikeldetailkonfiguration", productView);
-        productDialog.setVisible(true);
-        if ( productDialog.isCancel() ) return null;
-        validate(simpleView.getSelectedModel().get());  // preclose
-        validate(productView.getSpec());    // preclose
-        if ( simpleView.isEdit() ) return Dl.remote().lookup(ProductProcessor.class).update(productView.getSpec(), productView.getGtin());
-        // TODO: In Case of a Bundle autoupdate the name of the model.
-        else return Dl.remote().lookup(ProductProcessor.class).create(productView.getSpec(), simpleView.getSelectedModel().get(), productView.getGtin());
-
-    }
-
-    private static void validate(Object o) throws UserInfoException {
-        Set<ConstraintViolation<Object>> validate = VALIDATOR.validate(o);
-        if ( !validate.isEmpty() ) throw new UserInfoException(ValidationUtil.formatToMultiLine(new ArrayList<>(validate), true));
+    public static void createOrEditPart(SimpleView.CreateOrEdit in) {
+        Ui.build().modality(Modality.WINDOW_MODAL)
+                .swing().eval(() -> in, SimpleView.class).cf()
+                .thenCompose((SpecAndModel sam) -> Ui.build().title("Artikeldetailconfiguration").modality(Modality.WINDOW_MODAL)
+                .swing().eval(() -> sam, () -> OkCancelWrap.consumerVetoResult(AbstractView.newView(sam))).cf())
+                .thenAccept((SpecAndModel sam) -> {
+                    if ( sam.spec().getId() > 0 ) Dl.remote().lookup(ProductProcessor.class).update(sam);
+                    else Dl.remote().lookup(ProductProcessor.class).create(sam);
+                });
     }
 
 }

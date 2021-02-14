@@ -36,6 +36,7 @@ import eu.ggnet.dwoss.spec.ee.entity.Desktop.Os;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec.Extra;
 import eu.ggnet.dwoss.spec.ee.entity.*;
 import eu.ggnet.dwoss.spec.ee.entity.piece.*;
+import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.*;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
@@ -52,6 +53,39 @@ import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.*;
  */
 @Alternative
 public class ProductProcessorStub implements ProductProcessor {
+
+    public static class EditProduct {
+
+        private final String partNo;
+
+        private final TradeName manufacturer;
+
+        private final String description;
+
+        public EditProduct(ProductSpec spec) {
+            this.partNo = spec.getPartNo();
+            this.manufacturer = spec.getModel().getFamily().getSeries().getBrand().getManufacturer();
+            this.description = SpecFormater.toDetailedName(spec);
+        }
+
+        public TradeName manufacturer() {
+            return manufacturer;
+        }
+
+        public String description() {
+            return description;
+        }
+
+        public String partNo() {
+            return partNo;
+        }
+
+        @Override
+        public String toString() {
+            return "EditProduct{" + "partNo=" + partNo + ", manufacturer=" + manufacturer + ", description=" + description + '}';
+        }
+
+    }
 
     private final Set<ProductSeries> serieses;
 
@@ -75,6 +109,8 @@ public class ProductProcessorStub implements ProductProcessor {
 
     public Monitor monitor;
 
+    public DesktopBundle desktopBundle;
+
     private final Random R = new Random();
 
     private final List<Product> products;
@@ -95,11 +131,9 @@ public class ProductProcessorStub implements ProductProcessor {
 
     private final Map<Key, Long> RECEIPT_CUSTOMERS;
 
+    public final List<EditProduct> editProducts;
+
     public String editAbleRefurbishId;
-
-    public final String editAbleProductPartNo;
-
-    public final TradeName editAbleProductManufacturer;
 
     public ProductProcessorStub() {
         cpus = new ArrayList<>();
@@ -146,6 +180,7 @@ public class ProductProcessorStub implements ProductProcessor {
         ProductSeries tablet = soc.newProductSeries(ACER, MISC, "Tablet");
         ProductSeries monitor_a = soc.newProductSeries(ACER, MONITOR, "A Series");
         ProductSeries allInOneS = soc.newProductSeries(ACER, ALL_IN_ONE, "All In One");
+        ProductSeries bundleSeries = soc.newProductSeries(ACER, DESKTOP_BUNDLE, "DB Series");
 
         // PB Series
         ProductSeries imedia = soc.newProductSeries(PACKARD_BELL, DESKTOP, "iMedia");
@@ -166,6 +201,7 @@ public class ProductProcessorStub implements ProductProcessor {
         serieses.add(tablet);
         serieses.add(monitor_a);
         serieses.add(allInOneS);
+        serieses.add(bundleSeries);
 
         //ACER families
         ProductFamily veriton_n = soc.newProductFamily();
@@ -182,6 +218,7 @@ public class ProductProcessorStub implements ProductProcessor {
         ProductFamily tablet_A = soc.newProductFamily();
         ProductFamily monitor_A23 = soc.newProductFamily();
         ProductFamily allInOneF = soc.newProductFamily();
+        ProductFamily bundleFamiliy = soc.newProductFamily();
 
         veriton_m.setName("Veriton M");
         veriton_n.setName("Veriton N");
@@ -197,6 +234,7 @@ public class ProductProcessorStub implements ProductProcessor {
         tablet_A.setName("Tablet Iconia A");
         monitor_A23.setName("A230");
         allInOneF.setName("All In One");
+        bundleFamiliy.setName("Th DB Familiy");
 
         veriton.addFamily(veriton_m);
         veriton.addFamily(veriton_n);
@@ -212,6 +250,7 @@ public class ProductProcessorStub implements ProductProcessor {
         tablet.addFamily(tablet_A);
         monitor_a.addFamily(monitor_A23);
         allInOneS.addFamily(allInOneF);
+        bundleSeries.addFamily(bundleFamiliy);
 
         ProductModel g7700 = soc.newProductModel();
         ProductModel m1 = soc.newProductModel();
@@ -223,6 +262,7 @@ public class ProductProcessorStub implements ProductProcessor {
         ProductModel monitor_a231Bwsx = soc.newProductModel();
         ProductModel p6 = soc.newProductModel();
         ProductModel all = soc.newProductModel();
+        ProductModel bundleModel = soc.newProductModel();
 
         g7700.setName("Aspire Predator G7700");
         m1.setName("Veriton M480G");
@@ -234,6 +274,7 @@ public class ProductProcessorStub implements ProductProcessor {
         monitor_a231Bwsx.setName("A231Bwsx");
         p6.setName("TravelMate P648");
         all.setName("All-In-One 1000");
+        bundleModel.setName("The DB Model");
 
         predator.addModel(g7700);
         veriton_m.addModel(m1);
@@ -245,6 +286,7 @@ public class ProductProcessorStub implements ProductProcessor {
         monitor_A23.addModel(monitor_a231Bwsx);
         travelmate_family.addModel(p6);
         allInOneF.addModel(all);
+        bundleFamiliy.addModel(bundleModel);
 
         specs = new HashMap<>();
 
@@ -283,7 +325,7 @@ public class ProductProcessorStub implements ProductProcessor {
         specs.put(desktop.getPartNo(), desktop);
 
         notebook = new Notebook();
-        notebook.setModel(m3);
+        notebook.setModel(p6);
         notebook.setPartNo("LX.12345.AAB");
         notebook.setDisplay(new Display(Display.Size._18_4, Display.Resolution.FULL_HD, Display.Type.CRYSTAL_BRIGHT, Display.Ration.SIXTEEN_TO_NINE));
         notebook.setOs(Os.WINDOWS_7_HOME_PREMIUM_64);
@@ -311,8 +353,21 @@ public class ProductProcessorStub implements ProductProcessor {
 
         specs.put(allInOne.getPartNo(), allInOne);
 
-        editAbleProductPartNo = notebook.getPartNo();
-        editAbleProductManufacturer = notebook.getModel().getFamily().getSeries().getBrand().getManufacturer();
+        desktopBundle = new DesktopBundle(desktop, monitor);
+        desktopBundle.setModel(bundleModel);
+        desktopBundle.setPartNo("DB.12345.AAA");
+
+        specs.put(desktopBundle.getPartNo(), desktopBundle);
+
+        editProducts = Arrays.asList(
+                new EditProduct(one),
+                new EditProduct(monitor),
+                new EditProduct(desktop),
+                new EditProduct(notebook),
+                new EditProduct(allInOne),
+                new EditProduct(desktopBundle)
+        );
+
         // Stock
         shipments = new ArrayList<>();
         for (int i = 0; i < 30; i++) {
@@ -390,20 +445,16 @@ public class ProductProcessorStub implements ProductProcessor {
     }
 
     @Override
-    public ProductSpec create(ProductSpec spec, ProductModel model, long gtin) {
-        specs.put(spec.getPartNo(), spec);
-        return spec;
+    public ProductSpec create(SpecAndModel sam) {
+        specs.put(sam.spec().getPartNo(), sam.spec());
+        System.out.println(this.getClass().getSimpleName() + ".create(" + sam + ")");
+        return sam.spec();
     }
 
     @Override
-    public ProductSpec refresh(ProductSpec spec, ProductModel model) throws IllegalArgumentException {
-        spec.setModel(model);
-        return spec;
-    }
-
-    @Override
-    public ProductSpec update(ProductSpec spec, long gtin) {
-        return spec;
+    public ProductSpec update(SpecAndModel sam) throws IllegalArgumentException {
+        System.out.println(this.getClass().getSimpleName() + ".update(" + sam + ")");
+        return sam.spec();
     }
 
     @Override
@@ -437,7 +488,7 @@ public class ProductProcessorStub implements ProductProcessor {
      * Creates a new ProductModel and Persists it.
      * <p>
      * How this works: If series is null, family is also as null asumed. - so a default series and a default family is selected. If family is null, a default
-     * one is selecte at the series. In both cases, if no default exists, create on. Now create a ProductModel with the family.
+     * one is selecte at the series. In both cases, if no default exists, createOrUpdate on. Now createOrUpdate a ProductModel with the family.
      *
      * @param brand     may not be null
      * @param group     may not be null

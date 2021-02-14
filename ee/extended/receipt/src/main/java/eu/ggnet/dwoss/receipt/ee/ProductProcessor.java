@@ -16,6 +16,9 @@
  */
 package eu.ggnet.dwoss.receipt.ee;
 
+import java.io.Serializable;
+import java.util.Objects;
+
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.core.common.UserInfoException;
@@ -31,6 +34,39 @@ import eu.ggnet.dwoss.spec.ee.entity.piece.Gpu;
  */
 @Remote
 public interface ProductProcessor {
+
+    public class SpecAndModel implements Serializable {
+
+        private final ProductSpec spec;
+
+        private final ProductModel model;
+
+        private final long gtin;
+
+        public SpecAndModel(ProductSpec spec, ProductModel model, long gtin) {
+            this.spec = Objects.requireNonNull(spec, "spec must not be null");
+            this.model = Objects.requireNonNull(model, "model must not be null");
+            this.gtin = gtin;
+        }
+
+        public ProductSpec spec() {
+            return spec;
+        }
+
+        public ProductModel model() {
+            return model;
+        }
+
+        public long gtin() {
+            return gtin;
+        }
+
+        @Override
+        public String toString() {
+            return "SpecAndModel{" + "spec=" + spec + ", model=" + model + ", gtin=" + gtin + '}';
+        }
+
+    }
 
     /**
      * Creates a new Cpu instance.
@@ -123,25 +159,13 @@ public interface ProductProcessor {
      * <li>A SopoProduct is searched. If found, it is updated, else a new one is created</li>
      * </ol>
      *
-     * @param spec  the spec to persist, must not be null
-     * @param model the model for the spec, must not be null or new
-     * @param gtin  the value of gtin
+     * @param sam the spec and model
      * @throws IllegalArgumentException if Cpu or Gpu in a Desktop are new.
      *
      * @return the eu.ggnet.dwoss.spec.entity.ProductSpec
      */
-    // TODO: Check if the model as parameter is still needed.
-    ProductSpec create(ProductSpec spec, ProductModel model, long gtin) throws IllegalArgumentException;
-
-    /**
-     * Return a refreshed ProductSpec with the selected model added.
-     *
-     * @param spec  the spec to be refreshed.
-     * @param model the model to be assosiated, must not be null, but may be equal to spec.getModel
-     * @return
-     * @throws IllegalArgumentException
-     */
-    ProductSpec refresh(ProductSpec spec, ProductModel model) throws IllegalArgumentException;
+    // TODO: The methods create,update an refresh can be merged into a createOrUpdate, moved to the SpecAgent. The Product change can be realised via an event.
+    ProductSpec create(SpecAndModel sam) throws IllegalArgumentException;
 
     /**
      * Updates an existing detached Cpu.
@@ -168,23 +192,21 @@ public interface ProductProcessor {
      * <ol>
      * <li>Validate and throw IllegalArgumentException:
      * <ul>
-     * <li>if the ProductSpec.productId == null</li>
-     * <li>if there does not exist a Product with ProductSpec.productId</li>
-     * <li>if there does not exist a SopoProduct with Product.partNo (unchanged)</li>
+     * <li>if the ProductSpec.productId == null
+     * <li>if there does not exist a Product with ProductSpec.productId
+     * <li>if there does not exist a SopoProduct with Product.partNo (unchanged)
      * </ul>
-     * </li>
-     * <li>If Spec is a DisplayAble its assumed the Display is either existent or new.<br />
-     * In case it exists, the existent value will be set in the Spec</li>
-     * <li>if the supplied ProductModel is different from ProductSpec.getModel it is merged and set</li>
-     * <li>Overwrite all changes in Product</li>
-     * <li>Overwrite all changes in SopoProduct</li>
-     * <li> If PartNo change propagate to all matching SopoUnits</li>
+     * <li>if the supplied model differes from the model of the spec, it is updated on the spec
+     * <li>If Spec is a DisplayAble its assumed the Display is either existent or new. In case it exists, the existent value will be set in the Spec
+     * <li>if the supplied ProductModel is different from ProductSpec.getModel it is merged and set
+     * <li>Overwrite all changes in Product
+     * <li>Overwrite all changes in SopoProduct
+     * <li>If PartNo change propagate to all matching SopoUnits
      * </ol>
      *
-     * @param spec the spec to be updated, must not be null
-     * @param gtin the value of gtin
+     * @param sam the spec and model
      * @throws IllegalArgumentException if spec.productId == null
      * @return the eu.ggnet.dwoss.spec.entity.ProductSpec
      */
-    ProductSpec update(ProductSpec spec, long gtin) throws IllegalArgumentException;
+    ProductSpec update(SpecAndModel sam) throws IllegalArgumentException;
 }

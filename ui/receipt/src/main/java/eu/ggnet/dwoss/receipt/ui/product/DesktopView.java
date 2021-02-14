@@ -16,12 +16,6 @@
  */
 package eu.ggnet.dwoss.receipt.ui.product;
 
-import eu.ggnet.dwoss.core.widget.swing.ComboBoxController;
-import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
-import eu.ggnet.dwoss.core.widget.swing.CloseType;
-import eu.ggnet.dwoss.core.widget.swing.IPreClose;
-import eu.ggnet.dwoss.core.widget.swing.NamedEnumCellRenderer;
-
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -31,6 +25,9 @@ import java.util.*;
 import javax.swing.*;
 
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
+import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.swing.*;
+import eu.ggnet.dwoss.receipt.ee.ProductProcessor.SpecAndModel;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.entity.Desktop;
 import eu.ggnet.dwoss.spec.ee.entity.Desktop.Hdd;
@@ -38,13 +35,16 @@ import eu.ggnet.dwoss.spec.ee.entity.Desktop.Odd;
 import eu.ggnet.dwoss.spec.ee.entity.Desktop.Os;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Cpu;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Gpu;
-import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.core.impl.Swing;
+
+import static eu.ggnet.saft.core.ui.UiParent.of;
 
 /**
  *
  * @author pascal.perau
  */
-public class DesktopView extends AbstractView<Desktop> implements IPreClose {
+public class DesktopView extends AbstractView {
 
     private static class HddController {
 
@@ -287,26 +287,28 @@ public class DesktopView extends AbstractView<Desktop> implements IPreClose {
     }
 
     @Override
-    public void setSpec(Desktop desktop) {
+    public void accept(SpecAndModel sam) {
+        Desktop desktop = (Desktop)Objects.requireNonNull(sam, "sam must not be null").spec();
         setCpu(desktop.getCpu());
         setGpu(desktop.getGpu());
         setHdds(desktop.getHdds());
         setOdds(desktop.getOdds());
         memoryBox.setSelectedItem(desktop.getMemory());
         setOs(desktop.getOs());
-        basicView.setSpec(desktop);
+        basicView.accept(sam);
     }
 
     @Override
-    public Desktop getSpec() {
-        Desktop desktop = (Desktop)basicView.getSpec();
+    public SpecAndModel getResult() {
+        SpecAndModel sam = basicView.getResult();
+        Desktop desktop = (Desktop)sam.spec();
         desktop.setCpu(getCpu());
         desktop.setGpu(getGpu());
         desktop.setHdds(getHdds());
         desktop.setOdds(getOdds());
         desktop.setMemory((Integer)memoryBox.getSelectedItem());
         desktop.setOs((Os)osBox.getSelectedItem());
-        return desktop;
+        return new SpecAndModel(desktop, sam.model(), sam.gtin());
     }
 
     public BasicView getBasicView() {
@@ -425,16 +427,6 @@ public class DesktopView extends AbstractView<Desktop> implements IPreClose {
         }
         osBox.setModel(new DefaultComboBoxModel(os.getCategory().getOss()));
         osBox.setSelectedItem(os);
-    }
-
-    @Override
-    public long getGtin() {
-        return basicView.getGtin();
-    }
-
-    @Override
-    public void setGtin(long gtin) {
-        basicView.setGtin(gtin);
     }
 
     /**
@@ -1041,7 +1033,7 @@ public class DesktopView extends AbstractView<Desktop> implements IPreClose {
     private void createGpuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createGpuButtonActionPerformed
         EditGpuPanel view = new EditGpuPanel(allGpus);
         view.setDefaults(gpuTypes.getSelected(), gpuSeries.getSelected());
-        OkCancelDialog<EditGpuPanel> dialog = new OkCancelDialog<>(parent, "Spezifikationen", view);
+        OkCancelDialog<EditGpuPanel> dialog = new OkCancelDialog<>(UiCore.global().core(Swing.class).unwrap(of(this)).orElse(null), "Spezifikationen", view);
         dialog.setVisible(true);
         if ( dialog.getCloseType() == CloseType.OK ) {
             allGpus = specAgent.findAll(Gpu.class);
@@ -1053,7 +1045,7 @@ public class DesktopView extends AbstractView<Desktop> implements IPreClose {
         if ( getGpu() == null ) return;
         EditGpuPanel view = new EditGpuPanel(allGpus);
         view.setGpu(getGpu());
-        OkCancelDialog<EditGpuPanel> dialog = new OkCancelDialog<>(parent, "Spezifikationen", view);
+        OkCancelDialog<EditGpuPanel> dialog = new OkCancelDialog<>(UiCore.global().core(Swing.class).unwrap(of(this)).orElse(null), "Spezifikationen", view);
         dialog.setVisible(true);
         if ( dialog.getCloseType() == CloseType.OK ) {
             allGpus = specAgent.findAll(Gpu.class);
@@ -1065,7 +1057,7 @@ public class DesktopView extends AbstractView<Desktop> implements IPreClose {
         if ( getCpu() == null ) return;
         EditCpuPanel view = new EditCpuPanel(allCpus);
         view.setCpu(getCpu());
-        OkCancelDialog<EditCpuPanel> dialog = new OkCancelDialog<>(parent, "Spezifikationen", view);
+        OkCancelDialog<EditCpuPanel> dialog = new OkCancelDialog<>(UiCore.global().core(Swing.class).unwrap(of(this)).orElse(null), "Spezifikationen", view);
         dialog.setVisible(true);
         if ( dialog.getCloseType() == CloseType.OK ) {
             allCpus = specAgent.findAll(Cpu.class);
@@ -1076,7 +1068,7 @@ public class DesktopView extends AbstractView<Desktop> implements IPreClose {
     private void createCpuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createCpuButtonActionPerformed
         EditCpuPanel view = new EditCpuPanel(allCpus);
         view.setDefaults(cpuTypes.getSelected(), cpuSeries.getSelected());
-        OkCancelDialog<EditCpuPanel> dialog = new OkCancelDialog<>(parent, "Spezifikationen", view);
+        OkCancelDialog<EditCpuPanel> dialog = new OkCancelDialog<>(UiCore.global().core(Swing.class).unwrap(of(this)).orElse(null), "Spezifikationen", view);
         dialog.setVisible(true);
         if ( dialog.getCloseType() == CloseType.OK ) {
             allCpus = specAgent.findAll(Cpu.class);

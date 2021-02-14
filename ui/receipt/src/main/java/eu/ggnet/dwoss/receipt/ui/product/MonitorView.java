@@ -17,11 +17,12 @@
 package eu.ggnet.dwoss.receipt.ui.product;
 
 import java.awt.BorderLayout;
+import java.util.Objects;
 
-import eu.ggnet.dwoss.core.widget.swing.IPreClose;
+import eu.ggnet.dwoss.receipt.ee.ProductProcessor.SpecAndModel;
 import eu.ggnet.dwoss.spec.ee.entity.Monitor;
 
-public class MonitorView extends AbstractView<Monitor> implements IPreClose {
+public class MonitorView extends AbstractView {
 
     private BasicView basicView;
 
@@ -41,26 +42,18 @@ public class MonitorView extends AbstractView<Monitor> implements IPreClose {
     }
 
     @Override
-    public void setSpec(Monitor monitor) {
+    public void accept(SpecAndModel sam) {
+        Monitor monitor = (Monitor)Objects.requireNonNull(sam, "sam must not be null").spec();
         displayView.setDisplay(monitor.getDisplay());
-        basicView.setSpec(monitor);
+        basicView.accept(sam);
     }
 
     @Override
-    public Monitor getSpec() {
-        Monitor monitor = (Monitor)basicView.getSpec();
+    public SpecAndModel getResult() {
+        SpecAndModel sam = basicView.getResult();
+        Monitor monitor = (Monitor)sam.spec();
         monitor.setDisplay(displayView.getDisplay());
-        return monitor;
-    }
-
-    @Override
-    public long getGtin() {
-        return basicView.getGtin();
-    }
-
-    @Override
-    public void setGtin(long gtin) {
-        basicView.setGtin(gtin);
+        return new SpecAndModel(monitor, sam.model(), sam.gtin());
     }
 
     /**

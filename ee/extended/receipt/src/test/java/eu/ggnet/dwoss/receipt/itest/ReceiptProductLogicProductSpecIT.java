@@ -1,15 +1,5 @@
 package eu.ggnet.dwoss.receipt.itest;
 
-import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
-import eu.ggnet.dwoss.spec.ee.entity.ProductModel;
-import eu.ggnet.dwoss.spec.ee.entity.ProductSeries;
-import eu.ggnet.dwoss.spec.ee.entity.ProductFamily;
-import eu.ggnet.dwoss.spec.ee.entity.Desktop;
-import eu.ggnet.dwoss.spec.ee.entity.piece.Cpu;
-import eu.ggnet.dwoss.spec.ee.entity.piece.Display;
-import eu.ggnet.dwoss.spec.ee.entity.piece.Gpu;
-import eu.ggnet.dwoss.spec.ee.entity.Notebook;
-
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -21,9 +11,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
+import eu.ggnet.dwoss.receipt.ee.ProductProcessor.SpecAndModel;
 import eu.ggnet.dwoss.receipt.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.receipt.itest.support.DatabaseCleaner;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
+import eu.ggnet.dwoss.spec.ee.entity.*;
+import eu.ggnet.dwoss.spec.ee.entity.piece.*;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 
@@ -78,7 +71,7 @@ public class ReceiptProductLogicProductSpecIT extends ArquillianProjectArchive {
         notebook.setPartNo("LX.ASDFG.GHJ");
         notebook.setModel(productModel);
 
-        ProductSpec testSpec = productProcessor.create(notebook, productModel, 0);
+        ProductSpec testSpec = productProcessor.create(new SpecAndModel(notebook, productModel, 0));
 
         assertNotNull(testSpec);
 
@@ -95,7 +88,7 @@ public class ReceiptProductLogicProductSpecIT extends ArquillianProjectArchive {
         notebook2.setPartNo("LX.ASDFG.GH2");
         notebook2.setModel(productModel);
 
-        ProductSpec testSpec2 = productProcessor.create(notebook2, productModel, GTIN);
+        ProductSpec testSpec2 = productProcessor.create(new SpecAndModel(notebook2, productModel, GTIN));
         assertNotNull(testSpec2);
         assertNotSame(testSpec2, testSpec);
 
@@ -128,8 +121,8 @@ public class ReceiptProductLogicProductSpecIT extends ArquillianProjectArchive {
         notebook.setPartNo("LX.ASDFG.GHJ");
         notebook.setModel(productModel);
 
-        productProcessor.create(notebook, productModel, 0);
-        productProcessor.create(notebook, productModel, 0);
+        productProcessor.create(new SpecAndModel(notebook, productModel, 0));
+        productProcessor.create(new SpecAndModel(notebook, productModel, 0));
         fail("Error 040: No Exception Found at: CreateProductSpec");
     }
 
@@ -153,19 +146,18 @@ public class ReceiptProductLogicProductSpecIT extends ArquillianProjectArchive {
         notebook.setPartNo("LX.ASDFG.GHP");
         notebook.setModel(productModel);
 
-        ProductSpec spec = productProcessor.create(notebook, productModel, 0);
+        ProductSpec spec = productProcessor.create(new SpecAndModel(notebook, productModel, 0));
         ProductFamily family = spec.getModel().getFamily();
 
         ProductModel productModel2 = productProcessor.create(ACER, NOTEBOOK, family.getSeries(), family, "TestModel2");
 
-        spec = productProcessor.refresh(spec, productModel2);
-
-        long model2Id = spec.getModel().getId();
+        long idOfOldModel = productModel.getId();
+        long idOfNewModel = productModel2.getId();
 
         String comment = "MuhBlub";
         ((Notebook)spec).setComment(comment);
 
-        productProcessor.update(spec, 0);
+        productProcessor.update(new SpecAndModel(spec, productModel2, 0));
 
         List<ProductSeries> series = specAgent.findAllEager(ProductSeries.class);
         assertNotNull(series);
@@ -178,7 +170,7 @@ public class ReceiptProductLogicProductSpecIT extends ArquillianProjectArchive {
         List<ProductSpec> specs = specAgent.findAllEager(ProductSpec.class);
         assertNotNull(specs);
         assertEquals(1, specs.size());
-        assertEquals(model2Id, specs.get(0).getModel().getId());
+        assertThat(specs.get(0).getModel().getId()).as("ID of the Model should match new model, not old " + idOfOldModel).isEqualTo(idOfNewModel);
         assertEquals(comment, ((Notebook)specs.get(0)).getComment());
     }
 }
