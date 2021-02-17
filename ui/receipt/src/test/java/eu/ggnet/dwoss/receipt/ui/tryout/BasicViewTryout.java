@@ -20,7 +20,6 @@ import java.util.EnumSet;
 
 import javax.swing.UIManager;
 
-import eu.ggnet.dwoss.core.widget.swing.CloseType;
 import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
 import eu.ggnet.dwoss.receipt.ui.product.BasicView;
 import eu.ggnet.dwoss.spec.ee.entity.BasicSpec;
@@ -45,14 +44,8 @@ public class BasicViewTryout {
         basic.setVideoPorts(EnumSet.of(VideoPort.HDMI, VideoPort.VGA));
 
         BasicView view = new BasicView();
-        view.setSpec(basic);
+
         OkCancelDialog<BasicView> dialog = new OkCancelDialog<>("", view);
         dialog.setVisible(true);
-        if ( dialog.getCloseType() == CloseType.OK ) {
-            System.out.println(view.getSpec());
-            System.out.println(view.getGtin());
-        }
-        Thread.sleep(1221);
-        System.exit(0);
     }
 }

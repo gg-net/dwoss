@@ -21,9 +21,9 @@ import java.util.SortedMap;
 
 import javax.ejb.Remote;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
 import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
-import eu.ggnet.dwoss.core.common.UserInfoException;
 
 /**
  * StockTransctionProcessor.
@@ -44,10 +44,12 @@ public interface StockTransactionProcessor {
 
     /**
      * Prepares the transfer of multiple units.
-     * Creates an amount of needed transactions in the form,
-     * - that the transactions are correct (all units of a transaction have the same source as the transaciton)
-     * - that no transaction has more units than maxUnitSize.
-     * <p/>
+     * Creates an amount of needed transactions in the form:
+     * <ul>
+     * <li>that the transactions are correct (all units of a transaction have the same source as the transaciton)</li>
+     * <li>that no transaction has more units than maxUnitSize.</li>
+     * </ul>
+     *
      * @param stockUnits         the stockUnits to transfer
      * @param destinationStockId the destination stockId
      * @param arranger           the arranger

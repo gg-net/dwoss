@@ -16,32 +16,35 @@
  */
 package eu.ggnet.dwoss.receipt.ui.product;
 
-import java.util.Arrays;
-import java.util.Set;
+import java.util.*;
 
 import javax.swing.DefaultComboBoxModel;
 
 import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.core.widget.swing.NamedEnumCellRenderer;
-import eu.ggnet.dwoss.receipt.ui.SwingTraversalUtil;
+import eu.ggnet.dwoss.receipt.ee.ProductProcessor.SpecAndModel;
 import eu.ggnet.dwoss.receipt.ui.CheckBoxTableNoteModel;
+import eu.ggnet.dwoss.receipt.ui.SwingTraversalUtil;
 import eu.ggnet.dwoss.spec.ee.entity.BasicSpec;
 import eu.ggnet.dwoss.spec.ee.entity.BasicSpec.Color;
 import eu.ggnet.dwoss.spec.ee.entity.BasicSpec.VideoPort;
+import eu.ggnet.dwoss.spec.ee.entity.ProductModel;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec.Extra;
 
 /**
  *
  * @author pascal.perau
  */
-public class BasicView extends AbstractView<BasicSpec> {
+public class BasicView extends AbstractView {
 
     CheckBoxTableNoteModel<Extra> extrasModel = new CheckBoxTableNoteModel(Arrays.asList(Extra.class.getEnumConstants()), "Ausstattung");
 
     CheckBoxTableNoteModel<VideoPort> videoPortModel = new CheckBoxTableNoteModel(Arrays.asList(VideoPort.class.getEnumConstants()), "Ausstattung");
 
     private BasicSpec basicSpec;
+
+    private ProductModel model;
 
     /** Creates new form BasicView */
     public BasicView() {
@@ -64,7 +67,10 @@ public class BasicView extends AbstractView<BasicSpec> {
     }
 
     @Override
-    public void setSpec(BasicSpec basicSpec) {
+    public void accept(SpecAndModel sam) {
+        BasicSpec basicSpec = (BasicSpec)Objects.requireNonNull(sam, "sam must not be null").spec();
+        model = sam.model();
+        gtinTextField.setText(Long.toString(sam.gtin()));
         Set<Extra> extras = basicSpec.getDefaultExtras();
         extras.addAll(basicSpec.getExtras());
         extrasModel.setFiltered(extras);
@@ -76,13 +82,19 @@ public class BasicView extends AbstractView<BasicSpec> {
     }
 
     @Override
-    public BasicSpec getSpec() {
-        if ( basicSpec == null ) basicSpec = new BasicSpec();
+    public SpecAndModel getResult() {
+        if ( basicSpec == null ) throw new IllegalStateException("SecondState Ui, Consumer.accept() must be called first");
         basicSpec.setColor((Color)colorBox.getSelectedItem());
         basicSpec.setExtras(extrasModel.getMarked());
         basicSpec.setVideoPorts(videoPortModel.getMarked());
         basicSpec.setComment(noteArea.getText());
-        return basicSpec;
+        return new SpecAndModel(basicSpec, model, getGtin());
+    }
+
+    // only internal use
+    private long getGtin() {
+        if ( StringUtils.isBlank(gtinTextField.getText()) ) return 0;
+        return Long.parseLong(gtinTextField.getText());
     }
 
     /** This method is called from within the constructor to
@@ -215,16 +227,5 @@ public class BasicView extends AbstractView<BasicSpec> {
     private javax.swing.JTextArea noteArea;
     private javax.swing.JTable videoPortTable;
     // End of variables declaration//GEN-END:variables
-
-    @Override
-    public long getGtin() {
-        if ( StringUtils.isBlank(gtinTextField.getText()) ) return 0;
-        return Long.parseLong(gtinTextField.getText());
-    }
-
-    @Override
-    public void setGtin(long gtin) {
-        gtinTextField.setText(Long.toString(gtin));
-    }
 
 }

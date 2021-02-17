@@ -20,11 +20,11 @@ import java.io.Serializable;
 
 import javax.ejb.Remote;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.common.values.ReceiptOperation;
 import eu.ggnet.dwoss.stock.ee.entity.*;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-import eu.ggnet.dwoss.core.common.UserInfoException;
 
 /**
  *
@@ -60,6 +60,7 @@ public interface UnitProcessor {
 
         public final ReceiptOperation operation;
 
+        // TODO: I think, this is an sopo relict, verifiy if it can be removed. There should no longer be a uniqueunit without a product.
         public final String partNo;
 
         public EditableUnit(UniqueUnit uniqueUnit, StockUnit stockUnit, ReceiptOperation operation, String partNo) {
@@ -82,7 +83,7 @@ public interface UnitProcessor {
      * <li>Serial is already taken and Unit is in Stock [UniqueUnit &amp; Stock]</li>
      * </ul>
      * </li>
-     * <li>If serial is taken update existing Unit else persist Unit[UniqueUnit]<br />
+     * <li>If serial is taken update existing Unit else persist Unit[UniqueUnit]<br>
      * (At this point it implies that the Unit is not in Stock)</li>
      * <li>Create, weak reference StockUnit and prepare for rollIn [Stock]</li>
      * <li>Create and weak reference SopoUnit [Sopo]</li>
@@ -93,7 +94,7 @@ public interface UnitProcessor {
      * </ul>
      * </li>
      * </ol>
-     * <p/>
+     *
      * @param shipment         the shipment
      * @param product
      * @param recieptUnit      the UniqueUnit to be receipt, must not be null

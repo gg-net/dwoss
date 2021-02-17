@@ -51,13 +51,12 @@ public class ArquillianProjectArchive {
                 .resolve().withTransitivity().asFile();
         WebArchive war = ShrinkWrap.create(WebArchive.class, "stock-persistence-test.war")
                 .addPackages(true,
-                        Filters.exclude(PersistenceIT.class.getPackage(), // Compile safe package "eu.ggnet.dwoss.customer.itest"
-                                ValidationTest.class.getPackage()), // Compile safe package "eu.ggnet.dwoss.customer.test"
-                        "eu.ggnet.dwoss.stock")
-                .addClass(MandatorSupportProducer.class) // The Datasource Configuration and the Static Producers
+                        Filters.exclude(PersistenceIT.class.getPackage(), // Compile safe package "eu.ggnet.dwoss.stock.ee.itest"
+                                ValidationTest.class.getPackage()), // Compile safe package "eu.ggnet.dwoss.stock.ee.test"
+                        "eu.ggnet.dwoss.stock") // ee and api
                 .addClass(SampleDataSourceDefinition.class) // Alle Datasources. More than we need.
                 .addClass(Coordinate.class) // Need this cause of the maven resolver is part of the deployment
-                .addClass(ArquillianProjectArchive.class) // The local deployer configuration
+                .addPackage(ArquillianProjectArchive.class.getPackage()) // Everything in Support.
                 .addAsResource(new ClassLoaderAsset("META-INF/persistence.xml"), "META-INF/persistence.xml")
                 .addAsWebInfResource("jboss-deployment-structure.xml") // Needed for jboss/wildfly h2 enablement
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")

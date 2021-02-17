@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -73,7 +73,8 @@ public class BasicSpec extends ProductSpec {
         APRICOT("apricot"),
         BLACK_COPPER("schwarz-kupfer"),
         BLACK_GREY("schwarz-grau"),
-        BLACK_GOLD("schwarz-gold");
+        BLACK_GOLD("schwarz-gold"),
+        YELLOW("Gelb");
 
         private String note;
 

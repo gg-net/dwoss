@@ -47,7 +47,6 @@ import eu.ggnet.dwoss.misc.ui.toolbar.OpenDirectoryToolbarButton;
 import eu.ggnet.dwoss.price.ui.cap.*;
 import eu.ggnet.dwoss.price.ui.cap.build.PriceSubMenuBuilder.PriceSubMenu;
 import eu.ggnet.dwoss.receipt.ui.cap.*;
-import eu.ggnet.dwoss.receipt.ui.cap.OpenSpecListAction;
 import eu.ggnet.dwoss.redtapext.ui.cap.*;
 import eu.ggnet.dwoss.report.ui.cap.*;
 import eu.ggnet.dwoss.rights.ui.cap.NewRightsManagementAction;
@@ -221,8 +220,8 @@ public class DwOssClientController {
         logistik.getItems().addAll(m.items(
                 OpenShipmentListAction.class,
                 EditUnitAction.class,
-                ScrapUnitAction.class,
-                DeleteUnitAction.class
+                ScrapUnitsAction.class,
+                DeleteUnitsAction.class
         ));
 
         logistik.getItems().add(new SeparatorMenuItem());

@@ -57,7 +57,7 @@ public class Gpu extends BaseEntity implements Serializable {
          * Manufacturer nVidia.
          */
         NVIDIA("nVidia", Arrays.asList(GEFORCE_ULP, GEFORCE_8000, GEFORCE_9000, GEFORCE_100, GEFORCE_200, GEFORCE_300, GEFORCE_400,
-                GEFORCE_500, GEFORCE_600, GEFORCE_700, GEFORCE_800, QUADRO_2000, QUADRO_600, GEFORCE_900, QUADRO_4000, GEFORCE_10, GEFORCE_TITAN)),
+                GEFORCE_500, GEFORCE_600, GEFORCE_700, GEFORCE_800, QUADRO_2000, QUADRO_600, GEFORCE_900, QUADRO_4000, GEFORCE_10, GEFORCE_TITAN, GEFORCE_MX, GEFORCE_RTX)),
         /**
          * Manufacturer Apple.
          */
@@ -127,7 +127,9 @@ public class Gpu extends BaseEntity implements Serializable {
         R3("Radeon R3"),
         A8("Radeon A8"),
         GEFORCE_TITAN("GeForce Titan Series"),
-        GEFORCE_10("GeForce 10 Series");
+        GEFORCE_10("GeForce 10 Series"),
+        GEFORCE_MX("GeForce MX Series"),
+        GEFORCE_RTX("GeForce RTX Series");
 
         String note;
 
@@ -187,6 +189,7 @@ public class Gpu extends BaseEntity implements Serializable {
     /**
      *
      * Not used anymore, can be removed later.
+     *
      * @deprecated
      */
     @Deprecated
@@ -214,55 +217,55 @@ public class Gpu extends BaseEntity implements Serializable {
     public long getId() {
         return id;
     }
-    
+
     public Manufacturer getManufacturer() {
         return series.getManufacturer();
     }
-    
+
     public String getModel() {
         return model;
     }
-    
+
     public void setModel(String model) {
         this.model = model;
     }
-    
+
     public String getName() {
         return name;
     }
-    
+
     public void setName(String name) {
         this.name = name;
     }
-    
+
     public Series getSeries() {
         return series;
     }
-    
+
     public void setSeries(Series series) {
         this.series = series;
     }
-    
+
     public void addType(Type type) {
         types.add(type);
     }
-    
+
     public void removeType(Type type) {
         types.remove(type);
     }
-    
+
     public Set<Type> getTypes() {
         return types;
     }
-    
+
     public void setTypes(Set<Type> types) {
         this.types = types;
     }
-    
+
     public Double getEconomicValue() {
         return economicValue;
     }
-    
+
     public void setEconomicValue(Double economicValue) {
         this.economicValue = economicValue;
     }

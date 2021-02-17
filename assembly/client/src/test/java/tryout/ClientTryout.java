@@ -31,6 +31,7 @@ import eu.ggnet.dwoss.mandator.sample.impl.Sample;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;
 import eu.ggnet.dwoss.stock.api.*;
+import eu.ggnet.dwoss.stock.api.StockApi.Scraped;
 
 /**
  *
@@ -76,6 +77,16 @@ public class ClientTryout {
             }
 
             @Override
+            public List<Scraped> scrap(List<Long> stockUnitIds, String reason, String arranger) throws NullPointerException, UserInfoException {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public List<Scraped> delete(List<Long> stockUnitIds, String reason, String arranger) throws NullPointerException, UserInfoException {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
             public void perpareTransferByUniqueUnitIds(List<Long> uniqueUnitIds, int destinationStockId, String arranger, String comment) throws UserInfoException {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
@@ -84,6 +95,17 @@ public class ClientTryout {
             public SimpleStockUnit findByUniqueUnitId(long uniqueUnitId) {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
+
+            @Override
+            public SimpleStockUnit findByRefurbishId(String refurbishId) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public Map<String, SimpleStockUnit> findByRefurbishIds(List<String> refurbishIds) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
         });
 
         Dl.remote().add(Mandators.class, new Mandators() {

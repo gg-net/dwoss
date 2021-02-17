@@ -35,12 +35,12 @@ public class UnitSupporterStub implements UnitSupporter {
 
     @Override
     public boolean isRefurbishIdAvailable(String refurbishId) {
-        return units.stream().filter(uu -> refurbishId.equals(uu.getRefurbishId())).findAny().isPresent();
+        return !units.stream().filter(uu -> refurbishId.equals(uu.getRefurbishId())).findAny().isPresent();
     }
 
     @Override
     public boolean isSerialAvailable(String serial) {
-        return units.stream().filter(uu -> serial.equals(uu.getSerial())).findAny().isPresent();
+        return !units.stream().filter(uu -> serial.equals(uu.getSerial())).findAny().isPresent();
     }
 
     @Override

@@ -16,33 +16,136 @@
  */
 package eu.ggnet.dwoss.receipt.ui.product;
 
-import java.awt.Window;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.*;
+import java.util.concurrent.CompletionException;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+
 import org.apache.commons.lang3.StringUtils;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.widget.Dl;
-import eu.ggnet.dwoss.core.widget.saft.Failure;
-import eu.ggnet.dwoss.core.widget.saft.ReplyUtil;
-import eu.ggnet.dwoss.core.widget.swing.*;
+import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
+import eu.ggnet.dwoss.core.widget.saft.*;
 import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
+import eu.ggnet.dwoss.receipt.ee.ProductProcessor.SpecAndModel;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.entity.*;
 import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
-import eu.ggnet.dwoss.core.widget.saft.Reply;
+import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.*;
 
-public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
+import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
 
-    private final TradeName manufacturer;
+@Title("Artikelkonfiguration")
+public class SimpleView extends javax.swing.JPanel implements Consumer<SimpleView.CreateOrEdit>, ResultProducer<SpecAndModel> {
+
+    public static class Enforce {
+
+        private final TradeName brand;
+
+        private final ProductGroup group;
+
+        public Enforce(TradeName brand, ProductGroup group) {
+            this.brand = Objects.requireNonNull(brand, "brand must not be null");
+            this.group = Objects.requireNonNull(group, "group must not be null");
+        }
+
+        public TradeName brand() {
+            return brand;
+        }
+
+        public ProductGroup group() {
+            return group;
+        }
+
+        @Override
+        public String toString() {
+            return "EnforceGroupBrand{" + "brand=" + brand + ", group=" + group + '}';
+        }
+
+    }
+
+    /**
+     * Input for Create or Edit. (The SimpleView desides, if it is create or edit)
+     */
+    public static class CreateOrEdit {
+
+        private final TradeName manufacturer;
+
+        private final String partNo;
+
+        private final Enforce enforce;
+
+        /**
+         * Input for Create or Edit. (The SimpleView desides, if it is create or edit)
+         *
+         * @param manufacturer the manufacturer, must not be null
+         * @param partNo       the partNo, must not be blank
+         * @throws NullPointerException if manufacturer or partNo is null
+         * @throws UserInfoException    if partNo is black, manufacturer.isManufacturer() is false, the partNo does not match
+         *                              an optional partNo support of the manufacturer or enforce is set and contains a brand which is not of manufacturer.
+         */
+        public CreateOrEdit(TradeName manufacturer, String partNo) throws UserInfoException, NullPointerException {
+            this(manufacturer, partNo, null);
+        }
+
+        /**
+         * Input for Create or Edit. (The SimpleView desides, if it is create or edit)
+         *
+         * @param manufacturer the manufacturer, must not be null
+         * @param partNo       the partNo, must not be blank
+         * @param enforce      optional enforcement, may be null
+         * @throws NullPointerException if manufacturer or partNo is null
+         * @throws UserInfoException    if partNo is black, manufacturer.isManufacturer() is false, the partNo does not match
+         *                              an optional partNo support of the manufacturer or enforce is set and contains a brand which is not of manufacturer.
+         */
+        public CreateOrEdit(TradeName manufacturer, String partNo, Enforce enforce) throws UserInfoException, NullPointerException {
+            this.manufacturer = Objects.requireNonNull(manufacturer, "manufacturer must not be null");
+            this.partNo = Objects.requireNonNull(partNo, "partNo must not be null");
+            this.enforce = enforce;
+            if ( partNo.isBlank() ) throw new UserInfoException("Artikelnummer ist leer");
+            if ( !manufacturer.isManufacturer() ) throw new UserInfoException(manufacturer + " ist kein Hersteller");
+            if ( manufacturer.getPartNoSupport() != null && !manufacturer.getPartNoSupport().isValid(partNo) ) {
+                throw new UserInfoException(manufacturer.getPartNoSupport().violationMessages(partNo));
+            }
+            if ( enforce != null && enforce.brand().getManufacturer() != manufacturer ) {
+                throw new UserInfoException("Regel gebrocht: Brand " + enforce.brand() + " ist von " + enforce.brand().getManufacturer() + ", es wurde aber " + manufacturer + " ausgewählt");
+            }
+        }
+
+        public TradeName manufacturer() {
+            return manufacturer;
+        }
+
+        public String partNo() {
+            return partNo;
+        }
+
+        public Optional<Enforce> enforce() {
+            return Optional.ofNullable(enforce);
+        }
+
+        @Override
+        public String toString() {
+            return "CreateOrEdit{" + "manufacturer=" + manufacturer + ", partNo=" + partNo + ", enforce=" + enforce + '}';
+        }
+
+    }
+
+    private TradeName manufacturer;
 
     private final NamedComparator INAMED_COMPARATOR = new NamedComparator();
 
@@ -50,11 +153,15 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
 
     private List<ProductSeries> allSeries;
 
-    private Window parent;
+    private boolean edit = false;
 
-    private ProductProcessor productProcessor;
+    private boolean cancel = true;
 
-    private SpecAgent specAgent;
+    @Bind(SHOWING)
+    private final BooleanProperty showingProperty = new SimpleBooleanProperty();
+
+    // Inject
+    private RemoteDl remote = Dl.remote();
 
     private final KeyAdapter ENABLE_ADD_BUTTONS = new KeyAdapter() {
         @Override
@@ -63,72 +170,66 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
         }
     };
 
-    SimpleView(TradeName manufacturer) {
-        this.manufacturer = Objects.requireNonNull(manufacturer, "Manufacturer must not be null");
-        if ( !manufacturer.isManufacturer() ) throw new IllegalArgumentException("Manufacturer " + manufacturer + " is not a Manufacturer");
+    public SimpleView() {
         initComponents();
-        productProcessor = Dl.remote().lookup(ProductProcessor.class);
-        specAgent = Dl.remote().lookup(SpecAgent.class);
-        allSeries = specAgent.findAll(ProductSeries.class);
-        brandBox.setModel(new DefaultComboBoxModel<>(manufacturer.getBrands().toArray()));
         groupBox.setModel(new DefaultComboBoxModel<>(EnumSet.complementOf(EnumSet.of(ProductGroup.COMMENTARY)).toArray()));
-        updateSeries();
-        updateFamily();
-        updateModel();
         seriesBox.getEditor().getEditorComponent().addKeyListener(ENABLE_ADD_BUTTONS);
         familyBox.getEditor().getEditorComponent().addKeyListener(ENABLE_ADD_BUTTONS);
         modelBox.getEditor().getEditorComponent().addKeyListener(ENABLE_ADD_BUTTONS);
     }
 
-    /**
-     * Creates new ProductSpec from the PartNo with some hints.
-     * Usefull for existing SopoProducts.
-     * <p>
-     */
-    public SimpleView(TradeName manufacturer, String partNo) {
-        this(manufacturer);
-        partNoField.setText(partNo);
-        editButton.setEnabled(false);
+    @Override
+    public void accept(CreateOrEdit in) {
+        Objects.requireNonNull(in, "in must not be null");
+
+        this.manufacturer = in.manufacturer();
+        // TODO: put in some background thread.
+        allSeries = remote.lookup(SpecAgent.class).findAll(ProductSeries.class);
+        brandBox.setModel(new DefaultComboBoxModel<>(manufacturer.getBrands().toArray()));
+        partNoField.setText(in.partNo());
+
+        // TODO: Put in background.
+        final ProductSpec spec = remote.lookup(SpecAgent.class).findProductSpecByPartNoEager(in.partNo());
+        if ( spec != null ) { // Edit Case detected.
+            in.enforce().ifPresent(e -> { // Enforce Edit Case.
+                if ( spec.getModel().getFamily().getSeries().getGroup() != e.group() ) { // Nicht schön, aber geht erstmal. Info ist halt für den Nutzer.
+                    throw new CompletionException(new UserInfoException("Erlaubte Warengruppe ist " + e.group() + ", Artikel ist aber " + SpecFormater.toDetailedName(spec)));
+                } else if ( spec.getModel().getFamily().getSeries().getBrand() != e.brand() ) {
+                    throw new CompletionException(new UserInfoException("Ausgewählte Marke ist " + e.brand() + ", Artikel ist aber " + SpecFormater.toDetailedName(spec)));
+                }
+            });
+            this.edit = true;
+            this.spec = spec;
+            editButton.setEnabled(true);
+            brandBox.setEnabled(false);
+            groupBox.setEnabled(false);
+            ProductSeries series = spec.getModel().getFamily().getSeries();
+            brandBox.setSelectedItem(series.getBrand());
+            groupBox.setSelectedItem(series.getGroup());
+            updateSeries();
+            seriesBox.setSelectedItem(series.getName());
+            updateFamily();
+            familyBox.setSelectedItem(spec.getModel().getFamily().getName());
+            updateModel();
+            modelBox.setSelectedItem(spec.getModel().getName());
+            enableAddButtons();
+            htmlInfoPane.setText(SpecFormater.toHtml(spec));
+        } else { // Create case.
+            editButton.setEnabled(false);
+            in.enforce().ifPresent(e -> {
+                brandBox.setEnabled(false);
+                groupBox.setEnabled(false);
+                brandBox.setSelectedItem(e.brand());
+                groupBox.setSelectedItem(e.group());
+            });
+            updateSeries();
+            updateFamily();
+            updateModel();
+        }
     }
 
-    /**
-     * Creates new ProductSpec from the PartNo, but with the special case, that brand and group are fixed.
-     */
-    public SimpleView(String partNo, TradeName brand, ProductGroup group) {
-        this(brand.getManufacturer());
-        partNoField.setText(partNo);
-        editButton.setEnabled(false);
-        brandBox.setEnabled(false);
-        groupBox.setEnabled(false);
-        brandBox.setSelectedItem(brand);
-        groupBox.setSelectedItem(group);
-        updateSeries();
-        updateFamily();
-        updateModel();
-    }
-
-    public SimpleView(ProductSpec spec) {
-        this(spec.getModel().getFamily().getSeries().getBrand().getManufacturer());
-        this.spec = spec;
-        partNoField.setText(spec.getPartNo());
-        editButton.setEnabled(true);
-        brandBox.setEnabled(false);
-        groupBox.setEnabled(false);
-        ProductSeries series = spec.getModel().getFamily().getSeries();
-        brandBox.setSelectedItem(series.getBrand());
-        groupBox.setSelectedItem(series.getGroup());
-        updateSeries();
-        seriesBox.setSelectedItem(series.getName());
-        updateFamily();
-        familyBox.setSelectedItem(spec.getModel().getFamily().getName());
-        updateModel();
-        modelBox.setSelectedItem(spec.getModel().getName());
-        enableAddButtons();
-        htmlInfoPane.setText(SpecFormater.toHtml(spec));
-    }
-
-    public TradeName getManufacturer() {
-        return manufacturer;
+    public boolean isEdit() {
+        return edit;
     }
 
     /**
@@ -136,30 +237,23 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
      *
      * @return a ProductSpec.
      */
+    // Resultproducer
     public ProductSpec getProductSpec() {
         return spec;
     }
 
     @Override
-    public void setParent(Window parent) {
-        this.parent = parent;
-    }
+    public SpecAndModel getResult() {
+        if ( cancel ) return null;
 
-    // TODO: Describe somethere, that in the Editmode the Model is not set to the spec, but must be done in an active transaction.
-    // merge productSpec. merge model. set Model. commit
-    @Override
-    public boolean pre(CloseType type) {
-        if ( type != CloseType.OK ) return true;
-        if ( !getSelectedModel().isPresent() ) {
-            Ui.build(this).alert("Model nicht ausgewählt oder nicht hinzugefügt");
-            return false;
-        }
-        // The new ProductSpec Mode
         if ( spec == null ) {
             spec = ProductSpec.newInstance(getGroup());
             spec.setPartNo(partNoField.getText());
         }
-        return true;
+        // TODO: The gtin should be on the product spec, not on the product. thats why we need this workaround here.
+        // Load gtin if in edit mode.
+        long gtin = spec.getId() > 0 ? Dl.remote().lookup(UniqueUnitAgent.class).findById(Product.class, spec.getProductId()).getGtin() : 0;
+        return new SpecAndModel(spec, getSelectedModel().get(), gtin);
     }
 
     private TradeName getBrand() {
@@ -304,6 +398,8 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
         jScrollPane1 = new javax.swing.JScrollPane();
         htmlInfoPane = new javax.swing.JTextPane();
         addSeriesButton = new javax.swing.JButton();
+        okButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -522,6 +618,29 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
         gridBagConstraints.gridy = 4;
         gridBagConstraints.ipadx = 14;
         add(addSeriesButton, gridBagConstraints);
+
+        okButton.setText("Ok");
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        add(okButton, gridBagConstraints);
+
+        cancelButton.setText("Abbrechen");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 7;
+        add(cancelButton, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void brandBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_brandBoxActionPerformed
@@ -570,13 +689,12 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
         } else if ( !getSelectedFamily().isPresent() ) {
             if ( !warn("Keine Familie ausgewählt, es wird ein Standartwert verwendet.") ) return;
         }
-        ProductModel model = productProcessor.create(getBrand(), getGroup(), getSelectedSeries().orElse(null), getSelectedFamily().orElse(null), modelName);
+        ProductModel model = remote.lookup(ProductProcessor.class).create(getBrand(), getGroup(), getSelectedSeries().orElse(null), getSelectedFamily().orElse(null), modelName);
         // TODO: Add Model to local list in a better way
         // TODO: And show the active backgroundprogress.
         JOptionPane.showMessageDialog(this, "Modell " + model.getName() + " wurde hinzugefügt.\nAktualisiere Lokale Liste.");
-        parent.setEnabled(false);
-        allSeries = specAgent.findAll(ProductSeries.class);
-        parent.setEnabled(true);
+        // TODO: Put in background and add loadingblock
+        allSeries = remote.lookup(SpecAgent.class).findAll(ProductSeries.class);
         updateSeries();
         updateFamily();
         updateModel();
@@ -603,13 +721,12 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
         if ( !getSelectedSeries().isPresent() ) {
             if ( !warn("Keine Serie ausgewählt, es wird ein Standartwert verwendet.") ) return;
         }
-        ProductFamily family = productProcessor.create(getBrand(), getGroup(), getSelectedSeries().orElse(null), familyName);
+        ProductFamily family = remote.lookup(ProductProcessor.class).create(getBrand(), getGroup(), getSelectedSeries().orElse(null), familyName);
         // TODO: Add Family to local list in a better way
         // TODO: And show the active backgroundprogress.
         JOptionPane.showMessageDialog(this, "Familie " + family.getName() + " wurde hinzugefügt.\nAktualisiere Lokale Liste.");
-        parent.setEnabled(false);
-        allSeries = specAgent.findAll(ProductSeries.class);
-        parent.setEnabled(true);
+        // TODO: Put in background and add loadingblock
+        allSeries = remote.lookup(SpecAgent.class).findAll(ProductSeries.class);
         updateSeries();
         updateFamily();
         updateModel();
@@ -629,7 +746,7 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
             error("ArtikelNummer hat am Anfang oder Ende Freizeichen, nicht erlaubt");
             return;
         }
-        ProductSpec localSpec = specAgent.findProductSpecByPartNoEager(result);
+        ProductSpec localSpec = remote.lookup(SpecAgent.class).findProductSpecByPartNoEager(result);
         if ( localSpec != null ) {
             error("Artikel exitiert schon : " + localSpec.getModel().getName() + " (" + localSpec.getPartNo() + ")");
             return;
@@ -649,13 +766,12 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
             error("Serie " + seriesName + " existiert schon");
             return; // Found an equal, so nothing to do
         }
-        Reply<ProductSeries> reply = ReplyUtil.wrap(() -> productProcessor.create(getBrand(), getGroup(), seriesName));
+        Reply<ProductSeries> reply = ReplyUtil.wrap(() -> remote.lookup(ProductProcessor.class).create(getBrand(), getGroup(), seriesName));
         if ( !Failure.handle(reply) ) return;
         ProductSeries series = reply.getPayload();
         JOptionPane.showMessageDialog(this, "Serie " + series.getName() + " wurde hinzugefügt.\nAktualisiere Lokale Liste.");
-        parent.setEnabled(false);
-        allSeries = specAgent.findAll(ProductSeries.class);
-        parent.setEnabled(true);
+        // TODO: Put in background and add loadingblock
+        allSeries = remote.lookup(SpecAgent.class).findAll(ProductSeries.class);
         updateSeries();
         updateFamily();
         updateModel();
@@ -663,11 +779,25 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
         enableAddButtons();
     }//GEN-LAST:event_addSeriesButtonActionPerformed
 
+    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
+        if ( !getSelectedModel().isPresent() ) {
+            Ui.build(this).alert("Model nicht ausgewählt oder nicht hinzugefügt");
+        } else {
+            cancel = false;
+            showingProperty.set(false);
+        }
+    }//GEN-LAST:event_okButtonActionPerformed
+
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        showingProperty.set(false);
+    }//GEN-LAST:event_cancelButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addFamilyButton;
     private javax.swing.JButton addModelButton;
     private javax.swing.JButton addSeriesButton;
     private javax.swing.JComboBox brandBox;
+    private javax.swing.JButton cancelButton;
     private javax.swing.JButton editButton;
     private javax.swing.JComboBox<String> familyBox;
     private javax.swing.JComboBox groupBox;
@@ -680,6 +810,7 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JComboBox<String> modelBox;
+    private javax.swing.JButton okButton;
     private javax.swing.JTextField partNoField;
     private javax.swing.JComboBox<String> seriesBox;
     // End of variables declaration//GEN-END:variables

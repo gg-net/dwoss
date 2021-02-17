@@ -1,15 +1,5 @@
 package eu.ggnet.dwoss.receipt.itest;
 
-import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
-import eu.ggnet.dwoss.spec.ee.entity.ProductModel;
-import eu.ggnet.dwoss.spec.ee.entity.ProductSeries;
-import eu.ggnet.dwoss.spec.ee.entity.ProductFamily;
-import eu.ggnet.dwoss.spec.ee.entity.Desktop;
-import eu.ggnet.dwoss.spec.ee.entity.piece.Cpu;
-import eu.ggnet.dwoss.spec.ee.entity.piece.Gpu;
-import eu.ggnet.dwoss.spec.ee.entity.piece.Display;
-import eu.ggnet.dwoss.spec.ee.entity.Notebook;
-
 import javax.ejb.EJB;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -20,11 +10,14 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
-import eu.ggnet.dwoss.receipt.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
+import eu.ggnet.dwoss.receipt.ee.ProductProcessor.SpecAndModel;
+import eu.ggnet.dwoss.receipt.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.spec.ee.assist.Specs;
+import eu.ggnet.dwoss.spec.ee.entity.*;
+import eu.ggnet.dwoss.spec.ee.entity.piece.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -89,7 +82,7 @@ public class ReceiptProductLogicPossibleDeadlockIT extends ArquillianProjectArch
         notebook.setPartNo("LX.ASDFG.GHJ");
         notebook.setModel(productModel);
 
-        ProductSpec testSpec = productLogic.create(notebook, productModel, 0);
+        ProductSpec testSpec = productLogic.create(new SpecAndModel(notebook, productModel, 0));
 
         assertThat(testSpec).isNotNull();
     }

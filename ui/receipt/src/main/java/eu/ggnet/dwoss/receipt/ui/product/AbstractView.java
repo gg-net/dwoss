@@ -16,90 +16,67 @@
  */
 package eu.ggnet.dwoss.receipt.ui.product;
 
-import eu.ggnet.dwoss.core.widget.swing.IView;
-import eu.ggnet.dwoss.core.widget.swing.CloseType;
-import eu.ggnet.dwoss.core.widget.swing.IPreClose;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
+import java.util.function.Consumer;
 
-import java.awt.Window;
-import java.util.Set;
+import javax.validation.*;
 
-import javax.swing.JOptionPane;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-
-import eu.ggnet.dwoss.core.common.values.ProductGroup;
-import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.widget.saft.VetoableOnOk;
+import eu.ggnet.dwoss.receipt.ee.ProductProcessor.SpecAndModel;
 import eu.ggnet.dwoss.spec.ee.entity.*;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.AlertType;
+import eu.ggnet.saft.core.ui.ResultProducer;
 
 /**
  * Abstract View to help with pre cloes
  * <p>
  * @author oliver.guenther
- * @param <T> type of ProductSpec
  */
-public abstract class AbstractView<T extends ProductSpec> extends javax.swing.JPanel implements IPreClose, IView {
+public abstract class AbstractView extends javax.swing.JPanel implements VetoableOnOk, Consumer<SpecAndModel>, ResultProducer<SpecAndModel> {
 
-    public static AbstractView newView(ProductSpec spec, TradeName brand) {
-        AbstractView productView;
-        if ( spec instanceof Notebook ) {
-            productView = new DisplayAbleView(ProductGroup.NOTEBOOK);
-            productView.setSpec(spec);
-        } else if ( spec instanceof AllInOne ) {
-            productView = new DisplayAbleView(ProductGroup.ALL_IN_ONE);
-            productView.setSpec(spec);
-        } else if ( spec instanceof Tablet ) {
-            productView = new DisplayAbleView(ProductGroup.TABLET_SMARTPHONE);
-            productView.setSpec(spec);
-        } else if ( spec instanceof Desktop ) {
-            productView = new DesktopView();
-            productView.setSpec(spec);
-        } else if ( spec instanceof Monitor ) {
-            productView = new MonitorView();
-            productView.setSpec(spec);
-        } else if ( spec instanceof BasicSpec ) {
-            productView = new BasicView();
-            productView.setSpec(spec);
-        } else if ( spec instanceof DesktopBundle ) {
-            DesktopBundleView view = new DesktopBundleView(brand.getManufacturer(), brand, ProductGroup.DESKTOP, ProductGroup.MONITOR);
-            view.setSpec((DesktopBundle)spec);
-            productView = view;
-        } else {
-            throw new RuntimeException(spec.getClass().getSimpleName() + " not yet implemented");
+    public static Class<? extends AbstractView> selectView(SpecAndModel sam) {
+        ProductSpec spec = Objects.requireNonNull(sam, "sam must not be null").spec();
+        if ( spec instanceof Notebook ) return NotebookView.class;
+        if ( spec instanceof AllInOne ) return AllInOneView.class;
+        if ( spec instanceof Tablet ) return TabletSmartPhoneView.class;
+        if ( spec instanceof Desktop ) return DesktopView.class;
+        if ( spec instanceof Monitor ) return MonitorView.class;
+        if ( spec instanceof BasicSpec ) return BasicView.class;
+        if ( spec instanceof DesktopBundle ) return DesktopBundleView.class;
+        throw new IllegalArgumentException(spec.getClass().getSimpleName() + " not yet implemented");
+    }
+
+    public static AbstractView newView(SpecAndModel sam) {
+        Class<? extends AbstractView> clazz = selectView(sam);
+        try {
+            return (AbstractView)clazz.getConstructors()[0].newInstance();
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw new RuntimeException(ex);
         }
-        return productView;
     }
 
-    protected Window parent;
+    @Override
+    public abstract SpecAndModel getResult();
 
     @Override
-    public void setParent(Window parent) {
-        this.parent = parent;
-    }
+    public boolean mayClose() {
+        SpecAndModel sam = getResult();
+        Validator v = Validation.buildDefaultValidatorFactory().getValidator();
 
-    public abstract void setSpec(T t);
+        Set<ConstraintViolation> violations = new HashSet<>();
+        violations.addAll(v.validate(sam.spec()));
+        violations.addAll(v.validate(sam.model()));
+        //TODO: If there is time, make this more beutiful.        //TODO: If there is time, make this more beutiful.
 
-    public abstract T getSpec();
-
-    public abstract long getGtin();
-
-    public abstract void setGtin(long gtin);
-
-    @Override
-    public boolean pre(CloseType type) {
-        if ( type != CloseType.OK ) return true;
-        Set<? extends ConstraintViolation> violations = Validation.buildDefaultValidatorFactory().getValidator().validate(getSpec());
         if ( violations.isEmpty() ) return true;
         StringBuilder sb = new StringBuilder();
         for (ConstraintViolation violation : violations) {
-            if ( violation.getPropertyPath().toString().equals("model") ) continue;
-            if ( violation.getPropertyPath().toString().endsWith("validationViolations") ) {
-                sb.append(violation.getInvalidValue().toString()).append("\n");
-            } else {
-                sb.append("Validation Violation: ").append(violation.getPropertyPath()).append("=");
-                sb.append(violation.getInvalidValue()).append(",").append(violation.getMessage()).append("\n");
-            }
+            if ( violation.getPropertyPath().toString().equals("model") ) continue; // TODO: Why is this excluded ?
+            sb.append(violation.getMessage()).append("\n");
         }
-        JOptionPane.showMessageDialog(this, sb.toString(), "Errors", JOptionPane.ERROR_MESSAGE);
+        Ui.build(this).alert().title("Fehler").message(sb.toString()).show(AlertType.ERROR);
         return false;
     }
 }

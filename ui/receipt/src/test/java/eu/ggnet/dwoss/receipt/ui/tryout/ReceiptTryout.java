@@ -35,12 +35,13 @@ import eu.ggnet.dwoss.core.widget.dl.RemoteLookup;
 import eu.ggnet.dwoss.mandator.api.Mandators;
 import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.receipt.ee.*;
-import eu.ggnet.dwoss.receipt.ui.UiUnitSupport;
+import eu.ggnet.dwoss.receipt.ui.ProductUiBuilder;
 import eu.ggnet.dwoss.receipt.ui.cap.*;
+import eu.ggnet.dwoss.receipt.ui.product.SimpleView.CreateOrEdit;
 import eu.ggnet.dwoss.receipt.ui.shipment.ShipmentEditView;
+import eu.ggnet.dwoss.receipt.ui.tryout.stub.ProductProcessorStub.EditProduct;
 import eu.ggnet.dwoss.receipt.ui.tryout.stub.*;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
-import eu.ggnet.dwoss.stock.api.PicoStock;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.spi.ActiveStock;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
@@ -60,7 +61,7 @@ public class ReceiptTryout {
         SeContainerInitializer ci = SeContainerInitializer.newInstance();
         ci.addPackages(ReceiptTryout.class);
         ci.addPackages(WidgetProducers.class);
-        ci.addPackages(true, UiUnitSupport.class); // receipt.ui
+        ci.addPackages(true, ProductUiBuilder.class); // receipt.ui
         ci.disableDiscovery();
         SeContainer container = ci.initialize();
         Instance<Object> instance = container.getBeanManager().createInstance();
@@ -78,13 +79,14 @@ public class ReceiptTryout {
         remote.add(Mandators.class, pp.cachedMandators());
         remote.add(UnitProcessor.class, pp.unitProcessor());
         remote.add(UnitSupporter.class, pp.unitSupporter());
+        remote.add(UniqueUnitAgent.class, pp.uniqueUnitAgent());
 
         Dl.local().add(CachedMandators.class, pp.cachedMandators());
         Dl.local().add(RemoteLookup.class, new RemoteLookupStub());
         Dl.local().add(Guardian.class, new GuardianStub());
 
         StockSpiStub su = new StockSpiStub();
-        su.setActiveStock(new PicoStock(0, "Demostock"));
+        su.setActiveStock(pp.stocks.get(0).toPicoStock());
         Dl.local().add(ActiveStock.class, su);
 
         JFrame mainFrame = UiUtil.startup(() -> {
@@ -103,13 +105,24 @@ public class ReceiptTryout {
 
             JButton editOneUnit = new JButton("Eine SopoNr bearbeiten");
             editOneUnit.addActionListener(e -> {
-                UiUnitSupport uiUnitSupport = new UiUnitSupport(remote.lookup(UnitProcessor.class));
                 try {
-                    uiUnitSupport.editUnit(pp.editAbleRefurbishId);
+                    instance.select(EditUnitAction.class).get().editUnit(pp.editAbleRefurbishId);
                 } catch (UserInfoException ex) {
                     saft.handle(ex);
                 }
             });
+
+            JMenu editProduct = new JMenu("Artikel direkt bearbeiten");
+            for (EditProduct ep : pp.editProducts) {
+                JMenuItem m = new JMenuItem(ep.description());
+                m.addActionListener(e -> {
+                    instance.select(ProductUiBuilder.class).get()
+                            .createOrEditPart(() -> new CreateOrEdit(ep.manufacturer(), ep.partNo()))
+                            .handle(saft.handler());
+                });
+                editProduct.add(m);
+            }
+            menubar.add(editProduct);
 
             JPanel buttonPanel = new JPanel(new FlowLayout());
             buttonPanel.add(openShipmentUpdateView);
@@ -128,7 +141,6 @@ public class ReceiptTryout {
         });
 
         saft.core(Swing.class).initMain(mainFrame);
-
     }
 
     public static List<String> prepareHelper(UniqueUnitAgent agent) {

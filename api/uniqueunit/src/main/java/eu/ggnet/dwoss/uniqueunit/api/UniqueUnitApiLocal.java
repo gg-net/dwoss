@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.uniqueunit.api;
 
+import java.util.List;
+
 import javax.ejb.Local;
 
 /**
@@ -33,5 +35,9 @@ public interface UniqueUnitApiLocal {
      * @return null or a simple unit, one exists.
      */
     SimpleUniqueUnit findByRefurbishedId(String refurbishId);
+
+    SimpleUniqueUnit findById(long uniqueUnitId);
+
+    List<SimpleUniqueUnit> findByIds(List<Long> uniqueUnitIds);
 
 }

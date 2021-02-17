@@ -18,83 +18,102 @@ package eu.ggnet.dwoss.receipt.ui.product;
 
 import java.util.*;
 
+import javax.inject.Inject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
-import eu.ggnet.dwoss.core.widget.swing.IPreClose;
-import eu.ggnet.dwoss.mandator.api.Mandators;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.mandator.spi.CachedMandators;
-import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
-import eu.ggnet.dwoss.receipt.ui.UiProductSupport;
-import eu.ggnet.dwoss.receipt.ui.unit.UnitModel;
+import eu.ggnet.dwoss.receipt.ee.ProductProcessor.SpecAndModel;
+import eu.ggnet.dwoss.receipt.ui.ProductUiBuilder;
 import eu.ggnet.dwoss.receipt.ui.unit.chain.ChainLink;
 import eu.ggnet.dwoss.receipt.ui.unit.chain.Chains;
 import eu.ggnet.dwoss.receipt.ui.unit.chain.partno.ProductSpecMatches;
+import eu.ggnet.dwoss.receipt.ui.unit.model.MetaValue;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
-import eu.ggnet.dwoss.spec.ee.entity.DesktopBundle;
-import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
+import eu.ggnet.dwoss.spec.ee.entity.*;
 import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
-import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.dwoss.core.widget.Dl;
-import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.Saft;
+
+import static eu.ggnet.dwoss.core.common.values.ProductGroup.DESKTOP;
+import static eu.ggnet.dwoss.core.common.values.ProductGroup.MONITOR;
+import static eu.ggnet.saft.core.ui.UiParent.of;
 
 /**
  * Ui for the Desktop Bundle.
  * <p/>
  * @author pascal.perau, oliver.guenther
  */
-public class DesktopBundleView extends AbstractView<DesktopBundle> implements IPreClose {
+public class DesktopBundleView extends AbstractView {
 
     private final static Logger L = LoggerFactory.getLogger(DesktopBundleView.class);
 
-    private final UiProductSupport productSupport;
+    private final ProductUiBuilder productSupport;
 
     private final SpecAgent specAgent;
 
-    private final UnitModel.MetaValue<String> partNo1 = new UnitModel.MetaValue<>();
+    private final MetaValue<String> partNo1;
 
-    private final UnitModel.MetaValue<String> partNo2 = new UnitModel.MetaValue<>();
+    private final MetaValue<String> partNo2;
 
     private final List<ChainLink<String>> product1Chain;
 
     private final List<ChainLink<String>> product2Chain;
 
-    private final TradeName mustBrand;
-
     private final ProductGroup mustGroup1;
 
     private final ProductGroup mustGroup2;
 
+    private TradeName brand;
+
     private DesktopBundle spec;
 
-    public DesktopBundleView(TradeName mode,
-                             TradeName mustBrand, ProductGroup mustGroup1, ProductGroup mustGroup2) {
-        this(Dl.local().lookup(CachedMandators.class), Dl.remote().lookup(SpecAgent.class), Dl.remote().lookup(ProductProcessor.class), mode, mustBrand, mustGroup1, mustGroup2);
-    }
+    private ProductModel model;
 
-    public DesktopBundleView(Mandators mandatorSupporter, SpecAgent specAgent, ProductProcessor productProcessor,
-                             TradeName mode,
-                             TradeName mustBrand, ProductGroup mustGroup1, ProductGroup mustGroup2) {
+    private long gtin;
+
+    @Inject
+    private Saft saft;
+
+    @Inject
+    private ProductUiBuilder productUiBuilder;
+
+    public DesktopBundleView() {
         initComponents();
-        this.productSupport = new UiProductSupport();
-        this.specAgent = specAgent;
-        this.mustBrand = mustBrand;
-        this.mustGroup1 = mustGroup1;
-        this.mustGroup2 = mustGroup2;
-        // The Load here is so wrong. But what actually is right in Bunldes :-(
-        product1Chain = new ArrayList<>(Chains.getInstance(mode).newPartNoChain(specAgent, mandatorSupporter.loadContractors().allowedBrands()));
-        product2Chain = new ArrayList<>(product1Chain);
-        // Adding a extra enforcer of brand and product group.
-        product1Chain.add(new ProductSpecMatches(specAgent, mustBrand, mustGroup1));
-        product2Chain.add(new ProductSpecMatches(specAgent, mustBrand, mustGroup2));
+        this.productSupport = new ProductUiBuilder();
+        this.specAgent = Dl.remote().lookup(SpecAgent.class);
+        this.mustGroup1 = DESKTOP;
+        this.mustGroup2 = MONITOR;
+        product1Chain = new ArrayList<>();
+        product2Chain = new ArrayList<>();
+        partNo1 = new MetaValue<>();
+        partNo2 = new MetaValue<>();
         partNo1.setChain(product1Chain);
         partNo2.setChain(product2Chain);
     }
 
     @Override
-    public void setSpec(DesktopBundle bundle) {
+    public void accept(SpecAndModel sam) {
+
+        brand = sam.model().getFamily().getSeries().getBrand();
+        model = sam.model();
+        gtin = sam.gtin();
+
+        // TODO: verify, that this works. If the partNo validator works, we are fine.
+        product1Chain.clear();
+        product2Chain.clear();
+        product1Chain.addAll(Chains.getInstance(brand.getManufacturer())
+                .newPartNoChain(specAgent, Dl.local().lookup(CachedMandators.class).loadContractors().allowedBrands()));
+        product2Chain.addAll(Chains.getInstance(brand.getManufacturer())
+                .newPartNoChain(specAgent, Dl.local().lookup(CachedMandators.class).loadContractors().allowedBrands()));
+        // Adding a extra enforcer of brand and product group.
+        product1Chain.add(new ProductSpecMatches(specAgent, brand, mustGroup1));
+        product2Chain.add(new ProductSpecMatches(specAgent, brand, mustGroup2));
+
+        DesktopBundle bundle = (DesktopBundle)Objects.requireNonNull(sam, "sam must not be null").spec();
         this.spec = Objects.requireNonNull(bundle);
         if ( bundle.getDesktop() != null ) {
             partNo1.setValue(bundle.getDesktop().getPartNo());
@@ -107,10 +126,10 @@ public class DesktopBundleView extends AbstractView<DesktopBundle> implements IP
     }
 
     @Override
-    public DesktopBundle getSpec() {
-        return spec;
+    public SpecAndModel getResult() {
+        return new SpecAndModel(spec, model, gtin);
     }
-    
+
     private void updateActions() {
         // TODO: Disable/Enable the OK Button based on the Validation.
     }
@@ -142,7 +161,7 @@ public class DesktopBundleView extends AbstractView<DesktopBundle> implements IP
         updateView();
     }
 
-    private ProductSpec validatePartNoAndLoad(UnitModel.MetaValue<String> partNo) {
+    private ProductSpec validatePartNoAndLoad(MetaValue<String> partNo) {
         L.debug("Validating partNo : {}", partNo.getValue());
         partNo.getSurvey().validating("Wert wird geprüft");
         updateValidationStatus();
@@ -215,7 +234,7 @@ public class DesktopBundleView extends AbstractView<DesktopBundle> implements IP
                     .addGroup(bundleDesktopPanelLayout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addGap(38, 38, 38)
-                        .addComponent(desktopPartNoField, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
+                        .addComponent(desktopPartNoField, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
                         .addGap(12, 12, 12)
                         .addComponent(desktopEditButton))
                     .addComponent(desktopField))
@@ -288,35 +307,30 @@ public class DesktopBundleView extends AbstractView<DesktopBundle> implements IP
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(bundleDesktopPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(bundleMonitorPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 409, Short.MAX_VALUE)
+            .addComponent(bundleMonitorPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(bundleDesktopPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(bundleMonitorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(bundleMonitorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void desktopEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_desktopEditButtonActionPerformed
-        try {
-            partNo1.setValue(desktopPartNoField.getText());
-            productSupport.createOrEditPart(mustBrand.getManufacturer(), partNo1.getValue(), mustBrand, mustGroup1, parent);
-            validateAndUpdateDesktop();
-        } catch (UserInfoException ex) {
-            Ui.handle(ex);
-        }
+        partNo1.setValue(desktopPartNoField.getText());
+        productUiBuilder.createOrEditPart(() -> new SimpleView.CreateOrEdit(brand.getManufacturer(), partNo1.getValue(), new SimpleView.Enforce(brand, mustGroup1)), of(this))
+                .thenAccept(p -> validateAndUpdateDesktop())
+                .handle(saft.handler(this));
     }//GEN-LAST:event_desktopEditButtonActionPerformed
 
     private void monitorEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_monitorEditButtonActionPerformed
-        try {
-            partNo2.setValue(monitorPartNoField.getText());
-            productSupport.createOrEditPart(mustBrand.getManufacturer(), partNo2.getValue(), mustBrand, mustGroup2, parent);
-            validateAndUpdateMonitor();
-        } catch (UserInfoException ex) {
-            Ui.handle(ex);
-        }
+        partNo2.setValue(monitorPartNoField.getText());
+        productUiBuilder.createOrEditPart(() -> new SimpleView.CreateOrEdit(brand.getManufacturer(), partNo2.getValue(), new SimpleView.Enforce(brand, mustGroup2)), of(this))
+                .thenAccept(p -> validateAndUpdateMonitor())
+                .handle(saft.handler(this));
     }//GEN-LAST:event_monitorEditButtonActionPerformed
 
     private void desktopPartNoFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_desktopPartNoFieldFocusLost
@@ -342,13 +356,4 @@ public class DesktopBundleView extends AbstractView<DesktopBundle> implements IP
     private javax.swing.JTextField monitorPartNoField;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public long getGtin() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void setGtin(long gtin) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }

@@ -17,53 +17,40 @@
 package eu.ggnet.dwoss.receipt.ui.product;
 
 import java.awt.BorderLayout;
-import java.awt.Window;
+import java.util.Objects;
 
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
-import eu.ggnet.dwoss.spec.ee.SpecAgent;
+import eu.ggnet.dwoss.receipt.ee.ProductProcessor.SpecAndModel;
 import eu.ggnet.dwoss.spec.ee.entity.DisplayAbleDesktop;
 
-public class DisplayAbleView extends AbstractView<DisplayAbleDesktop> {
+public class DisplayAbleView extends AbstractView {
 
-    private DesktopView desktopView;
+    private final DesktopView desktopView;
 
-    private DisplayPanel displayView;
+    private final DisplayPanel displayView;
 
-    public DisplayAbleView(DesktopView desktopView, DisplayPanel displayView) {
-        this.desktopView = desktopView;
-        this.displayView = displayView;
+    public DisplayAbleView(ProductGroup group) {
+        this.desktopView = new DesktopView(group);
+        this.displayView = new DisplayPanel();
         initComponents();
         desktopView.getDisplayViewPanel().add(displayView, BorderLayout.CENTER);
         desktopPlace.add(desktopView, BorderLayout.CENTER);
         desktopPlace.setPreferredSize(desktopView.getPreferredSize());
     }
 
-    /** Creates new form DesktopView */
-    public DisplayAbleView(ProductGroup group) {
-        this(new DesktopView(group), new DisplayPanel(group));
-    }
-
-    public DisplayAbleView(SpecAgent specAgent, ProductGroup group) {
-        this(new DesktopView(specAgent, group), new DisplayPanel(group));
-    }
-
     @Override
-    public void setParent(Window parent) {
-        super.setParent(parent);
-        desktopView.setParent(parent);
-    }
-
-    @Override
-    public void setSpec(DisplayAbleDesktop dad) {
-        desktopView.setSpec(dad);
+    public void accept(SpecAndModel sam) {
+        DisplayAbleDesktop dad = (DisplayAbleDesktop)Objects.requireNonNull(sam, "sam must not be null").spec();
+        desktopView.accept(sam);
         displayView.setDisplay(dad.getDisplay());
     }
 
     @Override
-    public DisplayAbleDesktop getSpec() {
-        DisplayAbleDesktop displayAbleDesktop = (DisplayAbleDesktop)desktopView.getSpec();
+    public SpecAndModel getResult() {
+        SpecAndModel sam = desktopView.getResult();
+        DisplayAbleDesktop displayAbleDesktop = (DisplayAbleDesktop)sam.spec();
         displayAbleDesktop.setDisplay(displayView.getDisplay());
-        return displayAbleDesktop;
+        return new SpecAndModel(displayAbleDesktop, sam.model(), sam.gtin());
     }
 
     /** This method is called from within the constructor to
@@ -95,13 +82,4 @@ public class DisplayAbleView extends AbstractView<DisplayAbleDesktop> {
     private javax.swing.JPanel desktopPlace;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public long getGtin() {
-        return desktopView.getGtin();
-    }
-
-    @Override
-    public void setGtin(long gtin) {
-        desktopView.setGtin(gtin);
-    }
 }

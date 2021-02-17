@@ -21,6 +21,8 @@ import java.util.Optional;
 
 import org.inferred.freebuilder.FreeBuilder;
 
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+
 /**
  * Simple Unit representation for other api usages.
  *
@@ -40,9 +42,25 @@ public interface SimpleUniqueUnit extends Serializable {
      */
     long id();
 
+    long productId();
+
     String refurbishedId();
 
+    TradeName contractor();
+
+    /**
+     * Contations a oneline description, containing the product name and brand, the refurbishid and serial number.
+     *
+     * @return a oneline description, containing the product name and brand, the refurbishid and serial number.
+     */
     String shortDescription();
+
+    /**
+     * Returns a oneline descrition of all uniqueunit and coresponding product details, useful in any document.
+     *
+     * @return a oneline descrition of all uniqueunit and coresponding product details, useful in any document.
+     */
+    String detailedDiscription();
 
     /**
      * Is set if the unit had another refurbishId before.
