@@ -37,7 +37,7 @@ import eu.ggnet.dwoss.receipt.ui.*;
 import eu.ggnet.dwoss.receipt.ui.unit.UnitView;
 import eu.ggnet.dwoss.receipt.ui.unit.UnitView.In;
 import eu.ggnet.dwoss.stock.api.PicoStock;
-import eu.ggnet.dwoss.stock.api.StockDto;
+import eu.ggnet.dwoss.receipt.ui.StockDto;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
 import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
