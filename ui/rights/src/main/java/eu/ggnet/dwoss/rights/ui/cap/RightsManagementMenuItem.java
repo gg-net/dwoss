@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 GG-Net GmbH
+ * Copyright (C) 2021 GG-Net GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,31 +16,31 @@
  */
 package eu.ggnet.dwoss.rights.ui.cap;
 
-import java.awt.event.ActionEvent;
-
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import javax.swing.Action;
 
-import eu.ggnet.dwoss.core.widget.AccessableAction;
-import eu.ggnet.dwoss.rights.ui.NewRightsManagementController;
+import javafx.scene.control.MenuItem;
+
+import eu.ggnet.dwoss.rights.ui.RightsManagementController;
 import eu.ggnet.saft.core.Saft;
 
-import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_UPDATE_RIGHTS;
-
-public class NewRightsManagementAction extends AccessableAction {
+/**
+ * {@link MenuItem} to allow the creation and modification of {@link User}<code>s</code> and {@link Group}<code>s</code>.
+ *
+ * @author mirko.schulze
+ */
+public class RightsManagementMenuItem extends MenuItem {
 
     @Inject
     private Saft saft;
 
-    public NewRightsManagementAction() {
-        super(CREATE_UPDATE_RIGHTS);
-        putValue(Action.NAME, "Neu: " + CREATE_UPDATE_RIGHTS.toName());
+    public RightsManagementMenuItem() {
+        super("Erstellen oder ändern von Rechten");
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        saft.build().fxml().show(NewRightsManagementController.class);
-//        Ui.build().fxml().show(NewRightsManagementController.class);
+    @PostConstruct
+    private void init() {
+        setOnAction(e -> saft.build().fxml().show(RightsManagementController.class));
     }
 
 }

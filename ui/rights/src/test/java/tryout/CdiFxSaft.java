@@ -24,28 +24,28 @@ import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
 import eu.ggnet.saft.core.Saft;
-import eu.ggnet.saft.core.impl.Swing;
+import eu.ggnet.saft.core.impl.Fx;
 import eu.ggnet.saft.core.ui.LocationStorage;
 
 /**
- * CDI Saft with Swing.
+ * CDI Saft with FX.
  *
  * @author mirko.schulze
  */
 @ApplicationScoped
 // @Specializes
-public class CdiSwingSaft extends Saft {
+public class CdiFxSaft extends Saft {
 
     @Inject
     private Instance<Object> instance;
 
-    public CdiSwingSaft() {
+    public CdiFxSaft() {
         super(new LocationStorage(), Executors.newCachedThreadPool());
     }
 
     @PostConstruct
     private void postInit() {
-        init(new Swing(this, p -> instance.select(p).get()));
+        init(new Fx(this, p -> instance.select(p).get()));
         core().captureMode(true);
     }
 

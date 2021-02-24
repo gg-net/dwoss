@@ -35,7 +35,7 @@ public class GroupApiStub implements GroupApi {
 
     @Override
     public Group create(String name) throws IllegalArgumentException, NullPointerException {
-        L.info("Entering create({})", name);
+        L.debug("Entering create({})", name);
         Objects.requireNonNull(name, "Submitted name is null.");
         if ( name.isBlank() ) {
             throw new IllegalArgumentException("Submitted name is blank.");
@@ -46,14 +46,14 @@ public class GroupApiStub implements GroupApi {
         Persona group = new Persona(UserApiStub.getGroupId(), 0, name, new ArrayList<>());
         UserApiStub.getGroupsByIds().put(group.getId(), group);
         UserApiStub.incrementGroupId();
-        L.info("create()): added new Group {}", group);
+        L.debug("create()): added new Group {}", group);
 
         return findByName(name);
     }
 
     @Override
     public Group updateName(long groupId, String name) throws IllegalArgumentException, NullPointerException {
-        L.info("Entering updateName({}, {})", groupId, name);
+        L.debug("Entering updateName({}, {})", groupId, name);
         Objects.requireNonNull(name, "Submitted name is null.");
         if ( name.isBlank() ) {
             throw new IllegalArgumentException("Submitted name is blank.");
@@ -66,13 +66,13 @@ public class GroupApiStub implements GroupApi {
             throw new IllegalArgumentException("Submitted name " + name + " is already used.");
         }
         group.setName(name);
-        L.info("updateName(): set name to {}", name);
+        L.debug("updateName(): set name to {}", name);
         return group.toApiGroup();
     }
 
     @Override
     public Group addRight(long groupId, AtomicRight right) throws IllegalArgumentException, NullPointerException {
-        L.info("Entering addRight({}, {})", groupId, right);
+        L.debug("Entering addRight({}, {})", groupId, right);
         Objects.requireNonNull(right, "Right must not be null.");
         Persona group = UserApiStub.getGroupsByIds().get(groupId);
         if ( group == null ) {
@@ -82,13 +82,13 @@ public class GroupApiStub implements GroupApi {
             throw new IllegalArgumentException("Submitted Right " + right + " is already granted to Group " + group.getName() + ".");
         }
         group.add(right);
-        L.info("addRight(): added Right {} to Group {}", right, group);
+        L.debug("addRight(): added Right {} to Group {}", right, group);
         return group.toApiGroup();
     }
 
     @Override
     public Group removeRight(long groupId, AtomicRight right) throws IllegalArgumentException, NullPointerException {
-        L.info("Entering removeRight({}, {})", groupId, right);
+        L.debug("Entering removeRight({}, {})", groupId, right);
         Objects.requireNonNull(right, "Right must not be null.");
         Persona group = UserApiStub.getGroupsByIds().get(groupId);
         if ( group == null ) {
@@ -98,13 +98,13 @@ public class GroupApiStub implements GroupApi {
             throw new IllegalArgumentException("Submitted Right " + right + " was not granted to Group " + group.getName() + " at all.");
         }
         group.getPersonaRights().remove(right);
-        L.info("removeRight(): removed Right {} from Group {}", right, group);
+        L.debug("removeRight(): removed Right {} from Group {}", right, group);
         return group.toApiGroup();
     }
 
     @Override
     public void delete(long groupId) throws IllegalArgumentException {
-        L.info("Entering delete({})", groupId);
+        L.debug("Entering delete({})", groupId);
         Persona group = UserApiStub.getGroupsByIds().get(groupId);
         if ( group == null ) {
             throw new IllegalArgumentException("No Group found with groupId = " + groupId + ".");
@@ -115,23 +115,23 @@ public class GroupApiStub implements GroupApi {
             }
         });
         UserApiStub.getGroupsByIds().remove(group.getId());
-        L.info("delete(): deleted Group {}", group);
+        L.debug("delete(): deleted Group {}", group);
     }
 
     @Override
     public Group findById(long id) throws IllegalArgumentException {
-        L.info("Entering findById({})", id);
+        L.debug("Entering findById({})", id);
         Persona group = UserApiStub.getGroupsByIds().get(id);
-        L.info("found group = {}", group);
+        L.debug("found group = {}", group);
 
         Group g = group.toApiGroup();
-        L.info("findById(): returning {}", g);
+        L.debug("findById(): returning {}", g);
         return g;
     }
 
     @Override
     public Group findByName(String name) throws IllegalArgumentException, NullPointerException {
-        L.info("Entering findByName({})", name);
+        L.debug("Entering findByName({})", name);
         Objects.requireNonNull(name, "Submitted name is null.");
         if ( name.isBlank() ) {
             throw new IllegalArgumentException("Submitted name is blank.");
@@ -139,17 +139,17 @@ public class GroupApiStub implements GroupApi {
         Persona group = UserApiStub.getGroupsByIds().values().stream().filter(u -> u.getName().equals(name)).findAny().orElseGet(() -> null);
 
         Group g = group.toApiGroup();
-        L.info("findById(): returning {}", g);
+        L.debug("findById(): returning {}", g);
         return g;
     }
 
     @Override
     public List<Group> findAll() {
-        L.info("Entering findAll()");
+        L.debug("Entering findAll()");
         List<Persona> groups = new ArrayList<>(UserApiStub.getGroupsByIds().values());
         List<Group> findAll = new ArrayList<>();
         groups.forEach(g -> findAll.add(g.toApiGroup()));
-        L.info("findAll(): returning {}", findAll);
+        L.debug("findAll(): returning {}", findAll);
         return findAll;
     }
 

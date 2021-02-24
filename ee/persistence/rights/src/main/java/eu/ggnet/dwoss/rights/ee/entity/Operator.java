@@ -17,7 +17,6 @@
 package eu.ggnet.dwoss.rights.ee.entity;
 
 import java.io.Serializable;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import javax.persistence.*;
@@ -26,6 +25,7 @@ import javax.validation.constraints.NotNull;
 import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 import eu.ggnet.dwoss.core.system.persistence.EagerAble;
 import eu.ggnet.dwoss.rights.api.*;
+import eu.ggnet.dwoss.rights.ee.entity.Operator;
 
 import static javax.persistence.FetchType.EAGER;
 
@@ -210,7 +210,6 @@ public class Operator extends BaseEntity implements Serializable, EagerAble {
                 .setId(Optional.of(this.id))
                 .setOptLock(Optional.of(this.optLock))
                 .setUsername(this.username)
-                .setNullablePassword(this.password == null ? null : new String(this.password, StandardCharsets.UTF_8))
                 .addAllRights(this.rights)
                 .addAllGroups(groups)
                 .build();

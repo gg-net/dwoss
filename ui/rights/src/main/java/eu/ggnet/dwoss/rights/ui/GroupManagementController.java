@@ -21,13 +21,11 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -150,10 +148,10 @@ public class GroupManagementController implements Initializable, FxController, C
                     .setOptLock(optLock)
                     .addAllRights(new ArrayList<>(selectedRightsListView.getItems()))
                     .build();
-            L.info("Returning Group {}", result);
+            L.debug("Returning Group {}", result);
             return result;
         } else {
-            L.info("Returning null");
+            L.debug("Returning null");
             return null;
         }
     }
