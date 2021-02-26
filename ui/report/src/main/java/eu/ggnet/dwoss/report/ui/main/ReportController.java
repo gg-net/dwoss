@@ -20,6 +20,7 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -47,6 +48,7 @@ import eu.ggnet.dwoss.report.ee.api.ReportExporter;
 import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.core.ui.*;
 
 import static eu.ggnet.saft.core.ui.Bind.Type.TITLE;
@@ -179,7 +181,7 @@ public class ReportController implements Initializable, FxController, Consumer<R
 
     @Bind(TITLE)
     private StringProperty titleProperty = new SimpleStringProperty("Report Ansicht");
-    
+
     private SelectableViewReportResult selectAbleReportResult;
 
     private final Map<TableView<SelectableReportLine>, TableSummary> tableSummarys = new HashMap<>();
@@ -341,7 +343,7 @@ public class ReportController implements Initializable, FxController, Consumer<R
         ViewReportResult vrr = in.reportResult;
         boolean vm = in.viewmode;
         titleProperty.set("Report Ansicht : " + vrr.getParameter().reportName());
-        
+
         this.viewmode.set(vm);
         createButton.disableProperty().bind(this.viewmode);
 
@@ -416,12 +418,17 @@ public class ReportController implements Initializable, FxController, Consumer<R
 
     @FXML
     public void handleExportButtonAction() {
-        FileUtil.osOpen(Dl.remote().lookup(ReportExporter.class).toFullXls(filterRelevantLines()).toTemporaryFile());
+        CompletableFuture.supplyAsync(() -> Dl.remote().lookup(ReportExporter.class).toFullXls(filterRelevantLines()).toTemporaryFile(), Ui::exec)
+                .thenAccept(FileUtil::osOpen)
+                .handle(UiCore.global().handler(mainPane));
+
     }
 
     @FXML
     public void handleFullExportButtonAction() {
-        FileUtil.osOpen(XlsExporter.toFullXls(filterRelevantLines()));
+        CompletableFuture.supplyAsync(() -> XlsExporter.toFullXls(filterRelevantLines()), Ui::exec)
+                .thenAccept(FileUtil::osOpen)
+                .handle(UiCore.global().handler(mainPane));
     }
 
     public static URL loadFxml() {
