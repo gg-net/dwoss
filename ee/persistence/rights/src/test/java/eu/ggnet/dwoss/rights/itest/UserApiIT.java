@@ -280,22 +280,6 @@ public class UserApiIT extends ArquillianProjectArchive {
     }
 
     @Test
-    public void testUpdatePassword() throws Exception {
-        utx.begin();
-        em.joinTransaction();
-        Operator user = new Operator(NAME);
-        em.persist(user);
-        utx.commit();
-
-        assertThat(user.getPassword()).as("Existing User has no password").isNull();
-
-        userApi.updatePassword(user.getId(), PASSWORD);
-        User found = userApi.findByName(NAME);
-
-        assertThat(found.getPassword().get()).as("Existing User has a password").isNotNull();
-    }
-
-    @Test
     public void testUpdatePasswordUserIdNotFound() throws Exception {
         utx.begin();
         em.joinTransaction();

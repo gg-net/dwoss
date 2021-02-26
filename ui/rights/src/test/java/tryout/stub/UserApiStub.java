@@ -64,12 +64,12 @@ public class UserApiStub implements UserApi {
     }
 
     public UserApiStub() {
-        L.info("Entering UserApiStub constructor");
+        L.debug("Entering UserApiStub constructor");
         for (int i = 1; i < 4; i++) {
             Persona group = new Persona(groupId, 0, "Gruppe " + i, getRandomRights());
             groupsByIds.put(group.getId(), group);
             groupId++;
-            L.info("constructor: Added Group {}", group);
+            L.debug("constructor: Added Group {}", group);
         }
         for (int j = 1; j < 4; j++) {
             int endIndex = (int)(Math.random() * 3 - 1);
@@ -78,9 +78,9 @@ public class UserApiStub implements UserApi {
                     RandomStringUtils.randomAlphanumeric(5).getBytes(), groups, getRandomRights());
             usersByIds.put(user.getId(), user);
             userId++;
-            L.info("constructor: Added User {}", user);
+            L.debug("constructor: Added User {}", user);
         }
-        L.info("Exiting UserApiStub construsctor");
+        L.debug("Exiting UserApiStub construsctor");
     }
 
     @Override
@@ -90,7 +90,7 @@ public class UserApiStub implements UserApi {
 
     @Override
     public int getQuickLoginKey(long id) throws IllegalArgumentException {
-        L.info("Entering getQuickLoginKey({})", id);
+        L.debug("Entering getQuickLoginKey({})", id);
         Operator user = usersByIds.get(id);
         if ( user == null ) {
             throw new IllegalArgumentException("No User found with userId = " + id + ".");
@@ -100,7 +100,7 @@ public class UserApiStub implements UserApi {
 
     @Override
     public User create(String username) throws IllegalArgumentException, NullPointerException {
-        L.info("Entering create({})", username);
+        L.debug("Entering create({})", username);
         Objects.requireNonNull(username, "Submitted username is null.");
         if ( username.isBlank() ) {
             throw new IllegalArgumentException("Submitted username is blank.");
@@ -109,14 +109,14 @@ public class UserApiStub implements UserApi {
 
         usersByIds.put(user.getId(), user);
         userId++;
-        L.info("create(): added new User {}", user);
+        L.debug("create(): added new User {}", user);
 
         return user.toApiUser();
     }
 
     @Override
     public User updateUsername(long userId, String username) throws IllegalArgumentException, NullPointerException {
-        L.info("Entering updateUsername({}, {})", userId, username);
+        L.debug("Entering updateUsername({}, {})", userId, username);
         Operator user = usersByIds.get(userId);
         if ( user == null ) {
             throw new IllegalArgumentException("No User found with userId = " + userId + ".");
@@ -127,13 +127,13 @@ public class UserApiStub implements UserApi {
         }
         user.setUsername(username);
         User u = user.toApiUser();
-        L.info("updateUsername(): set username to {}", user.getUsername());
+        L.debug("updateUsername(): set username to {}", user.getUsername());
         return u;
     }
 
     @Override
     public User updatePassword(long userId, char[] password) throws IllegalArgumentException, NullPointerException {
-        L.info("Entering updatePassword({}, {})", userId, password);
+        L.debug("Entering updatePassword({}, {})", userId, password);
         Operator user = usersByIds.get(userId);
         if ( user == null ) {
             throw new IllegalArgumentException("No User found with userId = " + userId + ".");
@@ -148,13 +148,13 @@ public class UserApiStub implements UserApi {
         user.setPassword(hashPassword);
         user.setSalt(salt);
         User u = user.toApiUser();
-        L.info("updatePassword(): set password to {}", user.getPassword());
+        L.debug("updatePassword(): set password to {}", user.getPassword());
         return u;
     }
 
     @Override
     public User addRight(long userId, AtomicRight right) throws IllegalArgumentException, NullPointerException {
-        L.info("Entering addRight({}, {})", userId, right);
+        L.debug("Entering addRight({}, {})", userId, right);
         Operator user = usersByIds.get(userId);
         if ( user == null ) {
             throw new IllegalArgumentException("No User found with userId = " + userId + ".");
@@ -165,13 +165,13 @@ public class UserApiStub implements UserApi {
         }
         user.add(right);
         User u = user.toApiUser();
-        L.info("addRight(): added Right {} to User {}", right, user);
+        L.debug("addRight(): added Right {} to User {}", right, user);
         return u;
     }
 
     @Override
     public User removeRight(long userId, AtomicRight right) throws IllegalArgumentException, NullPointerException {
-        L.info("Entering removeRight({}, {})", userId, right);
+        L.debug("Entering removeRight({}, {})", userId, right);
         Operator user = usersByIds.get(userId);
         if ( user == null ) {
             throw new IllegalArgumentException("No User found with userId = " + userId + ".");
@@ -182,13 +182,13 @@ public class UserApiStub implements UserApi {
         }
         user.getRights().remove(right);
         User u = user.toApiUser();
-        L.info("removeRight(): removed Right {} from User {}", right, user);
+        L.debug("removeRight(): removed Right {} from User {}", right, user);
         return u;
     }
 
     @Override
     public User addGroup(long userId, long groupId) throws IllegalArgumentException {
-        L.info("Entering addGroup({}, {})", userId, groupId);
+        L.debug("Entering addGroup({}, {})", userId, groupId);
         Operator user = usersByIds.get(userId);
         if ( user == null ) {
             throw new IllegalArgumentException("No User found with userId " + userId + ".");
@@ -202,13 +202,13 @@ public class UserApiStub implements UserApi {
         }
         user.getPersonas().add(group);
         User u = user.toApiUser();
-        L.info("addGroup(): added Group {} to User {}", group, user);
+        L.debug("addGroup(): added Group {} to User {}", group, user);
         return u;
     }
 
     @Override
     public User removeGroup(long userId, long groupId) throws IllegalArgumentException {
-        L.info("Entering removeGroup({}, {})", userId, groupId);
+        L.debug("Entering removeGroup({}, {})", userId, groupId);
         Operator user = usersByIds.get(userId);
         if ( user == null ) {
             throw new IllegalArgumentException("No User found with userId " + userId + ".");
@@ -222,33 +222,33 @@ public class UserApiStub implements UserApi {
         }
         user.getPersonas().remove(group);
         User u = user.toApiUser();
-        L.info("removeGroup(): removed Group {} from User {}", group, user);
+        L.debug("removeGroup(): removed Group {} from User {}", group, user);
         return u;
     }
 
     @Override
     public void delete(long userId) throws IllegalArgumentException {
-        L.info("Entering delete({})", userId);
+        L.debug("Entering delete({})", userId);
         Operator user = usersByIds.get(userId);
         if ( user == null ) {
             throw new IllegalArgumentException("No User found with userId = " + userId + ".");
         }
         usersByIds.remove(user.getId());
-        L.info("delete(): deleted User {}", user);
+        L.debug("delete(): deleted User {}", user);
     }
 
     @Override
     public User findById(long id) throws IllegalArgumentException {
-        L.info("Entering findById({})", id);
+        L.debug("Entering findById({})", id);
         Operator user = usersByIds.get(id);
         User u = user.toApiUser();
-        L.info("findById(): returning User {}", u);
+        L.debug("findById(): returning User {}", u);
         return u;
     }
 
     @Override
     public User findByName(String username) throws IllegalArgumentException, NullPointerException {
-        L.info("Entering findByName({})", username);
+        L.debug("Entering findByName({})", username);
         Objects.requireNonNull(username, "Submitted username is null.");
         if ( username.isBlank() ) {
             throw new IllegalArgumentException("Submitted username is blank.");
@@ -258,27 +258,27 @@ public class UserApiStub implements UserApi {
             throw new IllegalArgumentException("No User found with username = " + username + ".");
         }
         User u = user.toApiUser();
-        L.info("findByName(): returning User {}", u);
+        L.debug("findByName(): returning User {}", u);
         return u;
     }
 
     @Override
     public List<User> findAll() {
-        L.info("Entering findAll()");
+        L.debug("Entering findAll()");
         List<Operator> users = new ArrayList<>(usersByIds.values());
         List<User> findAll = new ArrayList<>();
         users.forEach(u -> findAll.add(u.toApiUser()));
-        L.info("findAll(): returning {}", findAll);
+        L.debug("findAll(): returning {}", findAll);
         return findAll;
     }
 
     private List<AtomicRight> getRandomRights() {
-        L.info("Entering getRandomRights()");
+        L.debug("Entering getRandomRights()");
         List<AtomicRight> rights = Arrays.asList(AtomicRight.values());
         Collections.shuffle(rights);
         int till = (int)(Math.random() * rights.size() - 1) + 1;
         rights = rights.subList(0, till);
-        L.info("getRandomRights(): returning List of Rights {}", rights);
+        L.debug("getRandomRights(): returning List of Rights {}", rights);
         return rights;
     }
 

@@ -16,7 +16,7 @@ public class FxControllerTest {
 
     @Test
     public void controllerValid() {
-        assertThat(FxController.validationMessage(NewRightsManagementController.class)).isNull();
+        assertThat(FxController.validationMessage(RightsManagementController.class)).isNull();
         assertThat(FxController.validationMessage(UserManagementController.class)).isNull();
         assertThat(FxController.validationMessage(GroupManagementController.class)).isNull();
     }

@@ -33,10 +33,10 @@ import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
 import eu.ggnet.dwoss.receipt.ee.UnitProcessor;
 import eu.ggnet.dwoss.receipt.ui.StockController;
+import eu.ggnet.dwoss.receipt.ui.StockDto;
 import eu.ggnet.dwoss.receipt.ui.unit.UnitView;
 import eu.ggnet.dwoss.receipt.ui.unit.UnitView.In;
 import eu.ggnet.dwoss.stock.api.PicoStock;
-import eu.ggnet.dwoss.stock.api.StockDto;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
 import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
@@ -46,6 +46,7 @@ import eu.ggnet.saft.core.Saft;
 import eu.ggnet.saft.core.ui.AlertType;
 
 /**
+ * MenuItem to allow the Manipulation of an existing {@link UniqueUnit}.
  *
  * @author mirko.schulze
  */

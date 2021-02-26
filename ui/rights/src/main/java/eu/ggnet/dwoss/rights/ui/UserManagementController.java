@@ -21,16 +21,18 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
 import eu.ggnet.dwoss.rights.api.*;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.FxController;
@@ -40,9 +42,12 @@ import eu.ggnet.saft.core.ui.ResultProducer;
  *
  * @author mirko.schulze
  */
-public class UserManagementController implements Initializable, FxController, Consumer<User>, ResultProducer<User> {
+public class UserManagementController implements Initializable, FxController, Consumer<User>, ResultProducer<Result> {
 
     private static final Logger L = LoggerFactory.getLogger(UserManagementController.class);
+    
+    @Inject
+    private RemoteDl remote;
 
     private User user;
 
@@ -68,7 +73,7 @@ public class UserManagementController implements Initializable, FxController, Co
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        allGroups = Dl.remote().lookup(GroupApi.class).findAll();
+        allGroups = remote.lookup(GroupApi.class).findAll();
 
         selectedRightsListView.setCellFactory(new RightsListCell.Factory());
         selectedRightsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -194,7 +199,7 @@ public class UserManagementController implements Initializable, FxController, Co
     }
 
     @Override
-    public User getResult() {
+    public Result getResult() {
         if ( accept ) {
             Optional<Long> id;
             Optional<Integer> optLock;
@@ -205,24 +210,20 @@ public class UserManagementController implements Initializable, FxController, Co
                 id = Optional.empty();
                 optLock = Optional.empty();
             }
-            String password;
-            if(passwordField.getText().isEmpty()){
-                password = null;
-            }else{
-                password = passwordField.getText();
-            }
+            Optional<String> password = passwordField.getText().isEmpty() ? Optional.empty() : Optional.of(passwordField.getText());
             User result = new User.Builder()
                     .setId(id)
                     .setUsername(nameTextField.getText())
-                    .setNullablePassword(password)
                     .setOptLock(optLock)
                     .addAllRights(selectedRightsListView.getItems())
                     .addAllGroups(selectedGroupsListView.getItems())
                     .build();
-            L.info("Returning User {}", result);
-            return result;
+            Result userResult = new Result(result, password);
+            
+            L.debug("Returning UserResult {}", userResult);
+            return userResult;
         } else {
-            L.info("Returning null");
+            L.debug("Returning null");
             return null;
         }
     }

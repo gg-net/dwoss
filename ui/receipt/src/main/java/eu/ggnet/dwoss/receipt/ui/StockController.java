@@ -29,7 +29,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 
 import eu.ggnet.dwoss.stock.api.PicoStock;
-import eu.ggnet.dwoss.stock.api.StockDto;
 import eu.ggnet.saft.core.ui.*;
 
 import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;

@@ -39,9 +39,6 @@ public interface User extends Serializable {
 
     String getUsername();
 
-    // TODO: Wieso zur Hölle ist das hier geleandet. Macht keinen Sinn.
-    Optional<String> getPassword();
-
     List<AtomicRight> getRights();
 
     List<Group> getGroups();
