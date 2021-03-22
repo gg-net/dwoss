@@ -39,6 +39,7 @@ import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Condition;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
+import eu.ggnet.dwoss.redtape.ee.format.DossierFormater;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.saft.core.Ui;
 
@@ -102,7 +103,12 @@ public class DossierFilterController {
                 docConditions.addAll(doc.getConditions());
             }
 
+            // Select the most importend document
+            // TODO: Don't remember the rules. document them.
             Document activeDocument = null;
+            if ( dossier.getActiveDocuments().isEmpty() ) {
+                throw new RuntimeException("Dossier ist active, but no active documents: " + DossierFormater.toSimpleLine(dossier));
+            }
             for (Document document : dossier.getActiveDocuments()) {
                 if ( document.getDirective() != Directive.NONE ) activeDocument = dossier.getActiveDocuments(document.getType()).get(0);
             }
