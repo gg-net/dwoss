@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
+ * Copyright (C) 2021 GG-Net GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,20 +16,23 @@
  */
 package eu.ggnet.dwoss.receipt.ui.cap;
 
-import java.awt.Window;
 import java.awt.event.ActionEvent;
+import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
-import javax.swing.JOptionPane;
 
-import eu.ggnet.dwoss.core.common.UserInfoException;
+import javafx.scene.control.Alert;
+import javafx.scene.control.TextInputDialog;
+import javafx.stage.Modality;
+
 import eu.ggnet.dwoss.core.common.values.ReceiptOperation;
 import eu.ggnet.dwoss.core.widget.AccessableAction;
 import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
 import eu.ggnet.dwoss.receipt.ee.UnitProcessor;
-import eu.ggnet.dwoss.receipt.ui.StockDialog;
+import eu.ggnet.dwoss.receipt.ui.unit.StockController;
 import eu.ggnet.dwoss.receipt.ui.unit.UnitView;
 import eu.ggnet.dwoss.receipt.ui.unit.UnitView.In;
 import eu.ggnet.dwoss.stock.api.PicoStock;
@@ -39,14 +42,17 @@ import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
 import eu.ggnet.dwoss.stock.spi.ActiveStock;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.saft.core.Saft;
-import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.core.UiUtil;
+import eu.ggnet.saft.core.ui.AlertType;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_UNIQUE_UNIT;
+import static javafx.scene.control.ButtonType.NO;
+import static javafx.scene.control.ButtonType.YES;
 
 /**
- * Action to allow the Manipulation of an existing Unit.
- * <p/>
- * @author oliver.guenther
+ * MenuItem to allow the Manipulation of an existing {@link UniqueUnit}.
+ *
+ * @author mirko.schulze
  */
 public class EditUnitAction extends AccessableAction {
 
@@ -59,54 +65,42 @@ public class EditUnitAction extends AccessableAction {
     @Inject
     private Guardian guardian;
 
-    /**
-     * Default Constructor.
-     */
     public EditUnitAction() {
         super(UPDATE_UNIQUE_UNIT);
     }
 
-    /**
-     * Action to allow the Manipulation of an existing Unit.
-     * <p/>
-     * @author oliver.guenther
-     * @param e the event
-     */
     @Override
     public void actionPerformed(ActionEvent e) {
-        saft.exec(() -> {
-            String refurbishedId = JOptionPane.showInputDialog(UiCore.getMainFrame(), "Bitte SopoNr/Seriennummer eingeben:");
-            try {
-                editUnit(refurbishedId);
-            } catch (UserInfoException ex) {
-                saft.handle(ex);
-            }
-        });
+        saft.build().dialog()
+                .eval(() -> {
+                    TextInputDialog dialog = new TextInputDialog();
+                    dialog.setTitle("Eingabe");
+                    dialog.setHeaderText("Bitte SopoNr/Seriennummer eingeben: ");
+                    return dialog;
+                }).cf()
+                .thenCompose(s -> editUnit(s))
+                .handle(saft.handler());
     }
 
     /**
      * Starts the Ui to edit an existing Unit.
-     * <p/>
+     * <p>
      * @param refurbishedIdOrSerial the refurbishId or a serial
-     * @throws UserInfoException if the unit may not be edited.
+     * @return
      */
-    // Is public, so it can be used in a tryout.
-    public void editUnit(String refurbishedIdOrSerial) throws UserInfoException {
-        Window parent = UiCore.getMainFrame();
-        if ( refurbishedIdOrSerial == null || refurbishedIdOrSerial.trim().equals("") ) return;
-        refurbishedIdOrSerial = refurbishedIdOrSerial.trim().toUpperCase();
-        UnitProcessor.EditableUnit eu = remote.lookup(UnitProcessor.class).findEditableUnit(refurbishedIdOrSerial);
+    public CompletableFuture<Void> editUnit(final String refurbishedIdOrSerial) throws CompletionException {
+        if ( refurbishedIdOrSerial == null || refurbishedIdOrSerial.trim().equals("") ) return CompletableFuture.completedFuture(null);
+        UnitProcessor.EditableUnit eu = UiUtil.exceptionRun(() -> remote.lookup(UnitProcessor.class).findEditableUnit(refurbishedIdOrSerial.trim().toUpperCase()));
         if ( eu.operation == ReceiptOperation.IN_SALE ) {
-            JOptionPane.showMessageDialog(parent, "Achtung, dieses Gerät ist in einem Kundenauftrag, ändern nicht empfohlen.");
+            saft.build().alert().message("Achtung, dieses Gerät ist in einem Kundenauftrag, ändern nicht empfohlen.").show(AlertType.WARNING);
         } else if ( eu.operation != ReceiptOperation.SALEABLE ) {
-            JOptionPane.showMessageDialog(parent, "Gerät ist in Operation : " + eu.operation);
+            saft.build().alert().message("Gerät ist in Operation : " + eu.operation).show(AlertType.INFO);
         }
+        final CompletableFuture<UniqueUnit> uuf = (eu.stockUnit == null
+                ? CompletableFuture.completedFuture(eu.uniqueUnit)
+                : optionalChangeStock(eu.uniqueUnit, eu.stockUnit, Dl.local().lookup(ActiveStock.class).getActiveStock(), guardian.getUsername()));
 
-        final UniqueUnit uu = (eu.stockUnit == null
-                ? eu.uniqueUnit
-                : optionalChangeStock(eu.uniqueUnit, eu.stockUnit, Dl.local().lookup(ActiveStock.class).getActiveStock(), parent, guardian.getUsername()));
-
-        saft.build().parent(parent).swing().eval(() -> new In.Edit(uu, eu.operation, eu.partNo), UnitView.class).cf()
+        return uuf.thenCompose(uu -> saft.build().swing().eval(() -> new In.Edit(uu, eu.operation, eu.partNo), UnitView.class).cf())
                 .thenAccept(result -> {
                     remote.lookup(UnitProcessor.class).update(
                             result.uniqueUnit(),
@@ -115,30 +109,42 @@ public class EditUnitAction extends AccessableAction {
                             result.comment(),
                             guardian.getUsername()
                     );
-                })
-                .handle(saft.handler(parent));
-
+                });
     }
 
-    private UniqueUnit optionalChangeStock(UniqueUnit uniqueUnit, StockUnit stockUnit, PicoStock localStock, Window parent, String account) {
-        if ( !stockUnit.isInStock() ) return uniqueUnit;
-        if ( localStock.id == stockUnit.getStock().getId() ) return uniqueUnit;
+    private CompletableFuture<UniqueUnit> optionalChangeStock(UniqueUnit uniqueUnit, StockUnit stockUnit, final PicoStock localStock, String account) {
+        if ( !stockUnit.isInStock() ) return CompletableFuture.completedFuture(uniqueUnit);
+        if ( localStock.id == stockUnit.getStock().getId() ) return CompletableFuture.completedFuture(uniqueUnit);
         if ( stockUnit.isInTransaction() ) {
-            JOptionPane.showMessageDialog(parent,
-                    "Achtung, Gerät ist nicht auf " + localStock.shortDescription + ",\n"
-                    + "aber Gerät ist auch auf einer Transaktion.\n"
-                    + "Automatische Lageränderung nicht möglich !");
-            return uniqueUnit;
+            saft.build().alert().message("Achtung, Gerät ist nicht auf " + localStock.shortDescription + ",")
+                    .nl("aber Gerät ist auch auf einer Transaktion.").nl("Automatische Lageränderung nicht möglich !").show(AlertType.WARNING);
+            return CompletableFuture.completedFuture(uniqueUnit);
         }
-        int option = JOptionPane.showConfirmDialog(parent,
-                "Gerät steht nicht auf " + localStock.shortDescription + ", welches als Standort angegeben ist. Gerätestandort ändern ?",
-                "Standortabweichung", JOptionPane.YES_NO_OPTION);
-        if ( option == JOptionPane.YES_OPTION ) {
-            StockDialog dialog = new StockDialog(parent, Dl.remote().lookup(StockAgent.class).findAll(Stock.class).toArray(new Stock[0]));
-            dialog.setSelection(localStock);
-            dialog.setVisible(true);
-            if ( dialog.isOk() ) return remote.lookup(UnitProcessor.class).transfer(uniqueUnit, dialog.getSelection().getId(), account);
-        }
-        return uniqueUnit;
+
+        return saft.build().dialog()
+                .eval(() -> {
+                    Alert fxalert = new Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
+                    fxalert.setHeaderText("Standortabweichung\nGerät steht nicht auf " + localStock.shortDescription + ", welches als Standort angegeben ist.");
+                    fxalert.setContentText("Gerätestandort ändern ?");
+                    fxalert.initModality(Modality.APPLICATION_MODAL);
+                    fxalert.getButtonTypes().clear();
+                    fxalert.getButtonTypes().addAll(YES, NO);
+                    return fxalert;
+                }).cf() // Double No case. Think
+                .thenApply(bt -> remote.lookup(StockAgent.class).findAll(Stock.class).stream().map(Stock::toPicoStock).collect(Collectors.toList()))
+                .thenCompose(picoStocks -> saft.build().fxml().eval(() -> new StockController.In(picoStocks, localStock), StockController.class).cf())
+                .thenApply(s -> remote.lookup(UnitProcessor.class).transfer(uniqueUnit, s.id, account))
+                .handle((UniqueUnit uu, Throwable ex) -> {
+                    if ( ex != null ) {
+                        if ( ex instanceof CancellationException || ex.getCause() instanceof CancellationException ) return uniqueUnit; // NO Case, return original unique unit.
+                        else if ( ex instanceof RuntimeException ) throw (RuntimeException)ex; // Saftynet
+                        else throw new RuntimeException(ex); // Saftynet, Impossible to reach
+                    } else if ( uu != null ) {
+                        return uu;
+                    }
+                    throw new IllegalStateException("Impossible Case: CompletableFuture.handle(): uu and ex are null"); // Saftynet, Impossible to reach
+                });
+
     }
+
 }

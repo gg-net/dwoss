@@ -180,7 +180,7 @@ public class DwOssClientController {
                 OptimizedCreditMemoReportAction.class,
                 DebitorsReportAction.class,
                 DirectDebitReportAction.class,
-                ReportRefurbishmentAction.class
+                ReportRefurbishmentMenuItem.class
         ));
 
         Menu gl_close = new Menu("Abschluss Reporte");

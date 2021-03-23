@@ -40,7 +40,7 @@ import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
  */
 public class ReportRefurbishmentController implements FxController, ResultProducer<ReportRefurbishmentController.Result>, Initializable {
 
-    public class Result {
+    public static class Result {
 
         private Date start, end;
 

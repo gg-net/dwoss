@@ -14,9 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.receipt.ui;
+package eu.ggnet.dwoss.receipt.ui.unit;
+
+import eu.ggnet.dwoss.receipt.ui.PicoStockListCell;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
@@ -37,39 +40,52 @@ import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
  *
  * @author mirko.schulze
  */
-public class StockController implements FxController, Consumer<StockDto>,ResultProducer<PicoStock>, Initializable{
-    
+public class StockController implements FxController, Consumer<StockController.In>, ResultProducer<PicoStock>, Initializable {
+
+    public static class In {
+
+        private List<PicoStock> stocks;
+
+        private PicoStock selectedStock;
+
+        public In(List<PicoStock> stocks, PicoStock selectedStock) {
+            this.stocks = stocks;
+            this.selectedStock = selectedStock;
+        }
+
+    }
+
     private boolean ok;
-    
+
     @Bind(SHOWING)
     private BooleanProperty showingProperty = new SimpleBooleanProperty();
-    
+
     @FXML
     private ComboBox<PicoStock> stockComboBox;
-    
+
     @FXML
     private Button okButton;
-    
+
     @FXML
     private Button cancelButton;
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         stockComboBox.setCellFactory(new PicoStockListCell.Factory());
         stockComboBox.setButtonCell(new PicoStockListCell());
-        
+
         okButton.setOnAction(e -> {
             ok = true;
             showingProperty.set(false);
         });
-        
+
         cancelButton.setOnAction(e -> showingProperty.set(false));
     }
 
     @Override
-    public void accept(StockDto stockDto) {
-        stockComboBox.setItems(FXCollections.observableArrayList(stockDto.getStocks()));
-        stockComboBox.getSelectionModel().select(stockDto.getSelectedStock());
+    public void accept(StockController.In stockDto) {
+        stockComboBox.setItems(FXCollections.observableArrayList(stockDto.stocks));
+        stockComboBox.getSelectionModel().select(stockDto.selectedStock);
     }
 
     @Override

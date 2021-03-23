@@ -40,18 +40,18 @@ public class ReportRefurbishmentMenuItem extends MenuItem {
     @Inject
     private RemoteDl remote;
 
+    @Inject
+    private Progressor progressor;
+
     public ReportRefurbishmentMenuItem() {
         super("Refurbishmentreport");
     }
 
     @PostConstruct
     private void init() {
-        setOnAction(e -> saft.build()
-                .fxml()
-                .eval(ReportRefurbishmentController.class)
-                .cf()
-                .thenAccept(result -> FileUtil.osOpen(Progressor.global().run("Refurbishmentreporter",
-                () -> remote.lookup(RefurbishmentReporter.class).toXls(result.getTradeName(), result.getStart(), result.getEnd()).toTemporaryFile())))
+        setOnAction(e -> saft.build().fxml().eval(ReportRefurbishmentController.class).cf()
+                .thenApply(r -> progressor.run("Refurbishmentreporter", () -> remote.lookup(RefurbishmentReporter.class).toXls(r.getTradeName(), r.getStart(), r.getEnd()).toTemporaryFile()))
+                .thenAccept(f -> FileUtil.osOpen(f))
                 .handle(saft.handler())
         );
     }
