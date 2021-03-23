@@ -26,6 +26,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.redtape.api.DossierViewer;
 import eu.ggnet.dwoss.report.api.ReportApiLocal;
@@ -137,6 +138,27 @@ public class UniqueUnitApiBean implements UniqueUnitApi {
         UniqueUnit uu = eao.findByIdentifier(UniqueUnit.Identifier.REFURBISHED_ID, refurbishId);
         if ( uu == null ) throw new UserInfoException("Keine Unit mit der Refurbishid " + refurbishId + " gefunden");
         uu.addHistory(history + " - " + arranger);
+    }
+
+    /*
+    Artikelnummer 	Bezeichnung 	SopoNr 	Serial 	Lieferant 	Shipment 	InputDate 	Status (verfügbar, in transver, nicht im Lager) 	ReportName 	ReportDate 	Weitere Reportinformationen
+
+     */
+    @Override
+    public FileJacket toUnitsOfPartNoAsXls(String partNo) throws UserInfoException {
+        /*
+        prüfe partno ob ok
+        hole product mit uniqueunits
+        (Artikelnummer,Bezeichnung, SopoNr, Serial, Lieferant, Shipment, InputDate)
+
+        StockApiLocal -> StockUnit
+        (Status)
+        ReportApiLoca -> function existiert, Api Objekt noch nicht.
+
+        mache XLS draus.
+         */
+
+        return null;
     }
 
 }

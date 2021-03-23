@@ -18,6 +18,7 @@ package eu.ggnet.dwoss.uniqueunit.api;
 
 import javax.ejb.Remote;
 
+import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.common.UserInfoException;
 
 /**
@@ -51,4 +52,13 @@ public interface UniqueUnitApi {
      * @throws UserInfoException If history, arranger are null or blank, or no unit with the supplied refurbishid is found.
      */
     void addHistoryByRefurbishId(String refurbishId, String history, String arranger) throws UserInfoException;
+
+    /**
+     * Returns an XLS File containing Inforation to all units of the supplied partNo.
+     *
+     * @param partNo the partNo to supplied.
+     * @return an XLS File containing Inforation to all units of the supplied partNo.
+     * @throws eu.ggnet.dwoss.core.common.UserInfoException If partNo ist null, empty or no product can be found.
+     */
+    FileJacket toUnitsOfPartNoAsXls(String partNo) throws UserInfoException;
 }
