@@ -16,6 +16,7 @@
  */
 package tryout.stub;
 
+import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
 
@@ -56,6 +57,11 @@ public class UniqueUnitApiStub implements UniqueUnitApi {
         } catch (NumberFormatException e) {
             throw new UserInfoException("Refurbishid " + refurbishId + " ist keine Zahl");
         }
+    }
+
+    @Override
+    public FileJacket toUnitsOfPartNoAsXls(String partNo) throws UserInfoException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

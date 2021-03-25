@@ -38,8 +38,7 @@ import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
 import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.ui.ProductTask;
-import eu.ggnet.dwoss.uniqueunit.ui.cap.AddHistoryToUnitMenuItem;
-import eu.ggnet.dwoss.uniqueunit.ui.cap.ProductListMenuItem;
+import eu.ggnet.dwoss.uniqueunit.ui.cap.*;
 import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.impl.Fx;
 
@@ -101,7 +100,8 @@ public class UniqueUnitTryout {
                 Menu m = new Menu("UniqueUnit MenuItems");
                 m.getItems().addAll(
                         instance.select(ProductListMenuItem.class).get(),
-                        instance.select(AddHistoryToUnitMenuItem.class).get()
+                        instance.select(AddHistoryToUnitMenuItem.class).get(),
+                        instance.select(ProductHistoryMenuItem.class).get()
                 );
 
                 return new MenuBar(m);

@@ -411,7 +411,7 @@ public class ProductProcessorStub implements ProductProcessor {
                 uniqueUnits.add(uu);
                 if ( R.nextInt(10) <= 7 ) {
                     StockUnit su = new StockUnit(uu.getRefurbishId(), uu.getProduct().getName(), uu.getId());
-                    su.setStock(stocks.get(R.nextInt(stocks.size())));
+                    su.setStock(stocks.get(0));
                     editAbleRefurbishId = su.getRefurbishId();
                     stockUnits.add(su);
                 }

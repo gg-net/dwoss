@@ -14,25 +14,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.receipt.ui.cap;
+package eu.ggnet.dwoss.uniqueunit.ui.cap;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
-import javafx.scene.control.MenuItem;
-
-import eu.ggnet.dwoss.core.widget.FileUtil;
-import eu.ggnet.dwoss.core.widget.Progressor;
+import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
-import eu.ggnet.dwoss.receipt.ee.reporting.RefurbishmentReporter;
-import eu.ggnet.dwoss.receipt.ui.ReportRefurbishmentController;
+import eu.ggnet.dwoss.rights.api.AtomicRight;
+import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
+import eu.ggnet.dwoss.uniqueunit.ui.product.ProductHistoryController;
 import eu.ggnet.saft.core.Saft;
 
+import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_COMMENT_UNIQUE_UNIT_HISTORY;
+
+
 /**
+ * MenuItem to export information of a product to a xls file.
  *
  * @author mirko.schulze
  */
-public class ReportRefurbishmentMenuItem extends MenuItem {
+//TODO: welches right?
+public class ProductHistoryMenuItem extends AccessableMenuItem {
 
     @Inject
     private Saft saft;
@@ -43,17 +46,19 @@ public class ReportRefurbishmentMenuItem extends MenuItem {
     @Inject
     private Progressor progressor;
 
-    public ReportRefurbishmentMenuItem() {
-        super("Refurbishmentreport");
+    public ProductHistoryMenuItem(AtomicRight right) {
+        super(CREATE_COMMENT_UNIQUE_UNIT_HISTORY);
     }
 
     @PostConstruct
     private void init() {
-        setOnAction(e -> saft.build().fxml().eval(ReportRefurbishmentController.class).cf()
-                .thenApply(r -> progressor.run("Refurbishmentreporter", () -> remote.lookup(RefurbishmentReporter.class).toXls(r.getTradeName(), r.getStart(), r.getEnd()).toTemporaryFile()))
-                .thenAccept(f -> FileUtil.osOpen(f))
-                .handle(saft.handler())
-        );
+        setOnAction(e -> {
+            saft.build().fxml().eval(ProductHistoryController.class).cf()
+                    .thenApply(partNo -> progressor.run("Historie für Artikel " + partNo + " erstellen.", () -> remote.lookup(UniqueUnitApi.class).toUnitsOfPartNoAsXls(partNo).toTemporaryFile()))
+                    .thenAccept(f -> FileUtil.osOpen(f))
+                    .handle(saft.handler());
+        });
+
     }
 
 }

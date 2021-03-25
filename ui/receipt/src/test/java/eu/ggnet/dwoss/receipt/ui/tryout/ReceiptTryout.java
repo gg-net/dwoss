@@ -26,7 +26,6 @@ import javax.enterprise.inject.se.SeContainer;
 import javax.enterprise.inject.se.SeContainerInitializer;
 import javax.swing.*;
 
-import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.core.widget.cdi.WidgetProducers;
@@ -86,7 +85,7 @@ public class ReceiptTryout {
         Dl.local().add(Guardian.class, new GuardianStub());
 
         StockSpiStub su = new StockSpiStub();
-        su.setActiveStock(pp.stocks.get(0).toPicoStock());
+        su.setActiveStock(pp.stocks.get(1).toPicoStock()); // Hint: pp.editAbleRefurbishId is allways on stock.id=0
         Dl.local().add(ActiveStock.class, su);
 
         JFrame mainFrame = UiUtil.startup(() -> {
@@ -104,13 +103,7 @@ public class ReceiptTryout {
             openShipmentUpdateView.addActionListener(a -> saft.build().fx().eval(ShipmentEditView.class).cf().thenAccept(System.out::println));
 
             JButton editOneUnit = new JButton("Eine SopoNr bearbeiten");
-            editOneUnit.addActionListener(e -> {
-                try {
-                    instance.select(EditUnitAction.class).get().editUnit(pp.editAbleRefurbishId);
-                } catch (UserInfoException ex) {
-                    saft.handle(ex);
-                }
-            });
+            editOneUnit.addActionListener(e -> instance.select(EditUnitAction.class).get().editUnit(pp.editAbleRefurbishId).handle(saft.handler()));
 
             JMenu editProduct = new JMenu("Artikel direkt bearbeiten");
             for (EditProduct ep : pp.editProducts) {
