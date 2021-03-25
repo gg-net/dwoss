@@ -16,15 +16,18 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ui.cap;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
 import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
-import static eu.ggnet.dwoss.rights.api.AtomicRight.CHANGE_TAX;
 import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
-import eu.ggnet.dwoss.uniqueunit.ui.ProductHistoryController;
+import eu.ggnet.dwoss.uniqueunit.ui.product.ProductHistoryController;
 import eu.ggnet.saft.core.Saft;
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+
+import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_COMMENT_UNIQUE_UNIT_HISTORY;
+
 
 /**
  * MenuItem to export information of a product to a xls file.
@@ -44,18 +47,18 @@ public class ProductHistoryMenuItem extends AccessableMenuItem {
     private Progressor progressor;
 
     public ProductHistoryMenuItem(AtomicRight right) {
-        super(CHANGE_TAX);
+        super(CREATE_COMMENT_UNIQUE_UNIT_HISTORY);
     }
 
     @PostConstruct
     private void init() {
-        saft.build().fxml()
-                .eval(ProductHistoryController.class)
-                .cf()
-                .thenApply(partNo -> progressor.run("Historie für Artikel " + partNo + " erstellen.",
-                () -> remote.lookup(UniqueUnitApi.class).toUnitsOfPartNoAsXls(partNo).toTemporaryFile()))
-                .thenAccept(f -> FileUtil.osOpen(f))
-                .handle(saft.handler());
+        setOnAction(e -> {
+            saft.build().fxml().eval(ProductHistoryController.class).cf()
+                    .thenApply(partNo -> progressor.run("Historie für Artikel " + partNo + " erstellen.", () -> remote.lookup(UniqueUnitApi.class).toUnitsOfPartNoAsXls(partNo).toTemporaryFile()))
+                    .thenAccept(f -> FileUtil.osOpen(f))
+                    .handle(saft.handler());
+        });
+
     }
 
 }
