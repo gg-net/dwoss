@@ -14,20 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.uniqueunit.ui;
+package eu.ggnet.dwoss.uniqueunit.ui.product;
 
-import eu.ggnet.saft.core.Saft;
-import eu.ggnet.saft.core.ui.*;
-import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import javax.inject.Inject;
+
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javax.inject.Inject;
+
+import eu.ggnet.saft.core.Saft;
+import eu.ggnet.saft.core.ui.*;
+
+import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
 
 /**
  * Controller class for a dialog to enter a product number.
@@ -42,10 +46,10 @@ public class ProductHistoryController implements FxController, ResultProducer<St
     private Saft saft;
 
     @Bind(SHOWING)
-    private BooleanProperty showingProperty = new SimpleBooleanProperty();
+    private final BooleanProperty showingProperty = new SimpleBooleanProperty();
 
     private boolean ok;
-    
+
     @FXML
     private TextField partNoTextField;
 
@@ -58,17 +62,30 @@ public class ProductHistoryController implements FxController, ResultProducer<St
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         okButton.setOnAction(e -> {
-            if ( validatePartNo() ) {
+            //ProductGenerator uses a random number for partNo 
+//            if ( isPartNoValid() ) {
                 ok = true;
                 showingProperty.set(false);
-            } else {
-                saft.build().alert().message("Fehlerhafte Eingabe der Artikelnummer").show(AlertType.ERROR);
-            }
+//            } else {
+//                saft.build().alert().message("Fehlerhafte Eingabe der Artikelnummer").show(AlertType.ERROR);
+//            }
         });
         cancelButton.setOnAction(e -> showingProperty.set(false));
     }
 
-    private boolean validatePartNo() {
+    /**
+     * Validates if the String entered in this dialog matches following pattern:
+     * <p>
+     * 2 letters or digits, fullstop, 5 letters or digits, fullstop, 3 letters or digits, letters may be lower or upper case.
+     * <p>
+     * i.e.:
+     * <ul><li>xx.XXXXX.xxx</li>
+     * <li>12.34567.890</li>
+     * <li>XX.34x67.x9X</li></ul>
+     *
+     * @return true if the input matches the pattern.
+     */
+    private boolean isPartNoValid() {
         return partNoTextField.getText().matches("\\w{2}\\.\\w{5}\\.\\w{3}");
     }
 
