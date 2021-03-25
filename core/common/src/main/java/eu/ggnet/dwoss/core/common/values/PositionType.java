@@ -69,4 +69,8 @@ public enum PositionType {
         return description;
     }
 
+    public String description() {
+        return description;
+    }
+
 }

@@ -24,6 +24,7 @@ import javax.inject.Inject;
 
 import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.report.api.ReportApiLocal;
+import eu.ggnet.dwoss.report.api.SimpleReportUnit;
 import eu.ggnet.dwoss.report.ee.eao.ReportLineEao;
 import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
@@ -73,6 +74,16 @@ public class ReportApiLocalBean implements ReportApiLocal {
             sb.append(head).append(elme).append(foot);
         }
         return sb.toString();
+    }
+
+    @Override
+    public SimpleReportUnit findReportUnit(long uniqueUnitId) {
+        List<ReportLine> reportLines = eao.findByUniqueUnitId(uniqueUnitId);
+        if ( reportLines.isEmpty() ) return null;
+        return new SimpleReportUnit.Builder()
+                .uniqueUnitId(uniqueUnitId)
+                .addAllLines(reportLines.stream().map(ReportLine::toSimpleLine).collect(Collectors.toList()))
+                .build();
     }
 
 }

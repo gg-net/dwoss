@@ -242,7 +242,11 @@ public enum AtomicRight {
     /**
      * Allows to view cost an reference prices.
      */
-    VIEW_COST_AND_REFERENCE_PRICES("Darf Cost und Referenzpreise sehen");
+    VIEW_COST_AND_REFERENCE_PRICES("Darf Cost und Referenzpreise sehen"),
+    /**
+     * Allows to export the product unit report.
+     */
+    EXPORT_PRODUCT_UNIT_HISTORY_REPORT("Artikel Geräte History exportieren");
 
     private final String description;
 

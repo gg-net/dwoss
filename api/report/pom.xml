@@ -11,5 +11,13 @@
     <artifactId>dwoss-report-api</artifactId>
     <name>DwOss • Report • Api</name>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.inferred</groupId>
+            <artifactId>freebuilder</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
 </project>
 

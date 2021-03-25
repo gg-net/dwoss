@@ -21,13 +21,11 @@ import javax.inject.Inject;
 
 import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
-import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
 import eu.ggnet.dwoss.uniqueunit.ui.product.ProductHistoryController;
 import eu.ggnet.saft.core.Saft;
 
-import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_COMMENT_UNIQUE_UNIT_HISTORY;
-
+import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_PRODUCT_UNIT_HISTORY_REPORT;
 
 /**
  * MenuItem to export information of a product to a xls file.
@@ -46,8 +44,8 @@ public class ProductHistoryMenuItem extends AccessableMenuItem {
     @Inject
     private Progressor progressor;
 
-    public ProductHistoryMenuItem(AtomicRight right) {
-        super(CREATE_COMMENT_UNIQUE_UNIT_HISTORY);
+    public ProductHistoryMenuItem() {
+        super(EXPORT_PRODUCT_UNIT_HISTORY_REPORT);
     }
 
     @PostConstruct

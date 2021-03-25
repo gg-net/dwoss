@@ -34,4 +34,12 @@ public interface ReportApiLocal {
      */
     String findReportLinesByUniqueUnitIdAsHtml(long uniqueUnitId);
 
+    /**
+     * Returns a simple reportunit, referencing all lines for this unit.
+     *
+     * @param uniqueUnitId the unique unit id.
+     * @return a simple reportunit, referencing all lines for this unit or null if nothing was found.
+     */
+    SimpleReportUnit findReportUnit(long uniqueUnitId);
+
 }

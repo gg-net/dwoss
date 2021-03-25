@@ -19,6 +19,7 @@ package eu.ggnet.dwoss.report.ee.entity;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -32,9 +33,11 @@ import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 import eu.ggnet.dwoss.core.system.persistence.EagerAble;
 import eu.ggnet.dwoss.core.system.util.TwoDigits;
+import eu.ggnet.dwoss.core.system.util.Utils;
 
 import static eu.ggnet.dwoss.core.common.values.DocumentType.*;
 import static eu.ggnet.dwoss.core.common.values.PositionType.*;
+import static eu.ggnet.dwoss.report.ee.entity.ReportLine.SingleReferenceType.WARRANTY;
 
 /**
  * This is a Line of a report. It could be represent any type of Position.
@@ -1087,6 +1090,27 @@ public class ReportLine extends BaseEntity implements Serializable, EagerAble, C
     public String toName() {
         if ( StringUtils.isBlank(this.getProductBrandName()) || StringUtils.isBlank(this.getProductName()) ) return this.getName();
         return this.getProductBrandName() + " " + this.getProductName();
+    }
+
+    /**
+     * Returns a mapping to api.SimpleReportLine.
+     *
+     * @return a mapping to api.SimpleReportLine.
+     */
+    public eu.ggnet.dwoss.report.api.SimpleReportLine toSimpleLine() {
+        String reportNames = null;
+        if ( !getReports().isEmpty() ) reportNames = getReports().stream().map(Report::getName).collect(Collectors.joining(","));
+        return new eu.ggnet.dwoss.report.api.SimpleReportLine.Builder()
+                .reportingDate(Utils.toLd(reportingDate))
+                .actual(Utils.toLd(actual))
+                .id(id)
+                .refurbishId(refurbishId)
+                .positionType(positionType)
+                .documentType(documentType)
+                .dossierIdentifier(dossierIdentifier)
+                .isWarranty(positionType == PRODUCT_BATCH && getReference(WARRANTY) != null)
+                .nullableReportName(reportNames)
+                .build();
     }
 
     /**
