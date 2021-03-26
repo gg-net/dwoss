@@ -128,7 +128,7 @@ public class UniqueUnit implements Serializable, EagerAble {
         DISPLAYPORT_CABLE("Displayportkabel"),
         VGA_USB_ADAPTER("VGA-USB Adapter"),
         MAGNETIC_CHARGING_CABLE("magnetisches Ladekabel"),
-        SPARE_STRAP("Ersatzarmband"),
+        SPARE_STRAP("Sportarmband – anpassbar für die Längen S/M oder M/L"),
         LC_ADAPTER("Lightning-Klinke Adapter"),
         TRIPOD("Tripod"),
         LC_HEADSET("Headset (Lightnig Anschluss)");

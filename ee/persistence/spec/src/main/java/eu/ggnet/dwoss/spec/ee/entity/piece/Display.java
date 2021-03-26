@@ -48,7 +48,8 @@ public class Display extends BaseEntity implements Serializable {
         SIXTEEN_TO_NINE(16, 9),
         THREE_TO_TWO(3, 2),
         TWENTY_ONE_TO_NINE(21, 9),
-        THIRTEEN_TO_SIX(13, 6, "iPhone X");
+        THIRTEEN_TO_SIX(13, 6, "iPhone X"),
+        THEERTYTWO_TO_NINE(32, 9);
 
         private final int horizontal;
 
@@ -142,7 +143,9 @@ public class Display extends BaseEntity implements Serializable {
         IPHONE_X("iPhone X", 2436, 1125),
         UNKNOWN_3(1792, 828),
         UNKNOWN_4(2688, 1242),
-        UNKNOWN_6(1280, 960);
+        UNKNOWN_6(1280, 960),
+        UNKNOWN_7(368, 448),
+        UNKNOWN_8(324, 394);
 
         private final String description;
 
@@ -249,7 +252,10 @@ public class Display extends BaseEntity implements Serializable {
         _10_5(10.5),
         _5_8(5.8),
         _6_1(6.1),
-        _6_5(6.5);
+        _6_5(6.5),
+        _12_2(12.2),
+        _13_5(13.5),
+        _43(43);
 
         private final double size;
 

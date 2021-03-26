@@ -74,7 +74,8 @@ public class BasicSpec extends ProductSpec {
         BLACK_COPPER("schwarz-kupfer"),
         BLACK_GREY("schwarz-grau"),
         BLACK_GOLD("schwarz-gold"),
-        YELLOW("Gelb");
+        YELLOW("gelb"),
+        ANTHRAZIT("anthrazit");
 
         private String note;
 

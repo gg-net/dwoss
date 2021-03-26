@@ -59,6 +59,7 @@ public class Desktop extends BasicSpec {
                 Os.CHROME_OS,
                 Os.I_OS,
                 Os.MAC_OS_X,
+                Os.WATCH_OS,
                 Os.WINDOWS_HOME_SERVER,
                 Os.WINDOWS_XP_PROFESSIONAL,
                 Os.WINDOWS_XP_PROFESSIONAL_64,
@@ -156,7 +157,8 @@ public class Desktop extends BasicSpec {
         WINDOWS_8_1_PROFESSIONAL_32("Windows 8.1 Professional 32"),
         WINDOWS_8_1_PROFESSIONAL_64("Windows 8.1 Professional 64"),
         WINDOWS_10_S_32("Windows 10 S 32"),
-        WINDOWS_10_S_64("Windows 10 S 64");
+        WINDOWS_10_S_64("Windows 10 S 64"),
+        WATCH_OS("Watch OS");
 
         private final String note;
 
