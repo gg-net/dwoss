@@ -43,7 +43,7 @@ public class RightsListCell extends ListCell<AtomicRight> {
         if ( empty || item == null ) {
             setText("");
         } else {
-            setText(item.toName());
+            setText(item.description());
         }
     }
 }

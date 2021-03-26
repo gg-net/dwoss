@@ -18,6 +18,7 @@ package eu.ggnet.dwoss.uniqueunit.ee;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.ejb.Stateless;
 import javax.enterprise.inject.Instance;
@@ -31,7 +32,7 @@ import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
 import eu.ggnet.dwoss.core.system.progress.SubMonitor;
 import eu.ggnet.dwoss.redtape.api.DossierViewer;
-import eu.ggnet.dwoss.report.api.ReportApiLocal;
+import eu.ggnet.dwoss.report.api.*;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.UserApiLocal;
 import eu.ggnet.dwoss.stock.api.SimpleStockUnit;
@@ -75,7 +76,7 @@ public class UniqueUnitApiBean implements UniqueUnitApi {
     private StockApiLocal stockApi;
 
     @Inject
-    private Instance<ReportApiLocal> reports;
+    private ReportApiLocal reportApi;
 
     @Inject
     private MonitorFactory monitorFactory;
@@ -115,11 +116,9 @@ public class UniqueUnitApiBean implements UniqueUnitApi {
         re += stockApi.findByUniqueUnitIdAsHtml(id);
         re += "</p>";
 
-        if ( reports.isResolvable() ) {
-            re += "<hr />";
-            re += "<b>Reporting-Informationen</b>";
-            re += reports.get().findReportLinesByUniqueUnitIdAsHtml(id);
-        }
+        re += "<hr />";
+        re += "<b>Reporting-Informationen</b>";
+        re += reportApi.findReportLinesByUniqueUnitIdAsHtml(id);
 
         try {
             if ( rights.isResolvable() && rights.get().findByName(username).getAllRights().contains(AtomicRight.VIEW_COST_AND_REFERENCE_PRICES) ) {
@@ -154,10 +153,6 @@ public class UniqueUnitApiBean implements UniqueUnitApi {
         uu.addHistory(history + " - " + arranger);
     }
 
-    /*
-    Artikelnummer 	Bezeichnung 	SopoNr 	Serial 	Lieferant 	Shipment 	InputDate 	Status (verfügbar, in transver, nicht im Lager) 	ReportName 	ReportDate 	Weitere Reportinformationen
-
-     */
     @Override
     public FileJacket toUnitsOfPartNoAsXls(String partNo) throws UserInfoException {
         if ( partNo == null || partNo.isBlank() ) throw new UserInfoException("Keine Artikelnummer angegeben");
@@ -178,6 +173,7 @@ public class UniqueUnitApiBean implements UniqueUnitApi {
         for (UniqueUnit uu : p.getUniqueUnits()) {
             m.worked(1, "verarbeite " + uu.getRefurbishId());
             SimpleStockUnit su = stockApi.findByUniqueUnitId(uu.getId());
+            SimpleReportUnit sru = reportApi.findReportUnit(uu.getId());
 
             result.add(new Object[]{
                 p.getPartNo(),
@@ -187,45 +183,36 @@ public class UniqueUnitApiBean implements UniqueUnitApi {
                 uu.getContractor().getDescription(),
                 uu.getShipmentLabel(),
                 uu.getInputDate(),
-                toStatus(su)
-            // ReportUnit kommt noch.
-            // LocalDate als ordner kommt noch.
+                toStatus(su),
+                toReports(sru),
+                toReportPositionTypes(sru),
+                toReportInformation(sru)
             });
         }
 
         STable table = new STable();
         table.setTableFormat(new CFormat(BLACK, WHITE, new CBorder(BLACK)));
         table.setHeadlineFormat(new CFormat(BOLD_ITALIC, WHITE, BLUE, CENTER, new CBorder(BLACK)));
-        table.add(new STableColumn("Artikelnummer", 12));
-        table.add(new STableColumn("Bezeichnung", 20));
-        table.add(new STableColumn("RefurbishId", 12));
-        table.add(new STableColumn("Serial", 18));
-        table.add(new STableColumn("Lieferant", 12));
-        table.add(new STableColumn("Shipment", 12));
-        table.add(new STableColumn("Aufnahmedatum", 12, new CFormat(SHORT_DATE)));
-        table.add(new STableColumn("Status", 12));
+        table.add(new STableColumn("Artikelnummer", 16));
+        table.add(new STableColumn("Bezeichnung", 30));
+        table.add(new STableColumn("SopoNr", 12));
+        table.add(new STableColumn("Serial", 25));
+        table.add(new STableColumn("Lieferant", 15));
+        table.add(new STableColumn("Shipment", 15));
+        table.add(new STableColumn("Aufnahme", 12, new CFormat(SHORT_DATE)));
+        table.add(new STableColumn("Status", 30));
+        table.add(new STableColumn("Reports", 40));
+        table.add(new STableColumn("ReportType", 20));
+        table.add(new STableColumn("ReportInformationen", 120));
+        table.setModel(new STableModelList(result));
 
         CCalcDocument cdoc = new TempCalcDocument("Artikelreport");
         cdoc.add(new CSheet(partNo, table));
-
-        table.setModel(new STableModelList(result));
 
         FileJacket fj = new FileJacket(name, ".xls", new JExcelLucidCalcWriter().write(cdoc));
         m.finish();
         return fj;
 
-        /*
-        (Artikelnummer,Bezeichnung, SopoNr, Serial, Lieferant, Shipment, InputDate)
-
-        StockApiLocal -> StockUnit
-        (Status)
-        ReportApiLoca -> function existiert, Api Objekt noch nicht.
-        (ReportName, ReportDate, Weitere Reportinformationen)
-
-        nach reportingdate sortieren.
-
-        mache XLS draus.
-         */
     }
 
     private static String toStatus(SimpleStockUnit su) {
@@ -233,5 +220,27 @@ public class UniqueUnitApiBean implements UniqueUnitApi {
         if ( su.onLogicTransaction() ) return "im Verkaufporzess/in transfer";
         if ( su.stockTransaction().isPresent() ) return "verfügbar, in Umfuhr/Rollin";
         return "verfügbar";
+    }
+
+    private static String toReports(SimpleReportUnit sru) {
+        if ( sru == null || sru.lines().isEmpty() ) return "";
+        return sru.lines().stream()
+                .map(SimpleReportLine::reportName)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .distinct()
+                .collect(Collectors.joining(","));
+    }
+
+    private static String toReportPositionTypes(SimpleReportUnit sru) {
+        if ( sru == null || sru.lines().isEmpty() ) return "";
+        return sru.lines().stream()
+                .map(srl -> srl.documentType().description + "(" + (srl.isWarranty() ? "Garantieerweiterung" : srl.positionType().description()) + ")")
+                .collect(Collectors.joining(","));
+    }
+
+    private static String toReportInformation(eu.ggnet.dwoss.report.api.SimpleReportUnit sru) {
+        if ( sru == null ) return "";
+        return sru.toString();
     }
 }

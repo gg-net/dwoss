@@ -53,8 +53,7 @@ import eu.ggnet.dwoss.rights.ui.cap.RightsManagementMenuItem;
 import eu.ggnet.dwoss.search.ui.SearchCask;
 import eu.ggnet.dwoss.search.ui.cap.OpenSearchAction;
 import eu.ggnet.dwoss.stock.ui.cap.*;
-import eu.ggnet.dwoss.uniqueunit.ui.cap.AddHistoryToUnitMenuItem;
-import eu.ggnet.dwoss.uniqueunit.ui.cap.ProductListMenuItem;
+import eu.ggnet.dwoss.uniqueunit.ui.cap.*;
 import eu.ggnet.saft.core.UiCore;
 
 /**
@@ -180,7 +179,8 @@ public class DwOssClientController {
                 OptimizedCreditMemoReportAction.class,
                 DebitorsReportAction.class,
                 DirectDebitReportAction.class,
-                ReportRefurbishmentMenuItem.class
+                ReportRefurbishmentMenuItem.class,
+                ProductHistoryMenuItem.class
         ));
 
         Menu gl_close = new Menu("Abschluss Reporte");

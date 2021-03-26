@@ -19,24 +19,20 @@ package eu.ggnet.dwoss.uniqueunit.ui.cap;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
-import javafx.scene.control.MenuItem;
-
-import eu.ggnet.dwoss.core.widget.FileUtil;
-import eu.ggnet.dwoss.core.widget.Progressor;
+import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
 import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
 import eu.ggnet.dwoss.uniqueunit.ui.product.ProductHistoryController;
 import eu.ggnet.saft.core.Saft;
 
+import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_PRODUCT_UNIT_HISTORY_REPORT;
 
 /**
  * MenuItem to export information of a product to a xls file.
  *
  * @author mirko.schulze
  */
-//TODO: welches right?
-//public class ProductHistoryMenuItem extends AccessableMenuItem {
-public class ProductHistoryMenuItem extends MenuItem {
+public class ProductHistoryMenuItem extends AccessableMenuItem {
 
     @Inject
     private Saft saft;
@@ -47,11 +43,8 @@ public class ProductHistoryMenuItem extends MenuItem {
     @Inject
     private Progressor progressor;
 
-//    public ProductHistoryMenuItem(AtomicRight right) {
-//        super(CREATE_COMMENT_UNIQUE_UNIT_HISTORY);
-//    }
     public ProductHistoryMenuItem() {
-        super("Historie für Artikel erstellen");
+        super(EXPORT_PRODUCT_UNIT_HISTORY_REPORT);
     }
 
     @PostConstruct
