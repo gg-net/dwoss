@@ -37,4 +37,11 @@ public interface PositionService {
      */
     List<Position> servicePositionTemplates();
 
+    /**
+     * Returns a list of comment positions as templates
+     *
+     * @return a list of comment positions as templates
+     */
+    List<Position> commentPositionTemplates();
+
 }

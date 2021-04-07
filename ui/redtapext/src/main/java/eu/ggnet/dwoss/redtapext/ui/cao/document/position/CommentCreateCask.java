@@ -16,16 +16,16 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao.document.position;
 
-import eu.ggnet.dwoss.core.widget.swing.IPreClose;
-import eu.ggnet.dwoss.core.widget.swing.CloseType;
-import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
-
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.swing.JOptionPane;
 
 import eu.ggnet.dwoss.core.common.values.PositionType;
+import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.swing.CloseType;
+import eu.ggnet.dwoss.core.widget.swing.IPreClose;
+import eu.ggnet.dwoss.redtape.ee.api.PositionService;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 
 /**
@@ -36,41 +36,6 @@ public class CommentCreateCask extends javax.swing.JPanel implements IPreClose {
 
     private final List<Position> templates = new ArrayList<>();
 
-    {
-        Position commPosition = new Position();
-        commPosition.setName("UPS Versand am " + SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT).format(new Date()));
-        commPosition.setDescription("");
-        commPosition.setType(PositionType.COMMENT);
-        templates.add(commPosition);
-
-        commPosition = new Position();
-        commPosition.setName("Ihre Bestellung");
-        commPosition.setDescription("Diese Geräte konnten für Sie reserviert werden.");
-        commPosition.setType(PositionType.COMMENT);
-        templates.add(commPosition);
-
-        commPosition = new Position();
-        commPosition.setName("Verrechnung");
-        commPosition.setDescription("Betrag aus Stornorechnung/Gutschrift XXXX verrechnet.");
-        commPosition.setType(PositionType.COMMENT);
-        templates.add(commPosition);
-
-        commPosition = new Position();
-        commPosition.setName("Vorab-Überweisung");
-        commPosition.setDescription("Der Versand der Ware erfolgt nach Zahlungseingang. \n"
-                + "Bei Zahlungseingang bis 11:00 Uhr (Montag bis Freitag) erfolgt der Versand tagesgleich.");
-        commPosition.setType(PositionType.COMMENT);
-        templates.add(commPosition);
-
-        commPosition = new Position();
-        commPosition.setName("Information, " + SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT).format(new Date()));
-        commPosition.setDescription("Wir konnten bis heute keinen Zahlungseingang feststellen.\n"
-                + "Wir müssen annehmen, Sie haben kein Interesse mehr haben und geben das Gerät in 48 Stunden wieder zum Verkauf frei.");
-        commPosition.setType(PositionType.COMMENT);
-        templates.add(commPosition);
-
-    }
-
     private Position position;
 
     public CommentCreateCask() {
@@ -80,6 +45,43 @@ public class CommentCreateCask extends javax.swing.JPanel implements IPreClose {
     /** Creates new form CommentCreateCask */
     public CommentCreateCask(Position position) {
         initComponents();
+
+        Position templateComment = new Position();
+        templateComment.setName("UPS Versand am " + SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT).format(new Date()));
+        templateComment.setDescription("");
+        templateComment.setType(PositionType.COMMENT);
+        templates.add(templateComment);
+
+        templateComment = new Position();
+        templateComment.setName("Ihre Bestellung");
+        templateComment.setDescription("Diese Geräte konnten für Sie reserviert werden.");
+        templateComment.setType(PositionType.COMMENT);
+        templates.add(templateComment);
+
+        templateComment = new Position();
+        templateComment.setName("Verrechnung");
+        templateComment.setDescription("Betrag aus Stornorechnung/Gutschrift XXXX verrechnet.");
+        templateComment.setType(PositionType.COMMENT);
+        templates.add(templateComment);
+
+        templateComment = new Position();
+        templateComment.setName("Vorab-Überweisung");
+        templateComment.setDescription("Der Versand der Ware erfolgt nach Zahlungseingang. \n"
+                + "Bei Zahlungseingang bis 11:00 Uhr (Montag bis Freitag) erfolgt der Versand tagesgleich.");
+        templateComment.setType(PositionType.COMMENT);
+        templates.add(templateComment);
+
+        templateComment = new Position();
+        templateComment.setName("Information, " + SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT).format(new Date()));
+        templateComment.setDescription("Wir konnten bis heute keinen Zahlungseingang feststellen.\n"
+                + "Wir müssen annehmen, Sie haben kein Interesse mehr haben und geben das Gerät in 48 Stunden wieder zum Verkauf frei.");
+        templateComment.setType(PositionType.COMMENT);
+        templates.add(templateComment);
+
+        if ( Dl.remote().contains(PositionService.class) ) {
+            templates.addAll(Dl.remote().lookup(PositionService.class).commentPositionTemplates());
+        }
+
         if ( position != null ) setPosition(position);
         else setPosition(Position.builder().type(PositionType.COMMENT).amount(1).build());
         positionTamplateList.setCellRenderer(new Tuple2PositionRenderer());
@@ -205,15 +207,4 @@ public class CommentCreateCask extends javax.swing.JPanel implements IPreClose {
     private javax.swing.JTextField titleField;
     // End of variables declaration//GEN-END:variables
 
-    public static void main(String[] args) {
-        Position pos = new Position();
-        pos.setName("blarg");
-        pos.setDescription("blubbadiblub");
-        pos.setType(PositionType.COMMENT);
-        CommentCreateCask ccc = new CommentCreateCask(null);
-        OkCancelDialog<CommentCreateCask> dialog = new OkCancelDialog<>("Comment Creation", ccc);
-        dialog.setVisible(true);
-        System.out.println(ccc.getPosition());
-        System.exit(0);
-    }
 }
