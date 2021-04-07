@@ -96,7 +96,7 @@ public class MailSalesListingServiceBean implements MailSalesListingService {
             for (FileJacket fj : lists) {
                 email.attach(
                         new javax.mail.util.ByteArrayDataSource(fj.getContent(), "application/xls"),
-                        fj.getHead() + fj.getSuffix(), "Die Händlerliste für die Marke ");
+                        fj.getHead() + fj.getSuffix(), fj.getHead() + " für Händler");
             }
 
             email.send();
