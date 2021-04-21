@@ -16,27 +16,6 @@
  */
 package eu.ggnet.dwoss.receipt.ee;
 
-import eu.ggnet.dwoss.core.common.values.PositionType;
-import eu.ggnet.dwoss.core.common.values.TaxType;
-import eu.ggnet.dwoss.core.common.values.ReceiptOperation;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatus;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransactionParticipationType;
-import eu.ggnet.dwoss.stock.ee.entity.Stock;
-import eu.ggnet.dwoss.stock.ee.entity.LogicTransaction;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransactionParticipation;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
-import eu.ggnet.dwoss.stock.ee.eao.LogicTransactionEao;
-import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransactionPosition;
-import eu.ggnet.dwoss.stock.ee.entity.Shipment;
-import eu.ggnet.dwoss.stock.ee.eao.StockTransactionEao;
-import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransactionType;
-import eu.ggnet.dwoss.redtape.ee.entity.Document;
-import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
-import eu.ggnet.dwoss.redtape.ee.entity.Position;
-
 import java.util.Date;
 import java.util.Objects;
 
@@ -49,14 +28,20 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
+import eu.ggnet.dwoss.core.common.values.*;
+import eu.ggnet.dwoss.core.system.persistence.DefaultEao;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
 import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.eao.DossierEao;
 import eu.ggnet.dwoss.redtape.ee.emo.DossierEmo;
+import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
+import eu.ggnet.dwoss.stock.ee.eao.*;
 import eu.ggnet.dwoss.stock.ee.emo.LogicTransactionEmo;
 import eu.ggnet.dwoss.stock.ee.emo.StockLocationDiscoverer;
+import eu.ggnet.dwoss.stock.ee.entity.*;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
@@ -65,8 +50,6 @@ import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier;
 import eu.ggnet.dwoss.uniqueunit.ee.format.ProductFormater;
 import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
-import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.dwoss.core.system.persistence.DefaultEao;
 
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.REFURBISHED_ID;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.SERIAL;
@@ -129,7 +112,7 @@ public class UnitProcessorOperation implements UnitProcessor {
         L.info("Receiping Unit(id={},refurbishId={},name={}) on StockTransaction(id={}) with {} by {}",
                 receiptUnit.getId(), receiptUnit.getRefurbishId(), ProductFormater.toNameWithPartNo(product), transaction.getId(), operation, arranger);
         validateReceipt(receiptUnit);
-        UniqueUnit uniqueUnit = receiptUniqueUnit(receiptUnit, Objects.requireNonNull(product, "Product == null, not allowed"), shipment);
+        UniqueUnit uniqueUnit = receiptUniqueUnit(receiptUnit, Objects.requireNonNull(product, "Product == null, not allowed"), shipment, arranger);
         StockUnit stockUnit = receiptAndAddStockUnit(uniqueUnit, transaction);
         if ( operation == ReceiptOperation.SALEABLE ) return; // Nothing to do
         executeOperation(uniqueUnit, stockUnit, operation, operationComment, arranger);
@@ -162,7 +145,7 @@ public class UnitProcessorOperation implements UnitProcessor {
     public void update(UniqueUnit uniqueUnit, Product product, ReceiptOperation updateOperation, String operationComment, String arranger) throws IllegalArgumentException {
         L.info("Updateing UniqueUnit(id={},refurbishId={},name={}) with {} by {}", uniqueUnit.getId(),
                 uniqueUnit.getRefurbishId(), ProductFormater.toNameWithPartNo(product), updateOperation, arranger);
-        uniqueUnit = updateUniqueUnit(uniqueUnit, product);
+        uniqueUnit = updateUniqueUnit(uniqueUnit, product, arranger);
         StockUnit stockUnit = optionalUpdateStockUnit(uniqueUnit);
         // These two operations define, that nothing in LT/RedTape/Sopo may be changed.
         if ( updateOperation == ReceiptOperation.IN_SALE || stockUnit == null ) return;
@@ -271,7 +254,7 @@ public class UnitProcessorOperation implements UnitProcessor {
         if ( stockUnit != null ) throw new IllegalArgumentException(stockUnit + " exists");
     }
 
-    private UniqueUnit receiptUniqueUnit(UniqueUnit recieptUnit, Product product, Shipment shipment) {
+    private UniqueUnit receiptUniqueUnit(UniqueUnit recieptUnit, Product product, Shipment shipment, String arranger) {
         UniqueUnit uniqueUnit = new UniqueUnitEao(uuEm).findByIdentifier(UniqueUnit.Identifier.SERIAL, recieptUnit.getIdentifier(UniqueUnit.Identifier.SERIAL));
         product = new ProductEao(uuEm).findById(product.getId());
         if ( uniqueUnit == null ) {
@@ -300,13 +283,15 @@ public class UnitProcessorOperation implements UnitProcessor {
             uniqueUnit.setInputDate(new Date()); // Allways set the InputDate on receipt.
             L.debug("updating {}", recieptUnit);
         }
+        uniqueUnit.addHistory("Gerät erfasst durch " + arranger);
         return uniqueUnit;
     }
 
-    private UniqueUnit updateUniqueUnit(UniqueUnit uniqueUnit, Product product) {
+    private UniqueUnit updateUniqueUnit(UniqueUnit uniqueUnit, Product product, String arranger) {
         product = new ProductEao(uuEm).findById(product.getId());
         uniqueUnit = uuEm.merge(uniqueUnit);
         uniqueUnit.setProduct(product);
+        uniqueUnit.addHistory("Gerät bearbeitet durch " + arranger);
         L.debug("updating {}", uniqueUnit);
         return uniqueUnit;
     }
