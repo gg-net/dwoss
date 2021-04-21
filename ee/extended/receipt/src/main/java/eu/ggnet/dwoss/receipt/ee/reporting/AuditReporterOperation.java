@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,6 +22,8 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import eu.ggnet.dwoss.core.common.FileJacket;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
 import eu.ggnet.dwoss.core.system.progress.SubMonitor;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
@@ -32,7 +34,6 @@ import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.format.ProductFormater;
 import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
-import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.lucidcalc.*;
 
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.BOLD_ITALIC;
@@ -91,8 +92,8 @@ public class AuditReporterOperation implements AuditReporter {
                 UniqueUnitFormater.toSingleLineInternalComment(uu),
                 uu.getCondition().getNote(),
                 uu.getShipmentLabel(),
-                uu.getProduct().getDescription(),
-                ""
+                uu.getProduct().getAdditionalPartNo(TradeName.OTTO) != null ? uu.getProduct().getAdditionalPartNo(TradeName.OTTO) : "",
+                uu.getProduct().getDescription()
             });
         }
 
@@ -101,7 +102,7 @@ public class AuditReporterOperation implements AuditReporter {
         table.setHeadlineFormat(new CFormat(BOLD_ITALIC, BLACK, WHITE, CENTER, new CBorder(BLACK)));
         table.add(new STableColumn("SopoNr", 7)).add(new STableColumn("Warengruppe", 13)).add(new STableColumn("ArtikelNr", 15)).add(new STableColumn("Seriennummer", 27));
         table.add(new STableColumn("Name", 30)).add(new STableColumn("Lieferant", 12)).add(new STableColumn("Zubehör", 50)).add(new STableColumn("Bemerkung", 50));
-        table.add(new STableColumn("Interne Bemerkung", 30)).add(new STableColumn("Zustand", 12)).add(new STableColumn("Shipment", 12)).add(new STableColumn("Beschreibung", 50));
+        table.add(new STableColumn("Interne Bemerkung", 30)).add(new STableColumn("Zustand", 12)).add(new STableColumn("Shipment", 12)).add(new STableColumn("OttoArtNr", 15)).add(new STableColumn("Beschreibung", 50));
         table.setModel(new STableModelList(rows));
         sheet.addBelow(table);
         CCalcDocument document = new TempCalcDocument();
@@ -116,7 +117,6 @@ public class AuditReporterOperation implements AuditReporter {
      * <p/>
      * @return an audit report of units which are on a roll in transaction, but not yet rolled in.
      */
-    
     @Override
     public FileJacket byRange(Date start, Date end) {
         SubMonitor m = monitorFactory.newSubMonitor("AuditReport", 100);
