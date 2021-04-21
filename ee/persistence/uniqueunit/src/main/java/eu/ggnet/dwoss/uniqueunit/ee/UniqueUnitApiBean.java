@@ -101,9 +101,11 @@ public class UniqueUnitApiBean implements UniqueUnitApi {
             re += "<hr />";
             re += "<b>Vorgänge:</b><ul>";
             re += dossierViewer.get().findByUniqueUnitIdAsHtml(uu.getId());
+            re += "</ul>";
         }
 
         if ( uu.getHistory() != null && !uu.getHistory().isEmpty() ) {
+            re += "<hr />";
             re += "<b>Unit History:</b><ul>";
             for (UniqueUnitHistory history : new TreeSet<>(uu.getHistory())) {
                 re += "<li>" + df.format(history.getOccurence()) + " - " + history.getComment() + "</li>";
