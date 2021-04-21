@@ -7,14 +7,14 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="130.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.receipt.ui.ReportRefurbishmentController">
+<GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="130.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.receipt.ui.ReportRefurbishmentController">
   <columnConstraints>
-    <ColumnConstraints halignment="CENTER" hgrow="NEVER" minWidth="10.0" prefWidth="120.0" />
-    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
+    <ColumnConstraints halignment="CENTER" hgrow="NEVER" prefWidth="120.0" />
+    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+      <ColumnConstraints halignment="CENTER" hgrow="NEVER" />
   </columnConstraints>
   <rowConstraints>
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
@@ -27,23 +27,23 @@
          <font>
             <Font size="14.0" />
          </font></Label>
-      <ComboBox fx:id="tradeNameComboBox" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.valignment="TOP" />
+      <ComboBox fx:id="tradeNameComboBox" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.valignment="TOP" />
       <Label text="Start : " GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP">
          <font>
             <Font size="14.0" />
          </font></Label>
-      <DatePicker fx:id="startDatePicker" maxWidth="1.7976931348623157E308" minWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+      <DatePicker fx:id="startDatePicker" maxWidth="1.7976931348623157E308" minWidth="150.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" GridPane.valignment="TOP" />
       <Label text="Ende : " GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
          <font>
             <Font size="14.0" />
          </font></Label>
-      <DatePicker fx:id="endDatePicker" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP" />
-      <HBox alignment="CENTER_RIGHT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
-         <children>
-            <Button fx:id="okButton" mnemonicParsing="false" text="OK" />
-            <Button fx:id="cancelButton" mnemonicParsing="false" text="Abbrechen" />
-         </children>
-      </HBox>
+      <DatePicker fx:id="endDatePicker" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" GridPane.valignment="TOP" />
+      <Button fx:id="okButton" mnemonicParsing="false" text="OK" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+      <Button fx:id="cancelButton" mnemonicParsing="false" text="Abbrechen" GridPane.columnIndex="2" GridPane.rowIndex="3">
+         <GridPane.margin>
+            <Insets left="5.0" />
+         </GridPane.margin>
+      </Button>
    </children>
    <padding>
       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
