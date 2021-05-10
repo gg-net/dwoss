@@ -22,13 +22,13 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import eu.ggnet.dwoss.core.system.persistence.AbstractAgentBean;
 import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.eao.StockTransactionEao;
 import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
 import eu.ggnet.dwoss.stock.ee.emo.StockTransactionEmo;
 import eu.ggnet.dwoss.stock.ee.entity.*;
-import eu.ggnet.dwoss.core.system.persistence.AbstractAgentBean;
 
 /**
  * The StockAgent Implementation.
@@ -133,10 +133,4 @@ public class StockAgentBean extends AbstractAgentBean implements StockAgent {
             em.remove(t);
         }
     }
-
-    @Override
-    public StockTransaction findOrCreateRollInTransaction(int stockId, String userName, String comment) {
-        return stockTransactionEmo.requestRollInPrepared(stockId, userName, comment);
-    }
-
 }

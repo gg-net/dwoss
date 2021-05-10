@@ -20,8 +20,8 @@ import java.util.List;
 
 import javax.ejb.Remote;
 
-import eu.ggnet.dwoss.stock.ee.entity.*;
 import eu.ggnet.dwoss.core.system.persistence.RemoteAgent;
+import eu.ggnet.dwoss.stock.ee.entity.*;
 
 /**
  * The Stock Agent
@@ -97,9 +97,8 @@ public interface StockAgent extends RemoteAgent {
      * Delete a T Instance.
      * <p>
      * @param <T>
-     * @param t the instance that will be deleted.
+     * @param t   the instance that will be deleted.
      */
     <T> void delete(T t);
 
-    StockTransaction findOrCreateRollInTransaction(int stockId, String userName, String comment);
 }

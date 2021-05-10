@@ -24,7 +24,8 @@ import javax.enterprise.inject.Alternative;
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.common.values.ReceiptOperation;
 import eu.ggnet.dwoss.receipt.ee.UnitProcessor;
-import eu.ggnet.dwoss.stock.ee.entity.*;
+import eu.ggnet.dwoss.stock.ee.entity.Shipment;
+import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 
@@ -47,7 +48,7 @@ public class UnitProcessorStub implements UnitProcessor {
     }
 
     @Override
-    public void receipt(UniqueUnit recieptUnit, Product product, Shipment shipment, StockTransaction transaction, ReceiptOperation operation, String operationComment, String arranger) throws IllegalArgumentException {
+    public void receipt(UniqueUnit recieptUnit, Product product, Shipment shipment, int destinationId, ReceiptOperation operation, String operationComment, String arranger) throws IllegalArgumentException {
         System.out.println("UnitProcessorStub.receipt(" + recieptUnit + ")");
     }
 

@@ -98,13 +98,13 @@ public interface UnitProcessor {
      * @param shipment         the shipment
      * @param product
      * @param recieptUnit      the UniqueUnit to be receipt, must not be null
-     * @param transaction
+     * @param destintionId     the stockid of the receipt destination
      * @param operation        the Operation to do
      * @param arranger
      * @param operationComment
      * @throws IllegalArgumentException if validation fails
      */
-    void receipt(UniqueUnit recieptUnit, Product product, Shipment shipment, StockTransaction transaction,
+    void receipt(UniqueUnit recieptUnit, Product product, Shipment shipment, int destintionId,
                  ReceiptOperation operation, String operationComment, String arranger) throws IllegalArgumentException;
 
     /**

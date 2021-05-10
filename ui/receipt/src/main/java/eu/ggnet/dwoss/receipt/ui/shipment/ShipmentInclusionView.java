@@ -31,7 +31,7 @@ import eu.ggnet.dwoss.receipt.ee.UnitProcessor;
 import eu.ggnet.dwoss.receipt.ui.unit.UnitView;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment.Status;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
+import eu.ggnet.dwoss.stock.spi.ActiveStock;
 import eu.ggnet.saft.core.Saft;
 import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.core.ui.*;
@@ -45,34 +45,7 @@ import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
  * @author pascal.perau
  */
 @Title("Geräteaufnahme")
-public class ShipmentInclusionView extends javax.swing.JPanel implements Consumer<ShipmentInclusionView.In>, ResultProducer<Shipment.Status> {
-
-    // TODO: Records Candidate
-    public static class In {
-
-        private final Shipment shipment;
-
-        private final StockTransaction stockTransaction;
-
-        public In(Shipment shipment, StockTransaction stockTransaction) {
-            this.shipment = shipment;
-            this.stockTransaction = stockTransaction;
-        }
-
-        public Shipment shipment() {
-            return shipment;
-        }
-
-        public StockTransaction stockTransaction() {
-            return stockTransaction;
-        }
-
-        @Override
-        public String toString() {
-            return "In{" + "shipment=" + shipment + ", stockTransaction=" + stockTransaction + '}';
-        }
-
-    }
+public class ShipmentInclusionView extends javax.swing.JPanel implements Consumer<Shipment>, ResultProducer<Shipment.Status> {
 
     @Inject
     private RemoteDl remote;
@@ -80,9 +53,9 @@ public class ShipmentInclusionView extends javax.swing.JPanel implements Consume
     @Inject
     private Saft saft;
 
-    private ShipmentInclusionView.In in;
-
     private Shipment.Status resultStatus = null;
+
+    private Shipment shipment;
 
     @Bind(SHOWING)
     private BooleanProperty showingProperty = new SimpleBooleanProperty();
@@ -93,10 +66,10 @@ public class ShipmentInclusionView extends javax.swing.JPanel implements Consume
     }
 
     @Override
-    public void accept(In in) {
-        this.in = Objects.requireNonNull(in, "in must not be null");
-        inclusionShipField.setText(in.shipment().getShipmentId());
-        inclusionOwnerField.setText(in.shipment().getContractor().getDescription());
+    public void accept(Shipment shipment) {
+        this.shipment = Objects.requireNonNull(shipment, "shipment must not be null");
+        inclusionShipField.setText(shipment.getShipmentId());
+        inclusionOwnerField.setText(shipment.getContractor().getDescription());
     }
 
     @Override
@@ -205,13 +178,13 @@ public class ShipmentInclusionView extends javax.swing.JPanel implements Consume
     }// </editor-fold>//GEN-END:initComponents
 
     private void inclusionUnittButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inclusionUnittButtonActionPerformed
-        saft.build().parent(this).swing().eval(() -> new eu.ggnet.dwoss.receipt.ui.unit.UnitView.In.Create(in.shipment()), UnitView.class).cf()
+        saft.build().parent(this).swing().eval(() -> new eu.ggnet.dwoss.receipt.ui.unit.UnitView.In.Create(shipment), UnitView.class).cf()
                 .thenAccept(result -> {
                     remote.lookup(UnitProcessor.class).receipt(
                             result.uniqueUnit(),
                             result.product(),
-                            in.shipment(),
-                            in.stockTransaction(),
+                            shipment,
+                            Dl.local().lookup(ActiveStock.class).getActiveStock().id,
                             result.receiptOperation(),
                             result.comment(),
                             Dl.local().lookup(Guardian.class).getUsername()

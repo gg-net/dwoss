@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,27 +16,31 @@
  */
 package eu.ggnet.dwoss.stock.ee.eao;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
-import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransactionParticipation;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransactionType;
 import eu.ggnet.dwoss.core.system.persistence.AbstractEao;
+import eu.ggnet.dwoss.stock.ee.assist.Stocks;
+import eu.ggnet.dwoss.stock.ee.entity.*;
 
+@Stateless
 public class StockTransactionEao extends AbstractEao<StockTransaction> {
 
+    @Inject
+    @Stocks
     private EntityManager em;
 
     public StockTransactionEao(EntityManager em) {
         super(StockTransaction.class);
         this.em = em;
+    }
+
+    public StockTransactionEao() {
+        super(StockTransaction.class);
     }
 
     @Override

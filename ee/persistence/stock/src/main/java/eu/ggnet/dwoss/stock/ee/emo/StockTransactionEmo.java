@@ -187,14 +187,11 @@ public class StockTransactionEmo {
         List<StockUnit> result = new ArrayList<>();
         for (StockTransaction transaction : transactions) {
             if ( transaction.getPositions().isEmpty() ) {
-//                L.info("Removing Empty {}", transaction);
-//                transaction.setSource(null);
-//                transaction.setDestination(null);
-//                em.remove(transaction);
-                L.info("Ignoring Empty {}", transaction);
-                // TODO: Delete doesn' work, see http://overload.ahrensburg.gg-net.de/jira/browse/DW-1344
+                L.info("completeRollIn(): ignoring empty StockTransaction(id={})", transaction.getId());
             } else {
-                // TODO: If the addStatus succedes, but the hole transaciont fails and is rolled back, the addStatus is keept. Meaning the rollback is not successful completely.
+                L.info("completeRollIn(): completing StockTransaction(id={}) with UniqueUnit(ids={})",
+                        transaction.getId(),
+                        transaction.getPositions().stream().map(p -> p.getUniqueUnitId()).collect(Collectors.toList()));
                 StockTransactionStatus status = new StockTransactionStatus(StockTransactionStatusType.COMPLETED, new Date());
                 status.addParticipation(new StockTransactionParticipation(StockTransactionParticipationType.ARRANGER, arrangerName));
                 transaction.addStatus(status);

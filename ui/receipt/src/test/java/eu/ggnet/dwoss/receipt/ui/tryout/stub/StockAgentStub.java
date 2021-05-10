@@ -131,12 +131,4 @@ public class StockAgentStub implements StockAgent {
         return findById(entityClass, id);
     }
 
-    @Override
-    public StockTransaction findOrCreateRollInTransaction(int stockId, String userName, String comment) {
-        StockTransaction st = new StockTransaction(StockTransactionType.ROLL_IN);
-        st.setDestination(findById(Stock.class, stockId));
-        st.setComment(comment);
-        st.addStatus(StockTransactionStatusType.PREPARED, StockTransactionParticipationType.ARRANGER, userName);
-        return st;
-    }
 }

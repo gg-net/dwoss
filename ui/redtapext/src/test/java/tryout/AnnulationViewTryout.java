@@ -96,11 +96,6 @@ public class AnnulationViewTryout {
             }
 
             @Override
-            public StockTransaction findOrCreateRollInTransaction(int stockId, String userName, String comment) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
             public <T> long count(Class<T> entityClass) {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }

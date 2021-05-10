@@ -15,13 +15,13 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.BrandContractorCount;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.core.system.util.Utils;
 
 import static eu.ggnet.dwoss.core.system.util.Step.WEEK;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.REFURBISHED_ID;
@@ -129,7 +129,6 @@ public class UniqueUnitEaoIT extends ArquillianProjectArchive {
     }
 
     @Test
-    @Ignore // TODO: The query behind the eao fails in hsqld but works in mysql. Can't test it for now.
     public void testCount() throws Exception {
         utx.begin();
         em.joinTransaction();

@@ -38,9 +38,9 @@ import eu.ggnet.dwoss.redtape.ee.eao.DossierEao;
 import eu.ggnet.dwoss.redtape.ee.emo.DossierEmo;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
-import eu.ggnet.dwoss.stock.ee.eao.*;
-import eu.ggnet.dwoss.stock.ee.emo.LogicTransactionEmo;
-import eu.ggnet.dwoss.stock.ee.emo.StockLocationDiscoverer;
+import eu.ggnet.dwoss.stock.ee.eao.LogicTransactionEao;
+import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
+import eu.ggnet.dwoss.stock.ee.emo.*;
 import eu.ggnet.dwoss.stock.ee.entity.*;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
@@ -82,6 +82,9 @@ public class UnitProcessorOperation implements UnitProcessor {
     @Inject
     private PostLedger postLedger;
 
+    @Inject
+    private StockTransactionEmo ste;
+
     /**
      * Receipts a new Unit.
      * Multiphase Process:
@@ -101,19 +104,19 @@ public class UnitProcessorOperation implements UnitProcessor {
      * @param shipment         the shipment
      * @param receiptUnit      the UniqueUnit to be receipt, must not be null
      * @param operation        the Operation to do
-     * @param transaction
+     * @param destinationId    the id of the stock which is the destination
      * @param arranger
      * @param operationComment
      * @throws IllegalArgumentException if validation fails
      */
     @Override
     public void receipt(UniqueUnit receiptUnit, Product product, Shipment shipment,
-                        StockTransaction transaction, ReceiptOperation operation, String operationComment, String arranger) throws IllegalArgumentException {
-        L.info("Receiping Unit(id={},refurbishId={},name={}) on StockTransaction(id={}) with {} by {}",
-                receiptUnit.getId(), receiptUnit.getRefurbishId(), ProductFormater.toNameWithPartNo(product), transaction.getId(), operation, arranger);
+                        int destinationId, ReceiptOperation operation, String operationComment, String arranger) throws IllegalArgumentException {
+        L.info("Receiping Unit(id={},refurbishId={},name={}) on Stock(id={}) with {} by {}",
+                receiptUnit.getId(), receiptUnit.getRefurbishId(), ProductFormater.toNameWithPartNo(product), destinationId, operation, arranger);
         validateReceipt(receiptUnit);
         UniqueUnit uniqueUnit = receiptUniqueUnit(receiptUnit, Objects.requireNonNull(product, "Product == null, not allowed"), shipment, arranger);
-        StockUnit stockUnit = receiptAndAddStockUnit(uniqueUnit, transaction);
+        StockUnit stockUnit = receiptAndAddStockUnit(uniqueUnit, destinationId, arranger);
         if ( operation == ReceiptOperation.SALEABLE ) return; // Nothing to do
         executeOperation(uniqueUnit, stockUnit, operation, operationComment, arranger);
     }
@@ -296,12 +299,12 @@ public class UnitProcessorOperation implements UnitProcessor {
         return uniqueUnit;
     }
 
-    private StockUnit receiptAndAddStockUnit(UniqueUnit uniqueUnit, StockTransaction transaction) {
+    private StockUnit receiptAndAddStockUnit(UniqueUnit uniqueUnit, int stockId, String arranger) {
         StockUnit stockUnit = new StockUnit();
         stockUnit.setUniqueUnitId(uniqueUnit.getId());
         stockUnit.setRefurbishId(uniqueUnit.getIdentifier(UniqueUnit.Identifier.REFURBISHED_ID));
-        stockUnit.setName(uniqueUnit.getProduct().getTradeName().getName() + " " + uniqueUnit.getProduct().getName());
-        transaction = new StockTransactionEao(stockEm).findById(transaction.getId());
+        stockUnit.setName(uniqueUnit.getProduct().getTradeName().getDescription() + " " + uniqueUnit.getProduct().getName());
+        StockTransaction transaction = ste.requestRollInPrepared(stockId, arranger, "Aufnahme");
         transaction.addPosition(new StockTransactionPosition(stockUnit));
         L.debug("adding {} to {}", stockUnit, transaction); // implies persist on transaction commit
         return stockUnit;

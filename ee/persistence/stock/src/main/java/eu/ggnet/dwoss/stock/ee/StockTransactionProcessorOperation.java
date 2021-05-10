@@ -85,6 +85,7 @@ public class StockTransactionProcessorOperation implements StockTransactionProce
      */
     @Override
     public List<Integer> rollIn(List<StockTransaction> detachtedTransactions, String arranger) {
+        L.info("rollIn(transactions.ids={}) starting", detachtedTransactions.stream().map(StockTransaction::getId).collect(Collectors.toList()));
         SubMonitor m = monitorFactory.newSubMonitor("RollIn", detachtedTransactions.size() * 2);
         StockTransactionEao stockTransactionEao = new StockTransactionEao(stockEm);
         StockTransactionEmo stockTransactionEmo = new StockTransactionEmo(stockEm);
