@@ -20,12 +20,12 @@ import java.text.*;
 import java.util.Map.Entry;
 import java.util.*;
 
-import eu.ggnet.dwoss.core.system.GlobalConfig;
+import eu.ggnet.dwoss.core.common.INoteModel;
 import eu.ggnet.dwoss.core.common.values.Warranty;
+import eu.ggnet.dwoss.core.system.GlobalConfig;
+import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Equipment;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.*;
-import eu.ggnet.dwoss.core.common.INoteModel;
-import eu.ggnet.dwoss.core.system.util.Utils;
 
 import static eu.ggnet.dwoss.core.common.values.SalesChannel.UNKNOWN;
 import static java.util.Locale.GERMANY;
@@ -112,7 +112,7 @@ public abstract class UniqueUnitFormater {
                 + "<tr>"
                 + "<th>Seriennummer</th><th>Artikelnummer</th><th>GTIN/EAN</th><th>Lieferantenartikelnummer</th><th>Lieferant</th>"
                 + "</tr><tr>"
-                + "<td>" + unit.getSerial() + "</td><td>" + p.getPartNo() + "</td><td>" + p.getGtin() + "</td>"
+                + "<td>" + unit.getSerial() + "</td><td>" + p.getPartNo() + "</td><td>" + Utils.toGtin13(p.getGtin()) + "</td>"
                 + "<td>" + Optional.ofNullable(p.getAdditionalPartNo(unit.getContractor())).orElse("Keine Daten") + "</td><td>" + unit.getContractor().getName() + "</td>"
                 + "</tr></table>";
 

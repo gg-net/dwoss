@@ -259,4 +259,14 @@ public class Utils {
         return toDate(toLd(in).atTime(23, 59, 59));
     }
 
+    /**
+     * Formats supplied long to a gtin-13 String, fillig the supplied value with zeros.
+     *
+     * @param gtin the gtin.
+     * @return a gtin-13 format.
+     */
+    public static String toGtin13(long gtin) {
+        return String.format("%013d", gtin);
+    }
+
 }

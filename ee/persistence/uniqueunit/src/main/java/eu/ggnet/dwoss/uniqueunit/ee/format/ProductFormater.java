@@ -19,6 +19,7 @@ package eu.ggnet.dwoss.uniqueunit.ee.format;
 import java.util.Iterator;
 
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 
@@ -82,7 +83,7 @@ public class ProductFormater {
         return "<p><b>Product</b></br>"
                 + toNameWithPartNo(p) + "<br /><br />"
                 + p.getDescription() + "<br />"
-                + "EAN/GTIN: " + p.getGtin()
+                + "EAN/GTIN: " + Utils.toGtin13(p.getGtin())
                 + "</p>";
     }
 

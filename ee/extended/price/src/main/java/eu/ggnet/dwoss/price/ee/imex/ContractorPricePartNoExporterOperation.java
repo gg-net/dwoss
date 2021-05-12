@@ -23,13 +23,13 @@ import java.util.stream.Collectors;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.common.FileJacket;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
 import eu.ggnet.dwoss.core.system.progress.SubMonitor;
+import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.ee.format.ProductFormater;
-import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.lucidcalc.*;
 import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcWriter;
 
@@ -100,7 +100,7 @@ public class ContractorPricePartNoExporterOperation implements ContractorPricePa
                 .stream()
                 .filter(p -> missing ? !p.hasPrice(CONTRACTOR_REFERENCE) : true)
                 .sorted()
-                .map(p -> new Object[]{p.getPartNo(), p.getGtin(), p.getTradeName() + " " + p.getName(), p.getPrice(CONTRACTOR_REFERENCE), p.getAdditionalPartNo(contractor)})
+                .map(p -> new Object[]{p.getPartNo(), Utils.toGtin13(p.getGtin()), p.getTradeName() + " " + p.getName(), p.getPrice(CONTRACTOR_REFERENCE), p.getAdditionalPartNo(contractor)})
                 .collect(Collectors.toList());
 
         m.worked(5, "Generating File");

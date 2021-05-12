@@ -103,8 +103,8 @@ public abstract class ProductSpec extends BaseEntity implements Serializable, Ea
         private Extra(String note, double economicValue) {
             this.note = note;
             this.economicValue = economicValue;
-        }        
-        
+        }
+
         private Extra(String note) {
             this(note, 0);
         }
@@ -117,7 +117,7 @@ public abstract class ProductSpec extends BaseEntity implements Serializable, Ea
         public double getEconomicValue() {
             return economicValue;
         }
-                
+
     }
 
     public static ProductSpec newInstance(ProductGroup group) {
@@ -208,36 +208,36 @@ public abstract class ProductSpec extends BaseEntity implements Serializable, Ea
     public long getId() {
         return id;
     }
-    
+
     public ProductModel getModel() {
         return model;
     }
-    
+
     public String getPartNo() {
         return partNo;
     }
-    
+
     public Long getProductId() {
         return productId;
     }
-    
+
     public Double getEconomicValue() {
         return economicValue;
     }
-    
+
     public void setPartNo(String partNo) {
         this.partNo = partNo;
     }
-    
+
     public void setProductId(Long productId) {
         this.productId = productId;
     }
-    
+
     public void setEconomicValue(Double economicValue) {
         this.economicValue = economicValue;
     }
-    //</editor-fold>
 
+    //</editor-fold>
     public void setModel(ProductModel model) {
         if ( model == null && this.model == null ) return;
         if ( this.model != null && this.model == model ) return;
@@ -273,7 +273,7 @@ public abstract class ProductSpec extends BaseEntity implements Serializable, Ea
     private void prePersitValidate() {
         if ( model == null ) throw new RuntimeException("Model is null");
     }
-    
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
