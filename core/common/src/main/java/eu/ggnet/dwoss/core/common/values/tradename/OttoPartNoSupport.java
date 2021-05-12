@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.core.common.values.tradename;
 
-
 import java.util.regex.Pattern;
 
 /**
@@ -35,9 +34,9 @@ public class OttoPartNoSupport implements PartNoSupport {
     public String violationMessages(String partNo) {
         if ( partNo == null ) return "PartNo is null";
 
-        if ( !(Pattern.matches("[0-9]{2}.[0-9]{3}.[0-9]{3}", partNo) || Pattern.matches("[0-9]{3}.[0-9]{3}", partNo)) ) {
+        if ( !(Pattern.matches("( [0-9]{8} | [0-9]{6} )", partNo)) ) {
             return "PartNo " + partNo
-                    + "does not match either one of the Patterns [0-9]{3}.[0-9]{3} and [0-9]{2}.[0-9]{3}.[0-9]{3}";
+                    + "does not match either one of the Patterns [0-9]{8} and [0-9]{6}";
         }
         return null;
     }

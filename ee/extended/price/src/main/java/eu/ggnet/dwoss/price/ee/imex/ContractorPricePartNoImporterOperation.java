@@ -20,7 +20,6 @@ import java.io.Serializable;
 import java.util.Map.Entry;
 import java.util.*;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -48,7 +47,6 @@ import eu.ggnet.dwoss.uniqueunit.ee.format.ProductFormater;
 import eu.ggnet.lucidcalc.LucidCalcReader;
 import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcReader;
 
-import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.OTTO;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.CONTRACTOR_REFERENCE;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.MANUFACTURER_COST;
 
@@ -127,16 +125,9 @@ public class ContractorPricePartNoImporterOperation implements ContractorPricePa
             return contractor.getPartNoSupport().violationMessages(toNormalizeContractorPart(contractor));
         }
 
-        // TODO: optimize me
+        // TODO: still needed ?
         public String toNormalizeContractorPart(TradeName contractor) {
-            if ( contractor != OTTO ) return StringUtils.trim(contractorPartNo);
-            if ( contractorPartNo != null && Pattern.matches("[0-9]{8}", contractorPartNo) ) {
-                return StringUtils.trim(contractorPartNo.substring(0, 2) + "." + contractorPartNo.substring(2, 5) + "." + contractorPartNo.substring(5));
-            }
-            if ( contractorPartNo != null && Pattern.matches("[0-9]{6}", contractorPartNo) ) {
-                return StringUtils.trim(contractorPartNo.substring(0, 3) + "." + contractorPartNo.substring(3));
-            }
-            return StringUtils.trim(contractorPartNo);
+            return contractorPartNo != null ? contractorPartNo.trim() : null;
         }
 
         public boolean hasManufacturerPartNoOrGtin() {
