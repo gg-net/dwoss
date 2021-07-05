@@ -16,10 +16,6 @@
  */
 package eu.ggnet.dwoss.report.ee.eao;
 
-import eu.ggnet.dwoss.core.common.values.DocumentType;
-import eu.ggnet.dwoss.core.common.values.PositionType;
-import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,18 +28,24 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.system.persistence.AbstractEao;
 import eu.ggnet.dwoss.core.system.util.Step;
+import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.report.ee.assist.Reports;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine;
-import eu.ggnet.dwoss.core.system.util.Utils;
-import eu.ggnet.dwoss.core.system.persistence.AbstractEao;
 
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 
 import static eu.ggnet.dwoss.core.common.values.PositionType.*;
+import static eu.ggnet.dwoss.report.ee.entity.QReport.report;
 import static eu.ggnet.dwoss.report.ee.entity.QReportLine.reportLine;
 import static eu.ggnet.dwoss.report.ee.entity.ReportLine.SingleReferenceType.WARRANTY;
+import static eu.ggnet.dwoss.report.ee.entity.ReportLine.WorkflowStatus.UNDER_PROGRESS;
 import static eu.ggnet.dwoss.report.ee.entity.partial.QSimpleReportLine.simpleReportLine;
 
 /**
@@ -162,6 +164,52 @@ public class ReportLineEao extends AbstractEao<ReportLine> {
 
     public List<ReportLine> findUnreportedUnits(TradeName type, Date from, Date till) {
         return findUnreported(type, from, till, PositionType.UNIT, PositionType.UNIT_ANNEX);
+    }
+
+    /**
+     * Finds all ReportLines of Units, which have an open complaint, and therefor never been reported.
+     *
+     * @param contractor the contractor
+     * @return all ReportLines of Units, which have an open complaint, and therefor never been reported.
+     */
+    public List<ReportLine> findUnreportedUnitsOpenComplaints(TradeName contractor) {
+        // TODO: Implement for [DWPRO-37]
+        /*
+        Alle Reklamationen vom contractor
+        type unit
+        es gibt eine line mit workflowstatus UNDER_PROGRESS
+        es gibt keine line mit worklowstatus DISCHARGED or CHARGED.
+
+        // Noch besser
+        es gibt keine line mit worklowstatus DISCHARGED.
+        es gibt keine line mit creditmemo or stornorechung (wenn es ein line mit CHARGED gibt)
+         */
+
+ /*
+        holle alle lines mit under_progress
+        holle alle lines mit discharged und der selben dossier und unitid
+        holle alle lines mit creditmemo/stornorechung und der selben dossier und unit id
+        subtrahiere. fertig.
+         */
+        List<ReportLine> a = new JPAQuery<ReportLine>(em).from(reportLine)
+                .where(reportLine.contractor.eq(contractor)
+                        .and(reportLine.positionType.eq(UNIT))
+                        .and(reportLine.workflowStatus.eq(UNDER_PROGRESS))
+                        // TODO: Hier fehlt bestimmt noch ein join.
+                        .and(reportLine.notIn(JPAExpressions.select(reportLine).from(report).where(report.type.eq(contractor)))))
+                .fetch();
+
+        //SELECT pl.id FROM Report p JOIN p.lines pl WHERE p.type = :type)"
+        var b = new JPAQuery<ReportLine>(em).from(reportLine)
+                .where(reportLine.contractor.eq(contractor)
+                        .and(reportLine.positionType.eq(UNIT))
+                        .and(reportLine.workflowStatus.eq(UNDER_PROGRESS)))
+                .fetch();
+
+//                .
+//                ,reportLine.positionType.eq(UNIT), reportLine.uniqueUnitId.eq(uniqueUnitId), reportLine.dossierId.eq(dossierId)
+//                ).fetch();
+        return null;
     }
 
     /**

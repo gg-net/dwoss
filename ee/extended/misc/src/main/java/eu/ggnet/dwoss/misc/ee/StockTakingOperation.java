@@ -26,9 +26,10 @@ import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
+import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
 import eu.ggnet.dwoss.core.system.progress.SubMonitor;
+import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.eao.DossierEao;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
@@ -39,7 +40,6 @@ import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.format.ProductFormater;
-import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.lucidcalc.*;
 import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcReader;
 
@@ -169,6 +169,9 @@ public class StockTakingOperation implements StockTaking {
                     dos.getCustomerId(), dos.getIdentifier(), contractorPartNo, customerService.asUiCustomer(dos.getCustomerId()).toNameCompanyLine()});
             }
         }
+        //
+        // Insert Open Reklas.
+        //
         for (String error : read.errors) {
             result.add(new Object[]{"Lesefehler", error, null, null, null, null, null, null, null, null, null, null, null, null});
         }
@@ -197,5 +200,5 @@ public class StockTakingOperation implements StockTaking {
         File f = inFile.toTemporaryFile();
         return new ReaderResult(reader.read(f), reader.getErrors());
     }
-    
+
 }
