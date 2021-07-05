@@ -21,6 +21,7 @@ import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
@@ -32,6 +33,7 @@ import javax.swing.*;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.*;
 
 import org.apache.commons.lang3.StringUtils;
@@ -41,6 +43,7 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.core.common.values.ReceiptOperation;
 import eu.ggnet.dwoss.core.common.values.Warranty;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
 import eu.ggnet.dwoss.core.widget.swing.ComboBoxController;
@@ -341,9 +344,11 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         SwingTraversalUtil.spaceSelection(internalCommentTable);
         SwingTraversalUtil.spaceSelection(commentTable);
 
-        refurbishedIdField.requestFocus();
         contractorBox.setRenderer(new NamedEnumCellRenderer());
         contractorBox.setModel(new DefaultComboBoxModel(TradeName.getManufacturers().toArray()));
+        showingProperty.addListener((ObservableValue<? extends Boolean> ov, Boolean o, Boolean n) -> {
+            if ( n ) EventQueue.invokeLater(() -> refurbishedIdField.requestFocusInWindow());
+        });
     }
 
     @Override
@@ -359,7 +364,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
             unitOwnerField.setText(create.shipment().getContractor().toString());
             model.setContractor(create.shipment().getContractor());
             model.setMode(create.shipment().getDefaultManufacturer());
-            contractorBox.setSelectedItem(create.shipment().getDefaultManufacturer());
+            //      contractorBox.setSelectedItem(create.shipment().getDefaultManufacturer());
         } else if ( in instanceof In.Edit ) {
             var edit = (In.Edit)in;
             model.setContractor(edit.uniqueUnit().getContractor());
@@ -375,8 +380,8 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
             throw new IllegalArgumentException("in is neither of type create nor edit. Should never happen");
         }
 
-        updateMode();
         updateChains();
+        updateContratorBoxFromModel();
         validateAll();
         if ( model.getOperation() == IN_SALE ) { // This Unit is not available so only changes to the unit, but no followupaction ist allowed.
             addClosingAction(new InSaleAction());
@@ -580,7 +585,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
                 try {
                     get();
                 } catch (InterruptedException | ExecutionException ex) {
-                    Ui.handle(ex);
+                    saft.handle(commentArea, ex);
                 } finally {
                     updateMetaUnit();
                     updateProduct();
@@ -604,7 +609,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
                 try {
                     get();
                 } catch (InterruptedException | ExecutionException ex) {
-                    Ui.handle(ex);
+                    saft.handle(commentArea, ex);
                 } finally {
                     updateMetaUnit();
                 }
@@ -627,7 +632,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
                 try {
                     get();
                 } catch (InterruptedException | ExecutionException ex) {
-                    Ui.handle(ex);
+                    saft.handle(commentArea, ex);
                 } finally {
                     updateMetaUnit();
                 }
@@ -715,7 +720,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         detailArea.setText(model.getProductSpecDescription());
     }
 
-    private void updateMode() {
+    private void updateContratorBoxFromModel() {
         contractorBox.setSelectedItem(model.getMode());
     }
 
@@ -727,7 +732,6 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         manufacturerButtonGroup = new javax.swing.ButtonGroup();
         unitWritePanel = new javax.swing.JPanel();
@@ -946,10 +950,14 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
                     .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addGroup(unitWritePanelLayout.createSequentialGroup()
                             .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(unitStatusLabel)
-                                .addComponent(jLabel4)
-                                .addComponent(jLabel3))
-                            .addGap(9, 9, 9)
+                                .addGroup(unitWritePanelLayout.createSequentialGroup()
+                                    .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(unitStatusLabel)
+                                        .addComponent(jLabel4))
+                                    .addGap(15, 15, 15))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, unitWritePanelLayout.createSequentialGroup()
+                                    .addComponent(jLabel3)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                             .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(warrantyTillChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(unitStateBox, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -957,25 +965,30 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
                         .addGroup(unitWritePanelLayout.createSequentialGroup()
                             .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(unitSnLabel)
-                                .addComponent(unitNumberLabel))
-                            .addGap(24, 24, 24)
+                                .addComponent(unitNumberLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(12, 12, 12)
                             .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addGroup(unitWritePanelLayout.createSequentialGroup()
-                                    .addComponent(refurbishedIdField, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(refurbishedIdField, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(editRefurbishedIdButton, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(serialField, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(serialField)))
                         .addGroup(unitWritePanelLayout.createSequentialGroup()
                             .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(mfgLabel)
-                                .addComponent(unitItemLabel))
-                            .addGap(18, 18, 18)
-                            .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(mfgDateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGroup(unitWritePanelLayout.createSequentialGroup()
-                                    .addComponent(partNoField, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(unitItemLabel)
+                                    .addGap(25, 25, 25))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, unitWritePanelLayout.createSequentialGroup()
+                                    .addComponent(mfgLabel)
+                                    .addGap(18, 18, 18)))
+                            .addGap(7, 7, 7)
+                            .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(mfgDateChooser, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
+                                .addGroup(unitWritePanelLayout.createSequentialGroup()
+                                    .addComponent(partNoField)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(editProductButton, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(editProductButton, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(1, 1, 1))))
                         .addComponent(manufacturerPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(commentAreaScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -996,7 +1009,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
                                     .addComponent(jLabel1))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(unitOwnerField)
+                                    .addComponent(unitOwnerField, javax.swing.GroupLayout.DEFAULT_SIZE, 444, Short.MAX_VALUE)
                                     .addComponent(unitShipField))
                                 .addContainerGap())))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, unitWritePanelLayout.createSequentialGroup()
@@ -1040,24 +1053,29 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
                             .addComponent(partNoField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(editProductButton)
                             .addComponent(unitItemLabel))
-                        .addGap(4, 4, 4)
                         .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(mfgDateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(mfgLabel))
-                        .addGap(4, 4, 4)
+                            .addGroup(unitWritePanelLayout.createSequentialGroup()
+                                .addGap(4, 4, 4)
+                                .addComponent(mfgDateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(unitWritePanelLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(mfgLabel)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(unitStateBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(unitStatusLabel))
                         .addGap(4, 4, 4)
-                        .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(warrantyTypeChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4))
+                            .addGroup(unitWritePanelLayout.createSequentialGroup()
+                                .addGap(2, 2, 2)
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(4, 4, 4)
                         .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(warrantyTillChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE))
+                            .addComponent(warrantyTillChooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE))
                     .addGroup(unitWritePanelLayout.createSequentialGroup()
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1079,7 +1097,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        setLayout(layout);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
@@ -1088,9 +1106,9 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(cancelButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(operationButtonPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 1212, Short.MAX_VALUE))
+                        .addComponent(operationButtonPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 1233, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(unitWritePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 1293, Short.MAX_VALUE)
+                        .addComponent(unitWritePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 1305, Short.MAX_VALUE)
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
@@ -1116,7 +1134,11 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
     }//GEN-LAST:event_messagesButtonActionPerformed
 
     private void contractorBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contractorBoxActionPerformed
-        model.setMode((TradeName)contractorBox.getSelectedItem());
+        TradeName contractor = (TradeName)contractorBox.getSelectedItem();
+        model.setMode(contractor);
+        if ( contractor.isNoMfgDate() ) {
+            mfgDateChooser.setDate(Utils.toDate(LocalDate.now().minusYears(2))); // Autoset Date
+        }
         updateChains();
         validateAll();
     }//GEN-LAST:event_contractorBoxActionPerformed

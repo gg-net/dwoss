@@ -73,7 +73,7 @@ public enum TradeName {
 
     },
     NULL_NULL_4("004"),
-    APPLE("Apple") {
+    APPLE("Apple", true) {
         @Override
         public TradeName getManufacturer() {
             return APPLE;
@@ -116,7 +116,7 @@ public enum TradeName {
             return EnumSet.of(FUJITSU);
         }
     },
-    DELL("Dell") {
+    DELL("Dell", true) {
         @Override
         public TradeName getManufacturer() {
             return DELL;
@@ -183,6 +183,11 @@ public enum TradeName {
     private final String description;
 
     /**
+     * If ture, the mfgdate on this contractor can be ignored globaly.
+     */
+    private final boolean noMfgDate;
+
+    /**
      * Rule: if we are a brand, the Manufacturer is not null.
      */
     private final TradeName manufacturer = null;
@@ -193,7 +198,12 @@ public enum TradeName {
     private final Set<TradeName> brands = Collections.emptySet();
 
     private TradeName(String name) {
+        this(name, false);
+    }
+
+    private TradeName(String name, Boolean noMfgDate) {
         this.description = name;
+        this.noMfgDate = noMfgDate;
     }
 
     /**
@@ -206,12 +216,31 @@ public enum TradeName {
         return description;
     }
 
+    /**
+     * Returs a human readable description.
+     *
+     * @return a human readable description.
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Returns the manufacturer if a brand, otherwise self.
+     *
+     * @return the manufacturer if a brand, otherwise self.
+     */
     public TradeName getManufacturer() {
         return manufacturer;
+    }
+
+    /**
+     * Indicates if the mfg date on units can be ignored.
+     *
+     * @return if true, all ui's should ignore or autoset the mfg date of units.
+     */
+    public boolean isNoMfgDate() {
+        return noMfgDate;
     }
 
     public Set<TradeName> getBrands() {

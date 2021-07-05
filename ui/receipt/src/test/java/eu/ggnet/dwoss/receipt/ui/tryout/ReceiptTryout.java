@@ -18,6 +18,8 @@ package eu.ggnet.dwoss.receipt.ui.tryout;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +28,7 @@ import javax.enterprise.inject.se.SeContainer;
 import javax.enterprise.inject.se.SeContainerInitializer;
 import javax.swing.*;
 
+import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.core.widget.cdi.WidgetProducers;
@@ -134,6 +137,7 @@ public class ReceiptTryout {
         });
 
         saft.core(Swing.class).initMain(mainFrame);
+        System.out.println("DAte:" + Utils.toDate(LocalDateTime.of(2000, Month.JANUARY, 1, 0, 0)));
     }
 
     public static List<String> prepareHelper(UniqueUnitAgent agent) {
