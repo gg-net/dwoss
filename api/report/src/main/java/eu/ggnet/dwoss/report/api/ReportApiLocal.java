@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.report.api;
 
+import java.util.List;
+
 import javax.ejb.Local;
 
 /**
@@ -41,5 +43,12 @@ public interface ReportApiLocal {
      * @return a simple reportunit, referencing all lines for this unit or null if nothing was found.
      */
     SimpleReportUnit findReportUnit(long uniqueUnitId);
+
+    /**
+     * Returns all Reportlines of one unit which have an complaint, that was never reported.
+     *
+     * @return all Reportlines of one unit which have an complaint, that was never reported.
+     */
+    List<SimpleReportUnit> findUnreportedOpenComplaints();
 
 }

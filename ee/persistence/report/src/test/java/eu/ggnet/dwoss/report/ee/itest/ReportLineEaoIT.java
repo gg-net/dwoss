@@ -1,11 +1,8 @@
 package eu.ggnet.dwoss.report.ee.itest;
 
-import eu.ggnet.dwoss.core.common.values.DocumentType;
-import eu.ggnet.dwoss.core.common.values.PositionType;
-import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
-
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.Map.Entry;
 import java.util.*;
 
@@ -18,15 +15,19 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.*;
 import org.junit.runner.RunWith;
 
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.system.util.Step;
+import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.report.ee.assist.Reports;
 import eu.ggnet.dwoss.report.ee.assist.gen.ReportLineGenerator;
 import eu.ggnet.dwoss.report.ee.eao.ReportLineEao;
 import eu.ggnet.dwoss.report.ee.eao.Revenue;
+import eu.ggnet.dwoss.report.ee.entity.ReportLine.WorkflowStatus;
 import eu.ggnet.dwoss.report.ee.entity.*;
 import eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine;
 import eu.ggnet.dwoss.report.ee.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.core.system.util.Utils;
 
 import com.querydsl.jpa.impl.JPADeleteClause;
 
@@ -37,6 +38,7 @@ import static eu.ggnet.dwoss.core.common.values.SalesChannel.RETAILER;
 import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.*;
 import static eu.ggnet.dwoss.core.system.util.Step.DAY;
 import static org.apache.commons.lang3.time.DateUtils.addDays;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -81,7 +83,7 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
         utx.commit();
     }
 
-    @Ignore
+    //  @Ignore
     @Test
     public void testFindAllSimple() throws Exception {
         utx.begin();
@@ -102,7 +104,42 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
         utx.commit();
     }
 
-    @Ignore
+    //  @Ignore
+    @Test
+    public void findUnreportedOpenComplaints() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+
+        for (int i = 0; i < 300; i++) {
+            ReportLine l = generator.makeReportLine(Arrays.asList(TradeName.DELL), startEarly, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
+            em.persist(l);
+        }
+
+        ReportLine line1 = ReportLineBuilder.create("PersName1", "This is a TestDescription1", 137, "DW0037", 3, "RE0008", PositionType.UNIT,
+                DocumentType.INVOICE, 2, 1, 0.19, 100, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
+        line1.setReportingDate(Utils.toDate(LocalDate.of(2010, Month.JANUARY, 1)));
+        line1.setUniqueUnitId(10);
+
+        ReportLine line2 = ReportLineBuilder.create("PersName1", "This is a TestDescription1", 137, "DW0037", 4, "C0008", PositionType.UNIT,
+                DocumentType.COMPLAINT, 2, 1, 0.19, 100, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
+        line2.setReportingDate(Utils.toDate(LocalDate.of(2010, Month.JANUARY, 1)));
+        line2.setWorkflowStatus(WorkflowStatus.UNDER_PROGRESS);
+        line2.setUniqueUnitId(10);
+        line2.add(line1);
+
+        em.persist(line1);
+        em.persist(line2);
+
+        utx.commit();
+
+        utx.begin();
+        em.joinTransaction();
+        List<ReportLine> findAll = new ReportLineEao(em).findUnreportedOpenComplaints();
+        assertThat(findAll).isNotNull().hasSizeGreaterThanOrEqualTo(1);
+        utx.commit();
+    }
+
+    //   @Ignore
     @Test
     public void testFindProductIdMissingContractorPartNo() throws Exception {
         utx.begin();
@@ -137,7 +174,7 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
         utx.commit();
     }
 
-    @Ignore
+    //  @Ignore
     @Test
     public void testFindLastReported() throws Exception {
         utx.begin();
@@ -184,7 +221,7 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
         utx.commit();
     }
 
-    @Ignore
+    //   @Ignore
     @Test
     public void findByUniqueUnitId() throws Exception {
         String ISO = "yyyy-MM-dd";
@@ -222,7 +259,7 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
         utx.commit();
     }
 
-    @Ignore
+//    @Ignore
     @Test
     public void findUnreported() throws Exception {
         utx.begin();
@@ -269,7 +306,7 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
         utx.commit();
     }
 
-    @Ignore
+//    @Ignore
     @Test
     public void findUnreportedUnit() throws Exception {
         utx.begin();
@@ -315,7 +352,7 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
 
     }
 
-    @Ignore
+//    @Ignore
     @Test
     public void findFromTillUnreportedUnit() throws Exception {
         String ISO = "yyyy-MM-dd";

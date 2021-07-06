@@ -16,6 +16,9 @@
  */
 package eu.ggnet.dwoss.uniqueunit.itest.support;
 
+import java.util.Collections;
+import java.util.List;
+
 import javax.ejb.Stateless;
 
 import eu.ggnet.dwoss.report.api.ReportApiLocal;
@@ -36,6 +39,11 @@ public class ReportApiLocalStub implements ReportApiLocal {
     @Override
     public SimpleReportUnit findReportUnit(long uniqueUnitId) {
         return null;
+    }
+
+    @Override
+    public List<SimpleReportUnit> findUnreportedOpenComplaints() {
+        return Collections.emptyList();
     }
 
 }

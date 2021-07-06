@@ -18,6 +18,8 @@ package eu.ggnet.dwoss.misc.ee;
 
 import java.io.File;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -33,6 +35,8 @@ import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.eao.DossierEao;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
+import eu.ggnet.dwoss.report.api.ReportApiLocal;
+import eu.ggnet.dwoss.report.api.SimpleReportUnit;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
 import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
@@ -92,6 +96,9 @@ public class StockTakingOperation implements StockTaking {
     @Inject
     @RedTapes
     private EntityManager redTapeEm;
+
+    @Inject
+    private ReportApiLocal reportApi;
 
     /**
      * Takes the supplied list of refurbishIds, validates their existence in the supplied Stock or all if none supplied.
@@ -169,9 +176,17 @@ public class StockTakingOperation implements StockTaking {
                     dos.getCustomerId(), dos.getIdentifier(), contractorPartNo, customerService.asUiCustomer(dos.getCustomerId()).toNameCompanyLine()});
             }
         }
-        //
-        // Insert Open Reklas.
-        //
+        // Possible open reklas
+        List<SimpleReportUnit> openComplaints = reportApi.findUnreportedOpenComplaints();
+        // Filter allready found units.
+        List<Integer> allUniqueUnitIds = Stream.concat(found.stream(), openUnits.stream()).map(StockUnit::getUniqueUnitId).distinct().collect(Collectors.toList());
+        openComplaints = openComplaints.stream().filter(sru -> !allUniqueUnitIds.contains(sru.uniqueUnitId().intValue())).collect(Collectors.toList());
+        for (SimpleReportUnit sru : openComplaints) {
+            result.add(new Object[]{"möglicherweise", "nicht verfügbar", sru.lines().get(0).refurbishId(),
+                null, null, null, null, null, null, null, null, sru.lines().get(0).dossierIdentifier(), null, null});
+
+        }
+
         for (String error : read.errors) {
             result.add(new Object[]{"Lesefehler", error, null, null, null, null, null, null, null, null, null, null, null, null});
         }

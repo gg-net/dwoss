@@ -16,8 +16,10 @@
  */
 package eu.ggnet.dwoss.report.ee;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -30,6 +32,7 @@ import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 
 import static eu.ggnet.dwoss.core.common.values.PositionType.PRODUCT_BATCH;
+import static eu.ggnet.dwoss.core.common.values.PositionType.UNIT;
 import static eu.ggnet.dwoss.report.ee.entity.ReportLine.SingleReferenceType.WARRANTY;
 
 /**
@@ -84,6 +87,16 @@ public class ReportApiLocalBean implements ReportApiLocal {
                 .uniqueUnitId(uniqueUnitId)
                 .addAllLines(reportLines.stream().map(ReportLine::toSimpleLine).collect(Collectors.toList()))
                 .build();
+    }
+
+    @Override
+    public List<SimpleReportUnit> findUnreportedOpenComplaints() {
+        List<ReportLine> reportLines = eao.findUnreportedOpenComplaints();
+        if ( reportLines.isEmpty() ) return Collections.emptyList();
+        return reportLines.stream().map(l -> new SimpleReportUnit.Builder().uniqueUnitId(l.getUniqueUnitId())
+                .addAllLines(Stream.concat(Stream.of(l), l.getRefrences().stream()).filter(l1 -> l1.getPositionType() == UNIT).map(ReportLine::toSimpleLine))
+                .build()
+        ).collect(Collectors.toList());
     }
 
 }
