@@ -40,6 +40,7 @@ import eu.ggnet.dwoss.report.api.SimpleReportUnit;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
 import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
+import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApiLocal;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
@@ -99,6 +100,9 @@ public class StockTakingOperation implements StockTaking {
 
     @Inject
     private ReportApiLocal reportApi;
+
+    @Inject
+    private UniqueUnitApiLocal uniqueUnitApi;
 
     /**
      * Takes the supplied list of refurbishIds, validates their existence in the supplied Stock or all if none supplied.
@@ -182,9 +186,9 @@ public class StockTakingOperation implements StockTaking {
         List<Integer> allUniqueUnitIds = Stream.concat(found.stream(), openUnits.stream()).map(StockUnit::getUniqueUnitId).distinct().collect(Collectors.toList());
         openComplaints = openComplaints.stream().filter(sru -> !allUniqueUnitIds.contains(sru.uniqueUnitId().intValue())).collect(Collectors.toList());
         for (SimpleReportUnit sru : openComplaints) {
+            var suu = uniqueUnitApi.findById(sru.uniqueUnitId());
             result.add(new Object[]{"möglicherweise", "nicht verfügbar", sru.lines().get(0).refurbishId(),
-                null, null, null, null, null, null, null, null, sru.lines().get(0).dossierIdentifier(), null, null});
-
+                null, null, suu.shortDescription(), suu.contractor(), null, null, null, null, sru.lines().get(0).dossierIdentifier(), null, null});
         }
 
         for (String error : read.errors) {
