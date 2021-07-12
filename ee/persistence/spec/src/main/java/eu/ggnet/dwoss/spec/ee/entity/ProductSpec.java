@@ -94,7 +94,10 @@ public abstract class ProductSpec extends BaseEntity implements Serializable, Ea
         REPLACEMENT_STRAP("Ersatzarmband"),
         BLUE_LIGHT_FILTER("Blaulichtfilter"),
         REALSENSE_3D_CAM("RealSense 3D Kamera"),
-        ITEGATED_SIM("Integrierte Sim");
+        ITEGATED_SIM("Integrierte Sim"),
+        WLAN_AX("WLAN ax"),
+        DISPLAY_144("144 Hz Display"),
+        DISPLAY_120("120 Hz Display");
 
         private final String note;
 
