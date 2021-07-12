@@ -185,9 +185,10 @@ public class StockTakingOperation implements StockTaking {
         allUniqueUnitIds.addAll(notFound);
         openComplaints = openComplaints.stream().filter(sru -> !allUniqueUnitIds.contains(sru.uniqueUnitId().intValue())).collect(Collectors.toList());
         for (SimpleReportUnit sru : openComplaints) {
+            UniqueUnit uu = uniqueUnitEao.findById(sru.uniqueUnitId().intValue());
             result.add(new Object[]{"möglicherweise", "nicht verfügbar", sru.lines().get(0).refurbishId(),
-                null, null, null, null, null, null, null, null, sru.lines().get(0).dossierIdentifier(), null, null});
-
+                uu.getProduct().getPartNo(), uu.getSerial(), ProductFormater.toName(uu.getProduct()), uu.getContractor(), null, uu.getSalesChannel(),
+                "offene Reklamation", null, sru.lines().get(0).dossierIdentifier(), null, null});
         }
 
         for (String error : read.errors) {

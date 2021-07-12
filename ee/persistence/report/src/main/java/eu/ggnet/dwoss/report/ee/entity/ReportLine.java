@@ -1302,7 +1302,7 @@ public class ReportLine extends BaseEntity implements Serializable, EagerAble, C
         sb.append("<br>");
 
         sb.append("<b>mfg Date: </b>");
-        sb.append(simpleDateFormat.format(mfgDate));
+        if ( mfgDate != null ) sb.append(simpleDateFormat.format(mfgDate));
         sb.append("<br>");
 
         sb.append("<b>UniqueUnitId: </b>");
