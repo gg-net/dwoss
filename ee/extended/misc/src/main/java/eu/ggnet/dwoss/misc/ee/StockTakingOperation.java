@@ -123,6 +123,7 @@ public class StockTakingOperation implements StockTaking {
         StockUnitEao stockUnitEao = new StockUnitEao(stockEm);
         DossierEao dossierEao = new DossierEao(redTapeEm);
         List<Object[]> result = new ArrayList<>();
+        List<Integer> notFound = new ArrayList<>();
         Set<StockUnit> found = new HashSet<>();
         String stockTaking = "erfasst";
         for (String refurbishId : read.refurbisIds) {
@@ -140,6 +141,7 @@ public class StockTakingOperation implements StockTaking {
                 if ( stu == null ) {
                     result.add(new Object[]{stockTaking, "Nicht im Lager", refurbishId,
                         partNo, uu.getSerial(), name, uu.getContractor(), null, uu.getSalesChannel(), null, null, null, contractorPartNo, null});
+                    notFound.add(uu.getId());
                 } else {
                     // jetzt schauen was mit st ist
                     String stock = (stu.getStock() == null ? stu.getTransaction().toSimpleLine() : stu.getStock().getName());
@@ -183,12 +185,14 @@ public class StockTakingOperation implements StockTaking {
         // Possible open reklas
         List<SimpleReportUnit> openComplaints = reportApi.findUnreportedOpenComplaints();
         // Filter allready found units.
-        List<Integer> allUniqueUnitIds = Stream.concat(found.stream(), openUnits.stream()).map(StockUnit::getUniqueUnitId).distinct().collect(Collectors.toList());
+        List<Integer> allUniqueUnitIds = new ArrayList<>(Stream.concat(found.stream(), openUnits.stream()).map(StockUnit::getUniqueUnitId).distinct().collect(Collectors.toList()));
+        allUniqueUnitIds.addAll(notFound);
         openComplaints = openComplaints.stream().filter(sru -> !allUniqueUnitIds.contains(sru.uniqueUnitId().intValue())).collect(Collectors.toList());
         for (SimpleReportUnit sru : openComplaints) {
-            var suu = uniqueUnitApi.findById(sru.uniqueUnitId());
+            UniqueUnit uu = uniqueUnitEao.findById(sru.uniqueUnitId().intValue());
             result.add(new Object[]{"möglicherweise", "nicht verfügbar", sru.lines().get(0).refurbishId(),
-                null, null, suu.shortDescription(), suu.contractor(), null, null, null, null, sru.lines().get(0).dossierIdentifier(), null, null});
+                uu.getProduct().getPartNo(), uu.getSerial(), ProductFormater.toName(uu.getProduct()), uu.getContractor(), null, uu.getSalesChannel(),
+                "offene Reklamation", null, sru.lines().get(0).dossierIdentifier(), null, null});
         }
 
         for (String error : read.errors) {

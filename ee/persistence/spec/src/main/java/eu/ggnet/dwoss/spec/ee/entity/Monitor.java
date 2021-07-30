@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,6 +31,7 @@ import static javax.persistence.CascadeType.*;
 
 /**
  * Represents a Monitor.
+ *
  * @author pascal.perau
  */
 @Entity
@@ -55,7 +56,7 @@ public class Monitor extends BasicSpec implements DisplayAble {
 
     @Override
     public Set<Extra> getDefaultExtras() {
-        return EnumSet.of(KAMERA, THREE_D, PIVOT, HIGHT_CHANGEABLE, SPEAKERS, TOUCH, IPS_DISPLAY);
+        return EnumSet.of(KAMERA, THREE_D, PIVOT, HIGHT_CHANGEABLE, SPEAKERS, TOUCH, IPS_DISPLAY, DISPLAY_120, DISPLAY_144);
     }
 
     @Override
