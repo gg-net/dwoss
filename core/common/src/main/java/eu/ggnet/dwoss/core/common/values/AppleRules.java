@@ -32,7 +32,7 @@ public class AppleRules {
             Pattern.compile("[A-Z]{1}[0-9]{1}[A-Z]{2}[0-9]{3}[A-Z0-9]{2}")
     );
 
-    private final static Pattern SERIAL_PATTERN = Pattern.compile("[A-Z0-9]{11,12}");
+    private final static Pattern SERIAL_PATTERN = Pattern.compile("[A-Z0-9]{10,12}");
 
     /**
      * Validates a PartNo of Apple, returns null if ok or else a String representing the error.
@@ -61,8 +61,8 @@ public class AppleRules {
      */
     public static String validateSerial(String serial) {
         if ( serial == null ) return "Seriennummer darf nicht null sein";
-        if ( serial.length() < 11 ) return "Seriennummer ist zu kurz ! (ist " + serial.length() + ", soll 11-12)";
-        if ( serial.length() > 12 ) return "Seriennummer ist zu lang ! (ist " + serial.length() + ", soll 11-12)";
+        if ( serial.length() < 10 ) return "Seriennummer ist zu kurz ! (ist " + serial.length() + ", soll 10-12)";
+        if ( serial.length() > 12 ) return "Seriennummer ist zu lang ! (ist " + serial.length() + ", soll 10-12)";
         if ( !SERIAL_PATTERN.matcher(serial).matches() ) {
             return "Apple Seriennummer " + serial + " passt nicht auf Apple Pattern ************ (*=Zahl/Buchstabe) !";
         }

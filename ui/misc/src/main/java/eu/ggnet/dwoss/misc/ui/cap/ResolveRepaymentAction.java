@@ -49,7 +49,7 @@ public class ResolveRepaymentAction extends AccessableAction {
                 Ui.build().dialog().eval(() -> {
                     ChoiceDialog<TradeName> dialog = new ChoiceDialog<>(contractors.all().iterator().next(), contractors.all());
                     dialog.setTitle("Gutschriften");
-                    dialog.setHeaderText(RESOLVE_REPAYMENT.toName());
+                    dialog.setHeaderText(RESOLVE_REPAYMENT.description());
                     dialog.setContentText("Lieferant auswählen:");
                     return dialog;
                 }).opt().ifPresent(c -> Ui.build().fxml().show(() -> c, ResolveRepaymentController.class));
