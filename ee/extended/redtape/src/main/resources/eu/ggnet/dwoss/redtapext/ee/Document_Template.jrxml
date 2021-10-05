@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<!-- Created with Jaspersoft Studio version 6.17.0.final using JasperReports Library version 6.17.0-6d93193241dd8cc42629e188b94f9e0bc5722efd  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Document" language="groovy" pageWidth="595" pageHeight="842" columnWidth="507" leftMargin="60" rightMargin="28" topMargin="40" bottomMargin="28" uuid="bd31a193-c9b0-4028-acf3-be07d14d37f5">
 	<property name="ireport.zoom" value="1.7715610000000606"/>
 	<property name="ireport.x" value="291"/>
 	<property name="ireport.y" value="528"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="RedTape.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DwEntityHelper - Collection of JavaBeans"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -74,14 +74,8 @@
 	<field name="bookingAccount" class="java.lang.Integer">
 		<fieldDescription><![CDATA[bookingAccount]]></fieldDescription>
 	</field>
-	<field name="class" class="java.lang.Class">
-		<fieldDescription><![CDATA[class]]></fieldDescription>
-	</field>
 	<field name="description" class="java.lang.String">
 		<fieldDescription><![CDATA[description]]></fieldDescription>
-	</field>
-	<field name="document" class="eu.ggnet.dwoss.redtape.ee.entity.Document">
-		<fieldDescription><![CDATA[document]]></fieldDescription>
 	</field>
 	<field name="id" class="java.lang.Integer">
 		<fieldDescription><![CDATA[id]]></fieldDescription>
@@ -205,7 +199,7 @@
 						<pen lineWidth="1.0"/>
 					</graphicElement>
 				</line>
-				<textField isStretchWithOverflow="true" evaluationTime="Report">
+				<textField textAdjust="StretchHeight" evaluationTime="Report">
 					<reportElement stretchType="RelativeToTallestObject" x="0" y="5" width="265" height="80" isRemoveLineWhenBlank="true" forecolor="#404040" uuid="97aeee1c-733a-4076-ac39-894de257f13e"/>
 					<textElement markup="html">
 						<font size="7"/>
@@ -453,7 +447,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true">
+			<textField textAdjust="StretchHeight">
 				<reportElement x="53" y="0" width="327" height="26" uuid="f9d4819e-bb82-4688-a0af-b8b8fd7e2a0c"/>
 				<textElement>
 					<font size="9" isBold="false" isItalic="true"/>
@@ -461,7 +455,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true">
+			<textField textAdjust="StretchHeight">
 				<reportElement x="53" y="26" width="327" height="20" forecolor="#404040" uuid="6d4001df-fc74-4437-9133-d48c38d1513a"/>
 				<textElement>
 					<font size="8"/>
@@ -513,7 +507,7 @@
 	</pageFooter>
 	<summary>
 		<band height="51">
-			<textField isStretchWithOverflow="true" evaluationTime="Report">
+			<textField textAdjust="StretchHeight" evaluationTime="Report">
 				<reportElement stretchType="RelativeToTallestObject" x="0" y="2" width="507" height="49" isRemoveLineWhenBlank="true" forecolor="#404040" uuid="c670f019-096a-4895-b396-d643ca7bb7c3"/>
 				<textElement markup="html">
 					<font size="8"/>
