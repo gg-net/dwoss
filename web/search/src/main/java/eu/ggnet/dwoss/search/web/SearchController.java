@@ -17,20 +17,19 @@
 package eu.ggnet.dwoss.search.web;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.primefaces.event.SelectEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.search.api.GlobalKey;
+import eu.ggnet.dwoss.search.api.SearchRequest;
 import eu.ggnet.dwoss.search.api.ShortSearchResult;
 import eu.ggnet.dwoss.search.ee.SearcherOperation;
 
@@ -46,44 +45,39 @@ public class SearchController implements Serializable {
 
     private static final Logger LOG = LoggerFactory.getLogger(SearchController.class);
 
-    private SearchLazyModel lazyModel;
-
     @Inject
     private SearcherOperation searcher;
 
-    private ShortSearchResult selectedShortSearchResult;
-
-    public ShortSearchResult getSelectedShortSearchResult() {
-        return selectedShortSearchResult;
-    }
-
-    public void setSelectedShortSearchResult(ShortSearchResult selectedShortSearchResult) {
-        this.selectedShortSearchResult = selectedShortSearchResult;
-    }
+    private String search = "nix";
 
     @PostConstruct
-    public void init() {
-        lazyModel = new SearchLazyModel(searcher);
+    private void init() {
+        searcher.initSearch(new SearchRequest(search));
     }
 
-    public SearchLazyModel getLazyModel() {
-        return lazyModel;
+    public String getSearch() {
+        return search;
     }
 
-    public void onRowSelect(SelectEvent event) {
-        FacesMessage msg = new FacesMessage("SearchResult Selected", ((ShortSearchResult)event.getObject()).toString());
-        FacesContext.getCurrentInstance().addMessage(null, msg);
-
+    public void setSearch(String search) {
+        LOG.info("setSearch({})", search);
+        this.search = search;
+        searcher.initSearch(new SearchRequest(search));
     }
 
-    public String getDetails(GlobalKey key) {
-        LOG.info("Key: " + key);
-        try {
-            LOG.info("Details: " + searcher.details(key));
+    public int getCount() {
+        LOG.info("getCount()");
+        return searcher.estimateMaxResults();
+    }
 
-        } catch (Exception e) {
-            LOG.info("Details Exception " + e.getMessage());
+    public List<ShortSearchResultWrapper> getSearchResult() {
+        LOG.info("getSearchResult()");
+        List<ShortSearchResultWrapper> result = new ArrayList<>();
+        while (searcher.hasNext()) {
+            for (ShortSearchResult ssr : searcher.next()) {
+                result.add(new ShortSearchResultWrapper(ssr));
+            }
         }
-        return searcher.details(key);
+        return result;
     }
 }

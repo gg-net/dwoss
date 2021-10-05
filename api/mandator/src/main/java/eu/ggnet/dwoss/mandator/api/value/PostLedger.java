@@ -18,13 +18,13 @@ package eu.ggnet.dwoss.mandator.api.value;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.common.values.PositionType;
 import eu.ggnet.dwoss.core.common.values.TaxType;
-
 
 /**
  * PostLedger (Fibu Buchungskonto) engine.
@@ -101,7 +101,14 @@ public class PostLedger implements Serializable {
         public Storage(Ledger primaryLedger, List<Ledger> alternativeLedgers) {
             this.primaryLedger = primaryLedger;
             this.alternativeLedgers.addAll(alternativeLedgers);
-        }      
+        }
+
+        public String toHtml() {
+            return primaryLedger.toHtml()
+                    + (alternativeLedgers.isEmpty() || alternativeLedgers.get(0).description.equals(primaryLedger.description)
+                       ? ""
+                       : " - Alternativen: " + alternativeLedgers.stream().map(Ledger::toHtml).collect(Collectors.joining(",")));
+        }
 
     }
 
@@ -149,6 +156,19 @@ public class PostLedger implements Serializable {
         if ( positionAndTaxStorage.containsKey(positionType) && positionAndTaxStorage.get(positionType).containsKey(taxType) )
             return positionAndTaxStorage.get(positionType).get(taxType).alternativeLedgers;
         return Collections.emptyList();
+    }
+
+    public String toHtml() {
+        String r = "<ul>";
+        for (PositionType pt : positionAndTaxStorage.keySet()) {
+            r += "<li>" + pt.description() + "(" + pt.name() + ")<ul>\n";
+            for (TaxType tt : positionAndTaxStorage.get(pt).keySet()) {
+                r += "  <li>" + tt.description() + ": " + positionAndTaxStorage.get(pt).get(tt).toHtml() + "</li>\n";
+            }
+            r += "</ul></li>\n";
+        }
+        r += "</ul>";
+        return r;
     }
 
 }

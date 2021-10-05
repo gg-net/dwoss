@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.17.0.final using JasperReports Library version 6.17.0-6d93193241dd8cc42629e188b94f9e0bc5722efd  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="db8675b3-a3cd-4ed1-ae4d-fa5d3c5182bb">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CustomerSalesListing" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="db8675b3-a3cd-4ed1-ae4d-fa5d3c5182bb">
 	<property name="ireport.zoom" value="1.9487171000000014"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="258"/>
@@ -35,7 +35,7 @@
 				<textField>
 					<reportElement x="0" y="0" width="555" height="20" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="afb8c8d4-1c17-47e4-b369-4812540bf5f4"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
+						<font size="12" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA["Warengruppe: " + $F{commodityGroupName}]]></textFieldExpression>
 				</textField>
@@ -63,8 +63,8 @@
 			</image>
 			<textField isBlankWhenNull="false">
 				<reportElement x="130" y="0" width="425" height="18" uuid="35e42871-c404-44ce-af03-9540b6d0a1ad"/>
-				<textElement>
-					<font size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
+				<textElement markup="styled">
+					<font size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.get("TITLE") == null ? (new String("Platzhalter-Titel-Text vom: " + new SimpleDateFormat("dd. MMMMM yyyy").format(new Date()))) : ($P{REPORT_PARAMETERS_MAP}.get("TITLE") + " vom: "+ new SimpleDateFormat("dd. MMMMM yyyy").format(new Date()))]]></textFieldExpression>
 			</textField>
@@ -140,7 +140,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Dashed"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="SansSerif" size="14" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font fontName="SansSerif" size="14" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{customerPriceLabel}]]></textFieldExpression>
@@ -154,7 +154,7 @@
 			<textField pattern="" isBlankWhenNull="false">
 				<reportElement mode="Transparent" x="351" y="21" width="54" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="e48eaedf-f937-4773-b86f-f591584e0d46"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
@@ -162,21 +162,21 @@
 			<staticText>
 				<reportElement x="15" y="0" width="240" height="20" uuid="fd187218-bea8-40c8-bc2c-06d75712daab"/>
 				<textElement verticalAlignment="Middle">
-					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Modellbezeichnung]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="255" y="1" width="96" height="20" uuid="0b4c15a7-7d39-4c43-b4c6-b7bc357799ef"/>
 				<textElement verticalAlignment="Middle">
-					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Artikelnummer]]></text>
 			</staticText>
 			<textField pattern="" isBlankWhenNull="false">
 				<reportElement mode="Transparent" x="255" y="21" width="96" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="a53699a5-c2c2-4f92-a53d-7d2d8750cea7"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{manufacturerPartNo}]]></textFieldExpression>
@@ -184,14 +184,14 @@
 			<staticText>
 				<reportElement x="351" y="1" width="54" height="20" uuid="59df6943-5613-4ebb-89ff-443d9bae768b"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Bestand]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="15" y="20" width="240" height="20" uuid="8849ba21-5417-4ebf-a937-01bfb1d9a8ad"/>
 				<textElement verticalAlignment="Middle">
-					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{manufacturerName} + " " + $F{name}]]></textFieldExpression>
 			</textField>

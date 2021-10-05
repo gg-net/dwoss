@@ -17,9 +17,12 @@
 package tryout;
 
 import java.awt.BorderLayout;
+import java.awt.Desktop;
+import java.io.File;
 
 import javax.swing.JFrame;
 
+import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.swing.JRViewer;
 
@@ -72,8 +75,13 @@ public class DocumentRendererTryout {
         return documentSupporter.render(doc, DocumentViewType.DEFAULT);
     }
 
-    private static void showSwing() throws UserInfoException {
-        JRViewer viewer = new JRViewer(makeStaticDocument());
+    private static void show() throws Exception {
+        JasperPrint result = makeStaticDocument();
+
+        JasperExportManager.exportReportToPdfFile(result, "target/Dokument.pdf");
+        Desktop.getDesktop().open(new File("target/Dokument.pdf"));
+
+        JRViewer viewer = new JRViewer(result);
         JFrame frame = new JFrame("Viewer");
         frame.getContentPane().setLayout(new BorderLayout());
         frame.getContentPane().add(viewer, BorderLayout.CENTER);
@@ -82,8 +90,8 @@ public class DocumentRendererTryout {
         frame.setVisible(true);
     }
 
-    public static void main(String[] args) throws UserInfoException {
-        showSwing();
+    public static void main(String[] args) throws Exception {
+        show();
         // makeStaticDocument();
     }
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.17.0.final using JasperReports Library version 6.17.0-6d93193241dd8cc42629e188b94f9e0bc5722efd  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Document" language="groovy" pageWidth="595" pageHeight="842" columnWidth="507" leftMargin="60" rightMargin="28" topMargin="40" bottomMargin="28" uuid="bd31a193-c9b0-4028-acf3-be07d14d37f5">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Document" pageWidth="595" pageHeight="842" columnWidth="507" leftMargin="60" rightMargin="28" topMargin="40" bottomMargin="28" uuid="bd31a193-c9b0-4028-acf3-be07d14d37f5">
 	<property name="ireport.zoom" value="1.7715610000000606"/>
 	<property name="ireport.x" value="291"/>
 	<property name="ireport.y" value="528"/>
@@ -113,8 +113,8 @@
 	<variable name="IDENTIFIER_TYPE" class="java.lang.String">
 		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.containsKey("IDENTIFIER_TYPE") ? $P{REPORT_PARAMETERS_MAP}.get("IDENTIFIER_TYPE"): "IDENTIFIER_TYPE"]]></variableExpression>
 	</variable>
-	<variable name="CUSTOMER_ID" class="java.lang.Integer">
-		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.containsKey("CUSTOMER_ID") ? $P{REPORT_PARAMETERS_MAP}.get("CUSTOMER_ID") : -1]]></variableExpression>
+	<variable name="CUSTOMER_ID" class="java.lang.Long">
+		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.containsKey("CUSTOMER_ID") ? $P{REPORT_PARAMETERS_MAP}.get("CUSTOMER_ID") : -1l]]></variableExpression>
 	</variable>
 	<variable name="IDENTIFIER_ID" class="java.lang.String">
 		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.containsKey("IDENTIFIER_ID") ? $P{REPORT_PARAMETERS_MAP}.get("IDENTIFIER_ID") : "IDENTIFIER_ID"]]></variableExpression>

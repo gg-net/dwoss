@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.4.0.final using JasperReports Library version 6.4.1  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CustomerReport2_subreport1" pageWidth="555" pageHeight="802" columnWidth="535" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="acdd6daf-ad9f-44d2-a254-27ea8c14b197">
+<!-- Created with Jaspersoft Studio version 6.17.0.final using JasperReports Library version 6.17.0-6d93193241dd8cc42629e188b94f9e0bc5722efd  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CustomerSalesList_SubReport" pageWidth="555" pageHeight="802" columnWidth="535" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="acdd6daf-ad9f-44d2-a254-27ea8c14b197">
 	<property name="ireport.zoom" value="1.9487171000000014"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -51,14 +51,14 @@
 			<staticText>
 				<reportElement x="15" y="20" width="50" height="30" uuid="b6b3fe31-5448-4cc7-a2d8-ba8c43856da8"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Sopo-Nr.]]></text>
 			</staticText>
 			<staticText>
 				<reportElement mode="Transparent" x="69" y="20" width="59" height="30" forecolor="#000000" backcolor="#FFFFFF" uuid="94b8f082-578f-4c38-b6da-d7668c532c02"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[optischer Zustand]]></text>
@@ -66,7 +66,7 @@
 			<staticText>
 				<reportElement mode="Transparent" x="132" y="20" width="203" height="30" forecolor="#000000" backcolor="#FFFFFF" uuid="0f0a52c8-84ab-4db5-9164-291469c5cbfa"/>
 				<textElement verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[Bemerkung]]></text>
@@ -74,14 +74,14 @@
 			<staticText>
 				<reportElement x="440" y="20" width="80" height="30" uuid="dd8f67c1-b1e7-4c53-9eb3-86e3e2ee6478"/>
 				<textElement verticalAlignment="Middle">
-					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Preis inkl. MwSt.]]></text>
 			</staticText>
 			<staticText>
 				<reportElement mode="Transparent" x="339" y="20" width="96" height="30" forecolor="#000000" backcolor="#FFFFFF" uuid="59b6890e-e99c-4a2b-afb4-d4be128659bf"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[Zubehör]]></text>
@@ -89,7 +89,7 @@
 			<staticText>
 				<reportElement x="15" y="3" width="198" height="20" forecolor="#000000" uuid="0787475c-35ed-4799-95c9-96b1f3c24465"/>
 				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" size="11" isBold="true" isItalic="false" isUnderline="false" pdfFontName="Helvetica-Bold"/>
+					<font fontName="SansSerif" size="11" isBold="true" isItalic="false" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[Einzelstückbeschreibung:]]></text>
 			</staticText>
@@ -122,20 +122,20 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{roundedTaxedCustomerPrice}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true">
+			<textField textAdjust="StretchHeight">
 				<reportElement x="69" y="0" width="59" height="20" isPrintWhenDetailOverflows="true" uuid="48391490-f4fb-4bab-82bd-eb0e510b4360"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{conditionLevelDescription}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement x="132" y="0" width="203" height="20" uuid="23998b49-eef3-43a7-b107-f53eecbb0368"/>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{comment}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
+			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="false">
 				<reportElement mode="Transparent" x="339" y="0" width="96" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="48d6870d-3f4e-4060-9b25-4ee17a7151af"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{accessories}]]></textFieldExpression>

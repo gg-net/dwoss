@@ -40,10 +40,6 @@
             <artifactId>jasperreports-fonts</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
-        </dependency>
-        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-uniqueunit-ee</artifactId>
             <version>${project.version}</version>

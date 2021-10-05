@@ -117,4 +117,7 @@ public class CustomerAndGsOfficeProvider {
         return specialSystemCustomers;
     }
 
+    public static void main(String[] args) {
+        System.out.println(NEW_POST_LEDGER.toHtml());
+    }
 }

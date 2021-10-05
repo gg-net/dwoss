@@ -18,7 +18,6 @@ package eu.ggnet.dwoss.mandator.api.value;
 
 import java.io.Serializable;
 
-
 /**
  *
  * @author oliver.guenther
@@ -39,7 +38,7 @@ public class Ledger implements Serializable {
 
     /**
      * The Ledger Value.
-     * 
+     *
      * @return
      * @deprecated use pulic field value.
      */
@@ -56,7 +55,7 @@ public class Ledger implements Serializable {
         hash = 53 * hash + this.value;
         return hash;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if ( this == obj ) return true;
@@ -67,10 +66,13 @@ public class Ledger implements Serializable {
         return true;
     }
     //</editor-fold>
-    
+
     @Override
     public String toString() {
         return "Ledger{" + "value=" + value + ", description=" + description + '}';
     }
-    
+
+    public String toHtml() {
+        return description + " (" + value + ")";
+    }
 }

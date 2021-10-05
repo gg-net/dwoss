@@ -3,46 +3,34 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:pe="http://primefaces.org/ui/extensions">
+      xmlns:f="http://java.sun.com/jsf/core">
     <f:view contentType="text/html">
         <h:head>
             <title>Suche</title>
         </h:head>
         <h:body>
-            <h:form id="search">
-                <p:growl id="growl" showDetail="true" sticky="true" autoUpdate="true"/>
+            <h1>Allgemeine Suche</h1>
 
-                <p:layout fullPage="true">
-                    <p:layoutUnit id="top" position="north" header="Search" >
-                        <h:panelGrid columns="4" cellpadding="5">
-                            <h:outputLabel for="search" value="Suche:" style="font-weight:bold" />
-                            <p:inputText id="searchInput" value="#{searchController.lazyModel.search}" />
-                            <p:commandButton value="Submit" icon="ui-icon-check" update="search:searchresult" process="@this searchInput"/>
-                        </h:panelGrid>
-                    </p:layoutUnit>
-                    <p:layoutUnit id="center" position="center" header="Output">
-                        <p:messages autoUpdate="true"/>
-                        <p:dataTable id="searchresult" var="sresult" value="#{searchController.lazyModel}" paginator="true" rows="20"
-                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-                                     rowsPerPageTemplate="20,50,100" selectionMode="single" selection="#{searchController.selectedShortSearchResult}" lazy="true">
-                            <p:ajax event="rowSelect" listener="#{searchController.onRowSelect}" />
-                            <p:column headerText="Ergebnis">
-                                <h:outputText value="#{sresult.shortDescription}" />
-                            </p:column>
-                            <p:column width="15%" headerText="Key">
-                                <h:outputText value="#{sresult.key.component}:#{sresult.key.id}" />
-                            </p:column>
-                            <p:column width="15%" headerText="Details">
-                                <p:rowToggler />
-                            </p:column>
-                            <p:rowExpansion>
-                                <h:outputText value="#{searchController.getDetails(sresult.key)}" escape="false"/>
-                            </p:rowExpansion>
-                        </p:dataTable>
-                    </p:layoutUnit>
-                </p:layout>
+            <h:form>
+                Suchanfrage: <h:inputText id="searchText" value="#{searchController.search}"></h:inputText>&nbsp;
+                <h:commandButton value="Suche">
+                    <f:ajax execute="searchText" render="searchCount , searchResultTable" />
+                </h:commandButton>&nbsp;Ergebnisse: <h:outputText id="searchCount" value="#{searchController.count}" />
+
+                <h:dataTable id="searchResultTable" value="#{searchController.searchResult}" var="result">
+
+                    <h:column><f:facet name = "header">Komponente</f:facet>
+                        <h:outputText value="#{result.component}" />
+                    </h:column>
+
+                    <h:column><f:facet name = "header">Key</f:facet>
+                            #{result.key}
+                    </h:column>
+
+                    <h:column><f:facet name = "header">Beschreibung</f:facet>
+                            #{result.shortDescription}
+                    </h:column>
+                </h:dataTable>
             </h:form>
         </h:body>
     </f:view>
