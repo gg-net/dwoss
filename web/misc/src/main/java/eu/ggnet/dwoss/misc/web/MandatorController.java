@@ -16,26 +16,20 @@
  */
 package eu.ggnet.dwoss.misc.web;
 
-import eu.ggnet.dwoss.core.common.values.DocumentType;
-import eu.ggnet.dwoss.core.common.values.ShippingCondition;
-import eu.ggnet.dwoss.core.common.values.PositionType;
-import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
-import eu.ggnet.dwoss.core.common.values.TaxType;
-
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.ShippingCondition;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers.Key;
 import eu.ggnet.dwoss.mandator.api.value.*;
 
@@ -64,8 +58,6 @@ public class MandatorController implements Serializable {
     @Inject
     private PostLedger postLedger;
 
-    private TreeNode root;
-
     public List<TradeName> getAllowedBrands() {
         return contractors.allowedBrands().stream().collect(Collectors.toList());
     }
@@ -93,46 +85,12 @@ public class MandatorController implements Serializable {
 
     }
 
+    public PostLedger getPostLedger() {
+        return postLedger;
+    }
+
     public Mandator getMandator() {
         return mandator;
-    }
-
-    public TreeNode getRoot() {
-        return root;
-    }
-
-    @PostConstruct
-    public void init() {
-        root = new DefaultTreeNode("Root", null);
-
-        Map<PositionType, TreeNode> levelOneNodes = new HashMap<>();
-        Map<PositionType, Map<TaxType, TreeNode>> levelTwoNodes = new HashMap<>();
-
-        for (PositionType posType : PositionType.values()) {
-            for (TaxType taxType : TaxType.values()) {
-
-                Optional<Ledger> opt = postLedger.get(posType, taxType);
-
-                if ( opt.isPresent() ) {
-
-                    LOG.debug("Tax" + taxType + "  Pos: "
-                            + posType + "  Ledger " + opt.get());
-
-                    if ( !levelOneNodes.containsKey(posType) )
-                        levelOneNodes.put(posType, new DefaultTreeNode(posType.toString(), root));
-
-                    if ( !levelTwoNodes.containsKey(posType) ) {
-                        levelTwoNodes.put(posType, new EnumMap<>(TaxType.class));
-                        levelTwoNodes.get(posType).put(taxType, new DefaultTreeNode(taxType, levelOneNodes.get(posType)));
-                    } else if ( !levelTwoNodes.get(posType).containsKey(taxType) ) {
-                        levelTwoNodes.get(posType).put(taxType, new DefaultTreeNode(taxType, levelOneNodes.get(posType)));
-                    }
-
-                    levelTwoNodes.get(posType).get(taxType).getChildren().add(new DefaultTreeNode(opt.get()));
-                }
-
-            }
-        }
     }
 
 }

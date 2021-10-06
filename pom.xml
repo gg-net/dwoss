@@ -505,12 +505,6 @@
                 <artifactId>saft-core</artifactId>
                 <version>${saft.version}</version>
             </dependency>
-            <!-- Mobile Ui Usage -->
-            <dependency>
-                <groupId>commons-httpclient</groupId>
-                <artifactId>commons-httpclient</artifactId>
-                <version>3.1</version>
-            </dependency>
             <!-- Incubator Dependencies LucidCalc -->
             <dependency>
                 <groupId>net.sourceforge.jexcelapi</groupId>
@@ -534,7 +528,6 @@
                 <artifactId>jung-visualization</artifactId>
                 <version>2.1.1</version>
             </dependency>
-            <!-- Runtime Common/API Dependencies (Provided Usage) -->
             <!-- Runtime Common/API Dependencies -->
             <dependency>
                 <groupId>org.inferred</groupId>
@@ -697,17 +690,6 @@
                 <artifactId>jasperreports-fonts</artifactId>
                 <version>6.17.0</version>
             </dependency>
-            <!-- Web -->
-            <dependency>
-                <groupId>org.primefaces</groupId>
-                <artifactId>primefaces</artifactId>
-                <version>7.0</version>
-            </dependency>
-            <dependency>
-                <groupId>org.primefaces.extensions</groupId>
-                <artifactId>primefaces-extensions</artifactId>
-                <version>7.0.2</version>
-            </dependency>
             <!-- Runtime UI -->
             <dependency> <!-- Clientside for the collections, w15 = 5.3.7 -->
                 <groupId>org.hibernate</groupId>
@@ -719,6 +701,17 @@
                         <artifactId>xml-apis</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <!-- Client Side Validation -->
+            <dependency>
+                <groupId>org.hibernate.validator</groupId> <!-- W18 = 6.0.18 -->
+                <artifactId>hibernate-validator</artifactId>
+                <version>6.0.22.Final</version>
+            </dependency>
+            <dependency> <!-- Expresion factory for hibernate validator -->
+                <groupId>org.glassfish</groupId>
+                <artifactId>javax.el</artifactId>
+                <version>3.0.1-b11</version>
             </dependency>
             <dependency> <!-- Candidat for removal after switch to JDK9 as Services are declared in module.info -->
                 <groupId>org.netbeans.api</groupId>
@@ -760,7 +753,7 @@
                 <artifactId>logback-classic</artifactId>
                 <version>1.2.3</version>
             </dependency>
-            <dependency> <!-- verify if needed -->
+            <dependency> <!-- Log modification for JasperReports -->
                 <groupId>org.slf4j</groupId>
                 <artifactId>jcl-over-slf4j</artifactId>
                 <version>${slf4j.version}</version>
@@ -782,23 +775,6 @@
                 <version>4.13.1</version>
             </dependency>
             <dependency>
-                <groupId>org.jboss.arquillian</groupId>
-                <artifactId>arquillian-bom</artifactId>
-                <version>1.5.0.Final</version>
-                <scope>import</scope>
-                <type>pom</type>
-            </dependency>
-            <dependency>
-                <groupId>org.hibernate.validator</groupId> <!-- W18 = 6.0.18 -->
-                <artifactId>hibernate-validator</artifactId>
-                <version>6.0.22.Final</version>
-            </dependency>
-            <dependency> <!-- Expresion factory for hibernate validator -->
-                <groupId>org.glassfish</groupId>
-                <artifactId>javax.el</artifactId>
-                <version>3.0.1-b11</version>
-            </dependency>
-            <dependency>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
                 <version>3.18.1</version>
@@ -813,12 +789,14 @@
                 <artifactId>mockito-core</artifactId>
                 <version>2.28.2</version>
             </dependency>
-            <dependency> <!-- Used in for JAX RS Webclient Test -->
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-frontend-jaxrs</artifactId>
-                <version>2.7.18</version> <!-- Starting with Version 3 the Webclient class is missing. -->
-            </dependency>
             <!-- Arquillian Containers -->
+            <dependency>
+                <groupId>org.jboss.arquillian</groupId>
+                <artifactId>arquillian-bom</artifactId>
+                <version>1.5.0.Final</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
             <dependency>
                 <groupId>org.wildfly.arquillian</groupId>
                 <artifactId>wildfly-arquillian-container-remote</artifactId>
@@ -849,7 +827,7 @@
                 <artifactId>javafx-swing</artifactId>
                 <version>${openjfx.version}</version>
             </dependency>
-            <!-- XML Bindings, which got removed in JDK 11. Consider switchig away in the project ee.persistence.redtape (SageExporter) -->
+            <!-- XML Bindings, which got removed in JDK 11. Will return with jarkata ee, used in (SageExporter) -->
             <dependency>
                 <groupId>javax.xml.bind</groupId>
                 <artifactId>jaxb-api</artifactId>

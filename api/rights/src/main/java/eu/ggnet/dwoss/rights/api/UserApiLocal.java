@@ -16,6 +16,7 @@
  */
 package eu.ggnet.dwoss.rights.api;
 
+import java.util.List;
 
 import javax.ejb.Local;
 
@@ -29,7 +30,7 @@ public interface UserApiLocal {
 
     /**
      * Documentation copied from {@link UserApi#findByName(java.lang.String) }.
-     *
+     * <p>
      * Searches for the {@link Operator} with the submitted username and returns a {@link User} representation of that Operator.
      *
      * @param username name of the Operator, must not be null or blank.
@@ -37,6 +38,15 @@ public interface UserApiLocal {
      * @throws IllegalArgumentException if the submitted name is blank or the user is not found.
      * @throws NullPointerException     if the submitted name is null.
      */
-    User findByName(String username) throws IllegalArgumentException,NullPointerException;
+    User findByName(String username) throws IllegalArgumentException, NullPointerException;
+
+    /**
+     * Searches for all {@link Operator}<code>s</code> and returns a List of {@link User} with representations of those Operators.
+     *
+     * @return List&lt;User&gt; - representations of the found Operators or null.
+     * @throws IllegalArgumentException if the submitted name is blank.
+     * @throws NullPointerException     if the submitted name is null.
+     */
+    List<User> findAll();
 
 }

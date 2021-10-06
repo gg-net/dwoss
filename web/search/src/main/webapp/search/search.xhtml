@@ -14,13 +14,13 @@
             <h:form>
                 Suchanfrage: <h:inputText id="searchText" value="#{searchController.search}"></h:inputText>&nbsp;
                 <h:commandButton value="Suche">
-                    <f:ajax execute="searchText" render="searchCount , searchResultTable" />
+                    <f:ajax execute="searchText" render="searchCount searchResultTable" />
                 </h:commandButton>&nbsp;Ergebnisse: <h:outputText id="searchCount" value="#{searchController.count}" />
 
                 <h:dataTable id="searchResultTable" value="#{searchController.searchResult}" var="result">
 
                     <h:column><f:facet name = "header">Komponente</f:facet>
-                        <h:outputText value="#{result.component}" />
+                            #{result.component}
                     </h:column>
 
                     <h:column><f:facet name = "header">Key</f:facet>

@@ -23,8 +23,8 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import eu.ggnet.dwoss.rights.ee.eao.OperatorEao;
-import eu.ggnet.dwoss.rights.ee.entity.Operator;
+import eu.ggnet.dwoss.rights.api.User;
+import eu.ggnet.dwoss.rights.api.UserApiLocal;
 
 /**
  *
@@ -33,17 +33,13 @@ import eu.ggnet.dwoss.rights.ee.entity.Operator;
 @Named
 @ManagedBean
 @Stateless
-public class RightsFacesBean {
+public class UsersController {
 
     @Inject
-    private OperatorEao eao;
+    private UserApiLocal users;
 
-    public List<Operator> findAll() {
-        List<Operator> all = eao.findAll();
-        for (Operator operator : all) {
-            operator.fetchEager();
-        }
-        return all;
+    public List<User> findAll() {
+        return users.findAll();
     }
 
 }

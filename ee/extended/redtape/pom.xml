@@ -13,23 +13,6 @@
     <packaging>ejb</packaging>
     <description>Binds:uniqueunit.ee, stock.ee, spec.ee, redtape.ee, report.ee</description>
 
-    <!--    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <properties>
-                        <property>
-                            <name>listener</name>
-                            <value>de.dw.junit.SystemErrListener</value>
-                        </property>
-                    </properties>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>-->
-
     <dependencies>
         <dependency>
             <groupId>net.sf.jasperreports</groupId>
@@ -92,16 +75,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-frontend-jaxrs</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>xom</groupId>
-            <artifactId>xom</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

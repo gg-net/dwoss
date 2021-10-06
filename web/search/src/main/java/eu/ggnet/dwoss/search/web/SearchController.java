@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.ManagedBean;
-import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -48,12 +47,9 @@ public class SearchController implements Serializable {
     @Inject
     private SearcherOperation searcher;
 
-    private String search = "nix";
+    private String search = "";
 
-    @PostConstruct
-    private void init() {
-        searcher.initSearch(new SearchRequest(search));
-    }
+    private List<ShortSearchResultWrapper> result = new ArrayList<>();
 
     public String getSearch() {
         return search;
@@ -63,6 +59,7 @@ public class SearchController implements Serializable {
         LOG.info("setSearch({})", search);
         this.search = search;
         searcher.initSearch(new SearchRequest(search));
+        result.clear();
     }
 
     public int getCount() {
@@ -71,13 +68,13 @@ public class SearchController implements Serializable {
     }
 
     public List<ShortSearchResultWrapper> getSearchResult() {
-        LOG.info("getSearchResult()");
-        List<ShortSearchResultWrapper> result = new ArrayList<>();
+        if ( !result.isEmpty() ) return result;
         while (searcher.hasNext()) {
             for (ShortSearchResult ssr : searcher.next()) {
                 result.add(new ShortSearchResultWrapper(ssr));
             }
         }
+        LOG.info("getSearchResult() size = {}", result.size());
         return result;
     }
 }

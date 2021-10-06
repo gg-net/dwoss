@@ -16,10 +16,13 @@
  */
 package eu.ggnet.dwoss.rights.ee;
 
+import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import eu.ggnet.dwoss.rights.api.*;
+import eu.ggnet.dwoss.rights.api.User;
+import eu.ggnet.dwoss.rights.api.UserApiLocal;
 
 /**
  *
@@ -34,6 +37,11 @@ public class UserApiLocalBean implements UserApiLocal {
     @Override
     public User findByName(String username) {
         return bean.findByName(username);
+    }
+
+    @Override
+    public List<User> findAll() {
+        return bean.findAll();
     }
 
 }

@@ -43,11 +43,6 @@
             <groupId>eu.ggnet.lucidcalc</groupId>
             <artifactId>lucidcalc</artifactId>
         </dependency>
-        <dependency>
-            <groupId>xom</groupId>
-            <artifactId>xom</artifactId>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 </project>
 
