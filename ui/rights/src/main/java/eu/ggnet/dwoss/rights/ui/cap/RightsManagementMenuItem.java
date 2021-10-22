@@ -21,21 +21,24 @@ import javax.inject.Inject;
 
 import javafx.scene.control.MenuItem;
 
+import eu.ggnet.dwoss.core.widget.AccessableMenuItem;
 import eu.ggnet.dwoss.rights.ui.RightsManagementController;
 import eu.ggnet.saft.core.Saft;
+
+import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_UPDATE_RIGHTS;
 
 /**
  * {@link MenuItem} to allow the creation and modification of {@link User}<code>s</code> and {@link Group}<code>s</code>.
  *
  * @author mirko.schulze
  */
-public class RightsManagementMenuItem extends MenuItem {
+public class RightsManagementMenuItem extends AccessableMenuItem {
 
     @Inject
     private Saft saft;
 
     public RightsManagementMenuItem() {
-        super("Erstellen oder ändern von Rechten");
+        super(CREATE_UPDATE_RIGHTS);
     }
 
     @PostConstruct
