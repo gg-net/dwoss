@@ -29,15 +29,15 @@ public class AppleRules {
 
     private final static List<Pattern> PART_NO_PATTERNS = Arrays.asList(
             Pattern.compile("[A-Z]{1}[A-Z0-9]{4}[A-Z]{1,2}/[A-Z]{1}"),
-            Pattern.compile("[A-Z]{1}[0-9]{1}[A-Z]{2}[0-9]{3}[A-Z0-9]{2}")
+            Pattern.compile("[A-Z]{1}[0-9A-Z]{8}")
     );
 
     private final static Pattern SERIAL_PATTERN = Pattern.compile("[A-Z0-9]{9,12}");
 
     /**
      * Validates a PartNo of Apple, returns null if ok or else a String representing the error.
-     * Allowed is : M[A-Z][0-9]{3}[A-Z]{1-2}/A
-     * <p>
+     * See Source Code for allowed patterns.
+     *
      * @param partNo the partNo to validate
      * @return null if ok or else a String representing the error.
      */
