@@ -18,6 +18,7 @@ package eu.ggnet.dwoss.mandator.api;
 
 import javax.ejb.Remote;
 
+import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.mandator.api.value.*;
 
 /**
@@ -69,5 +70,19 @@ public interface Mandators {
      * @return the {@link PostLedger}.
      */
     PostLedger loadPostLedger();
+
+    /**
+     * Returns the Dw icon of the mandator.
+     *
+     * @return the Dw icon of the mandator
+     */
+    FileJacket loadDwIcon();
+
+    /**
+     * Returns the Customer and Orders icon of the mandator.
+     *
+     * @return the Customer and Orders icon of the mandator.
+     */
+    FileJacket loadCaoIcon();
 
 }

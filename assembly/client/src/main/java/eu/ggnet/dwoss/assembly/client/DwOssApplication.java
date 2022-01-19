@@ -332,7 +332,8 @@ public class DwOssApplication extends Application {
         mainFrame.setTitle(Dl.local().lookup(CachedMandators.class).loadMandator().company().name()
                 + " - Deutsche Warenwirtschaft - "
                 + cp.toUrl());
-        mainFrame.setIconImage(new ImageIcon(DwOssClientController.loadIcon()).getImage());
+        ImageIcon ii = new ImageIcon(Dl.local().lookup(CachedMandators.class).loadDwIcon().getContent());
+        mainFrame.setIconImage(ii.getImage());
 
         saft.core(Swing.class).initMain(mainFrame);
         mainFrame.addWindowListener(new WindowAdapter() {

@@ -16,21 +16,16 @@
  */
 package eu.ggnet.dwoss.mandator.ui;
 
-import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
-import eu.ggnet.dwoss.mandator.api.value.PostLedger;
-import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
-import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.mandator.api.value.Contractors;
-import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
-
 import org.openide.util.lookup.ServiceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.mandator.api.Mandators;
-import eu.ggnet.dwoss.mandator.spi.CachedMandators;
+import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.dl.LocalSingleton;
+import eu.ggnet.dwoss.mandator.api.Mandators;
+import eu.ggnet.dwoss.mandator.api.value.*;
+import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 
 /**
  * Implementation of the Mandators with Cache.
@@ -80,6 +75,16 @@ public class CachedMandatorsImpl implements CachedMandators, LocalSingleton {
             L.info("Cache filled once");
         }
         return service;
+    }
+
+    @Override
+    public FileJacket loadDwIcon() {
+        return loadOnce().loadDwIcon();
+    }
+
+    @Override
+    public FileJacket loadCaoIcon() {
+        return loadOnce().loadCaoIcon();
     }
 
 }

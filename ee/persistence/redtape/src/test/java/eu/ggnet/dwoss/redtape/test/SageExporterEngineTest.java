@@ -40,11 +40,6 @@ import static eu.ggnet.dwoss.core.common.values.TaxType.REVERSE_CHARGE;
 import static java.time.ZoneId.systemDefault;
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- *
- * @author oliver.guenther
- * import static eu.ggnet.dwoss.rules.TaxType.REVERSE_CHARGE;
- */
 public class SageExporterEngineTest {
 
     private final static String VALID = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>\n"

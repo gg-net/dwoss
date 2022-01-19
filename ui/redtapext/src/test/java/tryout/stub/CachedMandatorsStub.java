@@ -1,8 +1,11 @@
 package tryout.stub;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.EnumSet;
 
+import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.common.values.*;
 import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.mandator.spi.CachedMandators;
@@ -45,6 +48,15 @@ public class CachedMandatorsStub implements CachedMandators {
         return new SpecialSystemCustomers(Collections.emptyMap());
     }
 
+    @Override
+    public FileJacket loadCaoIcon() {
+        try (InputStream is = this.getClass().getResourceAsStream("cart.png")) {
+            return new FileJacket("cart", "png", is.readAllBytes());
+        } catch (IOException | NullPointerException ex) {
+            throw new RuntimeException("Can't load cart.png", ex);
+        }
+    }
+
     //<editor-fold defaultstate="collapsed" desc="unused methods">
     @Override
     public Mandator loadMandator() {
@@ -65,6 +77,11 @@ public class CachedMandatorsStub implements CachedMandators {
     public PostLedger loadPostLedger() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    //</editor-fold>
 
+    @Override
+    public FileJacket loadDwIcon() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    //</editor-fold>
 }

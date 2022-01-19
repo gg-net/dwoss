@@ -18,6 +18,7 @@ package eu.ggnet.dwoss.receipt.ui.tryout.stub;
 
 import java.util.*;
 
+import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers.Key;
 import eu.ggnet.dwoss.mandator.api.value.*;
@@ -68,6 +69,16 @@ public class MandatorsStub implements CachedMandators {
 
     @Override
     public PostLedger loadPostLedger() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public FileJacket loadDwIcon() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public FileJacket loadCaoIcon() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

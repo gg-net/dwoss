@@ -79,7 +79,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <slf4j.version>1.7.30</slf4j.version>
-        <saft.version>2.0</saft.version>
+        <saft.version>2.1</saft.version>
         <javaee.groupId>javax</javaee.groupId>
         <javaee.artifactId>javaee-api</javaee.artifactId>
         <javaee.version>8.0.1</javaee.version>

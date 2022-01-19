@@ -16,16 +16,13 @@
  */
 package tryout.stub;
 
-import eu.ggnet.dwoss.core.common.values.PaymentCondition;
-import eu.ggnet.dwoss.core.common.values.PaymentMethod;
-import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
-import eu.ggnet.dwoss.core.common.values.SalesChannel;
-import eu.ggnet.dwoss.core.common.values.ShippingCondition;
-
 import java.util.EnumSet;
 
-import eu.ggnet.dwoss.mandator.api.value.*;
+import eu.ggnet.dwoss.core.common.FileJacket;
+import eu.ggnet.dwoss.core.common.values.*;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.mandator.api.Mandators;
+import eu.ggnet.dwoss.mandator.api.value.*;
 
 /**
  *
@@ -67,6 +64,16 @@ public class MandatorsStub implements Mandators {
 
     @Override
     public PostLedger loadPostLedger() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public FileJacket loadDwIcon() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public FileJacket loadCaoIcon() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

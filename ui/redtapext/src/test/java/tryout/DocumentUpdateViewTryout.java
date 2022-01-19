@@ -6,6 +6,7 @@ import java.util.Arrays;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.*;
 
+import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.common.values.*;
 import eu.ggnet.dwoss.core.widget.AbstractGuardian;
 import eu.ggnet.dwoss.core.widget.Dl;
@@ -214,7 +215,17 @@ public class DocumentUpdateViewTryout {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
 
+            @Override
+            public FileJacket loadDwIcon() {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public FileJacket loadCaoIcon() {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
             //</editor-fold>
+
         });
         Dl.remote().add(RedTapeWorker.class, new RedTapeWorkerStub());
         Dl.remote().add(RedTapeAgent.class, null);

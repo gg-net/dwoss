@@ -16,9 +16,12 @@
  */
 package tryout;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 import eu.ggnet.dwoss.assembly.client.DwOssMain;
+import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.widget.AbstractGuardian;
 import eu.ggnet.dwoss.core.widget.Dl;
@@ -137,6 +140,24 @@ public class ClientTryout {
             @Override
             public PostLedger loadPostLedger() {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public FileJacket loadDwIcon() {
+                try (InputStream is = this.getClass().getResourceAsStream("money.png")) {
+                    return new FileJacket("money", "png", is.readAllBytes());
+                } catch (IOException | NullPointerException ex) {
+                    throw new RuntimeException("Can't load money.png", ex);
+                }
+            }
+
+            @Override
+            public FileJacket loadCaoIcon() {
+                try (InputStream is = this.getClass().getResourceAsStream("cart.png")) {
+                    return new FileJacket("cart", "png", is.readAllBytes());
+                } catch (IOException | NullPointerException ex) {
+                    throw new RuntimeException("Can't load cart.png", ex);
+                }
             }
         });
 

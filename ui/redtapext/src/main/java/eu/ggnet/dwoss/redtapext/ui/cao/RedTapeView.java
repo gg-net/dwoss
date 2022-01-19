@@ -20,6 +20,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
@@ -41,11 +43,14 @@ import javafx.embed.swing.JFXPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.HtmlPane;
 import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
 import eu.ggnet.dwoss.customer.api.*;
 import eu.ggnet.dwoss.customer.spi.CustomerUiModifier;
+import eu.ggnet.dwoss.mandator.api.Mandators;
+import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.redtapext.ee.state.*;
@@ -53,8 +58,9 @@ import eu.ggnet.dwoss.redtapext.ui.cao.common.DocumentStringRenderer;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.UiCustomerRenderer;
 import eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableView;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.ui.StoreLocation;
-import eu.ggnet.saft.core.ui.Title;
+import eu.ggnet.saft.core.ui.*;
+
+import static eu.ggnet.saft.core.ui.Bind.Type.ICONS;
 
 /**
  * The main UI for using RedTape components.
@@ -113,6 +119,9 @@ public class RedTapeView extends JPanel {
 
     private final ObservableList<Position> positions = FXCollections.observableArrayList();
 
+    @Bind(ICONS)
+    private final ObservableList<javafx.scene.image.Image> icons = FXCollections.observableArrayList();
+
     /** Creates new form RedTapeBasic */
     public RedTapeView() {
         initComponents();
@@ -133,6 +142,14 @@ public class RedTapeView extends JPanel {
 
     @PostConstruct
     private void initCdi() {
+        Mandators mandators = Dl.local().lookup(CachedMandators.class);
+        FileJacket caoIcon = mandators.loadCaoIcon();
+        try (ByteArrayInputStream bais = new ByteArrayInputStream(caoIcon.getContent())) {
+            icons.add(new javafx.scene.image.Image(bais));
+        } catch (IOException e) {
+            L.warn("Loading of Cao Icon from Mandator not sucessful");
+        }
+
         dossierTableViewPanel.add(dossierTableView, BorderLayout.CENTER);
 
         // Init Controller
@@ -223,7 +240,7 @@ public class RedTapeView extends JPanel {
         editEditItem.addActionListener(e -> {
             if ( model.getPurchaseCustomer() != null ) {
                 controller.openUpdateCustomer(model.getPurchaseCustomer().id());
-                customerDetailArea.setText(Dl.remote().lookup(CustomerService.class).asHtmlHighDetailed(model.getPurchaseCustomer().id()));
+                customerDetailArea.setText(remote.lookup(CustomerService.class).asHtmlHighDetailed(model.getPurchaseCustomer().id()));
             }
         });
 

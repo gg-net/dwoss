@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.assembly.client;
 
-import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
@@ -274,10 +273,6 @@ public class DwOssClientController {
                 instance.select(ActiveStockSelectorToolbarPane.class).get(),
                 instance.select(LoggedInTimeoutManager.class).get().createToolbarElementOnce(),
                 instance.select(OpenDirectoryToolbarButton.class).get());
-    }
-
-    public static URL loadIcon() {
-        return DwOssClientController.class.getResource("app-icon3.png"); // NOI18N
     }
 
 }
