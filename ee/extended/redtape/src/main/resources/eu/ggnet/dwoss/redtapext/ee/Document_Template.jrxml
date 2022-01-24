@@ -96,58 +96,59 @@
 		<fieldDescription><![CDATA[uniqueUnitProductId]]></fieldDescription>
 	</field>
 	<variable name="INVOICE_ADDRESS" class="java.lang.String">
-		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.containsKey("INVOICE_ADDRESS") ? $P{REPORT_PARAMETERS_MAP}.get("INVOICE_ADDRESS") : "Keine Rechnungsadresse\n\nKeine Rechnungsadresse\nKeine Rechnungsadresse"]]></variableExpression>
+		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.getOrDefault("INVOICE_ADDRESS", "Keine Rechnungsadresse\n\nKeine Rechnungsadresse\nKeine Rechnungsadresse")]]></variableExpression>
 	</variable>
 	<variable name="SHIPPING_ADDRESS" class="java.lang.String">
-		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.get("INVOICE_ADDRESS") == $P{REPORT_PARAMETERS_MAP}.get("SHIPPING_ADDRESS") ? "" : $P{REPORT_PARAMETERS_MAP}.get("SHIPPING_ADDRESS")]]></variableExpression>
+		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.get("INVOICE_ADDRESS").equals($P{REPORT_PARAMETERS_MAP}.get("SHIPPING_ADDRESS")) ? "" : $P{REPORT_PARAMETERS_MAP}.get("SHIPPING_ADDRESS")]]></variableExpression>
 	</variable>
 	<variable name="SUM_NETTO" class="java.lang.Double">
-		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.containsKey("SUM_NETTO") ?$P{REPORT_PARAMETERS_MAP}.get("SUM_NETTO") : 999.9988888]]></variableExpression>
+		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.getOrDefault("SUM_NETTO",Double.valueOf(999.9))]]></variableExpression>
 	</variable>
 	<variable name="SUM_BRUTTO" class="java.lang.Double">
-		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.containsKey("SUM_BRUTTO") ? $P{REPORT_PARAMETERS_MAP}.get("SUM_BRUTTO") : 1000.0011111111]]></variableExpression>
+		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.getOrDefault("SUM_BRUTTO",Double.valueOf(999.9))]]></variableExpression>
 	</variable>
 	<variable name="SUM_TAX" class="java.lang.Double">
-		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.containsKey("SUM_TAX") ? $P{REPORT_PARAMETERS_MAP}.get("SUM_TAX") : -0.4999999]]></variableExpression>
+		<variableExpression><![CDATA[
+$P{REPORT_PARAMETERS_MAP}.getOrDefault("SUM_TAX",Double.valueOf(-0.49999))]]></variableExpression>
 	</variable>
 	<variable name="IDENTIFIER_TYPE" class="java.lang.String">
-		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.containsKey("IDENTIFIER_TYPE") ? $P{REPORT_PARAMETERS_MAP}.get("IDENTIFIER_TYPE"): "IDENTIFIER_TYPE"]]></variableExpression>
+		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.getOrDefault("IDENTIFIER_TYPE","IDENTIFIER_TYPE leer")]]></variableExpression>
 	</variable>
 	<variable name="CUSTOMER_ID" class="java.lang.Long">
-		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.containsKey("CUSTOMER_ID") ? $P{REPORT_PARAMETERS_MAP}.get("CUSTOMER_ID") : -1l]]></variableExpression>
+		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.getOrDefault("CUSTOMER_ID",Long.valueOf(-1l))]]></variableExpression>
 	</variable>
 	<variable name="IDENTIFIER_ID" class="java.lang.String">
-		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.containsKey("IDENTIFIER_ID") ? $P{REPORT_PARAMETERS_MAP}.get("IDENTIFIER_ID") : "IDENTIFIER_ID"]]></variableExpression>
+		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.getOrDefault("IDENTIFIER_ID", "IDENTIFIER_ID leer")]]></variableExpression>
 	</variable>
 	<variable name="REF_ID" class="java.lang.String">
-		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.containsKey("REF_ID") ? $P{REPORT_PARAMETERS_MAP}.get("REF_ID") : "REF_ID ungesetzt"]]></variableExpression>
+		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.getOrDefault("REF_ID","REF_ID leer")]]></variableExpression>
 	</variable>
 	<variable name="COMPANY_LOGO" class="java.net.URL">
 		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.get("COMPANY_LOGO")]]></variableExpression>
 	</variable>
 	<variable name="ACTUAL" class="java.util.Date">
-		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.containsKey("ACTUAL") ? $P{REPORT_PARAMETERS_MAP}.get("ACTUAL") : new java.util.Date(10000000000L)]]></variableExpression>
+		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.getOrDefault("ACTUAL",new java.util.Date(10000000000L))]]></variableExpression>
 	</variable>
 	<variable name="TERMS1" class="java.lang.String">
-		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.containsKey("TERMS1") ? $P{REPORT_PARAMETERS_MAP}.get("TERMS1"): "Hier stehen jetzt die ersten AGBS, auch in <b>dick</b>"]]></variableExpression>
+		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.getOrDefault("TERMS1", "Hier stehen jetzt die ersten AGB, auch in <b>dick</b>")]]></variableExpression>
 	</variable>
 	<variable name="TERMS2" class="java.lang.String">
-		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.containsKey("TERMS2") ? $P{REPORT_PARAMETERS_MAP}.get("TERMS2"): "Hier stehen jetzt die zweiten AGBS, auch in <b>dick</b>"]]></variableExpression>
+		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.getOrDefault("TERMS2", "Hier stehen jetzt die zweiten AGB, auch in <b>dick</b>")]]></variableExpression>
 	</variable>
 	<variable name="SHIPPING_ADDRESS_HEAD" class="java.lang.String">
 		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.get("INVOICE_ADDRESS") == $P{REPORT_PARAMETERS_MAP}.get("SHIPPING_ADDRESS") ? "" : "Lieferanschrift"]]></variableExpression>
 	</variable>
 	<variable name="PERFOMANCE_ON" class="java.util.Date">
-		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.containsKey("PERFOMANCE_ON") ? $P{REPORT_PARAMETERS_MAP}.get("PERFOMANCE_ON") : new java.util.Date(1000L)]]></variableExpression>
+		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.getOrDefault("PERFOMANCE_ON", new java.util.Date(1000L))]]></variableExpression>
 	</variable>
 	<variable name="FOOTER" class="java.lang.String">
-		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.containsKey("FOOTER") ? $P{REPORT_PARAMETERS_MAP}.get("FOOTER"): "Der FussText"]]></variableExpression>
+		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.getOrDefault("FOOTER" ,"FOOTER leer")]]></variableExpression>
 	</variable>
 	<variable name="COMPANY" class="java.lang.String">
-		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.containsKey("COMPANY") ? $P{REPORT_PARAMETERS_MAP}.get("COMPANY"): "Die Firma"]]></variableExpression>
+		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.getOrDefault("COMPANY", "COMPANY leer")]]></variableExpression>
 	</variable>
 	<variable name="TAX_INFO" class="java.lang.String">
-		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.containsKey("TAX_INFO") ? $P{REPORT_PARAMETERS_MAP}.get("TAX_INFO"): "Standard Steuer Info"]]></variableExpression>
+		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.getOrDefault("TAX_INFO","TAX_INFO leer")]]></variableExpression>
 	</variable>
 	<group name="Summary Helper">
 		<groupFooter>
@@ -350,7 +351,7 @@
 	</title>
 	<pageHeader>
 		<band height="59" splitType="Stretch">
-			<printWhenExpression><![CDATA[$V{PAGE_NUMBER} > 1]]></printWhenExpression>
+			<printWhenExpression><![CDATA[Boolean.valueOf($V{PAGE_NUMBER}.intValue() > 1)]]></printWhenExpression>
 			<image evaluationTime="Report">
 				<reportElement x="357" y="0" width="150" height="50" uuid="77a25fb4-b435-40cd-a72a-2523a344633c"/>
 				<imageExpression><![CDATA[$V{COMPANY_LOGO}]]></imageExpression>
@@ -437,7 +438,7 @@
 					<font size="9"/>
 					<paragraph leftIndent="2" rightIndent="2" spacingBefore="2" spacingAfter="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{price} * $F{amount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[Double.valueOf($F{price}.doubleValue() * $F{amount}.doubleValue())]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.##">
 				<reportElement x="20" y="0" width="33" height="46" uuid="af7611e1-a29d-4b79-806a-3cb0a49b417e"/>
@@ -484,7 +485,7 @@
 				<textFieldExpression><![CDATA["Seite "+$V{PAGE_NUMBER}+" von"]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="467" y="6" width="40" height="20" forecolor="#808080" uuid="336356d9-8dc1-44ba-8396-e8d14cbbd1cf"/>
+				<reportElement x="467" y="6" width="40" height="20" printWhenGroupChanges="Summary Helper" forecolor="#808080" uuid="336356d9-8dc1-44ba-8396-e8d14cbbd1cf"/>
 				<textElement verticalAlignment="Bottom">
 					<font size="9"/>
 				</textElement>

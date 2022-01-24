@@ -16,12 +16,15 @@
  */
 package eu.ggnet.dwoss.mandator.sample.impl;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.*;
 
 import javax.enterprise.inject.Produces;
 
+import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.common.values.*;
 import eu.ggnet.dwoss.core.system.ImageFinder;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
@@ -29,6 +32,8 @@ import eu.ggnet.dwoss.mandator.api.FreeDocumentTemplateParameter;
 import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.mandator.api.value.partial.DocumentIdentifierGeneratorConfiguration.PrefixType;
 import eu.ggnet.dwoss.mandator.api.value.partial.*;
+import eu.ggnet.dwoss.mandator.api.value.qualifier.CustomerAndOrdersIcon;
+import eu.ggnet.dwoss.mandator.api.value.qualifier.DeutscheWarenwirtschaftIcon;
 
 import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.*;
 
@@ -127,5 +132,25 @@ public class Sample {
 
     static URL loadLogo() {
         return Sample.class.getResource("logo_example.jpg");
+    }
+
+    @Produces
+    @DeutscheWarenwirtschaftIcon
+    public static FileJacket loadDwIcon() {
+        try (InputStream is = Sample.class.getResourceAsStream("money.png")) {
+            return new FileJacket("money", "png", is.readAllBytes());
+        } catch (IOException | NullPointerException ex) {
+            throw new RuntimeException("Can't load money.png", ex);
+        }
+    }
+
+    @Produces
+    @CustomerAndOrdersIcon
+    public static FileJacket loadCaoIcon() {
+        try (InputStream is = Sample.class.getResourceAsStream("cart.png")) {
+            return new FileJacket("cart", "png", is.readAllBytes());
+        } catch (IOException | NullPointerException ex) {
+            throw new RuntimeException("Can't load cart.png", ex);
+        }
     }
 }

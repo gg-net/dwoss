@@ -23,6 +23,8 @@ import javax.inject.Named;
 import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.mandator.api.Mandators;
 import eu.ggnet.dwoss.mandator.api.value.*;
+import eu.ggnet.dwoss.mandator.api.value.qualifier.CustomerAndOrdersIcon;
+import eu.ggnet.dwoss.mandator.api.value.qualifier.DeutscheWarenwirtschaftIcon;
 
 /**
  * Support for the Mandator.
@@ -50,6 +52,14 @@ public class MandatorsBean implements Mandators {
 
     @Inject
     private PostLedger postLedger;
+
+    @Inject
+    @DeutscheWarenwirtschaftIcon
+    private FileJacket dwIcon;
+
+    @Inject
+    @CustomerAndOrdersIcon
+    private FileJacket caoIcon;
 
     @Override
     public Mandator loadMandator() {
@@ -83,12 +93,12 @@ public class MandatorsBean implements Mandators {
 
     @Override
     public FileJacket loadDwIcon() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return dwIcon;
     }
 
     @Override
     public FileJacket loadCaoIcon() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return caoIcon;
     }
 
 }

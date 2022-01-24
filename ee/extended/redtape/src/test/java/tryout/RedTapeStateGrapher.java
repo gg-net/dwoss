@@ -49,7 +49,7 @@ public class RedTapeStateGrapher {
         Grapher.showGreedy(om, new RedTapeStateFormater(), om.I);
         // Grapher.showFull(om);
 //
-        System.out.println(om.getState(cd));
+        // System.out.println(om.getState(cd));
     }
 
 }

@@ -317,6 +317,7 @@ public class DocumentSupporterOperation implements DocumentSupporter {
                 ? mandator.documentIntermix().getTemplate(viewType)
                 : DocumentSupporterOperation.class.getResource(viewType.fileName);
         try (InputStream inputStream = url.openStream()) {
+
             JasperReport jasperReport = JasperCompileManager.compileReport(inputStream);
             JasperPrint result = JasperFillManager.fillReport(jasperReport, toTemplateParameters(document, viewType), toNormalizedDataSource(document));
             return result;
