@@ -252,7 +252,12 @@ public class UniqueUnit implements Serializable, EagerAble {
         SLIGHT_SCRATCHES_AROUND_TOUCHPAD("leichte Kratzer um das Touchpad"),
         USETRACES_ON_CASE_BOTTOM_SIDE("Gebrauchsspuren auf der Geräteunterseite"),
         USETRACES_DISPLAY("Gebrauchsspuren auf dem Display"),
-        FOOT_OR_STAND_MISSING("Fuß/Bein fehlt");
+        FOOT_OR_STAND_MISSING("Fuß/Bein fehlt"),
+        USETRACES_ON_THE_LOADINGCASE("Gebrauchsspuren auf dem Ladecase"),
+        SCRATCHES_ON_THE_LOADINGCASE("Kratzer auf dem Ladecase"),
+        USETRACES_ON_THE_WRISTBAND("Gebrauchsspuren auf dem Armband"),
+        USETRACES_ON_THE_AIRPODS("Gebrauchsspuren auf den Airpods"),
+        SCRATCHES_ON_THE_AIRPODS("Kratzer auf den Airpods");
 
         private final String note;
 
