@@ -267,11 +267,11 @@ public class DesktopView extends AbstractView {
         odd2 = new OddController(oddSecondBox, oddSecondCheck);
 
         miscButton.setActionCommand(Desktop.OsCategory.MISC.toString());
-        win7Button.setActionCommand(Desktop.OsCategory.WINDOWS_7.toString());
-        win8Button.setActionCommand(Desktop.OsCategory.WINDOWS_8.toString());
+        win11Button.setActionCommand(Desktop.OsCategory.WINDOWS_11.toString());
         win10Button.setActionCommand(Desktop.OsCategory.WINDOWS_10.toString());
+        appleButton.setActionCommand(Desktop.OsCategory.APPLE.toString());
         osBox.setRenderer(new NamedEnumCellRenderer());
-        setOs(Os.WINDOWS_7_HOME_PREMIUM_64);
+        setOs(Os.WINDOWS_10_HOME_64);
         if ( productGroup == ProductGroup.NOTEBOOK || productGroup == ProductGroup.TABLET_SMARTPHONE ) {
             cpuTypes.setSelected(Cpu.Type.MOBILE);
             gpuTypes.setSelected(Gpu.Type.MOBILE);
@@ -412,14 +412,14 @@ public class DesktopView extends AbstractView {
             case MISC:
                 miscButton.setSelected(true);
                 break;
-            case WINDOWS_8:
-                win8Button.setSelected(true);
-                break;
-            case WINDOWS_7:
-                win7Button.setSelected(true);
-                break;
             case WINDOWS_10:
                 win10Button.setSelected(true);
+                break;
+            case WINDOWS_11:
+                win11Button.setSelected(true);
+                break;
+            case APPLE:
+                appleButton.setSelected(true);
                 break;
         }
         osBox.setModel(new DefaultComboBoxModel(os.getCategory().getOss()));
@@ -489,14 +489,14 @@ public class DesktopView extends AbstractView {
         editGpuButton = new javax.swing.JButton();
         osPanel = new javax.swing.JPanel();
         osBox = new javax.swing.JComboBox();
-        win8Button = new javax.swing.JRadioButton();
-        win7Button = new javax.swing.JRadioButton();
-        miscButton = new javax.swing.JRadioButton();
         win10Button = new javax.swing.JRadioButton();
+        win11Button = new javax.swing.JRadioButton();
+        miscButton = new javax.swing.JRadioButton();
+        appleButton = new javax.swing.JRadioButton();
         basicViewPanel = new javax.swing.JPanel();
         displayViewPanel = new javax.swing.JPanel();
 
-        cpuPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED, new java.awt.Color(204, 204, 255), new java.awt.Color(1, 1, 1)), "CPU", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12), new java.awt.Color(1, 1, 1))); // NOI18N
+        cpuPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED, new java.awt.Color(204, 204, 255), new java.awt.Color(1, 1, 1)), "CPU", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(1, 1, 1))); // NOI18N
         cpuPanel.setOpaque(false);
         cpuPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -610,7 +610,7 @@ public class DesktopView extends AbstractView {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         cpuPanel.add(cpuButtonPanel, gridBagConstraints);
 
-        hddPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED, new java.awt.Color(204, 204, 255), new java.awt.Color(1, 1, 1)), "HDD", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12), new java.awt.Color(1, 1, 1))); // NOI18N
+        hddPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED, new java.awt.Color(204, 204, 255), new java.awt.Color(1, 1, 1)), "HDD", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(1, 1, 1))); // NOI18N
         hddPanel.setMinimumSize(new java.awt.Dimension(783, 104));
         hddPanel.setOpaque(false);
 
@@ -618,7 +618,6 @@ public class DesktopView extends AbstractView {
 
         hddFirstHddCheck.setText("1. HDD");
         hddFirstHddCheck.setFocusable(false);
-        hddFirstHddCheck.setRolloverEnabled(false);
 
         hddSecondTypeBox.setEnabled(false);
 
@@ -664,7 +663,7 @@ public class DesktopView extends AbstractView {
                     .addComponent(hddFourthTypeBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(hddPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(hddFirstSizeBox, 0, 110, Short.MAX_VALUE)
+                    .addComponent(hddFirstSizeBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(hddSecondSizeBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(hddThirdSizeBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(hddFourthSizeBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -720,7 +719,7 @@ public class DesktopView extends AbstractView {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        oddPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED, new java.awt.Color(204, 204, 255), new java.awt.Color(1, 1, 1)), "Optische Laufwerke", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12), new java.awt.Color(1, 1, 1))); // NOI18N
+        oddPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED, new java.awt.Color(204, 204, 255), new java.awt.Color(1, 1, 1)), "Optische Laufwerke", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(1, 1, 1))); // NOI18N
         oddPanel.setMinimumSize(new java.awt.Dimension(783, 77));
         oddPanel.setOpaque(false);
 
@@ -757,7 +756,7 @@ public class DesktopView extends AbstractView {
                     .addComponent(oddSecondCheck)))
         );
 
-        ramPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED, new java.awt.Color(204, 204, 255), new java.awt.Color(1, 1, 1)), "RAM", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12), new java.awt.Color(1, 1, 1))); // NOI18N
+        ramPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED, new java.awt.Color(204, 204, 255), new java.awt.Color(1, 1, 1)), "RAM", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(1, 1, 1))); // NOI18N
         ramPanel.setMinimumSize(new java.awt.Dimension(783, 48));
 
         memoryBox.setNextFocusableComponent(gpuManufacturerBox);
@@ -781,7 +780,7 @@ public class DesktopView extends AbstractView {
                 .addComponent(jLabel4))
         );
 
-        gpuPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED, new java.awt.Color(204, 204, 255), new java.awt.Color(1, 1, 1)), "Grafikkarte", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12))); // NOI18N
+        gpuPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED, new java.awt.Color(204, 204, 255), new java.awt.Color(1, 1, 1)), "Grafikkarte"));
         gpuPanel.setMinimumSize(new java.awt.Dimension(783, 110));
         gpuPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -898,20 +897,20 @@ public class DesktopView extends AbstractView {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         gpuPanel.add(gpuButtonPanel, gridBagConstraints);
 
-        osPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED, new java.awt.Color(204, 204, 255), new java.awt.Color(1, 1, 1)), "Betriebssystem", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12))); // NOI18N
+        osPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED, new java.awt.Color(204, 204, 255), new java.awt.Color(1, 1, 1)), "Betriebssystem"));
         osPanel.setMinimumSize(new java.awt.Dimension(783, 76));
 
-        osVersionGroup.add(win8Button);
-        win8Button.setText("Windows 8");
-        win8Button.addActionListener(new java.awt.event.ActionListener() {
+        osVersionGroup.add(win10Button);
+        win10Button.setText("Windows 10");
+        win10Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 osCategoryFilter(evt);
             }
         });
 
-        osVersionGroup.add(win7Button);
-        win7Button.setText("Windows 7");
-        win7Button.addActionListener(new java.awt.event.ActionListener() {
+        osVersionGroup.add(win11Button);
+        win11Button.setText("Windows 11");
+        win11Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 osCategoryFilter(evt);
             }
@@ -925,9 +924,9 @@ public class DesktopView extends AbstractView {
             }
         });
 
-        osVersionGroup.add(win10Button);
-        win10Button.setText("Windows 10");
-        win10Button.addActionListener(new java.awt.event.ActionListener() {
+        osVersionGroup.add(appleButton);
+        appleButton.setText("Apple");
+        appleButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 osCategoryFilter(evt);
             }
@@ -941,11 +940,11 @@ public class DesktopView extends AbstractView {
                 .addGroup(osPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(osBox, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(osPanelLayout.createSequentialGroup()
-                        .addComponent(win7Button)
+                        .addComponent(win11Button)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(win8Button)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(win10Button)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(appleButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(miscButton)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -954,10 +953,10 @@ public class DesktopView extends AbstractView {
             osPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(osPanelLayout.createSequentialGroup()
                 .addGroup(osPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(win8Button)
-                    .addComponent(win7Button)
+                    .addComponent(win10Button)
+                    .addComponent(win11Button)
                     .addComponent(miscButton)
-                    .addComponent(win10Button))
+                    .addComponent(appleButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(osBox, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -1094,6 +1093,7 @@ public class DesktopView extends AbstractView {
     }//GEN-LAST:event_hddFourthHddCheckActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    javax.swing.JRadioButton appleButton;
     javax.swing.JPanel basicViewPanel;
     javax.swing.JComboBox cpuBox;
     javax.swing.JPanel cpuButtonPanel;
@@ -1152,8 +1152,7 @@ public class DesktopView extends AbstractView {
     javax.swing.ButtonGroup osVersionGroup;
     javax.swing.JPanel ramPanel;
     javax.swing.JRadioButton win10Button;
-    javax.swing.JRadioButton win7Button;
-    javax.swing.JRadioButton win8Button;
+    javax.swing.JRadioButton win11Button;
     // End of variables declaration//GEN-END:variables
 
 }

@@ -53,13 +53,10 @@ public class Desktop extends BasicSpec {
     public static enum OsCategory {
 
         MISC(
-                Os.LINUX,
-                Os.FREE_DOS,
-                Os.ANDROID,
                 Os.CHROME_OS,
-                Os.I_OS,
-                Os.MAC_OS_X,
-                Os.WATCH_OS,
+                Os.LINUX,
+                Os.ANDROID,
+                Os.FREE_DOS,
                 Os.WINDOWS_HOME_SERVER,
                 Os.WINDOWS_XP_PROFESSIONAL,
                 Os.WINDOWS_XP_PROFESSIONAL_64,
@@ -70,8 +67,7 @@ public class Desktop extends BasicSpec {
                 Os.WINDOWS_VISTA_HOME_PREMIUM_32,
                 Os.WINDOWS_VISTA_HOME_PREMIUM_64,
                 Os.WINDOWS_VISTA_BUSINESS_32,
-                Os.WINDOWS_VISTA_ULTIMATE_32),
-        WINDOWS_7(
+                Os.WINDOWS_VISTA_ULTIMATE_32,
                 Os.WINDOWS_7_STARTER_32,
                 Os.WINDOWS_7_HOME_BASIC_32,
                 Os.WINDOWS_7_HOME_PREMIUM_32,
@@ -80,8 +76,7 @@ public class Desktop extends BasicSpec {
                 Os.WINDOWS_7_PROFESSIONAL_64,
                 Os.WINDOWS_7_ULTIMATE_32,
                 Os.WINDOWS_7_ULTIMATE_64,
-                Os.WINDOWS_7_EMBEDDED),
-        WINDOWS_8(
+                Os.WINDOWS_7_EMBEDDED,
                 Os.WINDOWS_8_RT,
                 Os.WINDOWS_8_32,
                 Os.WINDOWS_8_64,
@@ -97,8 +92,14 @@ public class Desktop extends BasicSpec {
                 Os.WINDOWS_10_PRO_32,
                 Os.WINDOWS_10_PRO_64,
                 Os.WINDOWS_10_S_32,
-                Os.WINDOWS_10_S_64
-        );
+                Os.WINDOWS_10_S_64),
+        WINDOWS_11(
+                Os.WINDOWS_11_HOME,
+                Os.WINDOWS_11_PRO),
+        APPLE(
+                Os.I_OS,
+                Os.WATCH_OS,
+                Os.MAC_OS);
 
         private Os[] oss;
 
@@ -146,7 +147,7 @@ public class Desktop extends BasicSpec {
         WINDOWS_8_PROFESSIONAL_64("Windows 8 Professional 64"),
         CHROME_OS("Chrome OS"),
         I_OS("iOS"),
-        MAC_OS_X("Mac OS X"),
+        MAC_OS("macOS"),
         WINDOWS_8_1_64("Windows 8.1 64"),
         WINDOWS_8_1_32("Windows 8.1 32"),
         WINDOWS_7_EMBEDDED("Windows 7 Embedded Standard"),
@@ -158,7 +159,9 @@ public class Desktop extends BasicSpec {
         WINDOWS_8_1_PROFESSIONAL_64("Windows 8.1 Professional 64"),
         WINDOWS_10_S_32("Windows 10 S 32"),
         WINDOWS_10_S_64("Windows 10 S 64"),
-        WATCH_OS("Watch OS");
+        WATCH_OS("Watch OS"),
+        WINDOWS_11_HOME("Windows 11 Home"),
+        WINDOWS_11_PRO("Windows 11 Professional");
 
         private final String note;
 
