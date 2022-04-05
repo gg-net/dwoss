@@ -201,7 +201,11 @@ public abstract class AbstractJasperFxView extends StackPane {
         });
     }
 
-    private void saveToFile() {
+    protected void saveToFile() {
+        saveToFile(null);
+    }
+
+    protected void saveToFile(String initalFilename) {
         ExtensionFilter pdf = new ExtensionFilter("Portable Document Format", "*.pdf");
         ExtensionFilter html = new ExtensionFilter("HyperText Markup Language", "*.html");
         ExtensionFilter xml = new ExtensionFilter("eXtensible Markup Language", "*.xml");
@@ -209,8 +213,9 @@ public abstract class AbstractJasperFxView extends StackPane {
         ExtensionFilter xlsx = new ExtensionFilter("Microsoft Excel 2016", "*.xlsx");
 
         FileChooser chooser = new FileChooser();
-        chooser.setTitle("Save As");
         chooser.getExtensionFilters().addAll(pdf, html, xml, xls, xlsx);
+        chooser.setTitle("Save As");
+        if ( initalFilename != null ) chooser.setInitialFileName(initalFilename + ".pdf");
         chooser.setSelectedExtensionFilter(pdf);
 
         File file = chooser.showSaveDialog(null);

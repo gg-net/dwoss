@@ -28,6 +28,7 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperPrintManager;
 
 import eu.ggnet.dwoss.core.jasper.AbstractJasperFxView;
+import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.core.ui.ResultProducer;
@@ -64,6 +65,19 @@ public class DocumentJasperFxView extends AbstractJasperFxView implements Consum
                 UiCore.global().handle(btnEmail, ex);
             }
         });
+    }
+
+    @Override
+    protected void saveToFile() {
+        String identifier = in.document().getIdentifier() != null ? in.document().getIdentifier() : in.document().getDossier().getIdentifier();
+        identifier = identifier.replace("/", "_");
+        if ( in.document().getInvoiceAddress() != null ) {
+            identifier += " - " + in.document().getInvoiceAddress().getDescription().split("\\n")[0];
+        }
+        if ( in.document().getActual() != null ) {
+            identifier += " - " + Utils.ISO_DATE.format(in.document().getActual());
+        }
+        saveToFile(identifier);
     }
 
     @Override
