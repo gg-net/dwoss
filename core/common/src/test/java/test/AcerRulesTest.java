@@ -10,10 +10,6 @@ import static org.junit.Assert.*;
 
 public class AcerRulesTest {
 
-    @Before
-    public void setUp() throws Exception {
-    }
-
     @Test
     public void testValidatePartNo() {
         assertNull(AcerRules.validatePartNo("LX.AAAA0.001"));

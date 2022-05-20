@@ -282,7 +282,7 @@ public class ContractorPricePartNoImporterOperation implements ContractorPricePa
             if ( ci.getReferencePrice() < 0.01 ) {
                 errors.add(ci.line() + " : Importzeile hat keinen Preis (importline.getReferencePrice() < 0.01)");
             } else if ( TwoDigits.equals(p.getPrice(CONTRACTOR_REFERENCE), ci.getReferencePrice()) ) {
-                errors.add(ci.line() + " : Preis der Importzeile ist schon in der Datenbank (TwoDigits.equals(p.getPrice(CONTRACTOR_REFERENCE), ci.getReferencePrice())) Produkt(id=" + p.getId() + ",price(CONTRACTOR_REFERENCE)=" + p.getPrice(CONTRACTOR_REFERENCE) + ")");
+                errors.add(ci.line() + " : Preis der Importzeile ist schon in der Datenbank (TwoDigits.equals(p.getPrice(CONTRACTOR_REFERENCE), ci.getReferencePrice())) Produkt(id=" + p.getId() + ", price(CONTRACTOR_REFERENCE)=" + p.getPrice(CONTRACTOR_REFERENCE) + ")");
             } else {
                 double oldPrice = p.getPrice(CONTRACTOR_REFERENCE);
                 if ( p.hasPrice(CONTRACTOR_REFERENCE) ) updatedPrices++;

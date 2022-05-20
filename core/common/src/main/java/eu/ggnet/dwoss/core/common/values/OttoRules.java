@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
+ * Copyright (C) 2022 GG-Net GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,25 +14,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.core.common.values.tradename;
+package eu.ggnet.dwoss.core.common.values;
 
-import eu.ggnet.dwoss.core.common.values.OttoRules;
+import java.util.regex.Pattern;
 
 /**
- * OttoPartNoSupport.
- * <p>
+ *
  * @author oliver.guenther
  */
-public class OttoPartNoSupport implements PartNoSupport {
-    
-    @Override
-    public boolean isValid(String partNo) {
-        return violationMessages(partNo) == null;
-    }
+public class OttoRules {
 
-    @Override
-    public String violationMessages(String partNo) {
-        return OttoRules.validatePartNo(partNo);
-    }
+    private final static String PATTERN = "([0-9]{8}|[0-9]{6})";
 
+    public static String validatePartNo(String partNo) {
+        if (partNo == null) {
+            return "PartNo is null";
+        }
+
+        if (!(Pattern.matches(PATTERN, partNo))) {
+            return "PartNo '" + partNo
+                    + "' does not match the pattern " + PATTERN;
+        }
+        return null;
+    }
 }
