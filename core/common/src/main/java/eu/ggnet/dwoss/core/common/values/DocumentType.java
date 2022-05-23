@@ -292,6 +292,10 @@ public enum DocumentType {
         return description;
     }
 
+    public String description() {
+        return description;
+    }
+
     /**
      * Returns the MatchCode (e.g. Invoice = SR, CreditMemo = GS)
      *

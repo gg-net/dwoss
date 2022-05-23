@@ -248,27 +248,31 @@ public class DocumentSupporterOperation implements DocumentSupporter {
             for (Document document : dossier.getActiveDocuments()) {
                 List<Object[]> rows = new ArrayList<>();
                 datas.put(
-                        dossier.getIdentifier() + "_" + document.getType().getName() + "_" + (document.getIdentifier() == null ? "" : document.getIdentifier()),
+                        dossier.getIdentifier() + "_" + document.getType().description() + "_" + (document.getIdentifier() == null ? "" : document.getIdentifier()),
                         rows);
                 for (Position pos : document.getPositions().values()) {
                     if ( pos.getUniqueUnitId() > 0 ) {
                         UniqueUnit uu = uniqueUnitEao.findById(pos.getUniqueUnitId());
                         rows.add(new Object[]{
-                            pos.getType().getName(),
+                            pos.getType().description(),
                             pos.getAmount(),
                             pos.getName(),
                             pos.getPrice(),
                             pos.toAfterTaxPrice(),
                             Utils.ISO_DATE.format(uu.getMfgDate()),
-                            uu.getProduct().getPrice(PriceType.MANUFACTURER_COST)
+                            uu.getProduct().getPrice(PriceType.MANUFACTURER_COST),
+                            pos.getRefurbishedId(),
+                            pos.getSerial()
                         });
                     } else {
                         rows.add(new Object[]{
-                            pos.getType().getName(),
+                            pos.getType().description(),
                             pos.getAmount(),
                             pos.getName(),
                             pos.getPrice(),
                             pos.toAfterTaxPrice(),
+                            null,
+                            null,
                             null,
                             null
                         });
@@ -290,7 +294,9 @@ public class DocumentSupporterOperation implements DocumentSupporter {
                 .add(new STableColumn("Preis inc. Mwst", 15, euro))
                 .add(new STableColumn("MfgDate", 13, date))
                 .add(new STableColumn("CostPrice", 12, euro))
-                .add(new STableColumn("%Cost", 12, percent).setAction(new SFormulaAction(SR(3), "/", SR(6))));
+                .add(new STableColumn("%Cost", 12, percent).setAction(new SFormulaAction(SR(3), "/", SR(6))))
+                .add(new STableColumn("RefurbishedId", 10))
+                .add(new STableColumn("Serial", 15));
 
         CCalcDocument document = new TempCalcDocument();
         for (Map.Entry<String, List<Object[]>> entry : datas.entrySet()) {
