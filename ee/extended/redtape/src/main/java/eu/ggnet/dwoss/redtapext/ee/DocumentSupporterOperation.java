@@ -257,22 +257,22 @@ public class DocumentSupporterOperation implements DocumentSupporter {
                             pos.getType().description(),
                             pos.getAmount(),
                             pos.getName(),
+                            pos.getRefurbishedId(),
+                            pos.getSerial(),
                             pos.getPrice(),
                             pos.toAfterTaxPrice(),
                             Utils.ISO_DATE.format(uu.getMfgDate()),
-                            uu.getProduct().getPrice(PriceType.MANUFACTURER_COST),
-                            pos.getRefurbishedId(),
-                            pos.getSerial()
+                            uu.getProduct().getPrice(PriceType.MANUFACTURER_COST)
                         });
                     } else {
                         rows.add(new Object[]{
                             pos.getType().description(),
                             pos.getAmount(),
                             pos.getName(),
+                            null,
+                            null,
                             pos.getPrice(),
                             pos.toAfterTaxPrice(),
-                            null,
-                            null,
                             null,
                             null
                         });
@@ -290,13 +290,13 @@ public class DocumentSupporterOperation implements DocumentSupporter {
         template.add(new STableColumn("Type", 7))
                 .add(new STableColumn("Menge", 10))
                 .add(new STableColumn("Name", 30))
+                .add(new STableColumn("RefurbishedId", 10))
+                .add(new STableColumn("Serial", 15))
                 .add(new STableColumn("Preis", 15, euro))
                 .add(new STableColumn("Preis inc. Mwst", 15, euro))
                 .add(new STableColumn("MfgDate", 13, date))
                 .add(new STableColumn("CostPrice", 12, euro))
-                .add(new STableColumn("%Cost", 12, percent).setAction(new SFormulaAction(SR(3), "/", SR(6))))
-                .add(new STableColumn("RefurbishedId", 10))
-                .add(new STableColumn("Serial", 15));
+                .add(new STableColumn("%Cost", 12, percent).setAction(new SFormulaAction(SR(5), "/", SR(8))));
 
         CCalcDocument document = new TempCalcDocument();
         for (Map.Entry<String, List<Object[]>> entry : datas.entrySet()) {
