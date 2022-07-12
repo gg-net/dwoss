@@ -31,7 +31,8 @@ public enum Warranty {
     WARRANTY_TILL_DATE("Garantie bis Datum"),
     ONE_YEAR_STATUTORY_WARRANTY("12 Monate gesetzliche Gewährleistung ab Lieferung der Ware"),
     ONE_YEAR_STATUTORY_PLUS_ONEADO("12 Monate gesetzliche Gewährleistung ab Lieferung der Ware & 13 Monate oneado-Garantie ab Lieferung der Ware gemäß der beiliegenden Bedingungen"),
-    NO_B2B_WARRANTY("Händlergeschäft, die Gewährleistung ist ausgeschlossen");
+    NO_B2B_WARRANTY("Händlergeschäft, die Gewährleistung ist ausgeschlossen"),
+    ONEADO_2022("oneado-Garantie gemäß der beiliegenden Bedingungen. Gewährleistung: 12 Monate gesetzliche Gewährleistung ab Lieferung der Ware");
 
     /**
      * A short (german) description.
