@@ -131,7 +131,15 @@ public class UniqueUnit implements Serializable, EagerAble {
         SPARE_STRAP("Sportarmband – anpassbar für die Längen S/M oder M/L"),
         LC_ADAPTER("Lightning-Klinke Adapter"),
         TRIPOD("Tripod"),
-        LC_HEADSET("Headset (Lightnig Anschluss)");
+        LC_HEADSET("Headset (Lightnig Anschluss)"),
+        INTEGRATED_STYLUS("integrierter Displaystift"),
+        HDD_CARRIER("Festplattenhalterung"),
+        DESIGN_GLASS_COVER("Designglasblende"),
+        LOCKING_SCREW("Feststellschraube"),
+        AIRPODS_USB_CABLE("AirPods USB-Kabel"),
+        SILICON_HEADS("Silikontips"),
+        SMART_CASE("Smart Case"),
+        EAR_CUSHION("Ohrpolster");
 
         private final String note;
 
@@ -144,17 +152,18 @@ public class UniqueUnit implements Serializable, EagerAble {
             return note;
         }
 
-        public static Set<Equipment> getEquipments() {
-            return getEquipments(null);
+        public static Set<Equipment> valueSet() {
+            return Equipment.valueSet(null, null);
         }
 
         /**
          * Returns a Set of Equipment filtered by the {@link ProductGroup}.
          * <p>
          * @param group the {@link ProductGroup}
+         * @param name  an optional name of the Product. May be null.
          * @return a Set of Equipment filtered by the {@link ProductGroup}.
          */
-        public static Set<Equipment> getEquipments(ProductGroup group) {
+        public static Set<Equipment> valueSet(ProductGroup group, String name) {
             if ( group == null ) {
                 return EnumSet.allOf(Equipment.class);
             }
@@ -167,27 +176,39 @@ public class UniqueUnit implements Serializable, EagerAble {
                             DONGLE, FOOT, DISPLAY_FOOT_CONNECTOR, THREE_D_GLASSES, REMOTE, AC_ADAPTER_INC_CABLE, WALLHOLDER, MANUAL, ALTERNATIVE_PLUGIN_AC_ADAPTER,
                             ALTERNATIBVE_USB_CABLE, USB_KABEL);
                 case DESKTOP_BUNDLE:
-                    Set<Equipment> equipments = getEquipments(ProductGroup.DESKTOP);
-                    equipments.addAll(getEquipments(ProductGroup.MONITOR));
+                    Set<Equipment> equipments = Equipment.valueSet(ProductGroup.DESKTOP, null);
+                    equipments.addAll(Equipment.valueSet(ProductGroup.MONITOR, null));
                     return equipments;
                 case SERVER:
                     return EnumSet.of(ORIGINAL_BOXED, ALTERNATIVE_BOXED, POWER_CABLE, MOUSE, KEYBOARD, MANUAL, ALTERNATIVE_PLUGIN_AC_ADAPTER, ALTERNATIBVE_USB_CABLE);
                 case DESKTOP:
-                    return EnumSet.of(ORIGINAL_BOXED, ALTERNATIVE_BOXED, POWER_CABLE, MOUSE, KEYBOARD, GAME_MOUSE, GAME_KEYBOARD, CABLELES_KEYBOARD, MANUAL, ALTERNATIBVE_USB_CABLE,
-                            CABLELES_MOUSE, ANTENNA_ADAPTER, DONGLE, AC_ADAPTER_INC_CABLE, FOOT, WLAN_KINK_ANTENNA, DVI_HDMI_ADAPTOR, ALTERNATIVE_PLUGIN_AC_ADAPTER);
+                    return EnumSet.of(ORIGINAL_BOXED, ALTERNATIVE_BOXED, POWER_CABLE, MOUSE, KEYBOARD, GAME_MOUSE, GAME_KEYBOARD,
+                            CABLELES_KEYBOARD, CABLELES_MOUSE, DONGLE, AC_ADAPTER_INC_CABLE, FOOT, HDD_CARRIER, DESIGN_GLASS_COVER);
                 case MONITOR:
-                    return EnumSet.of(ORIGINAL_BOXED, ALTERNATIVE_BOXED, POWER_CABLE, AC_ADAPTER_INC_CABLE, VGA_CABLE, DVI_CABLE, HDMI_CABLE, FOOT,
-                            DISPLAY_FOOT_CONNECTOR, THREE_D_GLASSES, USB_KABEL, MANUAL, ALTERNATIVE_PLUGIN_AC_ADAPTER, ALTERNATIBVE_USB_CABLE, DISPLAYPORT_CABLE);
+                    return EnumSet.of(ORIGINAL_BOXED, ALTERNATIVE_BOXED, POWER_CABLE, AC_ADAPTER_INC_CABLE, VGA_CABLE, DVI_CABLE,
+                            HDMI_CABLE, FOOT, DISPLAY_FOOT_CONNECTOR, USB_KABEL, DISPLAYPORT_CABLE, PLUGIN_AC_ADAPTER, REMOTE,
+                            WALLHOLDER, LOCKING_SCREW);
                 case TABLET_SMARTPHONE:
-                    return EnumSet.of(ORIGINAL_BOXED, ALTERNATIVE_BOXED, PLUGIN_AC_ADAPTER, AC_ADAPTER_INC_CABLE, BATTERY, USB_KABEL, KEYBOARD_DOCK, VGA_NETWORK_ADAPTER, HEADSET, MANUAL,
-                            MICRO_USB_TO_USB_ADAPTER, PORTFOLIO_CASE, SDCARD_16GB, HDMI_VGA_ADAPTER, USB_NETWORK_ADAPTER, PORTFOLIO_CASE, USB_MICRO_HDMI_ADAPTER, SIM_OPENER,
-                            PORTFOLIO_CASE_INTEGRATED_KEYBOARD, CRUNCHCOVER, ALTERNATIVE_PLUGIN_AC_ADAPTER, ALTERNATIBVE_USB_CABLE, MS_OFFICE_365_PERSONAL,
-                            MS_OFFICE_HOME_AND_STUDENT_2013, STYLUS, MAGNETIC_CHARGING_CABLE, SPARE_STRAP, LC_ADAPTER, TRIPOD, LC_HEADSET);
+                    return EnumSet.of(ORIGINAL_BOXED, ALTERNATIVE_BOXED, PLUGIN_AC_ADAPTER, USB_KABEL, LC_HEADSET,
+                            SIM_OPENER, STYLUS);
                 case NOTEBOOK:
-                    return EnumSet.of(ORIGINAL_BOXED, ALTERNATIVE_BOXED, PLUGIN_AC_ADAPTER, AC_ADAPTER_INC_CABLE, BATTERY, REMOTE, EXT_ANTENNA, THREE_D_GLASSES, MANUAL, DONGLE,
-                            VGA_NETWORK_ADAPTER, CABLELES_MOUSE, HDMI_VGA_ADAPTER, USB_NETWORK_ADAPTER, PORTFOLIO_CASE, VGA_USB_NETWORK_ADAPTER, SIM_OPENER,
-                            PORTFOLIO_CASE_INTEGRATED_KEYBOARD, ALTERNATIVE_PLUGIN_AC_ADAPTER, ALTERNATIBVE_USB_CABLE, KEYBOARD_DOCK, MS_OFFICE_365_PERSONAL,
-                            MS_OFFICE_HOME_AND_STUDENT_2013, STYLUS, USB_KABEL, VGA_USB_ADAPTER, MAGNETIC_CHARGING_CABLE);
+                    return EnumSet.of(ORIGINAL_BOXED, ALTERNATIVE_BOXED, PLUGIN_AC_ADAPTER, AC_ADAPTER_INC_CABLE, STYLUS, INTEGRATED_STYLUS);
+                case PROJECTOR:
+                    return EnumSet.of(ORIGINAL_BOXED, ALTERNATIVE_BOXED, POWER_CABLE, REMOTE, VGA_CABLE, HDMI_CABLE, DONGLE);
+                case MISC:
+                    if ( name == null ) {
+                        return EnumSet.allOf(Equipment.class);
+                    } else if ( name.contains("AirPods") ) {
+                        return EnumSet.of(ORIGINAL_BOXED, ALTERNATIVE_BOXED, AIRPODS_USB_CABLE, SILICON_HEADS, SMART_CASE, EAR_CUSHION);
+                    } else if ( name.contains("HomePod") ) {
+                        return EnumSet.of(ORIGINAL_BOXED, ALTERNATIVE_BOXED, PLUGIN_AC_ADAPTER);
+                    } else if ( name.contains("Watch") ) {
+                        return EnumSet.of(ORIGINAL_BOXED, ALTERNATIVE_BOXED, PLUGIN_AC_ADAPTER, MAGNETIC_CHARGING_CABLE, SPARE_STRAP);
+                    } else if ( name.contains("Keyboard") ) {
+                        return EnumSet.of(ORIGINAL_BOXED, ALTERNATIVE_BOXED);
+                    } else if ( name.contains("Apple TV") ) {
+                        return EnumSet.of(ORIGINAL_BOXED, ALTERNATIVE_BOXED, POWER_CABLE, USB_KABEL, REMOTE);
+                    }
                 default:
             }
             return EnumSet.allOf(Equipment.class);
@@ -210,8 +231,8 @@ public class UniqueUnit implements Serializable, EagerAble {
         SCRATCHES_TOUCH("Kratzer um das Touchpad"),
         USETRACES_DISPLAYCOVER("Gebrauchsspuren auf dem Displayrahmen"),
         USETRACES_COVER("Gebrauchsspuren auf dem Deckel"),
-        USETRACES_TOUCH("Gebrauchsspuren um die Tastatur"),
-        USETRACES_KEYBOARD("Gebrauchsspuren um das Touchpad"),
+        USETRACES_KEYBOARD("Gebrauchsspuren um die Tastatur"),
+        USETRACES_AROUND_TOUCH("Gebrauchsspuren um das Touchpad"),
         SCRATCHES_CASE("Kratzer auf dem Gehäuse"),
         DENT_SOUND("Delle/n auf der Lautsprecherabdeckung"),
         DENT_COVER("Delle/n auf dem Deckel"),
@@ -257,7 +278,16 @@ public class UniqueUnit implements Serializable, EagerAble {
         SCRATCHES_ON_THE_LOADINGCASE("Kratzer auf dem Ladecase"),
         USETRACES_ON_THE_WRISTBAND("Gebrauchsspuren auf dem Armband"),
         USETRACES_ON_THE_AIRPODS("Gebrauchsspuren auf den Airpods"),
-        SCRATCHES_ON_THE_AIRPODS("Kratzer auf den Airpods");
+        SCRATCHES_ON_THE_AIRPODS("Kratzer auf den Airpods"),
+        SCRATCHES_POWER_SUPPLY("Kratzer auf dem Netzteil"),
+        SCRATCHES_HINGE("Kratzer auf dem Scharnier"),
+        USETRACES_CASE("Gebrauchsspuren auf dem Gehäuse"),
+        USETRACES_ON_THE_FOOT("Gebrauchsspuren auf dem Fuß"),
+        USETRACES_ON_DISPLAY_STAND("Gebrauchsspuren auf dem Displaybein"),
+        USETRACES_POWER_SUPPLY("Gebrauchsspuren auf dem Netzteil"),
+        BANGED_CASE_EDGES("Gehäuseecken angestoßen"),
+        USETRACES_IN_THE_LOADINGCASE("Gebrauchsspuren im Ladecase"),
+        SCRATCHES_ON_THE_DIGITAL_CROWN("Kratzer auf der Digital Crown");
 
         private final String note;
 
@@ -270,6 +300,71 @@ public class UniqueUnit implements Serializable, EagerAble {
             return note;
         }
 
+        /**
+         * Returns all values as set.
+         *
+         * @return all values as set.
+         */
+        public static EnumSet<StaticComment> valueSet() {
+            return EnumSet.allOf(StaticComment.class);
+        }
+
+        /**
+         * Returns a Set of StaticComment filtered by the {@link ProductGroup} and the product name.
+         * <p>
+         * @param group the {@link ProductGroup}
+         * @param name  an optional name of the Product. May be null.
+         * @return a Set of StaticComment filtered.
+         */
+        public static EnumSet<StaticComment> valueSet(ProductGroup group, String name) {
+            if ( group == null ) {
+                return EnumSet.allOf(StaticComment.class);
+            }
+            switch (group) {
+                case DESKTOP:
+                    return EnumSet.of(SCRATCHES_CASE, USETRACES_CASE, DENT_CASE);
+                case MONITOR:
+                    return EnumSet.of(SCRATCHES_ON_THE_BACK, SCRATCHES_DISPLAY, SCRATCHES_DISPLAYCOVER, SCRATCHES_ON_FOOT,
+                            SCRATCHES_ON_DISPLAY_STAND, SCRATCHES_POWER_SUPPLY, DISPLAY_PIXERROR, USETRACES_ON_THE_BACK,
+                            USETRACES_DISPLAY, USETRACES_DISPLAYCOVER, USETRACES_ON_THE_FOOT, USETRACES_ON_DISPLAY_STAND,
+                            USETRACES_POWER_SUPPLY);
+                case TABLET_SMARTPHONE:
+                    return EnumSet.of(SCRATCHES_ON_THE_BACK, SCRATCHES_DISPLAY, SCRATCHES_DISPLAYCOVER,
+                            SCRATCHES_POWER_SUPPLY, FOREIGN_PARTICLES_BELOW_DISPLAY, DISPLAY_PIXERROR,
+                            SCRATCHES_ON_COVER_EDGE, USETRACES_ON_THE_BACK, USETRACES_DISPLAY, USETRACES_DISPLAYCOVER,
+                            USETRACES_POWER_SUPPLY, BANGED_CASE_EDGES);
+                case NOTEBOOK:
+                    return EnumSet.of(SCRATCHES_ON_CASE_BOTTOM_SIDE, SCRATCHES_DISPLAY, SCRATCHES_DISPLAYCOVER,
+                            SCRATCHES_COVER, SCRATCHES_ON_COVER_EDGE, SCRATCHES_POWER_SUPPLY, SCRATCHES_BELOW_KEYBOARD,
+                            SCRATCHES_ABOVE_KEYBOARD, SCRATCHES_KEYBOARD, SCRATCHES_ON_TOUCH, SCRATCHES_TOUCH,
+                            SCRATCHES_HINGE, USED_KEABOARD, USETRACES_COVER, USETRACES_ON_CASE_BOTTOM_SIDE,
+                            USETRACES_DISPLAYCOVER, USETRACES_KEYBOARD, USETRACES_ABOVE_KEYBOARD,
+                            USETRACES_AROUND_KEYBOARD, USETRACES_AROUND_TOUCH, USED_TOUCHPAD,
+                            FOREIGN_PARTICLES_BELOW_DISPLAY, DISPLAY_PIXERROR);
+                case PROJECTOR:
+                    return EnumSet.of(SCRATCHES_CASE, USETRACES_CASE, DENT_CASE);
+                case MISC:
+                    if ( name == null ) {
+                        return EnumSet.allOf(StaticComment.class);
+                    } else if ( name.contains("AirPods") ) {
+                        return EnumSet.of(SCRATCHES_ON_THE_AIRPODS, SCRATCHES_ON_THE_LOADINGCASE, USETRACES_ON_THE_AIRPODS,
+                                USETRACES_ON_THE_LOADINGCASE, USETRACES_IN_THE_LOADINGCASE);
+                    } else if ( name.contains("HomePod") ) {
+                        return EnumSet.of(SCRATCHES_CASE,USETRACES_CASE);
+                    } else if ( name.contains("Watch") ) {
+                        return EnumSet.of(SCRATCHES_ON_CASE_BOTTOM_SIDE,SCRATCHES_DISPLAY,SCRATCHES_DISPLAYCOVER,
+                                SCRATCHES_ON_THE_DIGITAL_CROWN,USETRACES_ON_THE_WRISTBAND,USETRACES_ON_CASE_BOTTOM_SIDE,
+                                USETRACES_DISPLAY,USETRACES_DISPLAYCOVER);
+                    } else if ( name.contains("Keyboard") ) {
+                        return EnumSet.of(SCRATCHES_COVER,SCRATCHES_ON_CASE_BOTTOM_SIDE,SCRATCHES_KEYBOARD,
+                                USETRACES_COVER,USETRACES_ON_CASE_BOTTOM_SIDE,USETRACES_KEYBOARD);
+                    } else if ( name.contains("Apple TV") ) {
+                        return EnumSet.of(SCRATCHES_CASE,USETRACES_CASE);
+                    }
+                default:
+            }
+            return EnumSet.allOf(StaticComment.class);
+        }
     }
 
     /**

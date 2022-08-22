@@ -59,4 +59,28 @@ public enum Warranty {
         return description;
     }
 
+    public String description() {
+        return description;
+    }
+
+    /**
+     * All Values, but in a predefind order.
+     *
+     * @return all Values, but in a predefind order.
+     */
+    public static Warranty[] valuesSorted() {
+        return new Warranty[]{
+            ONEADO_2022,
+            ONE_YEAR_CARRY_IN,
+            ONE_YEAR_CARRY_IN_ADVANCED,
+            FOURTEEN_DAYS_FUNTION_WARRANTY,
+            TWO_YEARS_CARRY_IN,
+            NO_WARRANTY,
+            WARRANTY_TILL_DATE,
+            ONE_YEAR_STATUTORY_WARRANTY,
+            ONE_YEAR_STATUTORY_PLUS_ONEADO,
+            NO_B2B_WARRANTY
+        };
+    }
+
 }

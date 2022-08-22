@@ -327,7 +327,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         internalCommentModel.setTable(internalCommentTable);
 
         conditionController = new ComboBoxController<>(unitStateBox, UniqueUnit.Condition.values());
-        warrantyController = new ComboBoxController<>(warrantyTypeChooser, Warranty.values());
+        warrantyController = new ComboBoxController<>(warrantyTypeChooser, Warranty.valuesSorted());
         warrantyTypeChooser.setRenderer(new NamedEnumCellRenderer());
         unitStateBox.setRenderer(new NamedEnumCellRenderer());
         unitStateBox.setModel(new DefaultComboBoxModel(UniqueUnit.Condition.values()));
@@ -713,10 +713,20 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
      * Updates the Product and the Description from the Model;
      */
     private void updateProduct() {
-        Set<UniqueUnit.Equipment> equipment = UniqueUnit.Equipment.getEquipments();
-        if ( model.getProduct() != null ) equipment.retainAll(UniqueUnit.Equipment.getEquipments(model.getProduct().getGroup()));
-        if ( unit != null ) equipment.addAll(unit.getEquipments());
+        Set<UniqueUnit.Equipment> equipment = UniqueUnit.Equipment.valueSet();
+        Set<UniqueUnit.StaticComment> comments = UniqueUnit.StaticComment.valueSet();
+        // Only show elements for the group
+        if ( model.getProduct() != null ) {
+            equipment.retainAll(UniqueUnit.Equipment.valueSet(model.getProduct().getGroup(), model.getProduct().getName()));
+            comments.retainAll(UniqueUnit.StaticComment.valueSet(model.getProduct().getGroup(), model.getProduct().getName()));
+        }
+        // In the case (old products) a unit might contain a equipment, that the group no longer has.
+        if ( unit != null ) {
+            equipment.addAll(unit.getEquipments());
+            comments.addAll(unit.getComments());
+        }
         equipmentModel.setFiltered(equipment);
+        commentModel.setFiltered(comments);
         detailArea.setText(model.getProductSpecDescription());
     }
 

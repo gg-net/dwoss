@@ -80,7 +80,7 @@ public class UniqueUnitGenerator {
         uu.setContractor(contractor);
         uu.setMfgDate(DateUtils.addDays(new Date(), -1 * R.nextInt(1000))); // Random Date, may 3 years in the past.
         uu.setCondition(UniqueUnit.Condition.values()[R.nextInt(UniqueUnit.Condition.values().length)]);
-        uu.setEquipments(randomSet(group == null ? UniqueUnit.Equipment.values() : UniqueUnit.Equipment.getEquipments(group).toArray(new UniqueUnit.Equipment[0])));
+        uu.setEquipments(randomSet(group == null ? UniqueUnit.Equipment.values() : UniqueUnit.Equipment.valueSet(group,null).toArray(new UniqueUnit.Equipment[0])));
         uu.setComments(randomSet(UniqueUnit.StaticComment.values()));
         uu.setInternalComments(randomSet(UniqueUnit.StaticInternalComment.values()));
         if ( (Math.random() * 100) > 75 ) {
