@@ -67,7 +67,6 @@ public class MailSalesListingServiceBean implements MailSalesListingService {
         m.message("sending Mail");
         m.start();
         L.debug("generateResellerXlsAndSendToSubscribedCustomers() preparing mail with {}", smtpConfiguration);
-        L.debug("generateResellerXlsAndSendToSubscribedCustomers() preparing mail with {}", sendConfiguration);
 
         List<ResellerListCustomer> customers = rls.allResellerListCustomers();
         L.debug("generateResellerXlsAndSendToSubscribedCustomers() preparing mail with {}", customers);
@@ -79,7 +78,9 @@ public class MailSalesListingServiceBean implements MailSalesListingService {
             MultiPartEmail email = new MultiPartEmail();
             email.setHostName(smtpConfiguration.hostname);
             email.setFrom(sendConfiguration.fromAddress, sendConfiguration.fromName);
-            email.setAuthentication(smtpConfiguration.smtpAuthenticationUser, smtpConfiguration.smtpAuthenticationPass);
+            if ( smtpConfiguration.smtpAuthenticationUser != null && smtpConfiguration.smtpAuthenticationPass != null ) {
+                email.setAuthentication(smtpConfiguration.smtpAuthenticationUser, smtpConfiguration.smtpAuthenticationPass);
+            }
             email.setStartTLSEnabled(smtpConfiguration.useStartTls);
             email.setSSLCheckServerIdentity(false);
             email.setSSLOnConnect(smtpConfiguration.useSsl);

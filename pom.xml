@@ -459,17 +459,17 @@
         <repository>
             <id>netbeans-api</id>
             <name>Netbeans Api Repository</name>
-            <url>http://bits.netbeans.org/maven2/</url>
+            <url>https://bits.netbeans.org/maven2/</url>
         </repository>
         <repository>
-            <url>http://repository.primefaces.org/</url>
+            <url>https://repository.primefaces.org/</url>
             <id>PrimeFaces-maven-lib</id>
             <layout>default</layout>
             <name>Repository for library PrimeFaces-maven-lib</name>
         </repository>
         <repository>
             <id>skylynx-release</id>
-            <url>http://repo.cybertron.global/maven/</url>
+            <url>https://repo.cybertron.global/maven/</url>
         </repository>
     </repositories>
 

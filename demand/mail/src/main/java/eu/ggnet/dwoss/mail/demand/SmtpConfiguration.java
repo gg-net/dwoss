@@ -48,10 +48,19 @@ public class SmtpConfiguration implements Serializable {
                 + "Ssl:&nbsp;" + useSsl + "</p>";
     }
 
+    /**
+     * 
+     * @param hostname the hostname, must not be null
+     * @param smtpAuthenticationUser the user, may be null which implies no authentication
+     * @param smtpAuthenticationPass the pass, may be null which implies no authentication
+     * @param charset the charset to use, must not be null
+     * @param useStartTls
+     * @param useSsl 
+     */
     public SmtpConfiguration(String hostname, String smtpAuthenticationUser, String smtpAuthenticationPass, String charset, boolean useStartTls,boolean useSsl) {
         this.hostname = Objects.requireNonNull(hostname, "new SmtpConfiguration with hostname=null called, not allowed");;
-        this.smtpAuthenticationUser = Objects.requireNonNull(smtpAuthenticationUser, "new SmtpConfiguration with smtpAuthenticationUser=null called, not allowed");;
-        this.smtpAuthenticationPass = Objects.requireNonNull(smtpAuthenticationPass, "new SmtpConfiguration with smtpAuthenticationPass=null called, not allowed");;
+        this.smtpAuthenticationUser = smtpAuthenticationUser;
+        this.smtpAuthenticationPass = smtpAuthenticationPass;
         this.charset = Objects.requireNonNull(charset, "new SmtpConfiguration with charset=null called, not allowed");;
         this.useStartTls = useStartTls;
         this.useSsl = useSsl;

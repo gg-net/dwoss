@@ -34,8 +34,9 @@ import eu.ggnet.dwoss.mandator.api.value.partial.*;
 // @Value
 @FreeBuilder
 public abstract class Mandator implements Serializable {
-    
-    public static class Builder extends Mandator_Builder {};
+
+    public static class Builder extends Mandator_Builder {
+    };
 
     public abstract String defaultMailSignature();
 
@@ -73,7 +74,9 @@ public abstract class Mandator implements Serializable {
         email.setHostName(smtpConfiguration().hostname);
         email.addBcc(company().email());
         email.setFrom(company().email(), company().emailName());
-        email.setAuthentication(smtpConfiguration().smtpAuthenticationUser, smtpConfiguration().smtpAuthenticationPass);
+        if ( smtpConfiguration().smtpAuthenticationUser != null && smtpConfiguration().smtpAuthenticationPass != null ) {
+            email.setAuthentication(smtpConfiguration().smtpAuthenticationUser, smtpConfiguration().smtpAuthenticationPass);
+        }
         email.setStartTLSEnabled(smtpConfiguration().useStartTls);
         email.setSSLCheckServerIdentity(false);
         email.setSSLOnConnect(smtpConfiguration().useSsl);
