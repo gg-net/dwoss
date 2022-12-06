@@ -321,4 +321,21 @@ public class Row {
     public void setBruttoSumme(double bruttoSumme) {
         this.bruttoSumme = bruttoSumme;
     }
+
+    public String getKaKenn() {
+        return kaKenn;
+    }
+
+    public void setKaKenn(String kaKenn) {
+        this.kaKenn = kaKenn;
+    }
+
+    public String getKbKenn() {
+        return kbKenn;
+    }
+
+    public void setKbKenn(String kbKenn) {
+        this.kbKenn = kbKenn;
+    }
+
 }

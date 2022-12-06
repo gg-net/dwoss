@@ -55,7 +55,7 @@ public class CustomerAndGsOfficeProvider {
     private SpecialSystemCustomers specialSystemCustomers;
 
     @Produces
-    public final static SageExporterConfig SAGE_EXPORTER_CONFIG = new DefaultSageExporterConfig(1, false);
+    public final static SageExporterConfig SAGE_EXPORTER_CONFIG = new DefaultSageExporterConfig(1, false,"1","1");
 
     @Produces
     public final static PostLedger NEW_POST_LEDGER = new PostLedger(

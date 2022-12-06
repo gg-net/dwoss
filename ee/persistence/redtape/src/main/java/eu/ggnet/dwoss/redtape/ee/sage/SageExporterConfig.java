@@ -77,4 +77,18 @@ public interface SageExporterConfig extends Serializable {
      */
     String stCode(Document doc);
 
+    /**
+     * Returns a value for the field kakenn.
+     * 
+     * @return a value for the field kakenn.
+     */
+    String kakenn();
+ 
+       /**
+     * Returns a value for the field kbkenn.
+     * 
+     * @return a value for the field kbkenn.
+     */
+    String kbkenn();
+    
 }

@@ -40,14 +40,16 @@ public class RedTapeCounterEmo {
      * Requests a RedTapeCounter and increments the result.
      *
      * @param type   the type of counter.
-     * @param prefix the prefix of the counter (normally YY)
+     * @param prefix the prefix of the counter, typically YY
+     * @param initialValue the initialValue if a new counter is startet.
      * @return a RedTapeCounter with incremented Result
      */
-    public RedTapeCounter requestNext(DocumentType type, String prefix) {
+    public RedTapeCounter requestNext(DocumentType type, String prefix, long initialValue) {
         RedTapeCounterEao eao = new RedTapeCounterEao(em);
         RedTapeCounter singleResult = eao.findByCompositeKey(type, prefix);
         if ( singleResult == null ) {
             singleResult = new RedTapeCounter(type, prefix);
+            singleResult.setValue(initialValue);
             em.persist(singleResult);
         }
         singleResult.setValue(singleResult.getValue() + 1);

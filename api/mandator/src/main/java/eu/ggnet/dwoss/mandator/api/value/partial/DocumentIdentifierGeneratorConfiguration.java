@@ -24,8 +24,8 @@ import java.util.Date;
 import org.inferred.freebuilder.FreeBuilder;
 
 /**
- * A DocumentIdentifierGeneratorConfiguration
- * <p/>
+ * Configuation for the generator of document identifieres.
+ *
  * @author oliver.guenther
  */
 @FreeBuilder
@@ -75,7 +75,7 @@ public interface DocumentIdentifierGeneratorConfiguration extends Serializable {
 
         /**
          * Returns the generated prefix.
-         * <p/>
+         * 
          * @return the generated prefix
          */
         public abstract String generate();
@@ -104,8 +104,15 @@ public interface DocumentIdentifierGeneratorConfiguration extends Serializable {
      */
     DecimalFormat counterFormat();
 
-    public static DocumentIdentifierGeneratorConfiguration create(String pattern, PrefixType type, DecimalFormat counterFormat) {
-        return new DocumentIdentifierGeneratorConfiguration.Builder().pattern(pattern).prefixType(type).counterFormat(counterFormat).build();
+    /**
+     * The initial value for the counter on reset, normaly the start of the year.
+     *
+     * @return the initial value for the counter on reset.
+     */
+    long initialValue();
+
+    public static DocumentIdentifierGeneratorConfiguration create(String pattern, PrefixType type, DecimalFormat counterFormat, long initialValue) {
+        return new DocumentIdentifierGeneratorConfiguration.Builder().pattern(pattern).prefixType(type).counterFormat(counterFormat).initialValue(initialValue).build();
     }
 
 }

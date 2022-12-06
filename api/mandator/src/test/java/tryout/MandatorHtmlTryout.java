@@ -54,7 +54,7 @@ public class MandatorHtmlTryout {
                     .logo(new UrlLocation(new URL("http://noimage")))
                     .build(); // Logo missing
 
-            SmtpConfiguration smtpConfiguration = new SmtpConfiguration("example.de", "user", "password", "UTF-8", false,true);
+            SmtpConfiguration smtpConfiguration = new SmtpConfiguration("example.de", "user", "password", "UTF-8", false, true);
 
             DocumentIntermix documentIntermix = new DocumentIntermix(null);
             documentIntermix.setFooter("Geschäftsführer: Mr. Tester | USt. ID: XXXXXXXXXXX | HRB: 0000\n"
@@ -65,11 +65,11 @@ public class MandatorHtmlTryout {
 
             Map<DocumentType, DocumentIdentifierGeneratorConfiguration> documentIdentifierGeneratorConfigurations = new HashMap<>();
             documentIdentifierGeneratorConfigurations.put(DocumentType.INVOICE,
-                    DocumentIdentifierGeneratorConfiguration.create("RS{PREFIX}_{COUNTER}", PrefixType.YY, new DecimalFormat("00000")));
+                    DocumentIdentifierGeneratorConfiguration.create("RE.C-{PREFIX}/{COUNTER}", PrefixType.YY, new DecimalFormat("00000"), 10000));
             documentIdentifierGeneratorConfigurations.put(DocumentType.ANNULATION_INVOICE,
-                    DocumentIdentifierGeneratorConfiguration.create("SR{PREFIX}_{COUNTER}", PrefixType.YY, new DecimalFormat("00000")));
+                    DocumentIdentifierGeneratorConfiguration.create("SR{PREFIX}_{COUNTER}", PrefixType.YY, new DecimalFormat("00000"), 20000));
             documentIdentifierGeneratorConfigurations.put(DocumentType.CREDIT_MEMO,
-                    DocumentIdentifierGeneratorConfiguration.create("GS{PREFIX}_{COUNTER}", PrefixType.YY, new DecimalFormat("00000")));
+                    DocumentIdentifierGeneratorConfiguration.create("GS{PREFIX}_{COUNTER}", PrefixType.YY, new DecimalFormat("00000"), 30000));
 
             String defaultMailSignature = "Mail Signatur \n Test Test \t Senior System Requirements Specilist \n  Mobiel: 0174 123 45 67 \n  Phone; 040 123 45 67 \n Impressums: xxxx";
             UrlLocation mailTemplateLocation = new UrlLocation(new URL("http://example.com/"));

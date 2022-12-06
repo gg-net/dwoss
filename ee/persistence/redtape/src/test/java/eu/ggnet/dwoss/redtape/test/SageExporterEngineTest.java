@@ -76,15 +76,14 @@ public class SageExporterEngineTest {
             + "        </FIELDS>\n"
             + "    </METADATA>\n"
             + "    <ROWDATA>\n"
-            + "        <ROW WAWIBELEG=\"K1/IN1234\" STCODE=\"01\" REDATUM=\"30.01.2018\" KONTO=\"666\" GKONTO=\"1000\" FADATUM=\"30.01.2018\" DATUM=\"30.01.2018\" BUERFDATUM=\"30.01.2018\" BUCHTEXT=\"Müstermann - IN1234\" BELEG=\"AR/K0DW0001/IN12\" STPROZ=\"19\" BETRAGS=\"38,00\" BETRAGN=\"200,00\" B_EGKONTO=\"0\" B_EBBUCHUNG=\"0\" BETRAG=\"238,00\"/>\n"
-            + "        <ROW WAWIBELEG=\"K1/IN1234\" STCODE=\"01\" REDATUM=\"30.01.2018\" KONTO=\"666\" GKONTO=\"2000\" FADATUM=\"30.01.2018\" DATUM=\"30.01.2018\" BUERFDATUM=\"30.01.2018\" BUCHTEXT=\"Müstermann - IN1234\" BELEG=\"AR/K0DW0001/IN12\" STPROZ=\"19\" BETRAGS=\"19,00\" BETRAGN=\"100,00\" B_EGKONTO=\"0\" B_EBBUCHUNG=\"0\" BETRAG=\"119,00\"/>\n"
-            + "        <ROW WAWIBELEG=\"K1/IN4321\" STCODE=\"36\" REDATUM=\"30.01.2018\" KONTO=\"666\" GKONTO=\"1234\" FADATUM=\"30.01.2018\" DATUM=\"30.01.2018\" BUERFDATUM=\"30.01.2018\" BUCHTEXT=\"Müstermann - IN4321\" BELEG=\"AR/K0DW0002/IN43\" STPROZ=\"0\" BETRAGS=\"0,00\" BETRAGN=\"200,00\" B_EGKONTO=\"0\" B_EBBUCHUNG=\"0\" BETRAG=\"200,00\"/>\n"
+            + "        <ROW WAWIBELEG=\"K1/IN1234\" STCODE=\"01\" REDATUM=\"30.01.2018\" KONTO=\"666\" GKONTO=\"1000\" FADATUM=\"30.01.2018\" DATUM=\"30.01.2018\" BUERFDATUM=\"30.01.2018\" BUCHTEXT=\"Müstermann - IN1234\" BELEG=\"AR/K0DW0001/IN12\" STPROZ=\"19\" BETRAGS=\"38,00\" BETRAGN=\"200,00\" B_EGKONTO=\"0\" B_EBBUCHUNG=\"0\" BETRAG=\"238,00\" KAKENN=\"1\" KBKENN=\"1\"/>\n"
+            + "        <ROW WAWIBELEG=\"K1/IN1234\" STCODE=\"01\" REDATUM=\"30.01.2018\" KONTO=\"666\" GKONTO=\"2000\" FADATUM=\"30.01.2018\" DATUM=\"30.01.2018\" BUERFDATUM=\"30.01.2018\" BUCHTEXT=\"Müstermann - IN1234\" BELEG=\"AR/K0DW0001/IN12\" STPROZ=\"19\" BETRAGS=\"19,00\" BETRAGN=\"100,00\" B_EGKONTO=\"0\" B_EBBUCHUNG=\"0\" BETRAG=\"119,00\" KAKENN=\"1\" KBKENN=\"1\"/>\n"
+            + "        <ROW WAWIBELEG=\"K1/IN4321\" STCODE=\"36\" REDATUM=\"30.01.2018\" KONTO=\"666\" GKONTO=\"1234\" FADATUM=\"30.01.2018\" DATUM=\"30.01.2018\" BUERFDATUM=\"30.01.2018\" BUCHTEXT=\"Müstermann - IN4321\" BELEG=\"AR/K0DW0002/IN43\" STPROZ=\"0\" BETRAGS=\"0,00\" BETRAGN=\"200,00\" B_EGKONTO=\"0\" B_EBBUCHUNG=\"0\" BETRAG=\"200,00\" KAKENN=\"1\" KBKENN=\"1\"/>\n"
             + "    </ROWDATA>\n"
             + "</DATAPACKET>\n"
             + "";
 
     @Test
-    @Ignore // Corona Tax is makeing the result invalid.  Enable 2021
     public void testExport() throws UnsupportedEncodingException {
         UiCustomer cus = new UiCustomer(1, "Herr", "Max", "Müstermann", null, "none", "max@example.com", 0);
 
@@ -116,7 +115,7 @@ public class SageExporterEngineTest {
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-        SageExporterEngine engine = new SageExporterEngine(out, content, new DefaultSageExporterConfig(666, false));
+        SageExporterEngine engine = new SageExporterEngine(out, content, new DefaultSageExporterConfig(666, false, "1", "1"));
         engine.execute(null);
 
         String result = out.toString("ISO-8859-1");

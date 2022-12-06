@@ -51,6 +51,7 @@ import eu.ggnet.lucidcalc.*;
 import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcReader;
 
 import static eu.ggnet.dwoss.price.ee.engine.PriceEngineResult.*;
+import static eu.ggnet.dwoss.price.ee.engine.PriceEngineResult.Change.SET;
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.BOLD_ITALIC;
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.ITALIC;
 import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.CENTER;
@@ -96,7 +97,7 @@ public class ExporterOperation implements Exporter {
 
     /**
      * Export PriceManagement as Xls.
-     * <p/>
+     * 
      * @return PriceManagement as Xls.
      */
     @Override
@@ -124,11 +125,14 @@ public class ExporterOperation implements Exporter {
         table.add(new STableColumn("EvP netto", 11, euro).setAction(new SActionAdapter<PriceEngineResult>() {
             @Override
             public Object getValue(int relativeColumnIndex, int relativeRowIndex, int absoluteColumnIndex, int absoluteRowIndex, PriceEngineResult lineModel) {
-                CCellReference x = new CCellReferenceAdapter(absoluteRowIndex, 4);
-                // TODO: Change this, in the case of a fixed price. Here should be no formula if we have fixed prices.
-                double p = 1 + lineModel.getRetailerToCustomerPricePercentage();
-                double t = 1 + lineModel.getTax();
-                return new SFormula("RUNDEN", "((", "RUNDEN", "(", x, "*", p, "*", t, ",", 0, ")", ")/", t, ",", 2, ")");
+                if ( lineModel.getUnitPriceFixed() == SET ) {
+                    return lineModel.getCustomerPrice();
+                } else {
+                    CCellReference x = new CCellReferenceAdapter(absoluteRowIndex, 4);
+                    double p = 1 + lineModel.getRetailerToCustomerPricePercentage();
+                    double t = 1 + lineModel.getTax();
+                    return new SFormula("RUNDEN", "((", "RUNDEN", "(", x, "*", p, "*", t, ",", 0, ")", ")/", t, ",", 2, ")");
+                }
             }
         }));
         table.add(new STableColumn("EvP brutto", 11, euro).setAction(new SActionAdapter<PriceEngineResult>() {

@@ -17,6 +17,7 @@
 package eu.ggnet.dwoss.redtape.ee.sage;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -34,9 +35,15 @@ public class DefaultSageExporterConfig implements SageExporterConfig, Serializab
 
     private final boolean customerLedgersDisabled;
 
-    public DefaultSageExporterConfig(int defaultDebitorLedger, boolean customerLedgersDisabled) {
+    private final String kakenn;
+
+    private final String kbkenn;
+
+    public DefaultSageExporterConfig(int defaultDebitorLedger, boolean customerLedgersDisabled, String kakenn, String kbkenn) {
         this.defaultDebitorLedger = defaultDebitorLedger;
         this.customerLedgersDisabled = customerLedgersDisabled;
+        this.kakenn = Objects.requireNonNull(kakenn, "kakenn must not be null");
+        this.kbkenn = Objects.requireNonNull(kbkenn, "kbkenn must not be null");
     }
 
     @Override
@@ -51,8 +58,13 @@ public class DefaultSageExporterConfig implements SageExporterConfig, Serializab
 
     @Override
     public String beleg(Document doc, UiCustomer customer) {
-        String dossierIdentifier = doc.getDossier().getIdentifier() == null ? "NoDossierIdentifier" : doc.getDossier().getIdentifier().replace("_", "");
-        String documentIdentifier = doc.getIdentifier() == null ? "NoDocumentIdentifier" : doc.getIdentifier().substring(0, 4);
+        String dossierIdentifier = doc.getDossier().getIdentifier() == null ? "NoDos" : doc.getDossier().getIdentifier().replace("_", "");
+        String documentIdentifier = doc.getIdentifier() == null ? "NoDoc" : doc.getIdentifier().substring(0, 4);
+        /*
+        // Ab 2023
+        String documentIdentifier = doc.getIdentifier() == null ? "NoDoc" : doc.getIdentifier().substring(0, 2);        
+        return dossierIdentifier + ".K" + doc.getDossier().getCustomerId() + "." + documentIdentifier;
+         */
         return "AR/K" + doc.getDossier().getCustomerId() + dossierIdentifier + "/" + documentIdentifier;
     }
 
@@ -78,6 +90,16 @@ public class DefaultSageExporterConfig implements SageExporterConfig, Serializab
     @Override
     public String stCode(Document doc) {
         return doc.getTaxType().taxCode();
+    }
+
+    @Override
+    public String kakenn() {
+        return kakenn;
+    }
+
+    @Override
+    public String kbkenn() {
+        return kbkenn;
     }
 
 }

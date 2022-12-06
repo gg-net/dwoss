@@ -72,6 +72,8 @@ public class RedTapeOperationOrderInvoiceIT extends ArquillianProjectArchive {
     @Inject
     private DatabaseCleaner cleaner;
 
+    private final static String YYYY = new SimpleDateFormat("yyyy").format(new Date());
+    
     @After
     public void clearDatabase() throws Exception {
         cleaner.clear();
@@ -306,9 +308,9 @@ public class RedTapeOperationOrderInvoiceIT extends ArquillianProjectArchive {
         doc1.add(Document.Condition.PICKED_UP);
         doc1.setType(DocumentType.INVOICE);
         doc1 = redTapeWorker.update(doc1, null, "tester");
-        String format = new SimpleDateFormat("yy").format(new Date());
 
-        assertEquals("The Identifier of Invoice ", "RS" + format + "_00001", doc1.getIdentifier());
+
+        assertEquals("The Identifier of Invoice ", "RE.S-" + YYYY + "/10001", doc1.getIdentifier());
         assertFalse("Document must not contain " + Document.Flag.CUSTOMER_BRIEFED, doc1.getFlags().contains(Document.Flag.CUSTOMER_BRIEFED));
         assertFalse("Document must not contain " + Document.Flag.CUSTOMER_EXACTLY_BRIEFED, doc1.getFlags().contains(Document.Flag.CUSTOMER_EXACTLY_BRIEFED));
 
@@ -318,7 +320,7 @@ public class RedTapeOperationOrderInvoiceIT extends ArquillianProjectArchive {
 
         doc2.setType(DocumentType.INVOICE);
         Document update2 = redTapeWorker.update(doc2, null, "Junit");
-        assertEquals("RS" + format + "_00002", update2.getIdentifier());
+        assertEquals("RE.S-" + YYYY + "/10002", update2.getIdentifier());
 
         Date now = new Date();
         Date start = DateUtils.addDays(now, -1);

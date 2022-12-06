@@ -88,11 +88,11 @@ public class Sample {
 
         Map<DocumentType, DocumentIdentifierGeneratorConfiguration> documentIdentifierGeneratorConfigurations = new HashMap<>();
         documentIdentifierGeneratorConfigurations.put(DocumentType.INVOICE,
-                DocumentIdentifierGeneratorConfiguration.create("RS{PREFIX}_{COUNTER}", PrefixType.YY, new DecimalFormat("00000")));
+                DocumentIdentifierGeneratorConfiguration.create("RE.S-{PREFIX}/{COUNTER}", PrefixType.YYYY, new DecimalFormat("00000"),10000));
         documentIdentifierGeneratorConfigurations.put(DocumentType.ANNULATION_INVOICE,
-                DocumentIdentifierGeneratorConfiguration.create("SR{PREFIX}_{COUNTER}", PrefixType.YY, new DecimalFormat("00000")));
+                DocumentIdentifierGeneratorConfiguration.create("ST.S-{PREFIX}/{COUNTER}", PrefixType.YYYY, new DecimalFormat("00000"),20000));
         documentIdentifierGeneratorConfigurations.put(DocumentType.CREDIT_MEMO,
-                DocumentIdentifierGeneratorConfiguration.create("GS{PREFIX}_{COUNTER}", PrefixType.YY, new DecimalFormat("00000")));
+                DocumentIdentifierGeneratorConfiguration.create("GS.S-{PREFIX}/{COUNTER}", PrefixType.YYYY, new DecimalFormat("00000"),30000));
 
         MANDATOR = new Mandator.Builder()
                 .smtpConfiguration(smtpConfiguration)

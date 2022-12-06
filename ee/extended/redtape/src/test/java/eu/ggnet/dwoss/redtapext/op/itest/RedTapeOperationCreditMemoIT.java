@@ -62,7 +62,7 @@ public class RedTapeOperationCreditMemoIT extends ArquillianProjectArchive {
     @Inject
     private ReceiptGeneratorOperation receiptGenerator;
 
-    private final String YY = new SimpleDateFormat("yy").format(new Date());
+    private final String YYYY = new SimpleDateFormat("yyyy").format(new Date());
 
     @Test
     public void testCreditMemo() throws UserInfoException {
@@ -126,7 +126,7 @@ public class RedTapeOperationCreditMemoIT extends ArquillianProjectArchive {
 
         doc = redTapeWorker.update(doc, stockIdOfUU1, "JUnit Test");
         // Asserting Everything
-        assertEquals("The Identifier of CreditMemo", "GS" + YY + "_00001", doc.getIdentifier());
+        assertEquals("The Identifier of CreditMemo", "GS.S-" + YYYY + "/30001", doc.getIdentifier());
 
         lt = supportBean.findByDossierId(doc.getDossier().getId());
 
@@ -187,7 +187,7 @@ public class RedTapeOperationCreditMemoIT extends ArquillianProjectArchive {
         doc = redTapeWorker.update(invoice, stockIdOfUU1, "JUnit");
 
         // Assert Everything
-        assertEquals("The Identifier of CreditMemo", "GS" + YY + "_00002", doc.getIdentifier());
+        assertEquals("The Identifier of CreditMemo", "GS.S-" + YYYY + "/30002", doc.getIdentifier());
 
         stockUnit2 = stockAgent.findStockUnitByUniqueUnitIdEager(uu2.getId());
         assertNotNull("StockUnit exists", stockUnit2);

@@ -22,7 +22,6 @@ import javafx.scene.control.Alert;
 
 import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.core.widget.saft.Failure;

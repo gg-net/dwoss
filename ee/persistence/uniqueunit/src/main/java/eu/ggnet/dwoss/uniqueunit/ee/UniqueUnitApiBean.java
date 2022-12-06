@@ -31,6 +31,7 @@ import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
 import eu.ggnet.dwoss.core.system.progress.SubMonitor;
+import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.redtape.api.DossierViewer;
 import eu.ggnet.dwoss.report.api.*;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
@@ -188,7 +189,7 @@ public class UniqueUnitApiBean implements UniqueUnitApi {
                 toStatus(su),
                 toReports(sru),
                 toReportPositionTypes(sru),
-                toReportInformation(sru)
+                toReportInformation(sru, uu)
             });
         }
 
@@ -241,8 +242,9 @@ public class UniqueUnitApiBean implements UniqueUnitApi {
                 .collect(Collectors.joining(","));
     }
 
-    private static String toReportInformation(eu.ggnet.dwoss.report.api.SimpleReportUnit sru) {
-        if ( sru == null ) return "";
-        return sru.toString();
+    private static String toReportInformation(eu.ggnet.dwoss.report.api.SimpleReportUnit sru, UniqueUnit uu) {
+        if ( sru != null ) return sru.toString();
+        var lastHistory = new TreeSet<>(uu.getHistory()).last();        
+        return "Letzter Kommentar: " + Utils.ISO_DATE.format(lastHistory.getOccurence()) + " - " + lastHistory.getComment();
     }
 }

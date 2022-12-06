@@ -69,6 +69,7 @@ public class DocumentJasperFxView extends AbstractJasperFxView implements Consum
 
     @Override
     protected void saveToFile() {
+        // Building the Identifier. See also eu.ggnet.dwoss.redtapext.ee.DocumentSupporterOperation.mail
         String identifier = in.document().getIdentifier() != null ? in.document().getIdentifier() : in.document().getDossier().getIdentifier();
         identifier = identifier.replace("/", "_");
         if ( in.document().getInvoiceAddress() != null ) {

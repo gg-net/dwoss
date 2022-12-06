@@ -35,13 +35,9 @@ import eu.ggnet.dwoss.redtape.ee.sage.xml.RowData;
 
 /**
  * The GsOfficeExporterUtil.
- * <p>
  * Defined:
  * - Beleg: AR/K"Customerid""DossierIdentifier"/"DocumenteIdentifier first letters numbers" (e.g. AR/K123DW32412/RS12)
  * - WawiBeleg: K"CustomerId"/"DocumentIdentifier" (e.g. K1234/RS12_00001)
- * <p>
- * <
- * p/>
  * @author pascal.perau
  */
 public class SageExporterEngine {
@@ -120,6 +116,8 @@ public class SageExporterEngine {
             r.setBuchtext(config.buchText(doc, customer));
             r.setWawiBeleg(config.wawiBeleg(doc, customer));
             r.setStCode(config.stCode(doc));
+            r.setKaKenn(config.kakenn());
+            r.setKbKenn(config.kbkenn());
 
             r.setKonto(config.getDefaultDebitorLedger());
             if ( !config.isCustomerLedgersDisabled() && customer.ledger > 0 ) r.setKonto(customer.ledger);

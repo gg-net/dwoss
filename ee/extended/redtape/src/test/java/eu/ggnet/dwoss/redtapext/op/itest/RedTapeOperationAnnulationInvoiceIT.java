@@ -18,6 +18,7 @@ import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.core.common.values.PositionType;
 import eu.ggnet.dwoss.core.system.util.TwoDigits;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
+import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.receipt.ee.gen.ReceiptGeneratorOperation;
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
@@ -48,6 +49,9 @@ public class RedTapeOperationAnnulationInvoiceIT extends ArquillianProjectArchiv
 
     @Inject
     private StockGeneratorOperation stockGenerator;
+    
+    @Inject
+    private Mandator mandator;
 
     @EJB
     private RedTapeWorker redTapeWorker;
@@ -70,7 +74,7 @@ public class RedTapeOperationAnnulationInvoiceIT extends ArquillianProjectArchiv
     @EJB
     private SageExporter sageExporter;
 
-    private final String YY = new SimpleDateFormat("yy").format(new Date());
+    private final String YYYY = new SimpleDateFormat("yyyy").format(new Date());
 
     @Test
     public void testCreditMemo() throws UserInfoException {
@@ -138,7 +142,9 @@ public class RedTapeOperationAnnulationInvoiceIT extends ArquillianProjectArchiv
 
         doc = redTapeWorker.update(doc, stockIdOfUU1, "JUnit Test");
         // Asserting Everything
-        assertEquals("The Identifier of CreditMemo", "SR" + YY + "_00001", doc.getIdentifier());
+
+        // Siehe SampleMandtor
+        assertEquals("The Identifier of Annulation Invoice", "ST.S-" + YYYY + "/20001", doc.getIdentifier());
 
         lt = support.findByDossierId(doc.getDossier().getId());
 
@@ -203,7 +209,7 @@ public class RedTapeOperationAnnulationInvoiceIT extends ArquillianProjectArchiv
 
         // Assert Everything
         // TODO: this is Mandatorspecific, pickup there.
-        assertEquals("The Identifier of CreditMemo", "SR" + YY + "_00002", doc.getIdentifier());
+        assertEquals("The Identifier of CreditMemo", "ST.S-" + YYYY + "/20002", doc.getIdentifier());
 
         stockUnit2 = stockAgent.findStockUnitByUniqueUnitIdEager(uu2.getId());
         assertNotNull("StockUnit exists", stockUnit2);
