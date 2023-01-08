@@ -59,13 +59,11 @@ public class DefaultSageExporterConfig implements SageExporterConfig, Serializab
     @Override
     public String beleg(Document doc, UiCustomer customer) {
         String dossierIdentifier = doc.getDossier().getIdentifier() == null ? "NoDos" : doc.getDossier().getIdentifier().replace("_", "");
-        String documentIdentifier = doc.getIdentifier() == null ? "NoDoc" : doc.getIdentifier().substring(0, 4);
-        /*
-        // Ab 2023
+  //      String documentIdentifier = doc.getIdentifier() == null ? "NoDoc" : doc.getIdentifier().substring(0, 4);
+
         String documentIdentifier = doc.getIdentifier() == null ? "NoDoc" : doc.getIdentifier().substring(0, 2);        
         return dossierIdentifier + ".K" + doc.getDossier().getCustomerId() + "." + documentIdentifier;
-         */
-        return "AR/K" + doc.getDossier().getCustomerId() + dossierIdentifier + "/" + documentIdentifier;
+//        return "AR/K" + doc.getDossier().getCustomerId() + dossierIdentifier + "/" + documentIdentifier;
     }
 
     @Override

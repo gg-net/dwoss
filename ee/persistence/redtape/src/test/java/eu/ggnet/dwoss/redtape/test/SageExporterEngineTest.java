@@ -21,6 +21,7 @@ import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.util.*;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -76,9 +77,9 @@ public class SageExporterEngineTest {
             + "        </FIELDS>\n"
             + "    </METADATA>\n"
             + "    <ROWDATA>\n"
-            + "        <ROW WAWIBELEG=\"K1/IN1234\" STCODE=\"01\" REDATUM=\"30.01.2018\" KONTO=\"666\" GKONTO=\"1000\" FADATUM=\"30.01.2018\" DATUM=\"30.01.2018\" BUERFDATUM=\"30.01.2018\" BUCHTEXT=\"Müstermann - IN1234\" BELEG=\"AR/K0DW0001/IN12\" STPROZ=\"19\" BETRAGS=\"38,00\" BETRAGN=\"200,00\" B_EGKONTO=\"0\" B_EBBUCHUNG=\"0\" BETRAG=\"238,00\" KAKENN=\"1\" KBKENN=\"1\"/>\n"
-            + "        <ROW WAWIBELEG=\"K1/IN1234\" STCODE=\"01\" REDATUM=\"30.01.2018\" KONTO=\"666\" GKONTO=\"2000\" FADATUM=\"30.01.2018\" DATUM=\"30.01.2018\" BUERFDATUM=\"30.01.2018\" BUCHTEXT=\"Müstermann - IN1234\" BELEG=\"AR/K0DW0001/IN12\" STPROZ=\"19\" BETRAGS=\"19,00\" BETRAGN=\"100,00\" B_EGKONTO=\"0\" B_EBBUCHUNG=\"0\" BETRAG=\"119,00\" KAKENN=\"1\" KBKENN=\"1\"/>\n"
-            + "        <ROW WAWIBELEG=\"K1/IN4321\" STCODE=\"36\" REDATUM=\"30.01.2018\" KONTO=\"666\" GKONTO=\"1234\" FADATUM=\"30.01.2018\" DATUM=\"30.01.2018\" BUERFDATUM=\"30.01.2018\" BUCHTEXT=\"Müstermann - IN4321\" BELEG=\"AR/K0DW0002/IN43\" STPROZ=\"0\" BETRAGS=\"0,00\" BETRAGN=\"200,00\" B_EGKONTO=\"0\" B_EBBUCHUNG=\"0\" BETRAG=\"200,00\" KAKENN=\"1\" KBKENN=\"1\"/>\n"
+            + "        <ROW WAWIBELEG=\"K1/IN1234\" STCODE=\"01\" REDATUM=\"30.01.2018\" KONTO=\"666\" GKONTO=\"1000\" FADATUM=\"30.01.2018\" DATUM=\"30.01.2018\" BUERFDATUM=\"30.01.2018\" BUCHTEXT=\"Müstermann - IN1234\" BELEG=\"DW0001.K0.IN\" STPROZ=\"19\" BETRAGS=\"38,00\" BETRAGN=\"200,00\" B_EGKONTO=\"0\" B_EBBUCHUNG=\"0\" BETRAG=\"238,00\" KAKENN=\"1\" KBKENN=\"1\"/>\n"
+            + "        <ROW WAWIBELEG=\"K1/IN1234\" STCODE=\"01\" REDATUM=\"30.01.2018\" KONTO=\"666\" GKONTO=\"2000\" FADATUM=\"30.01.2018\" DATUM=\"30.01.2018\" BUERFDATUM=\"30.01.2018\" BUCHTEXT=\"Müstermann - IN1234\" BELEG=\"DW0001.K0.IN\" STPROZ=\"19\" BETRAGS=\"19,00\" BETRAGN=\"100,00\" B_EGKONTO=\"0\" B_EBBUCHUNG=\"0\" BETRAG=\"119,00\" KAKENN=\"1\" KBKENN=\"1\"/>\n"
+            + "        <ROW WAWIBELEG=\"K1/IN4321\" STCODE=\"36\" REDATUM=\"30.01.2018\" KONTO=\"666\" GKONTO=\"1234\" FADATUM=\"30.01.2018\" DATUM=\"30.01.2018\" BUERFDATUM=\"30.01.2018\" BUCHTEXT=\"Müstermann - IN4321\" BELEG=\"DW0002.K0.IN\" STPROZ=\"0\" BETRAGS=\"0,00\" BETRAGN=\"200,00\" B_EGKONTO=\"0\" B_EBBUCHUNG=\"0\" BETRAG=\"200,00\" KAKENN=\"1\" KBKENN=\"1\"/>\n"
             + "    </ROWDATA>\n"
             + "</DATAPACKET>\n"
             + "";
