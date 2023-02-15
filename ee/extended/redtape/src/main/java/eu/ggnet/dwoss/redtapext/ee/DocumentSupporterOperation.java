@@ -357,9 +357,9 @@ public class DocumentSupporterOperation implements DocumentSupporter {
         // Setting Defaults.
         Map<String, Object> reportParameter = new HashMap<>();
         Dossier dossier = document.getDossier();
-        reportParameter.put(REF_ID, "K" + dossier.getCustomerId() + (dossier.getIdentifier() == null ? "-" : dossier.getIdentifier()));
+        reportParameter.put(REF_ID, (dossier.getIdentifier() == null ? "-" : dossier.getIdentifier()) + ".K" + dossier.getCustomerId());
         reportParameter.put(CUSTOMER_ID, dossier.getCustomerId());
-        reportParameter.put(IDENTIFIER_TYPE, document.getType().getName());
+        reportParameter.put(IDENTIFIER_TYPE, document.getType().description());
         reportParameter.put(IDENTIFIER_ID, document.getIdentifier() == null ? (dossier.getIdentifier() == null ? "-" : dossier.getIdentifier()) : document.getIdentifier());
         // The two \n are a workaround for Windows/Remote Client. Otherwise the last line of an address is not shown.
         reportParameter.put(INVOICE_ADDRESS, document.getInvoiceAddress().getDescription() + "\n");
