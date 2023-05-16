@@ -11,6 +11,10 @@
     <artifactId>dwoss-redtape-ee</artifactId>
     <name>DwOss • RedTape • EE (persistence)</name>
     <packaging>ejb</packaging>
+    
+    <properties>
+        <ddl-gen.packages>eu.ggnet.dwoss.redtape.ee.entity</ddl-gen.packages>
+    </properties>
 
     <dependencies>
         <dependency>

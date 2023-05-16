@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.redtape.ee.entity;
 
+import eu.ggnet.dwoss.core.common.values.PaymentSettlement;
+
 import java.io.Serializable;
 import java.util.*;
 
@@ -246,51 +248,6 @@ public class Document extends BaseEntity implements Serializable, Comparable<Doc
         CUSTOMER_EXACTLY_BRIEFED
     }
 
-    /**
-     * Possible receipts of Payment.
-     * Represents the way, the customer balanced the receipt of a Payment.<br />
-     * Settlement may have restrictions according to {@link PaymentMethod} of the {@link Document#dossier}
-     */
-    public enum Settlement {
-
-        /**
-         * Direct physical transfer of money.
-         * Only possible for:
-         * <ul>
-         * <li>{@link PaymentMethod#ADVANCE_PAYMENT}</li>
-         * <li>{@link PaymentMethod#INVOICE}</li>
-         * </ul>
-         */
-        CASH("Barzahlung"),
-        /**
-         * Direct electronic transfer of money.
-         * Only possible for:
-         * <ul>
-         * <li>{@link PaymentMethod#ADVANCE_PAYMENT}</li>
-         * <li>{@link PaymentMethod#INVOICE}</li>
-         * </ul>
-         */
-        E_CASH("EC-Zahlung"),
-        /**
-         * Transfer of money provided by the customer.
-         * Only possible for:
-         * <ul>
-         * <li>{@link PaymentMethod#ADVANCE_PAYMENT}</li>
-         * <li>{@link PaymentMethod#INVOICE}</li>
-         * </ul>
-         */
-        REMITTANCE("Bank");
-
-        private String name;
-
-        private Settlement(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
-    }
 
     @Id
     @GeneratedValue
@@ -336,7 +293,7 @@ public class Document extends BaseEntity implements Serializable, Comparable<Doc
 
     @NotNull
     @ElementCollection(fetch = FetchType.EAGER)
-    private Set<Settlement> settlements = EnumSet.noneOf(Settlement.class);
+    private Set<PaymentSettlement> settlements = EnumSet.noneOf(PaymentSettlement.class);
 
     @Enumerated
     @NotNull
@@ -526,7 +483,7 @@ public class Document extends BaseEntity implements Serializable, Comparable<Doc
         clone.setDirective(directive);
         clone.setClosed(closed);
         clone.setTaxType(taxType);
-        for (Settlement settlement : settlements) clone.add(settlement);
+        for (PaymentSettlement settlement : settlements) clone.add(settlement);
         for (Condition condition : conditions) clone.add(condition);
         for (Flag flag : flags) clone.add(flag);
         // TODO: I assume a valid Document, meaning there are no holes and no negative values in the position ids and starting from 1.
@@ -766,15 +723,15 @@ public class Document extends BaseEntity implements Serializable, Comparable<Doc
         this.flags.remove(flag);
     }
 
-    public Set<Settlement> getSettlements() {
+    public Set<PaymentSettlement> getSettlements() {
         return Collections.unmodifiableSet(settlements);
     }
 
-    public void add(Settlement settlement) {
+    public void add(PaymentSettlement settlement) {
         this.settlements.add(settlement);
     }
 
-    public void remove(Settlement settlement) {
+    public void remove(PaymentSettlement settlement) {
         this.settlements.remove(settlement);
     }
 

@@ -25,7 +25,7 @@ import java.util.*;
 import javax.swing.JOptionPane;
 
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
-import eu.ggnet.dwoss.redtape.ee.entity.Document.Settlement;
+import eu.ggnet.dwoss.core.common.values.PaymentSettlement;
 
 /**
  * A UI to set the {@link Document#settlements} to a {@link Document}.
@@ -34,23 +34,23 @@ import eu.ggnet.dwoss.redtape.ee.entity.Document.Settlement;
  */
 public class SettlementViewCask extends javax.swing.JPanel implements IPreClose {
 
-    private Set<Settlement> settlements = new HashSet<>();
+    private final Set<PaymentSettlement> settlements = new HashSet<>();
 
     /** Creates new form SettlementViewCask */
     public SettlementViewCask() {
         initComponents();
-        cashButton.setText(Settlement.CASH.getName());
-        eCashButton.setText(Settlement.E_CASH.getName());
-        remittanceButton.setText(Settlement.REMITTANCE.getName());
-        splitButton.setText("Zahlung Splitten");
+        paypalButton.setText(PaymentSettlement.PAYPAL.description());
+        eCashButton.setText(PaymentSettlement.E_CASH.description());
+        remittanceButton.setText(PaymentSettlement.REMITTANCE.description());
+        ebayButton.setText(PaymentSettlement.EBAY.description());
 
-        cashButton.setActionCommand(Settlement.CASH.getName());
-        eCashButton.setActionCommand(Settlement.E_CASH.getName());
-        remittanceButton.setActionCommand(Settlement.REMITTANCE.getName());
-
+        paypalButton.setActionCommand(PaymentSettlement.PAYPAL.description());
+        eCashButton.setActionCommand(PaymentSettlement.E_CASH.description());
+        remittanceButton.setActionCommand(PaymentSettlement.REMITTANCE.description());
+        ebayButton.setActionCommand(PaymentSettlement.EBAY.description());
     }
 
-    public Set<Settlement> getSettlements() {
+    public Set<PaymentSettlement> getSettlements() {
         return settlements;
     }
 
@@ -73,14 +73,14 @@ public class SettlementViewCask extends javax.swing.JPanel implements IPreClose 
     private void initComponents() {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
-        cashButton = new javax.swing.JRadioButton();
+        paypalButton = new javax.swing.JRadioButton();
         eCashButton = new javax.swing.JRadioButton();
         remittanceButton = new javax.swing.JRadioButton();
-        splitButton = new javax.swing.JRadioButton();
+        ebayButton = new javax.swing.JRadioButton();
 
-        buttonGroup1.add(cashButton);
-        cashButton.setText("jRadioButton1");
-        cashButton.addActionListener(new java.awt.event.ActionListener() {
+        buttonGroup1.add(paypalButton);
+        paypalButton.setText("jRadioButton1");
+        paypalButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 settlementChangedAction(evt);
             }
@@ -102,11 +102,11 @@ public class SettlementViewCask extends javax.swing.JPanel implements IPreClose 
             }
         });
 
-        buttonGroup1.add(splitButton);
-        splitButton.setText("jRadioButton4");
-        splitButton.addActionListener(new java.awt.event.ActionListener() {
+        buttonGroup1.add(ebayButton);
+        ebayButton.setText("jRadioButton4");
+        ebayButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                splitAction(evt);
+                settlementChangedAction(evt);
             }
         });
 
@@ -117,45 +117,40 @@ public class SettlementViewCask extends javax.swing.JPanel implements IPreClose 
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cashButton)
+                    .addComponent(paypalButton)
                     .addComponent(eCashButton)
                     .addComponent(remittanceButton)
-                    .addComponent(splitButton))
+                    .addComponent(ebayButton))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(cashButton)
+                .addComponent(paypalButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(eCashButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(remittanceButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(splitButton)
+                .addComponent(ebayButton)
                 .addContainerGap(14, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void settlementChangedAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_settlementChangedAction
         settlements.clear();
-        for (Settlement settlement : Document.Settlement.values()) {
-            if ( evt.getActionCommand().equals(settlement.getName()) ) settlements.add(settlement);
+        for (PaymentSettlement settlement : PaymentSettlement.values()) {
+            if ( evt.getActionCommand().equals(settlement.description()) ) settlements.add(settlement);
         }
     }//GEN-LAST:event_settlementChangedAction
 
-    private void splitAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_splitAction
-        settlements.clear();
-        settlements.addAll(EnumSet.of(Settlement.CASH, Settlement.E_CASH));
-    }//GEN-LAST:event_splitAction
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JRadioButton cashButton;
     private javax.swing.JRadioButton eCashButton;
+    private javax.swing.JRadioButton ebayButton;
+    private javax.swing.JRadioButton paypalButton;
     private javax.swing.JRadioButton remittanceButton;
-    private javax.swing.JRadioButton splitButton;
     // End of variables declaration//GEN-END:variables
 
     public static void main(String[] args) {

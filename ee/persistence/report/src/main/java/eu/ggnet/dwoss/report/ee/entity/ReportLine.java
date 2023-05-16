@@ -436,6 +436,16 @@ public class ReportLine extends BaseEntity implements Serializable, EagerAble, C
 
     private long gtin;
 
+    @NotNull
+    @ElementCollection(fetch = FetchType.EAGER)
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_ReportLine_settlements"))
+    private Set<PaymentSettlement> settlements = EnumSet.noneOf(PaymentSettlement.class);
+
+    /**
+     * Defines if this is an reverse charge candidate. (German LAW example: Tablet)
+     */
+    private boolean rch = false;
+    
     public ReportLine() {
     }
 
@@ -767,6 +777,14 @@ public class ReportLine extends BaseEntity implements Serializable, EagerAble, C
         this.contractorReferencePrice = value;
     }
 
+    public boolean isRch() {
+        return rch;
+    }
+
+    public void setRch(boolean rch) {
+        this.rch = rch;
+    }
+
     //</editor-fold>
     public ReportLine getReference(SingleReferenceType type) {
         return singleReferences.get(type);
@@ -782,9 +800,17 @@ public class ReportLine extends BaseEntity implements Serializable, EagerAble, C
         return TwoDigits.roundedApply(getPrice(), getTax(), 0.00);
     }
 
+    public void add(PaymentSettlement paymentSettlement) {
+        settlements.add(paymentSettlement);
+    }
+    
+    public Set<PaymentSettlement> getSettlements() {
+        return Collections.unmodifiableSet(settlements);
+    }
+    
     /**
      * This setter Method sets the productGroup and the productGroupName.
-     * <p/>
+     *
      * @param productGroup
      */
     public void setProductGroup(ProductGroup productGroup) {
@@ -795,7 +821,7 @@ public class ReportLine extends BaseEntity implements Serializable, EagerAble, C
     }
 
     /** This setter Method sets the productBrand and the productBrandName.
-     * <p/>
+     *
      * @param productBrand
      */
     public void setProductBrand(TradeName productBrand) {
@@ -807,7 +833,7 @@ public class ReportLine extends BaseEntity implements Serializable, EagerAble, C
 
     /**
      * This setter Method sets the contractor and the contractorName.
-     * <p/>
+     *
      * @param contractor
      */
     public void setContractor(TradeName contractor) {
@@ -819,7 +845,7 @@ public class ReportLine extends BaseEntity implements Serializable, EagerAble, C
 
     /**
      * This setter Method sets the salesChannel and the salesChannelName.
-     * <p/>
+     *
      * @param salesChannel
      */
     public void setSalesChannel(SalesChannel salesChannel) {
@@ -845,10 +871,10 @@ public class ReportLine extends BaseEntity implements Serializable, EagerAble, C
             add(reportLine);
         }
     }
-
+    
     /**
      * Returns all references in a new collection.
-     * <p>
+     * 
      * @return all references in a new collection.
      */
     public NavigableSet<ReportLine> getRefrences() {
@@ -857,7 +883,7 @@ public class ReportLine extends BaseEntity implements Serializable, EagerAble, C
 
     /**
      * Calls {@link Collection#retainAll(java.util.Collection) } on a new instance of references and returns the resulting collection.
-     * <p>
+     * 
      * @param other the other collection to use as parameter on retainAll.
      * @return the resulting collection
      */
@@ -869,7 +895,7 @@ public class ReportLine extends BaseEntity implements Serializable, EagerAble, C
 
     /**
      * This add a ReportLine of the references Set. This is a bidirectional mapping method.
-     * <p/>
+     * 
      * @param reportLine
      */
     public void add(ReportLine reportLine) {
@@ -1145,7 +1171,7 @@ public class ReportLine extends BaseEntity implements Serializable, EagerAble, C
                 + ", mfgDate=" + mfgDate + ", uniqueUnitId=" + uniqueUnitId + ", marginPercentage=" + marginPercentage + ", purchasePrice=" + purchasePrice
                 + ", salesChannel=" + salesChannel + ", salesChannelName=" + salesChannelName + ", contractor=" + contractor
                 + ", contractorName=" + contractorName + ", contractorPartNo=" + contractorPartNo + ", contractorReferencePrice=" + contractorReferencePrice
-                + ", gtin=" + gtin + '}';
+                + ", gtin=" + gtin + ", settlements=" + settlements + '}';
     }
 
     /**
@@ -1194,7 +1220,7 @@ public class ReportLine extends BaseEntity implements Serializable, EagerAble, C
         sb.append("<br>");
 
         sb.append("<b>DocumentType: </b>");
-        sb.append(documentType.getName());
+        sb.append(documentType.description());
         sb.append("<br>");
 
         sb.append("<b>WorkflowStatus: </b>");
@@ -1222,7 +1248,7 @@ public class ReportLine extends BaseEntity implements Serializable, EagerAble, C
         sb.append("<br>");
 
         sb.append("<b>PositionType: </b>");
-        sb.append(positionType.getName());
+        sb.append(positionType.description());
         sb.append("<br>");
 
         sb.append("<b>Price (in Euro): </b>");
@@ -1318,14 +1344,14 @@ public class ReportLine extends BaseEntity implements Serializable, EagerAble, C
         sb.append("<br>");
 
         sb.append("<b>SalesChannel: </b>");
-        sb.append(salesChannel.getName());
+        sb.append(salesChannel.description());
 
         sb.append("</td>");
         //contractor
         sb.append("<td valign='top'>");
         sb.append("<font size='4'><b><u>Contractor</u></b></font><br>");
         sb.append("<b>Contractor: </b>");
-        sb.append(contractor.getName());
+        sb.append(contractor.getDescription());
         sb.append("<br>");
 
         sb.append("<b>Contractor PartNo: </b>");
@@ -1338,6 +1364,10 @@ public class ReportLine extends BaseEntity implements Serializable, EagerAble, C
 
         sb.append("<b>GTIN: </b>");
         sb.append(gtin);
+        sb.append("<br>");
+
+        sb.append("<b>PaymentSettlements: </b>");
+        sb.append(settlements);
 
         sb.append("</td>");
 

@@ -27,6 +27,7 @@ import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.core.system.GlobalConfig;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.core.system.util.Utils;
+import eu.ggnet.dwoss.core.common.values.PaymentSettlement;
 
 import static eu.ggnet.dwoss.redtape.ee.format.DocumentFormater.toConditions;
 
@@ -67,9 +68,9 @@ public class DocumentStringRenderer extends DefaultListCellRenderer {
         res += "Positionen: " + doc.getPositions().size() + "<br />";
         if ( !doc.getSettlements().isEmpty() && doc.getType() == DocumentType.INVOICE ) {
             res += "Gezahlt via ";
-            for (Iterator<Document.Settlement> it = doc.getSettlements().iterator(); it.hasNext();) {
-                Document.Settlement settlement = it.next();
-                res += settlement.getName();
+            for (Iterator<PaymentSettlement> it = doc.getSettlements().iterator(); it.hasNext();) {
+                PaymentSettlement settlement = it.next();
+                res += settlement.description();
                 if ( it.hasNext() ) res += " / ";
             }
             res += "<br />";

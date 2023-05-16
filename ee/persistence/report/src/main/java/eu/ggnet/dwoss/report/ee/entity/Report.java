@@ -32,6 +32,7 @@ import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.core.system.persistence.EagerAble;
 
 import static eu.ggnet.dwoss.report.ee.entity.Report.ViewMode.DEFAULT;
+import static javax.persistence.GenerationType.IDENTITY;
 
 //TODO: Name: Zusammenfassung, Comulation. Gruppierung.
 /**

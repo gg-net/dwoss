@@ -1,5 +1,7 @@
 package eu.ggnet.dwoss.redtapext.op.itest;
 
+import eu.ggnet.dwoss.core.common.values.PaymentSettlement;
+
 import javax.ejb.EJB;
 import javax.inject.Inject;
 
@@ -86,7 +88,7 @@ public class RedTapeOperationDossierIT extends ArquillianProjectArchive {
         doc.setType(DocumentType.INVOICE);
         doc.add(Document.Condition.PAID);
         doc.add(Document.Condition.PICKED_UP);
-        doc.add(Document.Settlement.CASH);
+        doc.add(PaymentSettlement.CASH);
         doc.setDirective(Document.Directive.NONE);
         doc = redTapeWorker.update(doc, null, "JUnit");
         assertTrue("Check size of active documents", doc.getDossier().getActiveDocuments().size() == 2);

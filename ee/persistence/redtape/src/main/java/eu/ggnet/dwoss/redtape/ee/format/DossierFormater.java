@@ -22,7 +22,7 @@ import java.util.*;
 
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Condition;
-import eu.ggnet.dwoss.redtape.ee.entity.Document.Settlement;
+import eu.ggnet.dwoss.core.common.values.PaymentSettlement;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.core.common.values.DocumentType;
 
@@ -53,9 +53,9 @@ public class DossierFormater {
                 cons += con.getName();
                 if ( it.hasNext() ) cons += ",";
             }
-            for (Iterator<Settlement> it = doc.getSettlements().iterator(); it.hasNext();) {
-                Settlement set = it.next();
-                settlements += set.getName();
+            for (Iterator<PaymentSettlement> it = doc.getSettlements().iterator(); it.hasNext();) {
+                PaymentSettlement set = it.next();
+                settlements += set.description();
                 if ( it.hasNext() ) settlements += ",";
             }
 

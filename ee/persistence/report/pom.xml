@@ -11,8 +11,11 @@
 
     <packaging>ejb</packaging>
     <artifactId>dwoss-report-ee</artifactId>
-
     <name>DwOss • Report • EE (persistence)</name>
+
+    <properties>
+        <ddl-gen.packages>eu.ggnet.dwoss.report.ee.entity</ddl-gen.packages>
+    </properties>
 
     <dependencies>
         <dependency>

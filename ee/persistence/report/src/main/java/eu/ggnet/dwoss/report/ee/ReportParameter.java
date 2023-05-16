@@ -36,6 +36,7 @@ public interface ReportParameter extends Serializable {
 
     class Builder extends ReportParameter_Builder {
         
+        @SuppressWarnings("OverridableMethodCallInConstructor")
         public Builder () {
             viewMode(ViewMode.DEFAULT); 
         }

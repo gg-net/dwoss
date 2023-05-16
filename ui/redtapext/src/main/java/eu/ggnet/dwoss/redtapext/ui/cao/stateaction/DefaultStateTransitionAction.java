@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao.stateaction;
 
+import eu.ggnet.dwoss.core.common.values.PaymentSettlement;
+
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 
@@ -29,8 +31,7 @@ import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.core.widget.swing.CloseType;
 import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
-import eu.ggnet.dwoss.redtape.ee.entity.Document;
-import eu.ggnet.dwoss.redtape.ee.entity.Position;
+import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.state.*;
 import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
@@ -92,7 +93,7 @@ public class DefaultStateTransitionAction extends AbstractAction {
             OkCancelDialog<SettlementViewCask> dialog = new OkCancelDialog<>(parent, "Zahlung hinterlegen", view);
             dialog.setVisible(true);
             if ( dialog.getCloseType() == CloseType.OK ) {
-                for (Document.Settlement settlement : view.getSettlements()) {
+                for (PaymentSettlement settlement : view.getSettlements()) {
                     cdoc.getDocument().add(settlement);
                 }
             } else {

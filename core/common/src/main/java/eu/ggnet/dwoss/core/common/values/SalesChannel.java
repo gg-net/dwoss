@@ -46,8 +46,9 @@ public enum SalesChannel {
     public String getName() {
         return description;
     }
+    
+    public String description() {
+        return description;
+    }
 
 }
-
-
-

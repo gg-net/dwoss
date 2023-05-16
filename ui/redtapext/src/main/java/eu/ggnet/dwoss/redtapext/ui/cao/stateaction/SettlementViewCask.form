@@ -23,10 +23,10 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="cashButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="paypalButton" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="eCashButton" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="remittanceButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="splitButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="ebayButton" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
@@ -36,20 +36,20 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="cashButton" min="-2" max="-2" attributes="0"/>
+              <Component id="paypalButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="eCashButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="remittanceButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="splitButton" min="-2" max="-2" attributes="0"/>
+              <Component id="ebayButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace pref="14" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JRadioButton" name="cashButton">
+    <Component class="javax.swing.JRadioButton" name="paypalButton">
       <Properties>
         <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
           <ComponentRef name="buttonGroup1"/>
@@ -82,7 +82,7 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="settlementChangedAction"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JRadioButton" name="splitButton">
+    <Component class="javax.swing.JRadioButton" name="ebayButton">
       <Properties>
         <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
           <ComponentRef name="buttonGroup1"/>
@@ -90,7 +90,7 @@
         <Property name="text" type="java.lang.String" value="jRadioButton4"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="splitAction"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="settlementChangedAction"/>
       </Events>
     </Component>
   </SubComponents>

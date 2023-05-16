@@ -135,7 +135,7 @@ public class RedTapeCloserAutomaticOperation {
 
     /**
      * The closing selects and closes all dossiers and documents in a closable state. This includes production of appropriated values for report.
-     * <p/>
+     * <p>
      * The workflow:
      * <ol>
      * <li>Load all open {@link Dossiers}, and filter them by the closing states of the associated {@link Documents}.See
@@ -147,8 +147,7 @@ public class RedTapeCloserAutomaticOperation {
      * <li>Find all associated {@link StockUnit}'s and roll them out. See
      * {@link #closeStock(java.util.Set, java.lang.String, java.lang.String, de.dw.progress.IMonitor)}</li>
      * </ol>
-     * <p>
-     * <p/>
+     * 
      * @param arranger the arranger
      * @param manual   is this called manual or automatic
      */
@@ -564,7 +563,8 @@ public class RedTapeCloserAutomaticOperation {
                 l.setPrice(position.getPrice());
                 l.setReportingDate(reporting);
                 l.setTax(position.getTax());
-
+                document.getSettlements().forEach(l::add);
+                
                 l.setMarginPercentage(0); // Set via Report afterwards
                 l.setPurchasePrice(0); // Set via Report afterwards
 

@@ -339,23 +339,9 @@
                     <artifactId>maven-jar-plugin</artifactId>
                     <version>3.1.2</version>
                 </plugin>
-                <!-- Call hibernate4:export in an Entityproject for DDL Files-->
                 <plugin>
-                    <groupId>de.juplo</groupId>
-                    <artifactId>hibernate4-maven-plugin</artifactId>
-                    <version>1.1.1</version>
-                    <configuration>
-                        <envers>true</envers>
-                        <format>true</format>
-                        <delimiter>;</delimiter>
-                        <force>true</force>
-                        <type>CREATE</type>
-                        <target>SCRIPT</target>
-                        <hibernateDialect>org.hibernate.dialect.MySQLDialect</hibernateDialect>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <!--creates the mdsat sql script for the entire schema in mariadb as well as mysql with the GOAL: hibernate54-ddl:gen-ddl-->
+                    <!-- creates the SQL-DDL from the entities in mariadb as well as mysql with the GOAL: hibernate54-ddl:gen-ddl. 
+                    Set ddl-gen.packages property on subproject -->
                     <groupId>de.jpdigital</groupId>
                     <artifactId>hibernate54-ddl-maven-plugin</artifactId>
                     <version>2.3.0</version>
@@ -691,10 +677,10 @@
                 <version>6.17.0</version>
             </dependency>
             <!-- Runtime UI -->
-            <dependency> <!-- Clientside for the collections, w15 = 5.3.7 -->
+            <dependency> <!-- Clientside for the collections, w18 = 5.3.13 -->
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-core</artifactId>
-                <version>5.3.12.Final</version>
+                <version>5.3.13.Final</version>
                 <exclusions> <!-- Is in the JDK-->
                     <exclusion>
                         <groupId>xml-apis</groupId>
