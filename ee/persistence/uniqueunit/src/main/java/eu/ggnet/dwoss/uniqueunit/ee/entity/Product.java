@@ -37,13 +37,6 @@ import static javax.persistence.CascadeType.*;
 /**
  * Represents a Product.
  *
- * @has n - 1 TradeName
- * @has n - 1 ProductGroup
- * @has n - 1 SalesChannel
- * @has 1 - n PriceHistory
- * @has n - m Flag
- * @has 0 - n UniqueUnit
- * @has 0 - n UnitCollection
  * @author oliver.guenther
  */
 @Entity
@@ -144,6 +137,11 @@ public class Product extends BaseEntity implements Serializable, EagerAble, Comp
     @Basic(optional = false)
     private SalesChannel salesChannel = SalesChannel.UNKNOWN;
 
+    @ManyToOne(cascade = {DETACH,MERGE,PERSIST,REFRESH})
+    private ShopCategory shopCategory = null;    
+    
+    private boolean rch = false;
+    
     public Product() {
     }
 
@@ -164,6 +162,22 @@ public class Product extends BaseEntity implements Serializable, EagerAble, Comp
         return optLock;
     }
 
+    public ShopCategory getShopCategory() {
+        return shopCategory;
+    }
+
+    public void setShopCategory(ShopCategory shopCategory) {
+        this.shopCategory = shopCategory;
+    }
+
+    public boolean isRch() {
+        return rch;
+    }
+
+    public void setRch(boolean rch) {
+        this.rch = rch;
+    }
+    
     public Set<Flag> getFlags() {
         return flags;
     }
