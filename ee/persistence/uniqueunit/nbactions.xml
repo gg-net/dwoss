@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>CUSTOM-Generate DDL</actionName>
+            <displayName>Generate DDL</displayName>
+            <goals>
+                <goal>hibernate54-ddl:gen-ddl</goal>
+            </goals>
+        </action>
+    </actions>

@@ -137,11 +137,12 @@ public class Product extends BaseEntity implements Serializable, EagerAble, Comp
     @Basic(optional = false)
     private SalesChannel salesChannel = SalesChannel.UNKNOWN;
 
-    @ManyToOne(cascade = {DETACH,MERGE,PERSIST,REFRESH})
-    private ShopCategory shopCategory = null;    
-    
+    @ManyToOne(cascade = {DETACH, MERGE, PERSIST, REFRESH})
+    @JoinColumn(foreignKey = @ForeignKey(name = "FK_Product_ShopCategory"))
+    private ShopCategory shopCategory = null;
+
     private boolean rch = false;
-    
+
     public Product() {
     }
 
@@ -177,7 +178,7 @@ public class Product extends BaseEntity implements Serializable, EagerAble, Comp
     public void setRch(boolean rch) {
         this.rch = rch;
     }
-    
+
     public Set<Flag> getFlags() {
         return flags;
     }

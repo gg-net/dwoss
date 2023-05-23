@@ -12,6 +12,10 @@
     <name>DwOss • UniqueUnit • EE (persistence)</name>
     <packaging>ejb</packaging>
 
+    <properties>
+        <ddl-gen.packages>eu.ggnet.dwoss.uniqueunit.ee.entity</ddl-gen.packages>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>eu.ggnet.lucidcalc</groupId>
