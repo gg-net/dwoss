@@ -22,6 +22,7 @@ import javax.swing.DefaultComboBoxModel;
 
 import org.apache.commons.lang3.StringUtils;
 
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.swing.NamedEnumCellRenderer;
 import eu.ggnet.dwoss.receipt.ee.ProductProcessor.SpecAndModel;
 import eu.ggnet.dwoss.receipt.ui.CheckBoxTableNoteModel;
@@ -31,6 +32,8 @@ import eu.ggnet.dwoss.spec.ee.entity.BasicSpec.Color;
 import eu.ggnet.dwoss.spec.ee.entity.BasicSpec.VideoPort;
 import eu.ggnet.dwoss.spec.ee.entity.ProductModel;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec.Extra;
+import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
+import eu.ggnet.dwoss.uniqueunit.api.ShopCategory;
 
 /**
  *
@@ -61,6 +64,12 @@ public class BasicView extends AbstractView {
         colorBox.setModel(new DefaultComboBoxModel(colors));
         colorBox.setRenderer(renderer);
         colorBox.setSelectedItem(null);
+        
+        List<ShopCategory> categories = new ArrayList<>(Dl.remote().lookup(UniqueUnitApi.class).findAllShopCategories());
+        categories.add(0,null);    
+        shopCategoryComboBox.setRenderer(new ShopCategoryCellRenderer());
+        shopCategoryComboBox.setModel(new DefaultComboBoxModel<>(categories.toArray(ShopCategory[]::new)));
+        shopCategoryComboBox.setSelectedItem(null);
 
         SwingTraversalUtil.spaceSelection(extrasTable);
         SwingTraversalUtil.spaceSelection(videoPortTable);
@@ -68,17 +77,19 @@ public class BasicView extends AbstractView {
 
     @Override
     public void accept(SpecAndModel sam) {
-        BasicSpec basicSpec = (BasicSpec)Objects.requireNonNull(sam, "sam must not be null").spec();
+        BasicSpec inSpec = (BasicSpec)Objects.requireNonNull(sam, "sam must not be null").spec();
         model = sam.model();
-        gtinTextField.setText(Long.toString(sam.gtin()));
-        Set<Extra> extras = basicSpec.getDefaultExtras();
-        extras.addAll(basicSpec.getExtras());
+        gtinTextField.setText(Long.toString(sam.gtin()));        
+        shopCategoryComboBox.setSelectedItem(sam.nullableShopCategory());
+        rchCheckBox.setSelected(sam.rch());
+        Set<Extra> extras = inSpec.getDefaultExtras();
+        extras.addAll(inSpec.getExtras());
         extrasModel.setFiltered(extras);
-        extrasModel.setMarked(basicSpec.getExtras());
-        colorBox.setSelectedItem(basicSpec.getColor());
-        videoPortModel.setMarked(basicSpec.getVideoPorts());
-        noteArea.setText(basicSpec.getComment());
-        this.basicSpec = basicSpec;
+        extrasModel.setMarked(inSpec.getExtras());
+        colorBox.setSelectedItem(inSpec.getColor());
+        videoPortModel.setMarked(inSpec.getVideoPorts());
+        noteArea.setText(inSpec.getComment());
+        this.basicSpec = inSpec;
     }
 
     @Override
@@ -88,7 +99,7 @@ public class BasicView extends AbstractView {
         basicSpec.setExtras(extrasModel.getMarked());
         basicSpec.setVideoPorts(videoPortModel.getMarked());
         basicSpec.setComment(noteArea.getText());
-        return new SpecAndModel(basicSpec, model, getGtin());
+        return new SpecAndModel(basicSpec, model, getGtin(),shopCategoryComboBox.getItemAt(shopCategoryComboBox.getSelectedIndex()),rchCheckBox.isSelected());
     }
 
     // only internal use
@@ -116,7 +127,10 @@ public class BasicView extends AbstractView {
         jScrollPane3 = new javax.swing.JScrollPane();
         extrasTable = new javax.swing.JTable();
         gtinLabel = new javax.swing.JLabel();
+        rchCheckBox = new javax.swing.JCheckBox();
         gtinTextField = new javax.swing.JFormattedTextField();
+        shopCategoryLabel = new javax.swing.JLabel();
+        shopCategoryComboBox = new javax.swing.JComboBox<>();
 
         colorBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         colorBox.setMinimumSize(new java.awt.Dimension(72, 28));
@@ -160,7 +174,11 @@ public class BasicView extends AbstractView {
 
         gtinLabel.setText("GTIN/EAN:");
 
+        rchCheckBox.setText("Reverse Charge Kandidat");
+
         gtinTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("0000000000000"))));
+
+        shopCategoryLabel.setText("Shop Kartegory: ");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -169,22 +187,28 @@ public class BasicView extends AbstractView {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(colorBox, 0, 265, Short.MAX_VALUE))
+                        .addComponent(colorBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(gtinLabel)
                         .addGap(2, 2, 2)
-                        .addComponent(gtinTextField)))
+                        .addComponent(gtinTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(rchCheckBox))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(shopCategoryLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(shopCategoryComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -195,9 +219,16 @@ public class BasicView extends AbstractView {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(rchCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(shopCategoryLabel)
+                            .addComponent(shopCategoryComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
+                        .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -221,6 +252,9 @@ public class BasicView extends AbstractView {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextArea noteArea;
+    private javax.swing.JCheckBox rchCheckBox;
+    private javax.swing.JComboBox<ShopCategory> shopCategoryComboBox;
+    private javax.swing.JLabel shopCategoryLabel;
     private javax.swing.JTable videoPortTable;
     // End of variables declaration//GEN-END:variables
 

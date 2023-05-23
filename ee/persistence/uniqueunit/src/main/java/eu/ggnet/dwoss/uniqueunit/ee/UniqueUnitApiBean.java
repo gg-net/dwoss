@@ -23,12 +23,14 @@ import java.util.stream.Collectors;
 import javax.ejb.Stateless;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.common.UserInfoException;
+import eu.ggnet.dwoss.core.system.persistence.DefaultEao;
 import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
 import eu.ggnet.dwoss.core.system.progress.SubMonitor;
 import eu.ggnet.dwoss.core.system.util.Utils;
@@ -39,6 +41,7 @@ import eu.ggnet.dwoss.rights.api.UserApiLocal;
 import eu.ggnet.dwoss.stock.api.SimpleStockUnit;
 import eu.ggnet.dwoss.stock.api.StockApiLocal;
 import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
+import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier;
@@ -81,6 +84,10 @@ public class UniqueUnitApiBean implements UniqueUnitApi {
 
     @Inject
     private MonitorFactory monitorFactory;
+
+    @Inject
+    @UniqueUnits
+    private EntityManager uuEm;
 
     @Override
     public String findBySerialAsHtml(String serial, String username) {
@@ -244,7 +251,26 @@ public class UniqueUnitApiBean implements UniqueUnitApi {
 
     private static String toReportInformation(eu.ggnet.dwoss.report.api.SimpleReportUnit sru, UniqueUnit uu) {
         if ( sru != null ) return sru.toString();
-        var lastHistory = new TreeSet<>(uu.getHistory()).last();        
+        var lastHistory = new TreeSet<>(uu.getHistory()).last();
         return "Letzter Kommentar: " + Utils.ISO_DATE.format(lastHistory.getOccurence()) + " - " + lastHistory.getComment();
+    }
+
+    @Override
+    public List<eu.ggnet.dwoss.uniqueunit.api.ShopCategory> findAllShopCategories() {
+        DefaultEao<ShopCategory> shopEao = new DefaultEao<>(ShopCategory.class, uuEm);
+        return shopEao.findAll().stream().map(ShopCategory::toApi).collect(Collectors.toList());
+    }
+
+    @Override
+    public eu.ggnet.dwoss.uniqueunit.api.ShopCategory create(eu.ggnet.dwoss.uniqueunit.api.ShopCategory shopCategory) throws UserInfoException {
+        Objects.requireNonNull(shopCategory, "shopCatergory must not be null");
+        if ( shopCategory.id() > 0 ) throw new UserInfoException("ShopCategory für create darf noch keine Datenbankid haben, ist aber " + shopCategory);
+        ShopCategory sc = new ShopCategory();
+        sc.setName(shopCategory.name());
+        sc.setShopId(shopCategory.shopId());
+        uuEm.persist(sc);
+        uuEm.flush(); // Ensure Id Generation.        
+        L.info("Created {}", sc);
+        return sc.toApi();
     }
 }

@@ -16,16 +16,20 @@
  */
 package eu.ggnet.dwoss.receipt.ui.tryout;
 
-import java.util.EnumSet;
-
+import javax.enterprise.inject.Instance;
+import javax.enterprise.inject.se.SeContainer;
+import javax.enterprise.inject.se.SeContainerInitializer;
+import javax.swing.JFrame;
 import javax.swing.UIManager;
 
-import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
+import eu.ggnet.dwoss.core.widget.cdi.WidgetProducers;
+import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
+import eu.ggnet.dwoss.receipt.ui.ProductUiBuilder;
 import eu.ggnet.dwoss.receipt.ui.product.BasicView;
-import eu.ggnet.dwoss.spec.ee.entity.BasicSpec;
-import eu.ggnet.dwoss.spec.ee.entity.BasicSpec.Color;
-import eu.ggnet.dwoss.spec.ee.entity.BasicSpec.VideoPort;
-import eu.ggnet.dwoss.spec.ee.entity.ProductSpec.Extra;
+import eu.ggnet.dwoss.receipt.ui.tryout.stub.*;
+import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
+import eu.ggnet.saft.core.*;
+import eu.ggnet.saft.core.impl.Swing;
 
 /**
  *
@@ -35,17 +39,26 @@ public class BasicViewTryout {
 
     public static void main(String[] args) throws Exception {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        SeContainerInitializer ci = SeContainerInitializer.newInstance();
+        ci.addPackages(ReceiptTryout.class);
+        ci.addPackages(WidgetProducers.class);
+        ci.addPackages(true, ProductUiBuilder.class); // receipt.ui
+        ci.disableDiscovery();
+        SeContainer container = ci.initialize();
+        Instance<Object> instance = container.getBeanManager().createInstance();
+        
+        RemoteDl remote = instance.select(RemoteDl.class).get();
+        remote.add(UniqueUnitApi.class, new UniqueUnitApiStub());
+                
+        Saft saft = instance.select(Saft.class).get();
+        saft.addOnShutdown(() -> container.close());
 
-        BasicSpec basic = new BasicSpec();
-        basic.setPartNo("ABX");
-        basic.setColor(Color.RED);
-        basic.setComment("Der große Kommentar");
-        basic.setExtras(EnumSet.of(Extra.BLUETOOTH, Extra.CARD_READER));
-        basic.setVideoPorts(EnumSet.of(VideoPort.HDMI, VideoPort.VGA));
+        UiCore.initGlobal(saft); // Transition.
 
-        BasicView view = new BasicView();
+        JFrame mainFrame = UiUtil.startup(() -> {
+            return new BasicView();
+        });
 
-        OkCancelDialog<BasicView> dialog = new OkCancelDialog<>("", view);
-        dialog.setVisible(true);
+        saft.core(Swing.class).initMain(mainFrame);
     }
 }

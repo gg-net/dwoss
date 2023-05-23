@@ -16,14 +16,21 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ee.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+
+import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 
 /**
  * Shop categroy.
  *
  * @author oliver.guenther
  */
-public class ShopCategory {
+@Entity
+@SuppressWarnings("PersistenceUnitPresent")
+public class ShopCategory extends BaseEntity implements Serializable {
 
     @Id
     @GeneratedValue
@@ -33,6 +40,7 @@ public class ShopCategory {
     private short optLock;
 
     @Basic(optional = false)
+    @NotNull
     private String name;
 
     private int shopId;
@@ -40,6 +48,7 @@ public class ShopCategory {
     public ShopCategory() {
     }
 
+    @Override
     public long getId() {
         return id;
     }
@@ -64,6 +73,14 @@ public class ShopCategory {
         this.shopId = shopId;
     }
 
+    public eu.ggnet.dwoss.uniqueunit.api.ShopCategory toApi() {
+        return new eu.ggnet.dwoss.uniqueunit.api.ShopCategory.Builder()
+                .id(getId())
+                .name(getName())
+                .shopId(getShopId())
+                .build();
+    }
+    
     @Override
     public String toString() {
         return "ShopCategory{" + "id=" + id + ", name=" + name + ", shopId=" + shopId + '}';

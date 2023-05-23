@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.uniqueunit.api;
 
+import java.util.List;
+
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.core.common.FileJacket;
@@ -29,6 +31,22 @@ import eu.ggnet.dwoss.core.common.UserInfoException;
 @Remote
 public interface UniqueUnitApi {
 
+    /**
+     * Return all shop categories.
+     * 
+     * @return all shop categories. 
+     */
+    List<ShopCategory> findAllShopCategories();
+    
+    /**
+     * Create a new ShopCategory.
+     * 
+     * @param shopCategory the shopCategory to create.
+     * @throws UserInfoException if a category with an id other the 0 is supplied.
+     * @return shopCategory with database id.
+     */
+    ShopCategory create(ShopCategory shopCategory) throws UserInfoException;
+    
     String findBySerialAsHtml(String serial, String username);
 
     String findAsHtml(long id, String username);

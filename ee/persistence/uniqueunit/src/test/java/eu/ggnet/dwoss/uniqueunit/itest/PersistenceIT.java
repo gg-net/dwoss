@@ -4,6 +4,7 @@ import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.inject.Inject;
@@ -15,6 +16,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.*;
@@ -33,6 +35,9 @@ public class PersistenceIT extends ArquillianProjectArchive {
     @EJB
     private UniqueUnitAgent agent;
 
+    @EJB
+    private UniqueUnitApi api;    
+    
     @Inject
     @UniqueUnits
     private EntityManager em;
@@ -45,12 +50,21 @@ public class PersistenceIT extends ArquillianProjectArchive {
         utx.begin();
         em.joinTransaction();
         Date now = new Date();
+        
+        ShopCategory sh1 = new ShopCategory();
+        sh1.setName("Category 1");
+        sh1.setShopId(1);
+
+                ShopCategory sh2 = new ShopCategory();
+        sh2.setName("Category 1");
+        sh2.setShopId(1);
 
         Product p1 = new Product(ProductGroup.DESKTOP, TradeName.ACER, "LX.11111.222", "Verition Stein");
         p1.setDescription("Ein Tolles Gerät");
         p1.setPrice(PriceType.MANUFACTURER_COST, 200.0, "JUnit - Testcase");
         p1.setPrice(PriceType.CONTRACTOR_REFERENCE, 240.0, "JUnit - Testcase");
         p1.addFlag(Product.Flag.PRICE_FIXED);
+        p1.setShopCategory(sh1);
  
         Product p2 = new Product(ProductGroup.COMMENTARY, TradeName.DELL, "DL", "Dienstleistung 1h");
         p2.setDescription("Eine Dienstleistungs Stunde");
@@ -112,6 +126,9 @@ public class PersistenceIT extends ArquillianProjectArchive {
                 + " sehr sehr sehr sehr sehr sehr sehr sehr sehr sehr sehr sehr sehr sehr sehr sehr sehr langer Kommentar");
 
   
+        em.persist(sh1);
+        em.persist(sh2);
+        
         em.persist(p1);
         em.persist(p2);
 
@@ -136,5 +153,8 @@ public class PersistenceIT extends ArquillianProjectArchive {
         assertThat(unit4_1).as("Expected unit4").isNotNull();
         assertThat(unit4_1.getComment()).as("Comment of unit4").isNotBlank();
         assertThat(unit4_1.getInternalComment()).as("InternalComment of unit4").isNotBlank();
+        
+        List<eu.ggnet.dwoss.uniqueunit.api.ShopCategory> categories = api.findAllShopCategories();
+        assertThat(categories).hasSize(2);
     }
 }

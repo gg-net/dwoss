@@ -127,7 +127,7 @@ public class DesktopBundleView extends AbstractView {
 
     @Override
     public SpecAndModel getResult() {
-        return new SpecAndModel(spec, model, gtin);
+        return new SpecAndModel(spec, model, gtin, null, false);
     }
 
     private void updateActions() {

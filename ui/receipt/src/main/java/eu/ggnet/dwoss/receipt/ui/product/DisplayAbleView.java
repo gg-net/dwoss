@@ -50,7 +50,7 @@ public class DisplayAbleView extends AbstractView {
         SpecAndModel sam = desktopView.getResult();
         DisplayAbleDesktop displayAbleDesktop = (DisplayAbleDesktop)sam.spec();
         displayAbleDesktop.setDisplay(displayView.getDisplay());
-        return new SpecAndModel(displayAbleDesktop, sam.model(), sam.gtin());
+        return new SpecAndModel(displayAbleDesktop, sam.model(), sam.gtin(), sam.nullableShopCategory(), sam.rch());
     }
 
     /** This method is called from within the constructor to

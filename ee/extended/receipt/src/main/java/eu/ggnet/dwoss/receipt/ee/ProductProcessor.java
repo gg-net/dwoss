@@ -18,6 +18,7 @@ package eu.ggnet.dwoss.receipt.ee;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Optional;
 
 import javax.ejb.Remote;
 
@@ -27,6 +28,7 @@ import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.spec.ee.entity.*;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Cpu;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Gpu;
+import eu.ggnet.dwoss.uniqueunit.api.ShopCategory;
 
 /**
  *
@@ -42,11 +44,17 @@ public interface ProductProcessor {
         private final ProductModel model;
 
         private final long gtin;
+        
+        private final ShopCategory shopCategory;
+        
+        private final boolean rch;
 
-        public SpecAndModel(ProductSpec spec, ProductModel model, long gtin) {
+        public SpecAndModel(ProductSpec spec, ProductModel model, long gtin, ShopCategory shopCategory, boolean rch) {
             this.spec = Objects.requireNonNull(spec, "spec must not be null");
             this.model = Objects.requireNonNull(model, "model must not be null");
+            this.shopCategory = shopCategory; // May be null;
             this.gtin = gtin;
+            this.rch = rch;
         }
 
         public ProductSpec spec() {
@@ -60,10 +68,18 @@ public interface ProductProcessor {
         public long gtin() {
             return gtin;
         }
+        
+        public ShopCategory nullableShopCategory() {
+            return shopCategory;
+        }
+
+        public boolean rch() {
+            return rch;
+        }        
 
         @Override
         public String toString() {
-            return "SpecAndModel{" + "spec=" + spec + ", model=" + model + ", gtin=" + gtin + '}';
+            return "SpecAndModel{" + "spec=" + spec + ", model=" + model + ", gtin=" + gtin + ", shopCategory=" + shopCategory + ", rch=" + rch + '}';
         }
 
     }

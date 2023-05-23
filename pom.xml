@@ -216,6 +216,7 @@
                 <class>eu.ggnet.dwoss.uniqueunit.ee.entity.PriceHistory</class>
                 <class>eu.ggnet.dwoss.uniqueunit.ee.entity.CategoryProduct</class>
                 <class>eu.ggnet.dwoss.uniqueunit.ee.entity.Product</class>
+                <class>eu.ggnet.dwoss.uniqueunit.ee.entity.ShopCategory</class>
                 <class>eu.ggnet.dwoss.uniqueunit.ee.entity.UnitCollection</class>
                 <class>eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit</class>
                 <class>eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnitHistory</class>

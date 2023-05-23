@@ -46,6 +46,7 @@ import eu.ggnet.dwoss.receipt.ui.tryout.stub.*;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.spi.ActiveStock;
+import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
@@ -82,7 +83,8 @@ public class ReceiptTryout {
         remote.add(UnitProcessor.class, pp.unitProcessor());
         remote.add(UnitSupporter.class, pp.unitSupporter());
         remote.add(UniqueUnitAgent.class, pp.uniqueUnitAgent());
-
+        remote.add(UniqueUnitApi.class, new UniqueUnitApiStub());
+        
         Dl.local().add(CachedMandators.class, pp.cachedMandators());
         Dl.local().add(RemoteLookup.class, new RemoteLookupStub());
         Dl.local().add(Guardian.class, new GuardianStub());

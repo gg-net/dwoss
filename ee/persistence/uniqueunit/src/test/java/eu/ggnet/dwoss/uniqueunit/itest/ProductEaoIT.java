@@ -13,8 +13,10 @@ import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.ShopCategory;
 import eu.ggnet.dwoss.uniqueunit.itest.support.ArquillianProjectArchive;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
 /**
@@ -31,13 +33,17 @@ public class ProductEaoIT extends ArquillianProjectArchive {
     @UniqueUnits
     EntityManager em;
 
-    Product p;
+    
 
     @Test
     public void testFindPartNo() throws Exception {
         utx.begin();
         em.joinTransaction();
-        p = new Product(ProductGroup.MISC, TradeName.ACER, "AA.BBBBB.CCC", "Evil Acer Handy of Doom");
+        Product p = new Product(ProductGroup.MISC, TradeName.ACER, "AA.BBBBB.CCC", "Evil Acer Handy of Doom");
+        ShopCategory sh = new ShopCategory();
+        sh.setName("Demo1");
+        sh.setShopId(501);
+        p.setShopCategory(sh);        
         em.persist(p);
         utx.commit();
 
@@ -48,6 +54,7 @@ public class ProductEaoIT extends ArquillianProjectArchive {
         assertNotNull(productEao.findByPartNo(p.getPartNo()));
         assertNull(productEao.findByPartNo("bb.ccccc.aa"));
         assertEquals(p, productEao.findByPartNo("AA.BBBBB.CCC"));
+        assertThat(productEao.findByPartNo("AA.BBBBB.CCC").getShopCategory()).isEqualTo(sh);
         utx.commit();
     }
 }

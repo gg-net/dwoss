@@ -53,7 +53,7 @@ public class MonitorView extends AbstractView {
         SpecAndModel sam = basicView.getResult();
         Monitor monitor = (Monitor)sam.spec();
         monitor.setDisplay(displayView.getDisplay());
-        return new SpecAndModel(monitor, sam.model(), sam.gtin());
+        return new SpecAndModel(monitor, sam.model(), sam.gtin(), sam.nullableShopCategory(), sam.rch());
     }
 
     /**

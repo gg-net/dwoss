@@ -250,10 +250,15 @@ public class SimpleView extends javax.swing.JPanel implements Consumer<SimpleVie
             spec = ProductSpec.newInstance(getGroup());
             spec.setPartNo(partNoField.getText());
         }
-        // TODO: The gtin should be on the product spec, not on the product. thats why we need this workaround here.
-        // Load gtin if in edit mode.
-        long gtin = spec.getId() > 0 ? Dl.remote().lookup(UniqueUnitAgent.class).findById(Product.class, spec.getProductId()).getGtin() : 0;
-        return new SpecAndModel(spec, getSelectedModel().get(), gtin);
+        // Loading Product specific details.
+
+        return Optional.ofNullable(spec.getId() > 0 ? spec.getId() : null)
+                .map((specId) -> {
+                    Product p = Dl.remote().lookup(UniqueUnitAgent.class).findById(Product.class, spec.getProductId());
+                    return new SpecAndModel(spec, getSelectedModel().get(), p.getGtin(),
+                            Optional.ofNullable(p.getShopCategory()).map(t -> t.toApi()).orElse(null), p.isRch());
+                })
+                .orElse(new SpecAndModel(spec, getSelectedModel().get(), 0, null, false));
     }
 
     private TradeName getBrand() {

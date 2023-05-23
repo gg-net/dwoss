@@ -39,6 +39,7 @@ import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.ShopCategory;
 
 /**
  * This Logic is used in Reciept to handle all modifications to ProductSpec,Product and SopoProduct.
@@ -293,6 +294,13 @@ public class ProductProcessorOperation implements ProductProcessor {
         product.setName(spec.getModel().getName());
         product.setDescription(SpecFormater.toSingleLine(spec));
         product.setGtin(sam.gtin());
+        product.setRch(sam.rch());
+        
+        if (sam.nullableShopCategory() != null) {
+            // If the ShopCategory is selected in the ui it exists in the database.
+            product.setShopCategory(uuEm.find(ShopCategory.class, sam.nullableShopCategory().id()));
+        }
+        
         if ( !uuEm.contains(product) ) {
             uuEm.persist(product);
             uuEm.flush(); // Ensuring Id generation
@@ -333,6 +341,15 @@ public class ProductProcessorOperation implements ProductProcessor {
         product.setName(spec.getModel().getName());
         product.setDescription(SpecFormater.toSingleLine(spec));
         product.setGtin(sam.gtin());
+        product.setRch(sam.rch());
+
+        if (sam.nullableShopCategory() != null) {
+            // If the ShopCategory is selected in the ui it exists in the database.
+            product.setShopCategory(uuEm.find(ShopCategory.class, sam.nullableShopCategory().id()));
+        } else {
+            product.setShopCategory(null);
+        }
+        
         L.debug("update({}) overwriting uniqueunti.Product.id={}", SpecFormater.toDetailedName(spec), product.getId());
         return spec;
     }

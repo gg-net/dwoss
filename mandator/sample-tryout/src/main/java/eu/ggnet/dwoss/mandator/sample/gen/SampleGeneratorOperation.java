@@ -123,7 +123,6 @@ public class SampleGeneratorOperation implements Serializable {
     @TransactionAttribute(REQUIRES_NEW)
     public void generateSampleData() {
         if ( stockEao.count() == 0 && customerEao.count() == 0 && uniqueUnitEao.count() == 0 && dossierEao.count() == 0 && reportLineEao.count() == 0 ) {
-;
             SubMonitor m = monitorFactory.newSubMonitor("Data generator", 7);
             m.start();
             generating = true;
@@ -138,8 +137,12 @@ public class SampleGeneratorOperation implements Serializable {
             customerGenerator.makeCustomers(50, new Assure.Builder().simple(true).build());
             customerGenerator.makeCustomers(50, new Assure.Builder().simple(true).addAllMandatorMetadataMatchCodes(Arrays.asList(mandator.matchCode())).build());
             customerGenerator.makeCustomers(50, new Assure.Builder().addAllMandatorMetadataMatchCodes(Arrays.asList(mandator.matchCode())).build());
-            customerGenerator.makeCustomers(100, new Assure.Builder().addAllMandatorMetadataMatchCodes(Arrays.asList(mandator.matchCode(),RandomStringUtils.randomAlphabetic(5).toUpperCase())).build());
+            customerGenerator.makeCustomers(100, new Assure.Builder().addAllMandatorMetadataMatchCodes(Arrays.asList(mandator.matchCode(),RandomStringUtils.randomAlphabetic(5).toUpperCase())).build());            
             m.worked(1, "Generating 100 Specs");
+            receiptGenerator.makeShopCategory();
+            receiptGenerator.makeShopCategory();
+            receiptGenerator.makeShopCategory();
+            receiptGenerator.makeShopCategory();
             receiptGenerator.makeProductSpecs(100, true);
             m.worked(1, "Generating 200 Units");
             receiptGenerator.makeUniqueUnits(200, true, true);

@@ -10,6 +10,7 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
 import eu.ggnet.dwoss.receipt.ee.ProductProcessor.SpecAndModel;
 import eu.ggnet.dwoss.receipt.itest.support.ArquillianProjectArchive;
@@ -17,6 +18,8 @@ import eu.ggnet.dwoss.receipt.itest.support.DatabaseCleaner;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.entity.*;
 import eu.ggnet.dwoss.spec.ee.entity.piece.*;
+import eu.ggnet.dwoss.uniqueunit.api.ShopCategory;
+import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 
@@ -37,6 +40,9 @@ public class ReceiptProductLogicProductSpecIT extends ArquillianProjectArchive {
 
     @EJB
     private UniqueUnitAgent uuAgent;
+
+    @EJB
+    private UniqueUnitApi uuApi;
 
     @Inject
     private DatabaseCleaner cleaner;
@@ -71,9 +77,15 @@ public class ReceiptProductLogicProductSpecIT extends ArquillianProjectArchive {
         notebook.setPartNo("LX.ASDFG.GHJ");
         notebook.setModel(productModel);
 
-        ProductSpec testSpec = productProcessor.create(new SpecAndModel(notebook, productModel, 0));
+        ProductSpec testSpec = productProcessor.create(new SpecAndModel(notebook, productModel, 0, null, false));
 
-        assertNotNull(testSpec);
+        assertThat(testSpec).isNotNull();
+
+        ShopCategory sc1 = new ShopCategory.Builder().name("Category 1").shopId(1).build();
+        ShopCategory sc2 = new ShopCategory.Builder().name("Category 2").shopId(2).build();
+
+        sc1 = uuApi.create(sc1);
+        sc2 = uuApi.create(sc2);
 
         Notebook notebook2 = new Notebook();
         notebook2.setDisplay(display);
@@ -88,13 +100,16 @@ public class ReceiptProductLogicProductSpecIT extends ArquillianProjectArchive {
         notebook2.setPartNo("LX.ASDFG.GH2");
         notebook2.setModel(productModel);
 
-        ProductSpec testSpec2 = productProcessor.create(new SpecAndModel(notebook2, productModel, GTIN));
+        ProductSpec testSpec2 = productProcessor.create(new SpecAndModel(notebook2, productModel, GTIN, sc2, true));
         assertNotNull(testSpec2);
         assertNotSame(testSpec2, testSpec);
 
         Product product = uuAgent.findById(Product.class, testSpec2.getProductId());
-        assertThat(product).isNotNull().returns(GTIN, Product::getGtin);
-
+        assertThat(product)
+                .isNotNull()
+                .returns(GTIN, Product::getGtin)
+                .returns(sc2.id(), p -> p.getShopCategory().getId())
+                .returns(true, Product::isRch);
     }
 
     @Test(expected = RuntimeException.class)
@@ -121,13 +136,13 @@ public class ReceiptProductLogicProductSpecIT extends ArquillianProjectArchive {
         notebook.setPartNo("LX.ASDFG.GHJ");
         notebook.setModel(productModel);
 
-        productProcessor.create(new SpecAndModel(notebook, productModel, 0));
-        productProcessor.create(new SpecAndModel(notebook, productModel, 0));
+        productProcessor.create(new SpecAndModel(notebook, productModel, 0, null, false));
+        productProcessor.create(new SpecAndModel(notebook, productModel, 0, null, false));
         fail("Error 040: No Exception Found at: CreateProductSpec");
     }
 
     @Test
-    public void testUpdateProductSpecModelChange() {
+    public void testUpdateProductSpecModelChange() throws UserInfoException {
         ProductModel productModel = productProcessor.create(ACER, NOTEBOOK, null, null, "TestModel");
 
         Cpu cpu = productProcessor.create(new Cpu(Cpu.Series.AMD_V, "TestCPU", Cpu.Type.MOBILE, 2.0, 5));
@@ -146,18 +161,32 @@ public class ReceiptProductLogicProductSpecIT extends ArquillianProjectArchive {
         notebook.setPartNo("LX.ASDFG.GHP");
         notebook.setModel(productModel);
 
-        ProductSpec spec = productProcessor.create(new SpecAndModel(notebook, productModel, 0));
+        ProductSpec spec = productProcessor.create(new SpecAndModel(notebook, productModel, 0, null, false));
         ProductFamily family = spec.getModel().getFamily();
 
         ProductModel productModel2 = productProcessor.create(ACER, NOTEBOOK, family.getSeries(), family, "TestModel2");
 
+                Product product = uuAgent.findById(Product.class, spec.getProductId());
+        assertThat(product)
+                .isNotNull()
+                .returns(0L, Product::getGtin)
+                .returns(null, p -> p.getShopCategory())
+                .returns(false, Product::isRch);
+        
         long idOfOldModel = productModel.getId();
         long idOfNewModel = productModel2.getId();
 
         String comment = "MuhBlub";
-        ((Notebook)spec).setComment(comment);
+        ((Notebook)spec).setComment(comment);                
 
-        productProcessor.update(new SpecAndModel(spec, productModel2, 0));
+        ShopCategory sc1 = new ShopCategory.Builder().name("Category 1").shopId(1).build();
+        ShopCategory sc2 = new ShopCategory.Builder().name("Category 2").shopId(2).build();
+
+        long gtin = 123456789;
+        sc1 = uuApi.create(sc1);
+        sc2 = uuApi.create(sc2);
+
+        productProcessor.update(new SpecAndModel(spec, productModel2, gtin, sc2, true));
 
         List<ProductSeries> series = specAgent.findAllEager(ProductSeries.class);
         assertNotNull(series);
@@ -172,5 +201,12 @@ public class ReceiptProductLogicProductSpecIT extends ArquillianProjectArchive {
         assertEquals(1, specs.size());
         assertThat(specs.get(0).getModel().getId()).as("ID of the Model should match new model, not old " + idOfOldModel).isEqualTo(idOfNewModel);
         assertEquals(comment, ((Notebook)specs.get(0)).getComment());
+        
+        product = uuAgent.findById(Product.class, spec.getProductId());
+        assertThat(product)
+                .isNotNull()
+                .returns(gtin, Product::getGtin)
+                .returns(sc2.id(), p -> p.getShopCategory().getId())
+                .returns(true, Product::isRch);
     }
 }

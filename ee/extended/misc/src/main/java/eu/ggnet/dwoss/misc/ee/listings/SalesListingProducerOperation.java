@@ -167,7 +167,9 @@ public class SalesListingProducerOperation implements SalesListingProducer, Sale
                 uu.getInputDate(),
                 firstPriced,
                 source,
-                uu.getProduct().getImageId()                
+                uu.getProduct().getImageId(),
+                Optional.ofNullable(uu.getProduct().getShopCategory()).map(ShopCategory::getName).orElse(null),
+                Optional.ofNullable(uu.getProduct().getShopCategory()).map(ShopCategory::getShopId).orElse(null)
             };
             if ( uu.getSalesChannel() == SalesChannel.CUSTOMER && uu.hasPrice(PriceType.CUSTOMER) ) customers.add(row);
             else if ( uu.getSalesChannel() == SalesChannel.RETAILER && (uu.hasPrice(PriceType.CUSTOMER) || uu.hasPrice(PriceType.RETAILER)) )
@@ -199,6 +201,8 @@ public class SalesListingProducerOperation implements SalesListingProducer, Sale
         consumerTable.add(new STableColumn("Erstmalig Bepreist", 18, new CFormat(Representation.SHORT_DATE)));
         consumerTable.add(new STableColumn("Preis Quelle", 18));
         consumerTable.add(new STableColumn("ImageId", 5));
+        consumerTable.add(new STableColumn("ShopCategory", 12));
+        consumerTable.add(new STableColumn("ShopCategoryId", 5));
         consumerTable.setModel(new STableModelList(customers));
 
         STable retailerTable = new STable(consumerTable);

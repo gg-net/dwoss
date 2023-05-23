@@ -305,7 +305,7 @@ public class DesktopView extends AbstractView {
         desktop.setOdds(getOdds());
         desktop.setMemory((Integer)memoryBox.getSelectedItem());
         desktop.setOs((Os)osBox.getSelectedItem());
-        return new SpecAndModel(desktop, sam.model(), sam.gtin());
+        return new SpecAndModel(desktop, sam.model(), sam.gtin(), sam.nullableShopCategory(), sam.rch());
     }
 
     public BasicView getBasicView() {

@@ -620,6 +620,7 @@ public class RedTapeCloserAutomaticOperation {
                     l.setProductGroup(p.getGroup());
                     l.setProductId(p.getId());
                     l.setGtin(p.getGtin());
+                    l.setRch(p.isRch());
                     // Extra Information for Type Product Batch
                 } else if ( position.getType() == PositionType.PRODUCT_BATCH ) {
                     Product p = Objects.requireNonNull(productEao.findById(position.getUniqueUnitProductId()),
@@ -631,6 +632,7 @@ public class RedTapeCloserAutomaticOperation {
                     l.setProductName(p.getName());
                     l.setProductId(p.getId());
                     l.setGtin(p.getGtin());
+                    l.setRch(p.isRch());
                     l.setUniqueUnitId(position.getUniqueUnitId());
                     l.setSerial(position.getSerial());
                     l.setRefurbishId(position.getRefurbishedId());

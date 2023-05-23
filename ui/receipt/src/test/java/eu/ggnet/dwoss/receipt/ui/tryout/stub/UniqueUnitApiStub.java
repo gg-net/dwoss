@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 GG-Net GmbH
+ * Copyright (C) 2023 GG-Net GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package tryout.stub;
+package eu.ggnet.dwoss.receipt.ui.tryout.stub;
 
 import java.util.List;
 
@@ -30,45 +30,35 @@ import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
 public class UniqueUnitApiStub implements UniqueUnitApi {
 
     @Override
+    public List<ShopCategory> findAllShopCategories() {
+        return List.of(
+                new ShopCategory.Builder().id(1).name("Category 1").shopId(1).build(),
+                new ShopCategory.Builder().id(2).name("Category 2").shopId(2).build()
+        );
+    }
+
+    @Override
     public String findBySerialAsHtml(String serial, String username) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public String findAsHtml(long id, String username) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void addHistory(long uniqueUnitId, String history, String arranger) throws UserInfoException {
-        if ( history == null || history.isBlank() ) throw new UserInfoException("history darf nicht null oder leer sein");
-        if ( arranger == null || arranger.isBlank() ) throw new UserInfoException("arranger dar nicht null oder leer sein");
-        if ( uniqueUnitId < 1 || uniqueUnitId > 100000 )
-            throw new UserInfoException("UniqueUnitId " + uniqueUnitId + " muß für Stub zwischen 1 und 100000 liegen");
-        System.out.println("Speichere History " + history + " - " + arranger + " für Unit: " + uniqueUnitId);
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void addHistoryByRefurbishId(String refurbishId, String history, String arranger) throws UserInfoException {
-        if ( history == null || history.isBlank() ) throw new UserInfoException("history darf nicht null oder leer sein");
-        if ( arranger == null || arranger.isBlank() ) throw new UserInfoException("arranger dar nicht null oder leer sein");
-        if ( refurbishId == null || refurbishId.isBlank() ) throw new UserInfoException("refurbishId darf nicht null oder leer sein");
-        try {
-            int intId = Integer.parseInt(refurbishId);
-            if ( intId < 1 || intId > 100000 ) throw new UserInfoException("Refurbishid " + refurbishId + " must für Stub zwischen 1 und 100000 liegen");
-            System.out.println("Speichere History " + history + " - " + arranger + " für Unit: " + refurbishId);
-        } catch (NumberFormatException e) {
-            throw new UserInfoException("Refurbishid " + refurbishId + " ist keine Zahl");
-        }
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public FileJacket toUnitsOfPartNoAsXls(String partNo) throws UserInfoException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public List<ShopCategory> findAllShopCategories() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
@@ -76,5 +66,5 @@ public class UniqueUnitApiStub implements UniqueUnitApi {
     public ShopCategory create(ShopCategory shopCategory) throws UserInfoException {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-
+    
 }
