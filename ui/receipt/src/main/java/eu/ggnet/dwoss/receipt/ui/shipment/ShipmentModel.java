@@ -67,6 +67,7 @@ public class ShipmentModel extends PojoTableModel<Shipment> {
         super(lines,
                 new PojoColumn<>("ShipmentNamen", 5, String.class, Shipment::getShipmentId),
                 new PojoColumn<>("Besitzer", 5, TradeName.class, Shipment::getContractor),
+                new PojoColumn<>("Menge LS", 5, Integer.class, Shipment::getAmountOfUnits),
                 new PojoColumn<>("Letzter Status", 10, Shipment.Status.class, Shipment::getStatus),
                 new PojoColumn<>("Datum", 20, Date.class, Shipment::getDate));
         filter = new ShipmentFilter();
@@ -96,12 +97,8 @@ public class ShipmentModel extends PojoTableModel<Shipment> {
 
     @Override
     public Shipment add(Shipment shipment) {
-        L.info("add({})", shipment);
-        Shipment add = super.add(shipment);
-//        getLines().forEach(sm -> {
-//            System.out.println(" - " + sm.getShipmentId());
-//        });
-        return add;
+        L.info("add({})", shipment);        
+        return super.add(shipment);
     }
 
 }

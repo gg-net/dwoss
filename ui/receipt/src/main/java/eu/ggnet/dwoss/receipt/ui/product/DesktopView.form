@@ -35,8 +35,8 @@
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="basicViewPanel" pref="331" max="32767" attributes="2"/>
-                  <Component id="displayViewPanel" alignment="0" pref="331" max="32767" attributes="2"/>
+                  <Component id="basicViewPanel" pref="476" max="32767" attributes="2"/>
+                  <Component id="displayViewPanel" alignment="0" pref="476" max="32767" attributes="2"/>
               </Group>
           </Group>
       </Group>

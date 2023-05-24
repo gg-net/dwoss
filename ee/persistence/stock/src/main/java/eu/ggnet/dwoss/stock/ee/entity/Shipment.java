@@ -31,7 +31,13 @@ public class Shipment extends BaseEntity implements Serializable {
 
     public static enum Status {
 
-        ANNOUNCED, DELIVERED, OPENED, CLOSED, RECEIPT_PLANED
+        ANNOUNCED, DELIVERED, OPENED, CLOSED, 
+        /**
+         * 
+         * @deprecated Wird nicht verwendet.
+         */
+        @Deprecated
+        RECEIPT_PLANED
     }
 
     @Id
@@ -56,13 +62,19 @@ public class Shipment extends BaseEntity implements Serializable {
     @NotNull
     @Enumerated(EnumType.ORDINAL)
     private Status status;
-
+    
+    /**
+     * Amount of Units on the Shipment, based on the Delivery note.
+     */    
+    private int amountOfUnits;
+    
     /**
      * DefaultConsturctor with status = ANNOUNCED and date = new Date().
      */
     public Shipment() {
         status = Status.ANNOUNCED;
         date = new Date();
+        amountOfUnits = 0;
     }
 
     public Shipment(String shipmentId, TradeName contractor, TradeName defaultManufacturer, Status status) {
@@ -122,6 +134,14 @@ public class Shipment extends BaseEntity implements Serializable {
     public Status getStatus() {
         return status;
     }
+
+    public int getAmountOfUnits() {
+        return amountOfUnits;
+    }
+
+    public void setAmountOfUnits(int amountOfUnits) {
+        this.amountOfUnits = amountOfUnits;
+    }
     //</editor-fold>
     
     /**
@@ -133,5 +153,5 @@ public class Shipment extends BaseEntity implements Serializable {
         this.date = new Date();
         this.status = status;
     }
-
+   
 }

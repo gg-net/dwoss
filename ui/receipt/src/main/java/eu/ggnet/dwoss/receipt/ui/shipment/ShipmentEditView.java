@@ -82,6 +82,8 @@ public class ShipmentEditView extends BorderPane implements Consumer<Shipment>, 
     private TextField idField;
 
     private TextField shipIdField;
+    
+    private Spinner<Integer> amountSpinnter;
 
     private Button okButton = new Button("OK");
 
@@ -141,13 +143,16 @@ public class ShipmentEditView extends BorderPane implements Consumer<Shipment>, 
         statusBox = new ComboBox<>(FXCollections.observableArrayList(Shipment.Status.values()));
         statusBox.setMaxWidth(MAX_VALUE);
         statusBox.getSelectionModel().selectFirst();
+        amountSpinnter = new Spinner<>(0, 100000, 0);
+        amountSpinnter.setEditable(true);
 
         GridPane grid = new GridPane();
         grid.addRow(1, new Label("ID:"), idField);
         grid.addRow(2, new Label("Shipment ID:"), shipIdField);
         grid.addRow(3, new Label("Besitzer:"), contractorBox);
         grid.addRow(4, new Label("Hersteller:"), manufacturerBox);
-        grid.addRow(5, new Label("Status"), statusBox);
+        grid.addRow(5, new Label("Menge laut Lieferschein"), amountSpinnter);
+        grid.addRow(6, new Label("Status"), statusBox);
         grid.setMaxWidth(MAX_VALUE);
         grid.vgapProperty().set(2.);
         grid.getColumnConstraints().add(0, new ColumnConstraints(100, 100, Double.MAX_VALUE, Priority.SOMETIMES, HPos.LEFT, false));
@@ -170,16 +175,8 @@ public class ShipmentEditView extends BorderPane implements Consumer<Shipment>, 
         else sm.select(shipment.getContractor());
         statusBox.getSelectionModel().select(shipment.getStatus() == null ? OPENED : shipment.getStatus());
         if ( shipment.getDefaultManufacturer() != null ) manufacturerBox.getSelectionModel().select(shipment.getDefaultManufacturer());
+        amountSpinnter.getValueFactory().setValue(shipment.getAmountOfUnits());
         this.shipment = shipment;
-    }
-
-    public Shipment getShipment() {
-        shipment.setDate(new Date());
-        shipment.setContractor(contractorBox.getValue());
-        shipment.setDefaultManufacturer(manufacturerBox.getValue());
-        shipment.setShipmentId(shipIdField.getText());
-        shipment.setStatus(statusBox.getValue());
-        return shipment;
     }
 
     @Override
@@ -189,6 +186,7 @@ public class ShipmentEditView extends BorderPane implements Consumer<Shipment>, 
         result.setContractor(contractorBox.getValue());
         result.setDefaultManufacturer(manufacturerBox.getValue());
         result.setShipmentId(shipIdField.getText());
+        result.setAmountOfUnits(amountSpinnter.getValue());
         result.setStatus(statusBox.getValue());
         return result;
     }
