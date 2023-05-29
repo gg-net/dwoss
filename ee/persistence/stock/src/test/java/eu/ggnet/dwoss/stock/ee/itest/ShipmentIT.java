@@ -16,6 +16,7 @@ import eu.ggnet.dwoss.stock.ee.eao.ShipmentEao;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
 import eu.ggnet.dwoss.stock.ee.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.core.system.util.Utils;
+import eu.ggnet.dwoss.core.common.values.ShipmentStatus;
 
 import static org.junit.Assert.*;
 
@@ -48,12 +49,11 @@ public class ShipmentIT extends ArquillianProjectArchive {
         utx.commit();
     }
 
-    //<editor-fold defaultstate="collapsed" desc=" testCreation ">
     @Test
     public void testCreateShipment() throws Exception {
         utx.begin();
         em.joinTransaction();
-        Shipment ship1 = new Shipment("001", TradeName.ONESELF, TradeName.HP, Shipment.Status.OPENED);
+        Shipment ship1 = new Shipment("001", TradeName.ONESELF, TradeName.HP, ShipmentStatus.OPENED);
         em.persist(ship1);
         assertTrue(ship1.getId() > 0);
         utx.commit();
@@ -61,7 +61,7 @@ public class ShipmentIT extends ArquillianProjectArchive {
         utx.begin();
         em.joinTransaction();
 
-        Shipment ship2 = new Shipment("002", TradeName.ALSO, TradeName.DELL, Shipment.Status.OPENED);
+        Shipment ship2 = new Shipment("002", TradeName.ALSO, TradeName.DELL, ShipmentStatus.OPENED);
         em.persist(ship2);
         utx.commit();
 
@@ -73,35 +73,31 @@ public class ShipmentIT extends ArquillianProjectArchive {
         assertNotNull(list);
         assertEquals(2, list.size());
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc=" testDeletion ">
     @Test
     public void testDeleteShipment() throws Exception {
         utx.begin();
         em.joinTransaction();
-        Shipment ship1 = new Shipment("001", TradeName.ONESELF, TradeName.APPLE, Shipment.Status.OPENED);
+        Shipment ship1 = new Shipment("001", TradeName.ONESELF, TradeName.APPLE, ShipmentStatus.OPENED);
         em.persist(ship1);
         utx.commit();
 
         utx.begin();
         em.joinTransaction();
         ship1 = em.find(Shipment.class, ship1.getId());
-        Shipment ship2 = new Shipment("002", TradeName.DELL, TradeName.DELL, Shipment.Status.OPENED);
+        Shipment ship2 = new Shipment("002", TradeName.DELL, TradeName.DELL, ShipmentStatus.OPENED);
         em.persist(ship2);
         em.remove(ship1);
         List<Shipment> list = eao.findAll();
         assertEquals(1, list.size());
         utx.commit();
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc=" testUpdate ">
     @Test
     public void testUpdateShipment() throws Exception {
         utx.begin();
         em.joinTransaction();
-        Shipment ship1 = new Shipment("001", TradeName.ONESELF, TradeName.LENOVO, Shipment.Status.OPENED);
+        Shipment ship1 = new Shipment("001", TradeName.ONESELF, TradeName.LENOVO, ShipmentStatus.OPENED);
         em.persist(ship1);
         utx.commit();
 
@@ -115,6 +111,5 @@ public class ShipmentIT extends ArquillianProjectArchive {
         utx.commit();
 
     }
-    //</editor-fold>
 
 }

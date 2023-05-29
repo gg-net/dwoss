@@ -28,7 +28,7 @@ import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.swing.ComboBoxController;
 import eu.ggnet.dwoss.mandator.spi.CachedMandators;
-import eu.ggnet.dwoss.stock.ee.entity.Shipment;
+import eu.ggnet.dwoss.core.common.values.ShipmentStatus;
 import eu.ggnet.saft.core.ui.*;
 
 import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
@@ -45,7 +45,7 @@ public class ShipmentListView extends javax.swing.JPanel {
     @Inject
     private ShipmentListController controller;
 
-    private ComboBoxController<Shipment.Status> filterStatus;
+    private ComboBoxController<ShipmentStatus> filterStatus;
 
     private ComboBoxController<TradeName> filterOwner;
 
@@ -64,7 +64,7 @@ public class ShipmentListView extends javax.swing.JPanel {
         } catch (ArrayIndexOutOfBoundsException e) {
             LoggerFactory.getLogger(ShipmentListView.class).error("Exception happend were we expected it. So bug is found, now we need to fix it, {}, {}", e.getClass().getName(), e.getMessage());
         }
-        filterStatus = new ComboBoxController<>(filterStatusbox, Shipment.Status.values());
+        filterStatus = new ComboBoxController<>(filterStatusbox, ShipmentStatus.values());
         filterOwner = new ComboBoxController<>(filterOwnerbox, Dl.local().lookup(CachedMandators.class).loadContractors().all().toArray());
     }
 

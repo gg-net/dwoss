@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.stock.ee.entity;
 
+import eu.ggnet.dwoss.core.common.values.ShipmentStatus;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -29,16 +31,6 @@ import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 @SuppressWarnings("PersistenceUnitPresent")
 public class Shipment extends BaseEntity implements Serializable {
 
-    public static enum Status {
-
-        ANNOUNCED, DELIVERED, OPENED, CLOSED, 
-        /**
-         * 
-         * @deprecated Wird nicht verwendet.
-         */
-        @Deprecated
-        RECEIPT_PLANED
-    }
 
     @Id
     @GeneratedValue
@@ -61,7 +53,7 @@ public class Shipment extends BaseEntity implements Serializable {
 
     @NotNull
     @Enumerated(EnumType.ORDINAL)
-    private Status status;
+    private ShipmentStatus status;
     
     /**
      * Amount of Units on the Shipment, based on the Delivery note.
@@ -72,12 +64,12 @@ public class Shipment extends BaseEntity implements Serializable {
      * DefaultConsturctor with status = ANNOUNCED and date = new Date().
      */
     public Shipment() {
-        status = Status.ANNOUNCED;
+        status = ShipmentStatus.ANNOUNCED;
         date = new Date();
         amountOfUnits = 0;
     }
 
-    public Shipment(String shipmentId, TradeName contractor, TradeName defaultManufacturer, Status status) {
+    public Shipment(String shipmentId, TradeName contractor, TradeName defaultManufacturer, ShipmentStatus status) {
         this();
         this.shipmentId = shipmentId;
         this.contractor = contractor;
@@ -131,7 +123,7 @@ public class Shipment extends BaseEntity implements Serializable {
         this.defaultManufacturer = defaultManufacturer;
     }
     
-    public Status getStatus() {
+    public ShipmentStatus getStatus() {
         return status;
     }
 
@@ -149,7 +141,7 @@ public class Shipment extends BaseEntity implements Serializable {
      *
      * @param status
      */
-    public void setStatus(Status status) {
+    public void setStatus(ShipmentStatus status) {
         this.date = new Date();
         this.status = status;
     }

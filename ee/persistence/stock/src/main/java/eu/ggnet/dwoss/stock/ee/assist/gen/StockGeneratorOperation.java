@@ -16,19 +16,24 @@
  */
 package eu.ggnet.dwoss.stock.ee.assist.gen;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import eu.ggnet.dwoss.core.common.values.SalesChannel;
+import eu.ggnet.dwoss.core.common.values.ShipmentStatus;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
 import eu.ggnet.dwoss.stock.ee.entity.StockLocation;
 import eu.ggnet.dwoss.core.system.generator.NameGenerator;
+import eu.ggnet.dwoss.stock.ee.entity.*;
 
 import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 
@@ -40,8 +45,12 @@ import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 @TransactionAttribute(REQUIRES_NEW)
 public class StockGeneratorOperation {
 
-    private final NameGenerator GEN = new NameGenerator();
+    private final static Random R = new Random();
 
+    private final Logger L = LoggerFactory.getLogger(StockGeneratorOperation.class);
+
+    private final NameGenerator GEN = new NameGenerator();    
+    
     public static final String[] STOCK_LOCATION_NAMES = {
         "Regal Endnummer - 0",
         "Regal Endnummer - 1",
@@ -83,6 +92,35 @@ public class StockGeneratorOperation {
             result.add(s);
         }
         return result;
+    }
+
+    public List<Shipment> makeShipments(int amount) {
+        List<Shipment> shipments = new ArrayList<>();
+        for (int i = 0; i < amount; i++) {
+            shipments.add(makeShipment());
+        }
+        return shipments;
+    }
+    
+    
+    public Shipment makeShipment() {
+        Shipment shipment = new Shipment("TEST-SHIPMENT-" + R.nextInt(1000),randomContractor() , randomManufacturer(), randomStatus());
+        shipment.setAmountOfUnits(R.nextInt(500));
+        em.persist(shipment);
+        return shipment;
+    }
+
+    private ShipmentStatus randomStatus() {
+      return ShipmentStatus.values()[R.nextInt(ShipmentStatus.values().length)];
+    }
+
+    
+    private TradeName randomContractor() {
+        return TradeName.values()[R.nextInt(TradeName.values().length)];
+    }
+
+    private TradeName randomManufacturer() {
+        return new ArrayList<>(TradeName.getManufacturers()).get(R.nextInt(TradeName.getManufacturers().size()));
     }
 
 }

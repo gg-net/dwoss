@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.widget.swing.*;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
+import eu.ggnet.dwoss.core.common.values.ShipmentStatus;
 
 public class ShipmentModel extends PojoTableModel<Shipment> {
 
@@ -44,7 +45,7 @@ public class ShipmentModel extends PojoTableModel<Shipment> {
 
         private TradeName owner = null;
 
-        private Shipment.Status status = null;
+        private ShipmentStatus status = null;
 
         @Override
         public boolean filter(Shipment t) {
@@ -68,7 +69,7 @@ public class ShipmentModel extends PojoTableModel<Shipment> {
                 new PojoColumn<>("ShipmentNamen", 5, String.class, Shipment::getShipmentId),
                 new PojoColumn<>("Besitzer", 5, TradeName.class, Shipment::getContractor),
                 new PojoColumn<>("Menge LS", 5, Integer.class, Shipment::getAmountOfUnits),
-                new PojoColumn<>("Letzter Status", 10, Shipment.Status.class, Shipment::getStatus),
+                new PojoColumn<>("Letzter Status", 10, ShipmentStatus.class, Shipment::getStatus),
                 new PojoColumn<>("Datum", 20, Date.class, Shipment::getDate));
         filter = new ShipmentFilter();
         setFilter(filter);
@@ -81,7 +82,7 @@ public class ShipmentModel extends PojoTableModel<Shipment> {
         fireTableDataChanged();
     }
 
-    public void filterStatus(Shipment.Status status, boolean enable) {
+    public void filterStatus(ShipmentStatus status, boolean enable) {
         filter.status = status;
         filter.isStatus = enable;
         L.debug("Filter changed. {}", filter);

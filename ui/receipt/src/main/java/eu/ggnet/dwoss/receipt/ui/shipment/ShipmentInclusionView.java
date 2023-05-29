@@ -30,14 +30,14 @@ import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
 import eu.ggnet.dwoss.receipt.ee.UnitProcessor;
 import eu.ggnet.dwoss.receipt.ui.unit.UnitView;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
-import eu.ggnet.dwoss.stock.ee.entity.Shipment.Status;
+import eu.ggnet.dwoss.core.common.values.ShipmentStatus;
 import eu.ggnet.dwoss.stock.spi.ActiveStock;
 import eu.ggnet.saft.core.Saft;
 import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.core.ui.*;
 
-import static eu.ggnet.dwoss.stock.ee.entity.Shipment.Status.CLOSED;
-import static eu.ggnet.dwoss.stock.ee.entity.Shipment.Status.OPENED;
+import static eu.ggnet.dwoss.core.common.values.ShipmentStatus.CLOSED;
+import static eu.ggnet.dwoss.core.common.values.ShipmentStatus.OPENED;
 import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
 
 /**
@@ -45,7 +45,7 @@ import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
  * @author pascal.perau
  */
 @Title("Geräteaufnahme")
-public class ShipmentInclusionView extends javax.swing.JPanel implements Consumer<Shipment>, ResultProducer<Shipment.Status> {
+public class ShipmentInclusionView extends javax.swing.JPanel implements Consumer<Shipment>, ResultProducer<ShipmentStatus> {
 
     @Inject
     private RemoteDl remote;
@@ -53,7 +53,7 @@ public class ShipmentInclusionView extends javax.swing.JPanel implements Consume
     @Inject
     private Saft saft;
 
-    private Shipment.Status resultStatus = null;
+    private ShipmentStatus resultStatus = null;
 
     private Shipment shipment;
 
@@ -73,7 +73,7 @@ public class ShipmentInclusionView extends javax.swing.JPanel implements Consume
     }
 
     @Override
-    public Status getResult() {
+    public ShipmentStatus getResult() {
         return resultStatus;
     }
 

@@ -39,11 +39,12 @@ import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
+import eu.ggnet.dwoss.core.common.values.ShipmentStatus;
 import eu.ggnet.saft.core.Saft;
 import eu.ggnet.saft.core.ui.Bind;
 import eu.ggnet.saft.core.ui.ResultProducer;
 
-import static eu.ggnet.dwoss.stock.ee.entity.Shipment.Status.OPENED;
+import static eu.ggnet.dwoss.core.common.values.ShipmentStatus.OPENED;
 import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
 import static java.lang.Double.MAX_VALUE;
 
@@ -77,7 +78,7 @@ public class ShipmentEditView extends BorderPane implements Consumer<Shipment>, 
 
     private ComboBox<TradeName> manufacturerBox;
 
-    private ComboBox<Shipment.Status> statusBox;
+    private ComboBox<ShipmentStatus> statusBox;
 
     private TextField idField;
 
@@ -140,7 +141,7 @@ public class ShipmentEditView extends BorderPane implements Consumer<Shipment>, 
                 });
         contractorBox.getSelectionModel().selectFirst();
 
-        statusBox = new ComboBox<>(FXCollections.observableArrayList(Shipment.Status.values()));
+        statusBox = new ComboBox<>(FXCollections.observableArrayList(ShipmentStatus.values()));
         statusBox.setMaxWidth(MAX_VALUE);
         statusBox.getSelectionModel().selectFirst();
         amountSpinnter = new Spinner<>(0, 100000, 0);

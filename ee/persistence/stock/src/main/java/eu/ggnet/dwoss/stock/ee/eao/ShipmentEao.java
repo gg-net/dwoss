@@ -16,17 +16,25 @@
  */
 package eu.ggnet.dwoss.stock.ee.eao;
 
+import java.util.List;
+
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
 import eu.ggnet.dwoss.core.system.persistence.AbstractEao;
+import eu.ggnet.dwoss.stock.ee.assist.*;
 
+import com.querydsl.jpa.impl.JPAQuery;
+
+import static eu.ggnet.dwoss.stock.ee.entity.QShipment.shipment;
 /**
  *
  * @author Bastian Venz
  */
+@Stateless
 public class ShipmentEao extends AbstractEao<Shipment> {
 
     @Inject
@@ -52,4 +60,12 @@ public class ShipmentEao extends AbstractEao<Shipment> {
         return em;
     }
 
+    public List<ShipmentCount> countShipmentsByStatus() {
+         return new JPAQuery<ShipmentCount>(em)
+                 .select(new QShipmentCount(shipment.status, shipment.count(), shipment.amountOfUnits.sum()))
+                 .from(shipment)
+                 .groupBy(shipment.status)
+                 .fetch();
+    }
+    
 }

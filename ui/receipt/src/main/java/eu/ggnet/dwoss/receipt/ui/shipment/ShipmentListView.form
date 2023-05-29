@@ -35,7 +35,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
                           <Component id="exitButton" max="32767" attributes="1"/>
-                          <Component id="createButton" alignment="1" pref="68" max="32767" attributes="1"/>
+                          <Component id="createButton" alignment="1" max="32767" attributes="1"/>
                       </Group>
                   </Group>
                   <Component id="filterPanel" alignment="1" min="-2" pref="165" max="-2" attributes="1"/>

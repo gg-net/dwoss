@@ -1,5 +1,7 @@
 package eu.ggnet.dwoss.receipt.itest;
 
+import eu.ggnet.dwoss.core.common.values.ShipmentStatus;
+
 import java.util.*;
 
 import javax.ejb.EJB;
@@ -89,7 +91,7 @@ public class ReceiptUnitOperationIT extends ArquillianProjectArchive {
         Product product = uniqueUnitAgent.findById(Product.class, productSpec.getProductId());
 
         for (TradeName contractor : contractors.all()) {
-            Shipment productShipment = stockAgent.persist(new Shipment("SHIPMENTNAME_" + contractor, contractor, TradeName.ACER, Shipment.Status.OPENED));
+            Shipment productShipment = stockAgent.persist(new Shipment("SHIPMENTNAME_" + contractor, contractor, TradeName.ACER, ShipmentStatus.OPENED));
             for (ReceiptOperation receiptOperation : operations) {
                 UniqueUnit receiptUnit = unitGenerator.makeUniqueUnit(contractor, product);
                 unitProcessor.receipt(receiptUnit, product, productShipment, stock.getId(), receiptOperation, "Receipt Operation from Test", ARRANGER);

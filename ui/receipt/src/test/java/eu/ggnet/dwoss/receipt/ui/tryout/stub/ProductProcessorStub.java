@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.receipt.ui.tryout.stub;
 
+import eu.ggnet.dwoss.core.common.values.ShipmentStatus;
+
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
@@ -374,7 +376,7 @@ public class ProductProcessorStub implements ProductProcessor {
             shipments.add(new Shipment("Test-SH-" + i,
                     TradeName.values()[R.nextInt(TradeName.values().length)],
                     TradeName.getManufacturers().toArray(new TradeName[0])[R.nextInt(TradeName.getManufacturers().size())],
-                    Shipment.Status.values()[R.nextInt(Shipment.Status.values().length)]));
+                    ShipmentStatus.values()[R.nextInt(ShipmentStatus.values().length)]));
         }
         stocks = Arrays.asList(new Stock(1, "Hamburg"), new Stock(2, "Lübeck"));
 

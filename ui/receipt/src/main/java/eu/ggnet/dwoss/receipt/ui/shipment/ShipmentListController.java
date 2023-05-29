@@ -27,7 +27,7 @@ import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
-import eu.ggnet.dwoss.stock.ee.entity.Shipment.Status;
+import eu.ggnet.dwoss.core.common.values.ShipmentStatus;
 import eu.ggnet.saft.core.Saft;
 import eu.ggnet.saft.core.ui.UiParent;
 
@@ -75,7 +75,7 @@ public class ShipmentListController {
                     }
                 })
                 .thenCompose((Void v) -> saft.build().parent(parent).modality(WINDOW_MODAL).swing().eval(() -> model.getSelected(), ShipmentInclusionView.class).cf())
-                .thenApplyAsync((Status st) -> {
+                .thenApplyAsync((ShipmentStatus st) -> {
                     Shipment shipment = model.getSelected();
                     model.remove(shipment);
                     shipment.setStatus(st);

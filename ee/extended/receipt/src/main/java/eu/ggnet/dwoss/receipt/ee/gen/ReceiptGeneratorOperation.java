@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.receipt.ee.gen;
 
+import eu.ggnet.dwoss.core.common.values.ShipmentStatus;
+
 import java.util.*;
 
 import javax.ejb.*;
@@ -197,7 +199,8 @@ public class ReceiptGeneratorOperation {
         Stock stock = findOrMakeStock();
         TradeName contractor = new ArrayList<>(contractors.all()).get(R.nextInt(contractors.all().size()));
 
-        Shipment shipment = new Shipment("TEST-SHIPMENT-" + R.nextInt(10), contractor, TradeName.ACER, Shipment.Status.OPENED);
+        Shipment shipment = new Shipment("TEST-SHIPMENT-" + R.nextInt(10), contractor, TradeName.ACER, ShipmentStatus.OPENED);
+        shipment.setAmountOfUnits(R.nextInt(500));
         stockEm.persist(shipment);
 
         for (int i = 0; i < amount; i++) {
@@ -230,7 +233,8 @@ public class ReceiptGeneratorOperation {
     public UniqueUnit makeUniqueUnit() {
         Stock stock = findOrMakeStock();
         TradeName contractor = new ArrayList<>(contractors.all()).get(R.nextInt(contractors.all().size()));
-        Shipment shipment = new Shipment("TEST-SHIPMENT-" + R.nextInt(10), contractor, TradeName.ACER, Shipment.Status.OPENED);
+        Shipment shipment = new Shipment("TEST-SHIPMENT-" + R.nextInt(10), contractor, TradeName.ACER, ShipmentStatus.OPENED);
+        shipment.setAmountOfUnits(R.nextInt(500));
         L.info("Shipment {}", shipment.toString());
         stockEm.persist(shipment);
 
