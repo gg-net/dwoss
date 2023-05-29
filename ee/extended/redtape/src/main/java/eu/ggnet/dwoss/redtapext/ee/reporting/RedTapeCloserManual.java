@@ -18,6 +18,9 @@ package eu.ggnet.dwoss.redtapext.ee.reporting;
 
 import javax.ejb.Remote;
 
+import eu.ggnet.dwoss.core.common.FileJacket;
+import eu.ggnet.dwoss.report.api.StockCount;
+
 /**
  *
  * @author oliver.guenther
@@ -26,5 +29,19 @@ import javax.ejb.Remote;
 public interface RedTapeCloserManual {
 
     void executeManual(String arranger);
+
+    /**
+     * Returns a stock count of now.
+     *
+     * @return a stock count of now.
+     */
+    StockCount countStock();
+
+    /**
+     * Returns a stockCount as Xls Report.
+     *
+     * @return a stockCount as Xls Report.
+     */
+    FileJacket countStockAsXls();
 
 }

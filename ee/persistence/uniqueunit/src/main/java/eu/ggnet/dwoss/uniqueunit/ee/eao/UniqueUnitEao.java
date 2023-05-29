@@ -38,6 +38,7 @@ import eu.ggnet.dwoss.core.system.persistence.AbstractEao;
 
 import com.querydsl.jpa.impl.JPAQuery;
 
+import static eu.ggnet.dwoss.uniqueunit.ee.entity.QUniqueUnit.uniqueUnit;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.QProduct.product;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.QUniqueUnitHistory.uniqueUnitHistory;
 
@@ -65,6 +66,13 @@ public class UniqueUnitEao extends AbstractEao<UniqueUnit> {
     @Override
     public EntityManager getEntityManager() {
         return em;
+    }
+
+    public long countByShipmentIds(Collection<Long> shipmentIds) {
+        return new JPAQuery<UniqueUnit>(em)
+                .from(uniqueUnit)
+                .where(uniqueUnit.shipmentId.in(shipmentIds))
+                .fetchCount();
     }
 
     /**

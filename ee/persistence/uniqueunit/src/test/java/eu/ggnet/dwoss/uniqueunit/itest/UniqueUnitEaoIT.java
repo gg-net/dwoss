@@ -26,6 +26,7 @@ import eu.ggnet.dwoss.uniqueunit.itest.support.ArquillianProjectArchive;
 import static eu.ggnet.dwoss.core.system.util.Step.WEEK;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.REFURBISHED_ID;
 import static java.time.ZoneId.systemDefault;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
 /**
@@ -64,6 +65,10 @@ public class UniqueUnitEaoIT extends ArquillianProjectArchive {
 
     private final static String PARTNO_3 = "AA.BBBBB.EEE";
 
+    private final static long SHIPMENT_ID_ONE = 1;
+
+    private final static long SHIPMENT_ID_TWO = 2;
+
     @Before
     public void setUp() throws Exception {
         utx.begin();
@@ -83,6 +88,7 @@ public class UniqueUnitEaoIT extends ArquillianProjectArchive {
         unit_62325.setCondition(UniqueUnit.Condition.ALMOST_NEW);
         unit_62325.setProduct(product);
         unit_62325.setInputDate(_2012_12_02_);
+        unit_62325.setShipmentId(SHIPMENT_ID_ONE);
         em.persist(unit_62325);
 
         UniqueUnit u2 = new UniqueUnit();
@@ -91,6 +97,7 @@ public class UniqueUnitEaoIT extends ArquillianProjectArchive {
         u2.setCondition(UniqueUnit.Condition.ALMOST_NEW);
         u2.setInputDate(_2012_12_10_);
         u2.setProduct(product);
+        u2.setShipmentId(SHIPMENT_ID_ONE);
         em.persist(u2);
 
         UniqueUnit u3 = new UniqueUnit();
@@ -99,6 +106,7 @@ public class UniqueUnitEaoIT extends ArquillianProjectArchive {
         u3.setCondition(UniqueUnit.Condition.AS_NEW);
         u3.setProduct(p2);
         u3.setInputDate(_2012_12_10_);
+        u3.setShipmentId(SHIPMENT_ID_TWO);
         em.persist(u3);
 
         UniqueUnit u4 = new UniqueUnit();
@@ -107,6 +115,7 @@ public class UniqueUnitEaoIT extends ArquillianProjectArchive {
         u4.setCondition(UniqueUnit.Condition.AS_NEW);
         u4.setProduct(p3);
         u4.setInputDate(_2012_12_10_);
+        u4.setShipmentId(SHIPMENT_ID_TWO);
         em.persist(u4);
 
         UniqueUnit u5 = new UniqueUnit();
@@ -139,6 +148,16 @@ public class UniqueUnitEaoIT extends ArquillianProjectArchive {
         }
 
         utx.commit();
+    }
+
+    @Test
+    public void testCountByShipmentIds() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        UniqueUnitEao unitEao = new UniqueUnitEao(em);
+        long count = unitEao.countByShipmentIds(List.of(SHIPMENT_ID_ONE, SHIPMENT_ID_TWO));
+        utx.commit();
+        assertThat(count).as("countByShipmentIds").isEqualTo(4); // Siehe Before.
     }
 
     @Test

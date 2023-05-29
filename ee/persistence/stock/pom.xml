@@ -12,6 +12,10 @@
     <name>DwOss • Stock • EE (persistence)</name>
     <packaging>ejb</packaging>
 
+    <properties>
+        <ddl-gen.packages>eu.ggnet.dwoss.stock.ee.entity</ddl-gen.packages>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.inferred</groupId>

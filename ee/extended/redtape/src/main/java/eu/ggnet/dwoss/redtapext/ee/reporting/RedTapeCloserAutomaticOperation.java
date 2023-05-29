@@ -16,6 +16,7 @@
  */
 package eu.ggnet.dwoss.redtapext.ee.reporting;
 
+import java.time.LocalDate;
 import java.util.Map.Entry;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -48,9 +49,11 @@ import eu.ggnet.dwoss.redtape.ee.entity.Document.Condition;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.workflow.RedTapeWorkflow;
+import eu.ggnet.dwoss.report.api.StockCount;
 import eu.ggnet.dwoss.report.ee.assist.Reports;
 import eu.ggnet.dwoss.report.ee.eao.ReportLineEao;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
+import eu.ggnet.dwoss.stock.ee.assist.ShipmentCount;
 import eu.ggnet.dwoss.stock.ee.eao.*;
 import eu.ggnet.dwoss.stock.ee.emo.StockTransactionEmo;
 import eu.ggnet.dwoss.stock.ee.entity.*;
@@ -58,14 +61,14 @@ import eu.ggnet.dwoss.uniqueunit.api.event.UnitHistory;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.*;
 import eu.ggnet.statemachine.State.Type;
 
 import static eu.ggnet.dwoss.core.common.values.DocumentType.BLOCK;
 import static eu.ggnet.dwoss.core.common.values.PaymentMethod.*;
 import static eu.ggnet.dwoss.core.common.values.PositionType.COMMENT;
 import static eu.ggnet.dwoss.core.common.values.PositionType.UNIT;
+import static eu.ggnet.dwoss.core.common.values.ShipmentStatus.OPENED;
 import static eu.ggnet.dwoss.redtape.ee.entity.Document.Condition.*;
 import static eu.ggnet.dwoss.report.ee.entity.ReportLine.SingleReferenceType.WARRANTY;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.CONTRACTOR_REFERENCE;
@@ -80,6 +83,19 @@ import static org.apache.commons.lang3.StringUtils.normalizeSpace;
 @Singleton
 public class RedTapeCloserAutomaticOperation {
 
+    private static class Unit {
+
+        private UniqueUnit uniqueUnit;
+
+        private StockUnit stockUnit;
+
+        public Unit(UniqueUnit uniqueUnit, StockUnit stockUnit) {
+            this.uniqueUnit = uniqueUnit;
+            this.stockUnit = stockUnit;
+        }
+
+    }
+
     private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     private final static Logger L = LoggerFactory.getLogger(RedTapeCloserAutomaticOperation.class);
@@ -93,12 +109,18 @@ public class RedTapeCloserAutomaticOperation {
 
     @Inject
     private StockEao stockEao;
+    
+    @Inject
+    private ShipmentEao shipmentEao;
 
     @Inject
     private StockUnitEao suEao;
 
     @Inject
     private StockTransactionEmo stEmo;
+
+    @Inject
+    private UniqueUnitEao uuEao;
 
     @Inject
     @UniqueUnits
@@ -147,7 +169,7 @@ public class RedTapeCloserAutomaticOperation {
      * <li>Find all associated {@link StockUnit}'s and roll them out. See
      * {@link #closeStock(java.util.Set, java.lang.String, java.lang.String, de.dw.progress.IMonitor)}</li>
      * </ol>
-     * 
+     *
      * @param arranger the arranger
      * @param manual   is this called manual or automatic
      */
@@ -181,6 +203,65 @@ public class RedTapeCloserAutomaticOperation {
         L.info("closed:stock");
 
         m.finish();
+    }
+
+    public StockCount countStock() {
+        SubMonitor m = monitorFactory.newSubMonitor("Lagerbestand ermitteln", 100);
+        StockCount.Builder scb = new StockCount.Builder();
+        scb.created(LocalDate.now());
+        m.message("Counting Stocks");
+        List<StockUnit> stockUnits = suEao.findAll();
+        m.worked(5);
+        List<UniqueUnit> uniqueUnits = uuEao.findByIds(stockUnits.stream().map(StockUnit::getUniqueUnitId).collect(Collectors.toList()));
+        m.worked(5);
+        List<Unit> units = stockUnits.stream()
+                .map((su) -> new Unit(uniqueUnits.stream().filter(uu -> uu.getId() == su.getUniqueUnitId()).findFirst().get(), su))
+                .collect(Collectors.toList());
+        m.worked(1);
+        m.setWorkRemaining(units.size() + 10);
+        m.message("Mapping Stockunits");
+        for (Unit unit : units) {
+            double price = unit.uniqueUnit.getPrice(PriceType.RETAILER);
+            if ( unit.stockUnit.getLogicTransaction() == null ) {
+                scb.mapStockUnitsAvailable(i -> i + 1);
+                if ( price < 0.01 ) scb.mapStockUnitsAvailablePriceZero(i -> i + 1);
+                else if ( price < 100 ) scb.mapStockUnitsAvailablePriceBelowOneHundred(i -> i + 1);
+                else if ( price < 300 ) scb.mapStockUnitsAvailablePriceBelowThreeHundred(i -> i + 1);
+                else scb.mapStockUnitsAvailablePriceAboveThreeHundred(i -> i + 1);
+            } else {
+                scb.mapStockUnitsInTransfer(i -> i + 1);
+                if ( price < 0.01 ) scb.mapStockUnitsInTransferPriceZero(i -> i + 1);
+                else if ( price < 100 ) scb.mapStockUnitsInTransferPriceBelowOneHundred(i -> i + 1);
+                else if ( price < 300 ) scb.mapStockUnitsInTransferPriceBelowThreeHundred(i -> i + 1);
+                else scb.mapStockUnitsInTransferPriceAboveThreeHundred(i -> i + 1);
+            }
+            m.worked(1);
+        }
+        m.message("Counting Shipments");
+        List<ShipmentCount> count = shipmentEao.countShipmentsByStatus();
+        for (ShipmentCount sc : count) {
+            switch (sc.status()) {
+                case ANNOUNCED:
+                    scb.shipmentsAnnounced((int)sc.amount());
+                    scb.shipmentsAnnouncedUnits(sc.amountOfUnits());
+                    break;
+                case DELIVERED:
+                    scb.shipmentsDelivered((int)sc.amount());
+                    scb.shipmentsDeliveredUnits(sc.amountOfUnits());
+                    break;
+                case OPENED:
+                    scb.shipmentsOpened((int)sc.amount());
+                    scb.shipmentsOpenedUnits(sc.amountOfUnits());
+                    break;
+                default:
+            }
+        }
+        m.worked(5);
+        List<Long> shipmentIds = shipmentEao.findAll().stream().filter(s -> s.getStatus() == OPENED).map(Shipment::getId).collect(Collectors.toList());
+        long countReceived = uuEao.countByShipmentIds(shipmentIds);
+        scb.shipmentsOpenedRemainderUnits(scb.shipmentsOpenedUnits() - (int)countReceived);
+        m.finish();
+        return scb.build();
     }
 
     /**
@@ -564,7 +645,7 @@ public class RedTapeCloserAutomaticOperation {
                 l.setReportingDate(reporting);
                 l.setTax(position.getTax());
                 document.getSettlements().forEach(l::add);
-                
+
                 l.setMarginPercentage(0); // Set via Report afterwards
                 l.setPurchasePrice(0); // Set via Report afterwards
 
