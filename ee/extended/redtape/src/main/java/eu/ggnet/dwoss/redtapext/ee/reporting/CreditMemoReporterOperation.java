@@ -245,7 +245,8 @@ public class CreditMemoReporterOperation implements CreditMemoReporter {
                 afterTaxPrice,
                 customer.getCompany(),
                 customer.toNameLine(),
-                sopos
+                sopos,
+                document.getCreditMemoReason() != null ? document.getCreditMemoReason().description() : "Keine Angabe"
             });
             m.worked(1);
         }
@@ -261,7 +262,7 @@ public class CreditMemoReporterOperation implements CreditMemoReporter {
         table.add(new STableColumn("DokumentId", 15)).add(new STableColumn("Voll/Teil", 10));
         table.add(new STableColumn("Netto", 10, new CFormat(CFormat.HorizontalAlignment.RIGHT, CFormat.Representation.CURRENCY_EURO)));
         table.add(new STableColumn("Brutto", 10, new CFormat(CFormat.HorizontalAlignment.RIGHT, CFormat.Representation.CURRENCY_EURO)));
-        table.add(new STableColumn("Firma", 25)).add(new STableColumn("Name", 25)).add(new STableColumn("SopoNr.", 10));
+        table.add(new STableColumn("Firma", 25)).add(new STableColumn("Name", 25)).add(new STableColumn("SopoNr.", 10)).add(new STableColumn("Grund", 10));
         table.setModel(new STableModelList(rows));
 
         CCalcDocument cdoc = new TempCalcDocument("Gutschriften_");

@@ -17,11 +17,11 @@
 package eu.ggnet.dwoss.redtapext.ui.cao.document.annulation;
 
 import java.awt.Component;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import javax.swing.*;
 
+import eu.ggnet.dwoss.core.common.values.CreditMemoReason;
 import eu.ggnet.dwoss.core.common.values.PositionType;
 import eu.ggnet.dwoss.core.widget.swing.CloseType;
 import eu.ggnet.dwoss.core.widget.swing.IPreClose;
@@ -51,7 +51,7 @@ public class CreditMemoView extends javax.swing.JPanel implements IPreClose {
      */
     public CreditMemoView(List<AfterInvoicePosition> creditPositions) {
         initComponents();
-        stockSelectionBox.setModel(new DefaultComboBoxModel(Dl.remote().lookup(StockAgent.class).findAll(Stock.class).toArray(new Stock[0])));
+        stockSelectionBox.setModel(new DefaultComboBoxModel(Dl.remote().lookup(StockAgent.class).findAll(Stock.class).toArray(Stock[]::new)));
         stockSelectionBox.setRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -71,13 +71,23 @@ public class CreditMemoView extends javax.swing.JPanel implements IPreClose {
         tablePanel.setTableModel(model);
         sumPanel.setModel(model);
         model.addTableModelListener(sumPanel);
-
+        
+        reasonComboBox.setRenderer(new CreditMemoReasonCellRenderer());
+        
+        var list = new ArrayList<>(EnumSet.allOf(CreditMemoReason.class));
+        list.add(null);               
+        reasonComboBox.setModel(new DefaultComboBoxModel<>(list.toArray(CreditMemoReason[]::new)));
+        reasonComboBox.setSelectedItem(null);
     }
 
     public List<Position> getPositions() {
         return positions;
     }
 
+    public CreditMemoReason getReason() {
+        return reasonComboBox.getItemAt(reasonComboBox.getSelectedIndex());
+    }
+    
     private List<Position> extractPositions() {
         List<Position> positionList = new ArrayList<>();
         for (AfterInvoicePosition creditMemoPosition : creditPositions) {
@@ -148,6 +158,8 @@ public class CreditMemoView extends javax.swing.JPanel implements IPreClose {
         jLabel3 = new javax.swing.JLabel();
         stockSelectionBox = new javax.swing.JComboBox();
         balancingBox = new javax.swing.JComboBox();
+        reasonLabel = new javax.swing.JLabel();
+        reasonComboBox = new javax.swing.JComboBox<>();
 
         jLabel3.setText("Standort:");
 
@@ -181,13 +193,21 @@ public class CreditMemoView extends javax.swing.JPanel implements IPreClose {
                 .addComponent(balancingBox, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
+        reasonLabel.setText("Grund:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(tablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 688, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(afterInvoiceInfoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(reasonLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(reasonComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(afterInvoiceInfoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(sumPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -197,8 +217,15 @@ public class CreditMemoView extends javax.swing.JPanel implements IPreClose {
                 .addComponent(tablePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(sumPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(afterInvoiceInfoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(reasonLabel)
+                            .addComponent(reasonComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(afterInvoiceInfoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(sumPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -211,6 +238,8 @@ public class CreditMemoView extends javax.swing.JPanel implements IPreClose {
     private javax.swing.JPanel afterInvoiceInfoPanel;
     private javax.swing.JComboBox balancingBox;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JComboBox<CreditMemoReason> reasonComboBox;
+    private javax.swing.JLabel reasonLabel;
     private javax.swing.JComboBox stockSelectionBox;
     private eu.ggnet.dwoss.redtapext.ui.cao.document.AfterInvoicePositionPriceSumPanel sumPanel;
     private eu.ggnet.dwoss.redtapext.ui.cao.document.AfterInvoiceTablePanel tablePanel;

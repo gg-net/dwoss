@@ -248,7 +248,6 @@ public class Document extends BaseEntity implements Serializable, Comparable<Doc
         CUSTOMER_EXACTLY_BRIEFED
     }
 
-
     @Id
     @GeneratedValue
     private long id;
@@ -325,6 +324,9 @@ public class Document extends BaseEntity implements Serializable, Comparable<Doc
     @Enumerated
     @NotNull
     private TaxType taxType;
+
+    @Enumerated
+    private CreditMemoReason creditMemoReason;
 
     public Document() {
         actual = new Date();
@@ -456,11 +458,19 @@ public class Document extends BaseEntity implements Serializable, Comparable<Doc
     public Dossier getDossier() {
         return dossier;
     }
+
+    public CreditMemoReason getCreditMemoReason() {
+        return creditMemoReason;
+    }
+
+    public void setCreditMemoReason(CreditMemoReason creditMemoReason) {
+        this.creditMemoReason = creditMemoReason;
+    }
     //</editor-fold>
 
     /**
      * Returns a partial clone of the Document, without some fields (nearly same goes for {@link Document#equalsContent(Document) }.
-     * <p/>
+     * <p>
      * The following properties are not cloned:
      * <ul>
      * <li>active</li>
@@ -470,7 +480,7 @@ public class Document extends BaseEntity implements Serializable, Comparable<Doc
      * <li>optLock</li>
      * <li>predecessor</li>
      * </ul>
-     * <p/>
+     *
      * @return the partial clone
      */
     public Document partialClone() {
@@ -483,6 +493,7 @@ public class Document extends BaseEntity implements Serializable, Comparable<Doc
         clone.setDirective(directive);
         clone.setClosed(closed);
         clone.setTaxType(taxType);
+        clone.setCreditMemoReason(creditMemoReason);
         for (PaymentSettlement settlement : settlements) clone.add(settlement);
         for (Condition condition : conditions) clone.add(condition);
         for (Flag flag : flags) clone.add(flag);

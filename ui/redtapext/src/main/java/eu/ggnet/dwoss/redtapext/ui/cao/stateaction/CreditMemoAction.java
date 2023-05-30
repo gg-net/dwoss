@@ -90,6 +90,7 @@ public class CreditMemoAction extends AccessableAction {
             }
             doc.setType(DocumentType.CREDIT_MEMO);
             doc.setDirective(Directive.BALANCE_REPAYMENT);
+            doc.setCreditMemoReason(view.getReason());
             Document d = Dl.remote().lookup(RedTapeWorker.class).update(doc, view.getStockLocation(), Dl.local().lookup(Guardian.class).getUsername());
             controller.reloadSelectionOnStateChange(d.getDossier());
         }

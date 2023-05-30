@@ -23,8 +23,7 @@ import java.util.*;
 import javax.swing.Action;
 import javax.swing.JOptionPane;
 
-import eu.ggnet.dwoss.core.common.values.DocumentType;
-import eu.ggnet.dwoss.core.common.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.*;
 import eu.ggnet.dwoss.core.widget.swing.CloseType;
 import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
@@ -91,6 +90,7 @@ public class AnnulationInvoiceAction extends AccessableAction {
             }
             doc.setType(DocumentType.ANNULATION_INVOICE);
             doc.setDirective(Directive.BALANCE_REPAYMENT);
+            doc.setCreditMemoReason(view.getReason());
             Document d = Dl.remote().lookup(RedTapeWorker.class).update(doc, view.getStockLocation(), Dl.local().lookup(Guardian.class).getUsername());
             controller.reloadSelectionOnStateChange(d.getDossier());
         }
