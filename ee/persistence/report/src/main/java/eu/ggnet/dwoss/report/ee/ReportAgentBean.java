@@ -33,6 +33,8 @@ import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.system.autolog.AutoLogger;
 import eu.ggnet.dwoss.core.system.persistence.AbstractAgentBean;
+import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
+import eu.ggnet.dwoss.core.system.progress.SubMonitor;
 import eu.ggnet.dwoss.report.ee.api.MarginCalculator;
 import eu.ggnet.dwoss.report.ee.assist.ReportUtil.PrepareReportPartition;
 import eu.ggnet.dwoss.report.ee.assist.Reports;
@@ -66,6 +68,9 @@ public class ReportAgentBean extends AbstractAgentBean implements ReportAgent {
 
     @Inject
     private Instance<MarginCalculator> marginCalculator;
+
+    @Inject
+    private MonitorFactory mf;
 
     @Override
     protected EntityManager getEntityManager() {
@@ -277,5 +282,17 @@ public class ReportAgentBean extends AbstractAgentBean implements ReportAgent {
         viewReportResult.getAllLines().stream().forEach((allLine) -> reportEm.detach(allLine));
         if ( !marginCalculator.isUnsatisfied() ) marginCalculator.get().recalc(viewReportResult);
         return viewReportResult;
+    }
+
+    @Override
+    public void migrate() {
+        SubMonitor m = mf.newSubMonitor("Migration", 100);
+        m.start();
+        m.setWorkRemaining(reportLineEao.count());
+        for (ReportLine rl : reportLineEao.findAll()) {
+            if (rl.getPurchasePrice() > 0.01) rl.setMargin(rl.getPrice() - rl.getPurchasePrice());
+            m.worked(1);
+        }
+        m.finish();
     }
 }

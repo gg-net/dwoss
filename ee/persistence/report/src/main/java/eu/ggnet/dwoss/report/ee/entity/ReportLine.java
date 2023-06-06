@@ -385,6 +385,17 @@ public class ReportLine extends BaseEntity implements Serializable, EagerAble, C
     private double marginPercentage;
 
     /**
+     * The absolute margin of this line.
+     */
+    private double margin = 0.0;
+    
+    /**
+     * Fees that are shown extra.
+     * Like Paypal, cost per box e.t.c.
+     */
+    private double fees = 0.0;
+    
+    /**
      * The Price with this unit was buyed.
      */
     private double purchasePrice;
@@ -464,6 +475,23 @@ public class ReportLine extends BaseEntity implements Serializable, EagerAble, C
     }
 
     //<editor-fold defaultstate="collapsed" desc="getter/setter">
+
+    public double getMargin() {
+        return margin;
+    }
+
+    public void setMargin(double margin) {
+        this.margin = margin;
+    }
+
+    public double getFees() {
+        return fees;
+    }
+
+    public void setFees(double fees) {
+        this.fees = fees;
+    }        
+    
     public Date getReportingDate() {
         return reportingDate;
     }

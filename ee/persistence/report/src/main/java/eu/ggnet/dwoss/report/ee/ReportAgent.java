@@ -152,5 +152,10 @@ public interface ReportAgent extends RemoteAgent {
      * @return the discovered and attached ReportLines.
      */
     public Set<ReportLine> attachDanglingComplaints(TradeName type, Date till);
+    
+    /**
+     * Migration der Marge.
+     */
+    public void migrate();
 
 }
