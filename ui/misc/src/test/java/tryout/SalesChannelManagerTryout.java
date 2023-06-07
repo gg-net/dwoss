@@ -128,8 +128,8 @@ public class SalesChannelManagerTryout {
             @Override
             public List<SalesChannelLine> findAvailableUnits() {
                 List<SalesChannelLine> lines = new ArrayList<>();
-                lines.add(new SalesChannelLine(0, "22231", "Acer Aspire 3222-üäö", "gebraucht", 10, 10, "Lager", SalesChannel.UNKNOWN, lager.getId()));
-                lines.add(new SalesChannelLine(1, "23212", "Acer Aspire 5102WLMi-€", "gebraucht", 10, 10, "Lager", SalesChannel.RETAILER, lager.getId()));
+                lines.add(new SalesChannelLine(0, "22231", "Acer Aspire 3222-üäö", "gebraucht", 10, 10, "Lager", SalesChannel.UNKNOWN, laden.getId()));
+                lines.add(new SalesChannelLine(1, "23212", "Acer Aspire 5102WLMi-€", "gebraucht", 10, 10, "Lager", SalesChannel.RETAILER, laden.getId()));
                 lines.add(new SalesChannelLine(2, "43521", "Acer Aspire X3200", "gebraucht", 10, 10, "Lager", SalesChannel.RETAILER, lager.getId()));
                 lines.add(new SalesChannelLine(4, "58247", "Acer Aspire One A150X blau", "gebraucht", 10, 10, "Lager", SalesChannel.CUSTOMER, laden.getId()));
                 lines.add(new SalesChannelLine(5, "82235", "Acer Aspire 8930G-583G32Bn", "gebraucht", 10, 10, "Lager", SalesChannel.CUSTOMER, laden.getId()));

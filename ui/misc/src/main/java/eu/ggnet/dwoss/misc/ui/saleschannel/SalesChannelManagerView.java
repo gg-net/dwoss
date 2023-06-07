@@ -17,11 +17,13 @@
 package eu.ggnet.dwoss.misc.ui.saleschannel;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import javax.swing.ListSelectionModel;
 
+import eu.ggnet.dwoss.core.common.values.SalesChannel;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
 import eu.ggnet.dwoss.stock.ee.model.SalesChannelLine;
 import eu.ggnet.saft.core.Ui;
@@ -135,7 +137,10 @@ public class SalesChannelManagerView extends javax.swing.JPanel implements Consu
 
     @Override
     public void accept(SalesChannelManagerData data) {
-        this.model = new SalesChannelTableModel(data.lines, data.stocks.stream().collect(Collectors.toMap(Stock::getPrimaryChannel, s -> s)));
+        // Todo (OG): Too lazy to change the datamodel. All Primary Channles point to Stock 0.
+        Stock primary = data.stocks.stream().filter(s -> s.getId() == 0).findAny().get();
+        // Was: data.stocks.stream().collect(Collectors.toMap(Stock::getPrimaryChannel, s -> s))        
+        this.model = new SalesChannelTableModel(data.lines,Map.of(SalesChannel.CUSTOMER, primary, SalesChannel.RETAILER, primary));
         salesChanelTable.setDefaultEditor(Stock.class, new StockTableEditor(data.stocks.toArray()));
         salesChanelTable.setModel(model);
         for (int i = 0; i < model.getColumnCount(); i++) {

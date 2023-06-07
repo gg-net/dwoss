@@ -27,6 +27,7 @@ import eu.ggnet.dwoss.stock.ee.entity.Stock;
 import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.saft.core.UiUtil;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.OPEN_SALES_CHANNEL_MANAGER;
 
@@ -47,7 +48,7 @@ public class OpenSalesChannelManagerAction extends AccessableAction {
                 () -> new SalesChannelManagerData(Dl.remote().lookup(SalesChannelHandler.class).findAvailableUnits(), Dl.remote().lookup(StockAgent.class).findAll(Stock.class)),
                 () -> new SalesChannelManagerView()).cf()
                 .thenApply(lines
-                        -> Ui.exception().wrap(() -> Dl.remote().lookup(SalesChannelHandler.class).update(lines, Dl.local().lookup(Guardian.class).getUsername(), "Erzeugt duch Verkaufskanalmanager")))
+                        -> UiUtil.exceptionRun(() -> Dl.remote().lookup(SalesChannelHandler.class).update(lines, Dl.local().lookup(Guardian.class).getUsername(), "Erzeugt duch Verkaufskanalmanager")))
                 .thenAccept(change
                         -> Ui.build().alert().message((change ? "Verkaufskanaländerungen durchgeführt und Umfuhren vorbereitet" : "Keine Änderungen an Verkaufskanälen durchgeführt")).show())
                 .handle(Ui.handler());
