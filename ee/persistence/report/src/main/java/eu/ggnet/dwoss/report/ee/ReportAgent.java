@@ -156,6 +156,7 @@ public interface ReportAgent extends RemoteAgent {
     /**
      * Migration der Marge.
      */
+    @Deprecated
     public void migrate();
 
 }

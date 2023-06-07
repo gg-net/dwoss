@@ -32,6 +32,7 @@ import eu.ggnet.saft.core.Saft;
  *
  * @author oliver.guenther
  */
+@Deprecated
 public class MigrateMenuItem extends MenuItem {
     @Inject
     private Saft saft;
