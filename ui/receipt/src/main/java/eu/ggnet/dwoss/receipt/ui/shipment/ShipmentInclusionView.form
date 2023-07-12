@@ -21,13 +21,6 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="inclusionUnittButton" alignment="0" pref="485" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="inclusionOkButton" pref="160" max="32767" attributes="1"/>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="inclusionCancelButton" pref="222" max="32767" attributes="0"/>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="cancelButton" max="32767" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="inclusionShipLabel" alignment="0" min="-2" max="-2" attributes="1"/>
                           <Component id="inclusionOwnerLabel" alignment="0" min="-2" max="-2" attributes="1"/>
@@ -38,6 +31,7 @@
                           <Component id="inclusionShipField" alignment="0" pref="390" max="32767" attributes="0"/>
                       </Group>
                   </Group>
+                  <Component id="inclusionOkButton" alignment="0" max="32767" attributes="1"/>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
@@ -59,11 +53,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="inclusionUnittButton" pref="51" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="inclusionOkButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="inclusionCancelButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="cancelButton" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
+              <Component id="inclusionOkButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -88,14 +78,6 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="inclusionOkButtonActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="inclusionCancelButton">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Aufnahme unterbrechen"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="inclusionCancelButtonActionPerformed"/>
-      </Events>
-    </Component>
     <Component class="javax.swing.JButton" name="inclusionUnittButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="Ger&#xe4;t hinzuf&#xfc;gen"/>
@@ -113,14 +95,6 @@
       <Properties>
         <Property name="editable" type="boolean" value="false"/>
       </Properties>
-    </Component>
-    <Component class="javax.swing.JButton" name="cancelButton">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Abbrechen"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cancelButtonActionPerformed"/>
-      </Events>
     </Component>
   </SubComponents>
 </Form>

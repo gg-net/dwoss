@@ -30,14 +30,11 @@ import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
 import eu.ggnet.dwoss.receipt.ee.UnitProcessor;
 import eu.ggnet.dwoss.receipt.ui.unit.UnitView;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
-import eu.ggnet.dwoss.core.common.values.ShipmentStatus;
 import eu.ggnet.dwoss.stock.spi.ActiveStock;
 import eu.ggnet.saft.core.Saft;
 import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.core.ui.*;
 
-import static eu.ggnet.dwoss.core.common.values.ShipmentStatus.CLOSED;
-import static eu.ggnet.dwoss.core.common.values.ShipmentStatus.OPENED;
 import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
 
 /**
@@ -45,15 +42,13 @@ import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
  * @author pascal.perau
  */
 @Title("Geräteaufnahme")
-public class ShipmentInclusionView extends javax.swing.JPanel implements Consumer<Shipment>, ResultProducer<ShipmentStatus> {
+public class ShipmentInclusionView extends javax.swing.JPanel implements Consumer<Shipment>{
 
     @Inject
     private RemoteDl remote;
 
     @Inject
     private Saft saft;
-
-    private ShipmentStatus resultStatus = null;
 
     private Shipment shipment;
 
@@ -72,11 +67,6 @@ public class ShipmentInclusionView extends javax.swing.JPanel implements Consume
         inclusionOwnerField.setText(shipment.getContractor().getDescription());
     }
 
-    @Override
-    public ShipmentStatus getResult() {
-        return resultStatus;
-    }
-
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -89,11 +79,9 @@ public class ShipmentInclusionView extends javax.swing.JPanel implements Consume
         inclusionShipLabel = new javax.swing.JLabel();
         inclusionOwnerLabel = new javax.swing.JLabel();
         inclusionOkButton = new javax.swing.JButton();
-        inclusionCancelButton = new javax.swing.JButton();
         inclusionUnittButton = new javax.swing.JButton();
         inclusionShipField = new javax.swing.JTextField();
         inclusionOwnerField = new javax.swing.JTextField();
-        cancelButton = new javax.swing.JButton();
 
         inclusionShipLabel.setText("Shipment ID:");
 
@@ -103,13 +91,6 @@ public class ShipmentInclusionView extends javax.swing.JPanel implements Consume
         inclusionOkButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 inclusionOkButtonActionPerformed(evt);
-            }
-        });
-
-        inclusionCancelButton.setText("Aufnahme unterbrechen");
-        inclusionCancelButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                inclusionCancelButtonActionPerformed(evt);
             }
         });
 
@@ -124,13 +105,6 @@ public class ShipmentInclusionView extends javax.swing.JPanel implements Consume
 
         inclusionOwnerField.setEditable(false);
 
-        cancelButton.setText("Abbrechen");
-        cancelButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelButtonActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -140,19 +114,14 @@ public class ShipmentInclusionView extends javax.swing.JPanel implements Consume
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(inclusionUnittButton, javax.swing.GroupLayout.DEFAULT_SIZE, 485, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(inclusionOkButton, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(inclusionCancelButton, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cancelButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(inclusionShipLabel)
                             .addComponent(inclusionOwnerLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(inclusionOwnerField, javax.swing.GroupLayout.DEFAULT_SIZE, 390, Short.MAX_VALUE)
-                            .addComponent(inclusionShipField, javax.swing.GroupLayout.DEFAULT_SIZE, 390, Short.MAX_VALUE))))
+                            .addComponent(inclusionShipField, javax.swing.GroupLayout.DEFAULT_SIZE, 390, Short.MAX_VALUE)))
+                    .addComponent(inclusionOkButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -169,10 +138,7 @@ public class ShipmentInclusionView extends javax.swing.JPanel implements Consume
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(inclusionUnittButton, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(inclusionOkButton)
-                    .addComponent(inclusionCancelButton)
-                    .addComponent(cancelButton))
+                .addComponent(inclusionOkButton)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -194,22 +160,10 @@ public class ShipmentInclusionView extends javax.swing.JPanel implements Consume
     }//GEN-LAST:event_inclusionUnittButtonActionPerformed
 
     private void inclusionOkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inclusionOkButtonActionPerformed
-        resultStatus = CLOSED;
         showingProperty.set(false);
     }//GEN-LAST:event_inclusionOkButtonActionPerformed
 
-    private void inclusionCancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inclusionCancelButtonActionPerformed
-        resultStatus = OPENED;
-        showingProperty.set(false);
-    }//GEN-LAST:event_inclusionCancelButtonActionPerformed
-
-    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        showingProperty.set(false);
-    }//GEN-LAST:event_cancelButtonActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton cancelButton;
-    private javax.swing.JButton inclusionCancelButton;
     private javax.swing.JButton inclusionOkButton;
     private javax.swing.JTextField inclusionOwnerField;
     private javax.swing.JLabel inclusionOwnerLabel;

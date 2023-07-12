@@ -23,11 +23,9 @@ import java.util.concurrent.CompletableFuture;
 import javax.inject.Inject;
 import javax.swing.JOptionPane;
 
-import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
-import eu.ggnet.dwoss.core.common.values.ShipmentStatus;
 import eu.ggnet.saft.core.Saft;
 import eu.ggnet.saft.core.ui.UiParent;
 
@@ -40,9 +38,6 @@ public class ShipmentListController {
 
     @Inject
     private RemoteDl remote;
-
-    @Inject
-    private Guardian guardian;
 
     private ShipmentModel model;
 
@@ -74,15 +69,10 @@ public class ShipmentListController {
                         throw new CancellationException("No Shipment selected");
                     }
                 })
-                .thenCompose((Void v) -> saft.build().parent(parent).modality(WINDOW_MODAL).swing().eval(() -> model.getSelected(), ShipmentInclusionView.class).cf())
-                .thenApplyAsync((ShipmentStatus st) -> {
-                    Shipment shipment = model.getSelected();
-                    model.remove(shipment);
-                    shipment.setStatus(st);
-                    return shipment;
-                }, EventQueue::invokeLater)
-                .thenApplyAsync(remote.lookup(StockAgent.class)::merge, saft.executorService()::submit)
-                .thenApplyAsync(model::add, EventQueue::invokeLater);
+                .thenRun(() -> {
+                    saft.build().parent(parent).modality(WINDOW_MODAL).swing().show(() -> model.getSelected(), ShipmentInclusionView.class);
+                })
+                .handle(saft.handler(parent));
     }
 
     public void createShipment(UiParent parent) {
