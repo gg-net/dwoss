@@ -105,23 +105,23 @@ public class RedTapeCloserManualOperation implements RedTapeCloserManual {
         STable table = new STable();
         table.setTableFormat(new CFormat(BLACK, WHITE, new CBorder(BLACK)));
         table.setHeadlineFormat(new CFormat(BOLD_ITALIC, WHITE, BLUE, CENTER, new CBorder(BLACK)));
-        table.add(new STableColumn("Datum", 15))
-                .add(new STableColumn("Angekündigt", 20))
-                .add(new STableColumn("Angekündigt Geräte", 20))
-                .add(new STableColumn("Geliefert", 20))
+        table.add(new STableColumn("Datum", 13))
+                .add(new STableColumn("Angekündigt", 18))
+                .add(new STableColumn("Angekündigt Geräte", 22))
+                .add(new STableColumn("Geliefert", 18))
                 .add(new STableColumn("Geliefert Geräte", 20))
-                .add(new STableColumn("Geöffnet", 20))
-                .add(new STableColumn("Geöffnet Restmenge", 20))
+                .add(new STableColumn("Geöffnet", 18))
+                .add(new STableColumn("Geöffnet Restmenge", 22))
                 .add(new STableColumn("Geräte verfügbar", 20))
-                .add(new STableColumn("Geräte verfügbar 0 €", 20))
-                .add(new STableColumn("Geräte verfügbar < 100 €", 20))
-                .add(new STableColumn("Geräte verfügbar < 300 €", 20))
-                .add(new STableColumn("Geräte verfügbar > 300 €", 20))
+                .add(new STableColumn("Geräte verfügbar 0 €", 22))
+                .add(new STableColumn("Geräte verfügbar < 100 €", 25))
+                .add(new STableColumn("Geräte verfügbar < 300 €", 25))
+                .add(new STableColumn("Geräte verfügbar > 300 €", 25))
                 .add(new STableColumn("Geräte in Transfer", 20))
-                .add(new STableColumn("Geräte in Transfer 0 €", 20))
-                .add(new STableColumn("Geräte in Transfer < 100 €", 20))
-                .add(new STableColumn("Geräte in Transfer < 300 €", 20))
-                .add(new STableColumn("Geräte in Transfer > 300 €", 20));
+                .add(new STableColumn("Geräte in Transfer 0 €", 22))
+                .add(new STableColumn("Geräte in Transfer < 100 €", 25))
+                .add(new STableColumn("Geräte in Transfer < 300 €", 25))
+                .add(new STableColumn("Geräte in Transfer > 300 €", 25));
         table.setModel(new STableModelList(rows));
 
         CCalcDocument cdoc = new TempCalcDocument("Lagerbestand");
