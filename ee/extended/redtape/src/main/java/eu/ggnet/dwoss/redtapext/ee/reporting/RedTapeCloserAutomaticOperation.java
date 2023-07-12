@@ -71,8 +71,7 @@ import static eu.ggnet.dwoss.core.common.values.PositionType.UNIT;
 import static eu.ggnet.dwoss.core.common.values.ShipmentStatus.OPENED;
 import static eu.ggnet.dwoss.redtape.ee.entity.Document.Condition.*;
 import static eu.ggnet.dwoss.report.ee.entity.ReportLine.SingleReferenceType.WARRANTY;
-import static eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.CONTRACTOR_REFERENCE;
-import static eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.MANUFACTURER_COST;
+import static eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.*;
 import static org.apache.commons.lang3.StringUtils.normalizeSpace;
 
 /**
@@ -221,7 +220,8 @@ public class RedTapeCloserAutomaticOperation {
         m.setWorkRemaining(units.size() + 10);
         m.message("Mapping Stockunits");
         for (Unit unit : units) {
-            double price = unit.uniqueUnit.getPrice(PriceType.RETAILER);
+            double price = unit.uniqueUnit.getPrice(RETAILER);
+            if (price < 0.01) price = unit.uniqueUnit.getPrice(CUSTOMER);
             if ( unit.stockUnit.getLogicTransaction() == null ) {
                 scb.mapStockUnitsAvailable(i -> i + 1);
                 if ( price < 0.01 ) scb.mapStockUnitsAvailablePriceZero(i -> i + 1);

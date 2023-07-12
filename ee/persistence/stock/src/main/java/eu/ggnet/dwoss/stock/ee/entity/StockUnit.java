@@ -265,7 +265,7 @@ public class StockUnit implements Serializable, EagerAble {
 
     /**
      * Sets the StockLocation and the Stock
-     * <p/>
+     * <p>
      * @param stockLocation the StockLocation to be set
      */
     public void setStockLocation(StockLocation stockLocation) {
