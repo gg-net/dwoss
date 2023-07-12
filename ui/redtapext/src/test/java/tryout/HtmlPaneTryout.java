@@ -19,8 +19,8 @@ package tryout;
 import javax.swing.JLabel;
 
 import eu.ggnet.dwoss.core.widget.HtmlPane;
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.core.*;
+import eu.ggnet.saft.core.impl.Swing;
 
 /**
  *
@@ -29,7 +29,7 @@ import eu.ggnet.saft.core.UiCore;
 public class HtmlPaneTryout {
 
     public static void main(String[] args) {
-        UiCore.startSwing(() -> new JLabel("Main Application"));
+        UiCore.global().init(new Swing(UiCore.global(), UiUtil.startup(() -> new JLabel("Main Application"))));
 
         Ui.exec(() -> {
             Ui.build().fx().show(() -> "<h1>Hallo HTML Pane</h1>", () -> new HtmlPane());

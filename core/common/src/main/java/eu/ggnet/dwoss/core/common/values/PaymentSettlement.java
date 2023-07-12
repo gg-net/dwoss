@@ -44,7 +44,13 @@ public enum PaymentSettlement {
     /**
      * eBay.
      */    
-    EBAY("eBay");
+    EBAY("eBay"),
+    /**
+     * Kreditkarte.
+     */
+    CREDIT_CARD("Kreditkarte");
+    
+    
 
     private final String description;
 

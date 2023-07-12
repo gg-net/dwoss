@@ -65,7 +65,7 @@ public class DocumentFormater {
      * @return a html string representation of a document.
      */
     public static String toHtmlSimple(Document doc) {
-        String res = (doc.getType() == null) ? "<b>Dokumenttyp unbekannt</b>" : "<b>" + doc.getType().getName() + "</b>";
+        String res = (doc.getType() == null) ? "<b>Dokumenttyp unbekannt</b>" : "<b>" + doc.getType().description() + "</b>";
         res += (doc.getIdentifier() == null) ? "" : " <i>" + doc.getIdentifier() + "</i>";
         res += " von " + ((doc.getActual() != null) ? Utils.ISO_DATE.format(doc.getActual()) : "Kein Actual gesetzt") + "<br />";
         res += "Steuertyp: " + doc.getTaxType().description() + "<br />";
