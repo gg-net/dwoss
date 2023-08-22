@@ -183,7 +183,7 @@ public class DocumentSupporterOperation implements DocumentSupporter {
 
         String doctype = (jtype == DocumentViewType.DEFAULT ? document.getType().description : jtype.description);
 
-        try ( InputStream is = mandator.mailTemplateLocation().toURL().openStream();  InputStreamReader templateReader = new InputStreamReader(is)) {
+        try (InputStream is = mandator.mailTemplateLocation().toURL().openStream(); InputStreamReader templateReader = new InputStreamReader(is)) {
             String text = new MailDocumentParameter(customer.toTitleNameLine(), doctype).eval(IOUtils.toString(templateReader));
             MultiPartEmail email = mandator.prepareDirectMail();
 
@@ -195,13 +195,23 @@ public class DocumentSupporterOperation implements DocumentSupporter {
 
             // Building the Identifier, See also eu.ggnet.dwoss.redtapext.ui.cao.jasper.DocumentJasperFxView.saveToFile
             String identifier = document.getIdentifier() != null ? document.getIdentifier() : document.getDossier().getIdentifier();
-            identifier = identifier.replace("/", "_");
+
             if ( document.getInvoiceAddress() != null ) {
                 identifier += " - " + document.getInvoiceAddress().getDescription().split("\\n")[0];
             }
             if ( document.getActual() != null ) {
                 identifier += " - " + Utils.ISO_DATE.format(document.getActual());
             }
+
+            // Not nice, but should solve some problems.
+            identifier = identifier.replace("/", "_")
+                    .replace("ü", "ue")
+                    .replace("ö", "oe")
+                    .replace("ä", "ae")
+                    .replace("Ä", "Ae")
+                    .replace("Ö", "Oe")
+                    .replace("Ü", "Ue")
+                    .replace("ß", "ss");
 
             email.attach(
                     new ByteArrayDataSource(JasperExportManager.exportReportToPdf(jasper(document, jtype)), "application/pdf"),
@@ -332,7 +342,7 @@ public class DocumentSupporterOperation implements DocumentSupporter {
         URL url = mandator.documentIntermix().getTemplate(viewType) != null
                 ? mandator.documentIntermix().getTemplate(viewType)
                 : DocumentSupporterOperation.class.getResource(viewType.fileName);
-        try ( InputStream inputStream = url.openStream()) {
+        try (InputStream inputStream = url.openStream()) {
 
             JasperReport jasperReport = JasperCompileManager.compileReport(inputStream);
             JasperPrint result = JasperFillManager.fillReport(jasperReport, toTemplateParameters(document, viewType), toNormalizedDataSource(document));
