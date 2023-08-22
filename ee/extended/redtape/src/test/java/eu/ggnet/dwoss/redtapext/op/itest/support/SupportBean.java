@@ -18,7 +18,6 @@ import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.eao.LogicTransactionEao;
 import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
-import eu.ggnet.dwoss.stock.ee.emo.StockLocationDiscoverer;
 import eu.ggnet.dwoss.stock.ee.emo.StockTransactionEmo;
 
 /**
@@ -53,9 +52,8 @@ public class SupportBean {
 
     public StockUnit changeStock(int uniqueUnitId, int target) {
         StockUnit stockUnit1 = stockUnitEao.findByUniqueUnitId(uniqueUnitId);
-        StockLocationDiscoverer discoverer = new StockLocationDiscoverer(stockEm);
         Stock notDestination = stockEm.find(Stock.class, target);
-        discoverer.discoverAndSetLocation(stockUnit1, notDestination);
+        stockUnit1.setStock(notDestination);
         return stockUnit1;
     }
 

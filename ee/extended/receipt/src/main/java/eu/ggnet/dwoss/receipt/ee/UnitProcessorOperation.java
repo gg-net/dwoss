@@ -186,7 +186,7 @@ public class UnitProcessorOperation implements UnitProcessor {
         st.addPosition(new StockTransactionPosition(stockUnit));
         stockEm.persist(st);
         stockUnit.setPosition(null);
-        new StockLocationDiscoverer(stockEm).discoverAndSetLocation(stockUnit, destination);
+        stockUnit.setStock(destination);
         uniqueUnit = new UniqueUnitEao(uuEm).findById(uniqueUnit.getId());
         uniqueUnit.addHistory("External Stock change from " + stockUnit.getStock() + " to " + destination + " by " + arranger);
         uniqueUnit.fetchEager();

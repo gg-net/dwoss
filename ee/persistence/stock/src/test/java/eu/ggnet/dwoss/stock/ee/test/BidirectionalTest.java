@@ -47,30 +47,4 @@ public class BidirectionalTest {
         assertTrue(su0.isInTransaction());
     }
 
-    @Test
-    public void testStockAndLocation() {
-
-        Stock s0 = new Stock(0);
-        StockLocation s0l0 = new StockLocation("Bla Bla");
-        StockLocation s0l1 = new StockLocation("Bla Bla");
-        s0.addStockLocation(s0l0);
-        s0.addStockLocation(s0l1);
-
-        assertEquals(2, s0.getStockLocations().size());
-        s0l1.setStock(null);
-        assertEquals(1, s0.getStockLocations().size());
-        s0l1.setStock(s0);
-
-        StockUnit su = TestStockUnitFactory.makeStockUnitWithId(0);
-        su.setStockLocation(s0l0);
-        assertEquals(s0l1, su.getStockLocation());
-        assertEquals(s0, su.getStock());
-
-        su.setStock(null);
-
-        assertNull(su.getStockLocation());
-        assertNull(su.getStock());
-
-    }
-
 }

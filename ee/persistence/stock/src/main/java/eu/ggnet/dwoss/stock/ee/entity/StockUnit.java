@@ -83,9 +83,6 @@ public class StockUnit implements Serializable, EagerAble {
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = EAGER)
     private Stock stock;
 
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = EAGER)
-    private StockLocation stockLocation;
-
     @Valid
     @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, mappedBy = "stockUnit", fetch = EAGER)
     StockTransactionPosition position;
@@ -172,10 +169,6 @@ public class StockUnit implements Serializable, EagerAble {
         return stock;
     }
 
-    public StockLocation getStockLocation() {
-        return stockLocation;
-    }
-
     public StockTransactionPosition getPosition() {
         return position;
     }
@@ -259,18 +252,7 @@ public class StockUnit implements Serializable, EagerAble {
         if ( stock != null ) {
             stock.units.add(this);
         }
-        this.stockLocation = null;
         this.stock = stock;
-    }
-
-    /**
-     * Sets the StockLocation and the Stock
-     * <p>
-     * @param stockLocation the StockLocation to be set
-     */
-    public void setStockLocation(StockLocation stockLocation) {
-        setStock(stockLocation == null ? null : stockLocation.getStock());
-        this.stockLocation = stockLocation;
     }
 
     public void setLogicTransaction(LogicTransaction logicTransaction) {

@@ -31,7 +31,6 @@ import eu.ggnet.dwoss.core.common.values.ShipmentStatus;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
-import eu.ggnet.dwoss.stock.ee.entity.StockLocation;
 import eu.ggnet.dwoss.core.system.generator.NameGenerator;
 import eu.ggnet.dwoss.stock.ee.entity.*;
 
@@ -51,19 +50,6 @@ public class StockGeneratorOperation {
 
     private final NameGenerator GEN = new NameGenerator();    
     
-    public static final String[] STOCK_LOCATION_NAMES = {
-        "Regal Endnummer - 0",
-        "Regal Endnummer - 1",
-        "Regal Endnummer - 2",
-        "Regal Endnummer - 3",
-        "Regal Endnummer - 4",
-        "Regal Endnummer - 5",
-        "Regal Endnummer - 6",
-        "Regal Endnummer - 7",
-        "Regal Endnummer - 8",
-        "Regal Endnummer - 9"
-    };
-
     @Inject
     @Stocks
     private EntityManager em;
@@ -83,12 +69,7 @@ public class StockGeneratorOperation {
             Stock s = new Stock(i);
             s.setName("Lager " + GEN.makeAddress().getTown());
             s.setPrimaryChannel(SalesChannel.values()[i]);
-            em.persist(s);
-            for (String name : STOCK_LOCATION_NAMES) {
-                StockLocation sl = new StockLocation(name);
-                s.addStockLocation(sl);
-                em.persist(sl);
-            }
+            em.persist(s);           
             result.add(s);
         }
         return result;

@@ -48,15 +48,13 @@ public class StockUnitEaoIT extends ArquillianProjectArchive {
         Stock s = new Stock(0, "TEEEEEEEEEEEEEEEST");
         em.persist(s);
 
-        StockLocation sl = new StockLocation("Lagerplatz");
-        s.addStockLocation(sl);
 
         StockUnit s1 = new StockUnit("G1", 1);
         s1.setRefurbishId("23");
         StockUnit s2 = new StockUnit("G2", 2);
         s2.setRefurbishId("42");
-        s.addUnit(s1, sl);
-        s.addUnit(s2, sl);
+        s.addUnit(s1);
+        s.addUnit(s2);
 
         em.persist(new Stock(1, "TEEEEEEEEST"));
         utx.commit();
@@ -99,8 +97,6 @@ public class StockUnitEaoIT extends ArquillianProjectArchive {
         Stock s1 = new Stock(1, "2222222222222222222222222222");
         em.persist(s0);
         em.persist(s1);
-        StockLocation s0l0 = new StockLocation("Lagerplatz");
-        s0.addStockLocation(s0l0);
 
         StockUnit su0 = new StockUnit("g1", 1);
         su0.setRefurbishId("23");
@@ -111,9 +107,9 @@ public class StockUnitEaoIT extends ArquillianProjectArchive {
         StockUnit su2 = new StockUnit("g3", 3);
         su2.setRefurbishId("42");
         su2.setName("Name");
-        s0.addUnit(su0, s0l0);
-        s0.addUnit(su1, s0l0);
-        s0.addUnit(su2, s0l0);
+        s0.addUnit(su0);
+        s0.addUnit(su1);
+        s0.addUnit(su2);
 
         em.persist(su0);
         em.persist(su1);
@@ -138,17 +134,15 @@ public class StockUnitEaoIT extends ArquillianProjectArchive {
         em.joinTransaction();
         Stock s = new Stock(0, "TEEEEEEEEEEEEEEEEEEEEEst");
         em.persist(s);
-        StockLocation sl = new StockLocation("Lagerplatz");
-        s.addStockLocation(sl);
 
         StockUnit s1 = new StockUnit("G1", 1);
         StockUnit s2 = new StockUnit("G2", 2);
         StockUnit s3 = new StockUnit("G3", 3);
         StockUnit s4 = new StockUnit("G4", 4);
-        s.addUnit(s1, sl);
-        s.addUnit(s2, sl);
-        s.addUnit(s3, sl);
-        s.addUnit(s4, sl);
+        s.addUnit(s1);
+        s.addUnit(s2);
+        s.addUnit(s3);
+        s.addUnit(s4);
         em.persist(s);
         em.persist(new Stock(1, "teeeeeeeeeeest"));
         LogicTransaction lt = new LogicTransaction();
@@ -170,17 +164,15 @@ public class StockUnitEaoIT extends ArquillianProjectArchive {
         em.joinTransaction();
         Stock s = new Stock(0, "TEEEEEEEEEEEEEEST");
         em.persist(s);
-        StockLocation sl = new StockLocation("Lagerplatz");
-        s.addStockLocation(sl);
 
         StockUnit s1 = new StockUnit("G1", 1);
         StockUnit s2 = new StockUnit("G2", 2);
         StockUnit s3 = new StockUnit("G3", 3);
         StockUnit s4 = new StockUnit("G4", 4);
-        s.addUnit(s1, sl);
-        s.addUnit(s2, sl);
-        s.addUnit(s3, sl);
-        s.addUnit(s4, sl);
+        s.addUnit(s1);
+        s.addUnit(s2);
+        s.addUnit(s3);
+        s.addUnit(s4);
         em.persist(s);
         em.persist(new Stock(1, "TEEEEEEEEEST2"));
         LogicTransaction lt = new LogicTransaction();

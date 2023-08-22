@@ -96,22 +96,16 @@ public class StockApiScrapDeleteIT extends ArquillianProjectArchive {
         em.joinTransaction();
         Stock stock0 = new Stock(STOCK0_ID, "Stock Zero (0)");
         Stock stock1 = new Stock(STOCK1_ID, "Stock One (1)");
-        StockLocation stock0location = new StockLocation("Location on Stock Zero");
-        StockLocation stock1location = new StockLocation("Location on Stock Zero");
-        stock0.addStockLocation(stock0location);
-        stock1.addStockLocation(stock1location);
 
         em.persist(stock0);
         em.persist(stock1);
-        em.persist(stock0location);
-        em.persist(stock1location);
 
         StockUnit su0 = new StockUnit(SU0_REFURBISHID, SU0_NAME, (int)SU0_UNQIUE_UNIT_ID);
-        su0.setStockLocation(stock0location);
+        su0.setStock(stock0);
         StockUnit su1 = new StockUnit(SU1_REFURBISHID, SU1_NAME, (int)SU1_UNQIUE_UNIT_ID);
-        su1.setStockLocation(stock0location);
+        su1.setStock(stock0);
         StockUnit su2 = new StockUnit(SU2_REFURBISHID, SU2_NAME, (int)SU2_UNQIUE_UNIT_ID);
-        su2.setStockLocation(stock1location);
+        su2.setStock(stock1);
         StockUnit su3 = new StockUnit(SU3_REFURBISHID, SU3_NAME, (int)SU3_UNQIUE_UNIT_ID);
         StockTransaction st = new StockTransactionEmo(em).requestExternalTransferPrepare(STOCK0_ID, STOCK1_ID, "IntegrationTestUser", "Integeration Test");
         st.addUnit(su3);

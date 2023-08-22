@@ -57,15 +57,11 @@ public class StockTransactionEmo {
     @Stocks
     private EntityManager em;
 
-    private final StockLocationDiscoverer discoverer;
-
     public StockTransactionEmo(EntityManager em) {
         this.em = em;
-        this.discoverer = new StockLocationDiscoverer(em);
     }
 
     public StockTransactionEmo() {
-        this.discoverer = new StockLocationDiscoverer(em);
     }
 
     /**
@@ -199,8 +195,10 @@ public class StockTransactionEmo {
                     StockUnit stockUnit = position.getStockUnit();
                     L.debug("RollingIn StockUnit={} of Transaction(id={})", stockUnit, transaction.getId());
                     position.setStockUnit(null);
-                    discoverer.discoverAndSetLocation(stockUnit, transaction.getDestination());
-                    if ( stockUnit != null ) result.add(stockUnit);
+                    if ( stockUnit != null ) { // Todo (OG): Kann das überhaupt ein Fall sein ?
+                        stockUnit.setStock(transaction.getDestination());
+                        result.add(stockUnit);
+                    }
                 }
             }
         }
@@ -225,7 +223,7 @@ public class StockTransactionEmo {
             for (StockUnit stockUnit : st.getUnits()) {
                 result.add(stockUnit);
                 stockUnit.setPosition(null);
-                discoverer.discoverAndSetLocation(stockUnit, st.getDestination());
+                stockUnit.setStock(st.getDestination());
             }
         }
         return result;

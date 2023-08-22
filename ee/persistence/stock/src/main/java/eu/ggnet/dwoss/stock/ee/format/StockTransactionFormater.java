@@ -32,10 +32,10 @@ public class StockTransactionFormater {
             String group;
             if ( position.getStockUnit() == null ) {
                 group = shadow;
-            } else if ( position.getStockUnit().getStockLocation() == null ) {
-                group = miss;
+            } else if ( position.getStockUnit().getStock() != null ) {
+                group = position.getStockUnit().getStock().getName();
             } else {
-                group = position.getStockUnit().getStockLocation().getName();
+                group = miss;
             }
             SortedSet<String> groupSet = detailMap.get(group);
             if ( groupSet == null ) {
@@ -118,10 +118,10 @@ public class StockTransactionFormater {
                 String group;
                 if ( position.getStockUnit() == null ) {
                     group = shadow;
-                } else if ( position.getStockUnit().getStockLocation() == null ) {
-                    group = miss;
+                } else if ( position.getStockUnit().getStock() != null ) {
+                    group = position.getStockUnit().getStock().getName();
                 } else {
-                    group = position.getStockUnit().getStockLocation().getName();
+                    group = miss;
                 }
                 SortedSet<String> d = detailMap.get(group);
                 if ( d == null ) {

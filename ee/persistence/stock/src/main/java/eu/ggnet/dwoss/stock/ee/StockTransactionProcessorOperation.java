@@ -225,7 +225,6 @@ public class StockTransactionProcessorOperation implements StockTransactionProce
      */
     @Override
     public void receive(List<StockTransaction> transactions, String deliverer, String reciever) {
-        StockLocationDiscoverer discoverer = new StockLocationDiscoverer(stockEm);
         for (StockTransaction transaction : transactions) {
             transaction = stockEm.find(StockTransaction.class, transaction.getId());
             transaction.addStatus(RECEIVED, DELIVERER, deliverer, RECEIVER, reciever);
@@ -233,7 +232,7 @@ public class StockTransactionProcessorOperation implements StockTransactionProce
             Stock destination = transaction.getDestination();
             for (StockUnit stockUnit : transaction.getUnits()) {
                 stockUnit.setPosition(null);
-                discoverer.discoverAndSetLocation(stockUnit, destination);
+                stockUnit.setStock(destination);
                 history.fire(UnitHistory.create(stockUnit.getUniqueUnitId(), "Unit received in Stock(" + destination.getId() + ") " + destination.getName(), reciever));
             }
         }

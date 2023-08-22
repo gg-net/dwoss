@@ -60,12 +60,8 @@ public class PersistenceIT extends ArquillianProjectArchive {
 
         s1 = em.find(Stock.class, s1.getId());
 
-        StockLocation s1l1 = new StockLocation("Regal A");
-        StockLocation s1l2 = new StockLocation("Regal B");
-        s1.addStockLocation(s1l1);
-        s1.addStockLocation(s1l2);
         StockUnit su1 = new StockUnit("Gerät", 1);
-        su1.setStockLocation(s1l2);
+        su1.setStock(s1);
 
         utx.commit();
         utx.begin();

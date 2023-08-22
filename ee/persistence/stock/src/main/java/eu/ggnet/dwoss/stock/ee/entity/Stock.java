@@ -53,9 +53,6 @@ public class Stock implements Serializable {
     @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, mappedBy = "stock")
     List<StockUnit> units = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "stock")
-    List<StockLocation> stockLocations = new ArrayList<>();
-
     public Stock() {
     }
 
@@ -102,18 +99,6 @@ public class Stock implements Serializable {
         unit.setStock(this);
     }
 
-    /**
-     * Adds the Unit to this Stock spezifing the stock location, bidirectional handling implemented.
-     * Wont do anything if either unit or stock location is null or the stock location is not from this stock
-     *
-     * @param unit          the unit to be added, may not be null
-     * @param stockLocation the stock location may not be null
-     */
-    public void addUnit(StockUnit unit, StockLocation stockLocation) {
-        if ( unit == null || stockLocation == null || !stockLocations.contains(stockLocation) ) return;
-        unit.setStockLocation(stockLocation);
-    }
-
     public void removeUnit(StockUnit unit) {
         if ( unit == null ) return;
         unit.setStock(null);
@@ -121,30 +106,6 @@ public class Stock implements Serializable {
 
     public List<StockUnit> getUnits() {
         return Collections.unmodifiableList(units);
-    }
-
-    /**
-     * Adds the StockLocation to the Stock, bidirectional handling implemented
-     *
-     * @param stockLocation the StockLocation to be added
-     */
-    public void addStockLocation(StockLocation stockLocation) {
-        if ( stockLocation == null ) return;
-        stockLocation.setStock(this);
-    }
-
-    /**
-     * Removes the StockLocation for this stock, bidirectional handling implemented
-     *
-     * @param stockLocation the StockLocation to be removed
-     */
-    public void removeStockLocation(StockLocation stockLocation) {
-        if ( stockLocation == null ) return;
-        stockLocation.setStock(null);
-    }
-
-    public List<StockLocation> getStockLocations() {
-        return Collections.unmodifiableList(stockLocations);
     }
 
     public PicoStock toPicoStock() {
