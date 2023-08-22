@@ -32,8 +32,6 @@ public class AppleRules {
             Pattern.compile("[A-Z]{1}[0-9A-Z]{8}")
     );
 
-    private final static Pattern SERIAL_PATTERN = Pattern.compile("[A-Z0-9]{9,12}");
-
     /**
      * Validates a PartNo of Apple, returns null if ok or else a String representing the error.
      * See Source Code for allowed patterns.
@@ -61,11 +59,10 @@ public class AppleRules {
      */
     public static String validateSerial(String serial) {
         if ( serial == null ) return "Seriennummer darf nicht null sein";
-        if ( serial.length() < 9 ) return "Seriennummer ist zu kurz ! (ist " + serial.length() + ", soll 9-12)";
-        if ( serial.length() > 12 ) return "Seriennummer ist zu lang ! (ist " + serial.length() + ", soll 9-12)";
-        if ( !SERIAL_PATTERN.matcher(serial).matches() ) {
-            return "Apple Seriennummer " + serial + " passt nicht auf Apple Pattern ************ (*=Zahl/Buchstabe) !";
-        }
+        if ( serial.length() < 9 ) return "Seriennummer ist zu kurz ! (ist " + serial.length() + ", soll 9-40)";
+        if ( serial.length() > 40 ) return "Seriennummer ist zu lang ! (ist " + serial.length() + ", soll 9-40)";
+        if (serial.startsWith(" "))  return "Seriennummer hat am Anfang ein Leerzeichen, nicht erlaubt";
+        if (serial.endsWith(" "))  return "Seriennummer hat am Ende ein Leerzeichen, nicht erlaubt";
         return null;
     }
 

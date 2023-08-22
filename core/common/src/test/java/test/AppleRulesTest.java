@@ -51,7 +51,7 @@ public class AppleRulesTest {
             "DMPJPNVCDKPH", "DMPJPPEUDKPH", "DLXJK55CF183", "DMQJPH9GF186", "DQTJLSJCF185", "DQTJPFCXF185", "DLXJP5HFF186", "DMPJJC4RF183", "DQTJPJ0QF185",
             "DMQJPHMGF186", "DLXJM2WWF185", "8K348DYG9ZU", "8K348DYG9Z", "XPVW29FV34", "Z12N00006", "Z12P0007P", "Z12N00003", "Z12N0006D"};
 
-        String[] invalidSerials = {null, "", "1MV2JR9XHF185", "dfMPJNTSLDFHW", "PJMX2EDK", "DDMPJMWA0DKPH", "  DMPJMDXCF191", "DN6GWB6MDKPK  "};
+        String[] invalidSerials = {null, "", "  DMPJMDXCF191", "DN6GWB6MDKPK  "};
 
         for (String validSerial : validSerials) {
             assertValidSerial(validSerial);
