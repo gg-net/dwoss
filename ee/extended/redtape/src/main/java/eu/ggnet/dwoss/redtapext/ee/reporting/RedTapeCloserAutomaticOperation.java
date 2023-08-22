@@ -201,6 +201,9 @@ public class RedTapeCloserAutomaticOperation {
                 "Rollout by " + (manual ? "manuel" : "automatic") + " closing on " + Utils.ISO_DATE.format(now), arranger, m);
         L.info("closed:stock");
 
+        poluteReportingCountStock();
+        L.info("closed:poluteReportingCountStock");
+        
         m.finish();
     }
 
@@ -262,6 +265,15 @@ public class RedTapeCloserAutomaticOperation {
         scb.shipmentsOpenedRemainderUnits(scb.shipmentsOpenedUnits() - (int)countReceived);
         m.finish();
         return scb.build();
+    }
+    
+    /**
+     * Store the stock count in the reporting.
+     */
+    private void poluteReportingCountStock() {
+       StockCount sc = countStock();
+       eu.ggnet.dwoss.report.ee.entity.StockCount sce = eu.ggnet.dwoss.report.ee.entity.StockCount.fromApi(sc);
+       reportEm.persist(sce);
     }
 
     /**

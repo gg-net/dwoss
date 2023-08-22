@@ -44,4 +44,12 @@ public interface RedTapeCloserManual {
      */
     FileJacket countStockAsXls();
 
+        /**
+     * Returns all stored stockCounts as Xls Report.
+     *
+     * @return all stored stockCounts as Xls Report.
+     */
+    FileJacket countStockHistoryAsXls();
+
+    
 }

@@ -172,6 +172,7 @@ public class DwOssClientController {
         Menu gl_allgemein = new Menu("Allgemeine Reporte");
         gl_allgemein.getItems().addAll(m.items(
                 ActualStockCountMenuItem.class,
+                HistoryStockCountMenuItem.class,
                 UnitQualityReportAction.class,
                 ExportInputReportAction.class,
                 ExportDossierToXlsAction.class,

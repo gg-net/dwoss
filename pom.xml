@@ -142,6 +142,7 @@
           <![CDATA[
                 <class>eu.ggnet.dwoss.report.ee.entity.Report</class>
                 <class>eu.ggnet.dwoss.report.ee.entity.ReportLine</class>
+                <class>eu.ggnet.dwoss.report.ee.entity.StockCount</class>
                 <class>eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine</class>
                 <exclude-unlisted-classes>true</exclude-unlisted-classes>
           ]]>
@@ -196,7 +197,6 @@
                 <class>eu.ggnet.dwoss.stock.ee.entity.LogicTransaction</class>
                 <class>eu.ggnet.dwoss.stock.ee.entity.Shipment</class>
                 <class>eu.ggnet.dwoss.stock.ee.entity.Stock</class>
-                <class>eu.ggnet.dwoss.stock.ee.entity.StockLocation</class>
                 <class>eu.ggnet.dwoss.stock.ee.entity.StockTransaction</class>
                 <class>eu.ggnet.dwoss.stock.ee.entity.StockTransactionParticipation</class>
                 <class>eu.ggnet.dwoss.stock.ee.entity.StockTransactionPosition</class>
