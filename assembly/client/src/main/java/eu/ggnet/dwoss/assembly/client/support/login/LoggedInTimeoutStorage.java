@@ -74,7 +74,7 @@ public class LoggedInTimeoutStorage {
      * @return the status
      */
     public boolean loadActive() {
-        return P.getBoolean(ACTIVE, true);
+        return P.getBoolean(ACTIVE, false);
     }
 
     /**
