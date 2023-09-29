@@ -101,16 +101,42 @@ public class ReportLine extends BaseEntity implements Serializable, EagerAble, C
 
     public static class Storeable implements Serializable {
 
-        public final long id;
+        private final long id;
 
-        public final double marginPercentage;
+        private final double marginPercentage;
 
-        public final double purchasePrice;
+        private final double purchasePrice;
 
-        public Storeable(long id, double marginPercentage, double purchasePrice) {
+        private final double margin;
+
+        private final double fees;
+
+        public Storeable(long id, double marginPercentage, double purchasePrice, double margin, double fees) {
             this.id = id;
             this.marginPercentage = marginPercentage;
             this.purchasePrice = purchasePrice;
+            this.margin = margin;
+            this.fees = fees;
+        }
+
+        public long id() {
+            return id;
+        }
+
+        public double marginPercentage() {
+            return marginPercentage;
+        }
+
+        public double purchasePrice() {
+            return purchasePrice;
+        }
+
+        public double margin() {
+            return margin;
+        }
+
+        public double fees() {
+            return fees;
         }
 
         @Override
@@ -388,13 +414,13 @@ public class ReportLine extends BaseEntity implements Serializable, EagerAble, C
      * The absolute margin of this line.
      */
     private double margin = 0.0;
-    
+
     /**
      * Fees that are shown extra.
      * Like Paypal, cost per box e.t.c.
      */
     private double fees = 0.0;
-    
+
     /**
      * The Price with this unit was buyed.
      */
@@ -456,7 +482,7 @@ public class ReportLine extends BaseEntity implements Serializable, EagerAble, C
      * Defines if this is an reverse charge candidate. (German LAW example: Tablet)
      */
     private boolean rch = false;
-    
+
     public ReportLine() {
     }
 
@@ -475,7 +501,6 @@ public class ReportLine extends BaseEntity implements Serializable, EagerAble, C
     }
 
     //<editor-fold defaultstate="collapsed" desc="getter/setter">
-
     public double getMargin() {
         return margin;
     }
@@ -490,8 +515,8 @@ public class ReportLine extends BaseEntity implements Serializable, EagerAble, C
 
     public void setFees(double fees) {
         this.fees = fees;
-    }        
-    
+    }
+
     public Date getReportingDate() {
         return reportingDate;
     }
@@ -831,11 +856,11 @@ public class ReportLine extends BaseEntity implements Serializable, EagerAble, C
     public void add(PaymentSettlement paymentSettlement) {
         settlements.add(paymentSettlement);
     }
-    
+
     public Set<PaymentSettlement> getSettlements() {
         return Collections.unmodifiableSet(settlements);
     }
-    
+
     /**
      * This setter Method sets the productGroup and the productGroupName.
      *
@@ -899,10 +924,10 @@ public class ReportLine extends BaseEntity implements Serializable, EagerAble, C
             add(reportLine);
         }
     }
-    
+
     /**
      * Returns all references in a new collection.
-     * 
+     *
      * @return all references in a new collection.
      */
     public NavigableSet<ReportLine> getRefrences() {
@@ -911,7 +936,7 @@ public class ReportLine extends BaseEntity implements Serializable, EagerAble, C
 
     /**
      * Calls {@link Collection#retainAll(java.util.Collection) } on a new instance of references and returns the resulting collection.
-     * 
+     *
      * @param other the other collection to use as parameter on retainAll.
      * @return the resulting collection
      */
@@ -923,7 +948,7 @@ public class ReportLine extends BaseEntity implements Serializable, EagerAble, C
 
     /**
      * This add a ReportLine of the references Set. This is a bidirectional mapping method.
-     * 
+     *
      * @param reportLine
      */
     public void add(ReportLine reportLine) {
@@ -1173,7 +1198,7 @@ public class ReportLine extends BaseEntity implements Serializable, EagerAble, C
      * @return a Storable of this ReportLine.
      */
     public Storeable toStorable() {
-        return new Storeable(id, marginPercentage, purchasePrice);
+        return new Storeable(id, marginPercentage, purchasePrice, margin, fees);
     }
 
     /**
@@ -1199,7 +1224,7 @@ public class ReportLine extends BaseEntity implements Serializable, EagerAble, C
                 + ", mfgDate=" + mfgDate + ", uniqueUnitId=" + uniqueUnitId + ", marginPercentage=" + marginPercentage + ", purchasePrice=" + purchasePrice
                 + ", salesChannel=" + salesChannel + ", salesChannelName=" + salesChannelName + ", contractor=" + contractor
                 + ", contractorName=" + contractorName + ", contractorPartNo=" + contractorPartNo + ", contractorReferencePrice=" + contractorReferencePrice
-                + ", gtin=" + gtin + ", settlements=" + settlements + '}';
+                + ", gtin=" + gtin + ", settlements=" + settlements + ", fees=" + fees + '}';
     }
 
     /**
@@ -1363,12 +1388,20 @@ public class ReportLine extends BaseEntity implements Serializable, EagerAble, C
         sb.append(uniqueUnitId);
         sb.append("<br>");
 
+        sb.append("<b>Purchase Price: </b>");
+        sb.append(purchasePrice);
+        sb.append("<br>");
+
         sb.append("<b>Margin Percentage: </b>");
         sb.append(marginPercentage);
         sb.append("<br>");
 
-        sb.append("<b>Purchase Price: </b>");
-        sb.append(purchasePrice);
+        sb.append("<b>Margin: </b>");
+        sb.append(margin);
+        sb.append("<br>");
+
+        sb.append("<b>Fees: </b>");
+        sb.append(fees);
         sb.append("<br>");
 
         sb.append("<b>SalesChannel: </b>");

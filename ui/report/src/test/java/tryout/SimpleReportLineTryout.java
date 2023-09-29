@@ -161,11 +161,6 @@ public class SimpleReportLineTryout {
             }
             //</editor-fold>
 
-            @Override
-            public void migrate() {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-            }
-
         };
         Dl.remote().add(ReportAgent.class, rastub);
         Ui.exec(() -> {

@@ -219,7 +219,8 @@ public class ReportController implements Initializable, FxController, Consumer<R
                 toCurrencyColumn("Contractor RP", cell -> new ReadOnlyDoubleWrapper(cell.getValue().reportLine.getContractorReferencePrice()).getReadOnlyProperty()),
                 toCurrencyColumn("VK", cell -> new ReadOnlyDoubleWrapper(cell.getValue().reportLine.getPrice()).getReadOnlyProperty()),
                 toCurrencyColumn("EK", cell -> new ReadOnlyDoubleWrapper(cell.getValue().reportLine.getPurchasePrice()).getReadOnlyProperty()),
-                toCurrencyColumn("Marge", cell -> new ReadOnlyDoubleWrapper(cell.getValue().reportLine.getPrice() - cell.getValue().reportLine.getPurchasePrice()).getReadOnlyProperty()),
+                toCurrencyColumn("Marge", cell -> new ReadOnlyDoubleWrapper(cell.getValue().reportLine.getMargin()).getReadOnlyProperty()),
+                toCurrencyColumn("Gebühren", cell -> new ReadOnlyDoubleWrapper(cell.getValue().reportLine.getFees()).getReadOnlyProperty()),
                 toTableLineColumn("Rechnungsaddresse", cell -> new ReadOnlyStringWrapper(cell.getValue().reportLine.getInvoiceAddress()).getReadOnlyProperty()),
                 toTableLineColumn("DocumentType", cell -> new ReadOnlyStringWrapper(
                 cell.getValue().reportLine.getDocumentTypeName() + cell.getValue().reportLine.getWorkflowStatus().sign).getReadOnlyProperty()),

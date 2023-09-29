@@ -104,7 +104,7 @@ public class ReportAgentBean extends AbstractAgentBean implements ReportAgent {
 
     /**
      * Stores a new report, persisting the report and merging the lines.
-     * <p/>
+     * <p>
      * @param report    the report to persist.
      * @param storables the lines to merge, only the id is considered and a new instance is used from the EntityManager.
      * @return the persisted report.
@@ -112,10 +112,12 @@ public class ReportAgentBean extends AbstractAgentBean implements ReportAgent {
     @Override
     @AutoLogger
     public Report store(Report report, Collection<ReportLine.Storeable> storables) {
-        for (ReportLine.Storeable storable : storables) {
-            ReportLine line = reportEm.find(ReportLine.class, storable.id);
-            line.setMarginPercentage(storable.marginPercentage);
-            line.setPurchasePrice(storable.purchasePrice);
+        for (ReportLine.Storeable storeable : storables) {
+            ReportLine line = reportEm.find(ReportLine.class, storeable.id());
+            line.setMarginPercentage(storeable.marginPercentage());
+            line.setPurchasePrice(storeable.purchasePrice());
+            line.setMargin(storeable.margin());
+            line.setFees(storeable.fees());
             report.add(line);
             L.debug("Report Line {} was anded to report. ", line);
         }
@@ -284,15 +286,4 @@ public class ReportAgentBean extends AbstractAgentBean implements ReportAgent {
         return viewReportResult;
     }
 
-    @Override
-    public void migrate() {
-        SubMonitor m = mf.newSubMonitor("Migration", 100);
-        m.start();
-        m.setWorkRemaining(reportLineEao.count());
-        for (ReportLine rl : reportLineEao.findAll()) {
-            if (rl.getPurchasePrice() > 0.01) rl.setMargin(rl.getPrice() - rl.getPurchasePrice());
-            m.worked(1);
-        }
-        m.finish();
-    }
 }
