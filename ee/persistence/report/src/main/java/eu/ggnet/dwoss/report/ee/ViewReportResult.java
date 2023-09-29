@@ -45,22 +45,28 @@ public class ViewReportResult implements Serializable {
         /**
          * Lines which should not be stored in the report, as future lines have an implaced here. e.g. a open complaint.
          */
-        ACTIVE_INFO, /**
+        ACTIVE_INFO,
+        /**
          * Lines which represent repayents.
          */
-        REPAYMENTS, /**
+        REPAYMENTS,
+        /**
          * Invoice Units with a MFG Date between report date and report date - 1 year.
          */
-        UNDER_ONE_YEAR, /**
+        UNDER_ONE_YEAR,
+        /**
          * Invoice Units with a MFG Date older than report date - 1 year.
          */
-        PAST_ONE_YEAR, /**
+        PAST_ONE_YEAR,
+        /**
          * Lines which in sum result into zero.
          */
-        REPORT_INFO, /**
+        REPORT_INFO,
+        /**
          * Warrenty lines.
          */
-        WARRENTY, /**
+        WARRENTY,
+        /**
          * Invoiced elements.
          */
         INVOICED;
