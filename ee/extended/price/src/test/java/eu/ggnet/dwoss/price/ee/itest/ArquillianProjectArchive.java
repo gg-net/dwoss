@@ -49,7 +49,7 @@ public class ArquillianProjectArchive {
 
         File[] libs = Maven.resolver()
                 .loadPomFromFile("pom.xml")
-                .importRuntimeDependencies()
+                .importCompileAndRuntimeDependencies()
                 .addDependency(MavenDependencies.createDependency("eu.ggnet.dwoss:dwoss-mandator-sample", RUNTIME, false)) // The Sample Mandator
                 .addDependency(MavenDependencies.createDependency("eu.ggnet.dwoss:dwoss-mandator-sample-service", RUNTIME, false)) // The Sample Mandator Services
                 .addDependency(MavenDependencies.createDependency("eu.ggnet.dwoss:dwoss-receipt-ee", RUNTIME, false)) // Using Receipt for unit generation

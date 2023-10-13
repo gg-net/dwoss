@@ -4,12 +4,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-import org.junit.Test;
-
 import eu.ggnet.dwoss.core.system.autolog.AutoLoggerInterceptor;
 import eu.ggnet.dwoss.core.system.progress.ProgressProducerForTests;
 
 import nu.xom.*;
+
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

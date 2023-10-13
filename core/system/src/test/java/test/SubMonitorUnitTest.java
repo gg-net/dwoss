@@ -2,8 +2,7 @@ package test;
 
 import eu.ggnet.dwoss.core.system.progress.SubMonitor;
 
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 
 /**
  *

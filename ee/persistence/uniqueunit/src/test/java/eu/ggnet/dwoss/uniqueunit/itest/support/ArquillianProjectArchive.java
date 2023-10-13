@@ -45,7 +45,7 @@ public class ArquillianProjectArchive {
     public static WebArchive createDeployment() {
         File[] libs = Maven.resolver()
                 .loadPomFromFile("pom.xml")
-                .importRuntimeDependencies()
+                .importCompileAndRuntimeDependencies()
                 .addDependency(MavenDependencies.createDependency("eu.ggnet.dwoss:dwoss-mandator-sample", RUNTIME, false)) // The Sample Mandator is needed on many places.
                 .addDependency(MavenDependencies.createDependency("org.assertj:assertj-core", RUNTIME, false)) // AssertJ Fluent Assertions
                 .resolve().withTransitivity().asFile();

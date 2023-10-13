@@ -44,7 +44,7 @@ public class ArquillianProjectArchive {
 
         File[] libs = Maven.resolver()
                 .loadPomFromFile("pom.xml")
-                .importRuntimeDependencies()
+                .importCompileAndRuntimeDependencies()
                 .addDependency(MavenDependencies.createDependency("org.assertj:assertj-core", RUNTIME, false)) // AssertJ Fluent Assertions
                 .resolve().withTransitivity().asFile();
         WebArchive war = ShrinkWrap.create(WebArchive.class, "misc-core-test.war")

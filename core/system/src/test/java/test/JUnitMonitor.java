@@ -3,7 +3,7 @@ package test;
 
 import eu.ggnet.dwoss.core.system.progress.IMonitor;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *

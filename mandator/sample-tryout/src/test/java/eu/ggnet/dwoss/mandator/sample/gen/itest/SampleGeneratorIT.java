@@ -51,7 +51,7 @@ public class SampleGeneratorIT {
 
         File[] libs = Maven.resolver()
                 .loadPomFromFile("pom.xml")
-                .importRuntimeDependencies()
+                .importCompileAndRuntimeDependencies()
                 .addDependency(MavenDependencies.createDependency("org.assertj:assertj-core", RUNTIME, false)) // AssertJ Fluent Assertions
                 .resolve().withTransitivity().asFile();
         WebArchive war = ShrinkWrap.create(WebArchive.class, "sample-persistence-test.war")
