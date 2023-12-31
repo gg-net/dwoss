@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.redtape.ee.emo;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import eu.ggnet.dwoss.redtape.ee.eao.RedTapeCounterEao;
 import eu.ggnet.dwoss.redtape.ee.entity.RedTapeCounter;

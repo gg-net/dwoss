@@ -23,10 +23,13 @@ import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.price.ee.imex.ContractorPricePartNoExporter;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  *
  * @author oliver.guenther
  */
+@Dependent
 public class ContractorExportMenuItem extends MenuItem {
 
     public ContractorExportMenuItem init(TradeName contractor, boolean missing) {

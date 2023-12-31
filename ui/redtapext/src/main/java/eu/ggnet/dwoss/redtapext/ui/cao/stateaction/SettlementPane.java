@@ -18,8 +18,6 @@ package eu.ggnet.dwoss.redtapext.ui.cao.stateaction;
 
 import java.util.*;
 
-import javax.inject.Inject;
-
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
@@ -27,10 +25,11 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
 import eu.ggnet.dwoss.core.common.values.PaymentSettlement;
-import eu.ggnet.saft.core.Saft;
 import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.core.ui.Bind;
 import eu.ggnet.saft.core.ui.ResultProducer;
+
+import jakarta.enterprise.context.Dependent;
 
 import static eu.ggnet.dwoss.core.common.values.PaymentSettlement.*;
 import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
@@ -39,6 +38,7 @@ import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
  *
  * @author oliver.guenther
  */
+@Dependent
 public class SettlementPane extends VBox implements ResultProducer<PaymentSettlement> {
 
     @Bind(SHOWING)

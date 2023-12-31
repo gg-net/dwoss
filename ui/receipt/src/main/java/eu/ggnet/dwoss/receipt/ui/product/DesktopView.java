@@ -38,12 +38,15 @@ import eu.ggnet.dwoss.spec.ee.entity.piece.Gpu;
 import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.core.impl.Swing;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.saft.core.ui.UiParent.of;
 
 /**
  *
  * @author pascal.perau
  */
+@Dependent
 public class DesktopView extends AbstractView {
 
     private static class HddController {

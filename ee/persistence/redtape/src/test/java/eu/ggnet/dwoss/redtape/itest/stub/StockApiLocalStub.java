@@ -19,10 +19,13 @@ package eu.ggnet.dwoss.redtape.itest.stub;
 import eu.ggnet.dwoss.stock.api.SimpleStockUnit;
 import eu.ggnet.dwoss.stock.api.StockApiLocal;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  *
  * @author oliver.guenther
  */
+@Dependent
 public class StockApiLocalStub implements StockApiLocal {
 
     @Override

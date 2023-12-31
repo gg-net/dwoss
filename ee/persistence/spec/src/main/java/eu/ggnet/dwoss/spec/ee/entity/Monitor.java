@@ -19,15 +19,15 @@ package eu.ggnet.dwoss.spec.ee.entity;
 import java.util.EnumSet;
 import java.util.Set;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 import eu.ggnet.dwoss.spec.ee.entity.piece.Display;
 
 import static eu.ggnet.dwoss.spec.ee.entity.ProductSpec.Extra.*;
-import static javax.persistence.CascadeType.*;
+import static jakarta.persistence.CascadeType.*;
 
 /**
  * Represents a Monitor.

@@ -25,6 +25,8 @@ import eu.ggnet.dwoss.report.ui.returns.ReturnsReportView;
 import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.core.common.values.DocumentType.RETURNS;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_RETUNRS_REPORT;
 
@@ -33,6 +35,7 @@ import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_RETUNRS_REPORT;
  *
  * @author oliver.guenther
  */
+@Dependent
 public class CreateReturnsReportAction extends AccessableAction {
 
     public CreateReturnsReportAction() {

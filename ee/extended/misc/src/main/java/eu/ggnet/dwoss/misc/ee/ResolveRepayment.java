@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.misc.ee;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 

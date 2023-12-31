@@ -23,6 +23,8 @@ import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.redtapext.ee.sage.SageExporter;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_DOCUMENTS_FOR_SAGE_IN_XML;
 
 /**
@@ -30,6 +32,7 @@ import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_DOCUMENTS_FOR_SAGE_IN
  *
  * @author pascal.perau
  */
+@Dependent
 public class SageExportAction extends AccessableAction {
 
     public SageExportAction() {

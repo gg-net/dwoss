@@ -19,9 +19,9 @@ package eu.ggnet.dwoss.report.ee.eao;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.persistence.*;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import jakarta.persistence.*;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.time.DateUtils;

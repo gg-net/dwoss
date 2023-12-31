@@ -18,7 +18,7 @@ package tryout;
 
 import java.util.*;
 
-import javax.persistence.LockModeType;
+import jakarta.persistence.LockModeType;
 
 import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;

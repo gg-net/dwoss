@@ -23,11 +23,14 @@ import javafx.scene.image.ImageView;
 import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeView;
 import eu.ggnet.saft.core.UiCore;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  * Button to start RedTape form the Toolbar.
  *
  * @author pascal.perau
  */
+@Dependent
 public class RedTapeToolbarButton extends Button {
 
     public RedTapeToolbarButton() {

@@ -21,26 +21,22 @@ import java.io.Serializable;
 /**
  * A concise representation of a customer.
  * Every field can be null.
- * <p>
- * <p>
- * @author pascal.perau
  */
-// TODO: As every field of this class can be null, keep it like this.
 public class UiCustomer implements Serializable {
 
-    public final long id;
+    private final long id;
 
-    public final String title;
+    private final String title;
 
-    public final String firstName;
+    private final String firstName;
 
-    public final String lastName;
+    private final String lastName;
 
-    public final String company;
+    private final String company;
 
-    public final String simpleHtml;
+    private final String simpleHtml;
 
-    public final String email;
+    private final String email;
 
     /**
      * Customer.additionalCustomerIds(SAGE_FIBU_DEBITOR_LEDGER), 0 if not used.
@@ -58,91 +54,35 @@ public class UiCustomer implements Serializable {
         this.ledger = ledger;
     }
 
-    /**
-     * Returns id.
-     *
-     * @return
-     * @deprecated use public field
-     */
-    @Deprecated
-    public long getId() {
+    public long id() {
         return id;
     }
 
-    /**
-     * Returns id.
-     *
-     * @return
-     * @deprecated use public field
-     */
-    @Deprecated
-    public String getTitle() {
+    public String title() {
         return title;
     }
 
-    /**
-     * Returns id.
-     *
-     * @return
-     * @deprecated use public field
-     */
-    @Deprecated
-    public String getFirstName() {
+    public String firstName() {
         return firstName;
     }
 
-    /**
-     * Returns id.
-     *
-     * @return
-     * @deprecated use public field
-     */
-    @Deprecated
-    public String getLastName() {
+    public String lastName() {
         return lastName;
     }
 
-    /**
-     * Returns id.
-     *
-     * @return
-     * @deprecated use public field
-     */
-    @Deprecated
-    public String getCompany() {
+    public String company() {
         return company;
     }
 
-    /**
-     * Returns id.
-     *
-     * @return
-     * @deprecated use public field
-     */
-    @Deprecated
-    public String getSimpleHtml() {
+    public String simpleHtml() {
         return simpleHtml;
     }
 
-    /**
-     * Returns id.
-     *
-     * @return
-     * @deprecated use public field
-     */
-    @Deprecated
-    public String getEmail() {
+    public String email() {
         return email;
     }
 
-    /**
-     * Returns id.
-     *
-     * @return
-     * @deprecated use public field
-     */
-    @Deprecated
-    public int getLedger() {
+    public int ledger() {
         return ledger;
     }
 
@@ -180,4 +120,11 @@ public class UiCustomer implements Serializable {
         sb.append(lastName != null ? lastName : "");
         return sb.toString();
     }
+
+    @Override
+    public String toString() {
+        return "UiCustomer{" + "id=" + id + ", title=" + title + ", firstName=" + firstName + ", lastName=" + lastName + ", company=" + company + ", simpleHtml=" + simpleHtml + ", email=" + email + ", ledger=" + ledger + '}';
+    }
+    
+    
 }

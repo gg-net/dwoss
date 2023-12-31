@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.receipt.ui.shipment;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -35,12 +35,15 @@ import eu.ggnet.saft.core.Saft;
 import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.core.ui.*;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
 
 /**
  *
  * @author pascal.perau
  */
+@Dependent
 @Title("Geräteaufnahme")
 public class ShipmentInclusionView extends javax.swing.JPanel implements Consumer<Shipment>{
 

@@ -29,6 +29,8 @@ import eu.ggnet.dwoss.redtapext.ee.reporting.RedTapeCloserManual;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.UiCore;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXECUTE_MANUAL_CLOSING;
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
 
@@ -37,6 +39,7 @@ import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
  *
  * @author oliver.guenther
  */
+@Dependent
 public class LastWeekCloseAction extends AccessableAction {
 
     private final static Logger L = LoggerFactory.getLogger(LastWeekCloseAction.class);

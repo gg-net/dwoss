@@ -20,8 +20,8 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 
 import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.common.UserInfoException;

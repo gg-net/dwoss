@@ -20,8 +20,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 
 import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;

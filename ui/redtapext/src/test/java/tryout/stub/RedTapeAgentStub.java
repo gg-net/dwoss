@@ -10,7 +10,7 @@ import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 
 import java.util.*;
 
-import javax.persistence.LockModeType;
+import jakarta.persistence.LockModeType;
 
 import eu.ggnet.dwoss.core.system.GlobalConfig;
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;

@@ -19,8 +19,8 @@ package eu.ggnet.dwoss.redtape.ee.entity;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * Represents the History of a Document.

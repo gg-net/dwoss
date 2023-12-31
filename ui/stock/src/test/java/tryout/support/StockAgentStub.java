@@ -18,7 +18,7 @@ package tryout.support;
 
 import java.util.*;
 
-import javax.persistence.LockModeType;
+import jakarta.persistence.LockModeType;
 
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.*;

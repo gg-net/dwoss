@@ -19,21 +19,21 @@ package eu.ggnet.dwoss.assembly.client.support.executor;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.annotation.PreDestroy;
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Inject;
+
+import jakarta.annotation.PreDestroy;
 
 import org.slf4j.Logger;
 
-import eu.ggnet.dwoss.assembly.client.support.executor.Executor;
+import jakarta.enterprise.context.ApplicationScoped;
 
 /**
  * First throw with an alternative to static UiCore executors.
  *
  * @author oliver.guenther
  */
-@Singleton
+@ApplicationScoped
 public class ExecutorManager {
 
     /**

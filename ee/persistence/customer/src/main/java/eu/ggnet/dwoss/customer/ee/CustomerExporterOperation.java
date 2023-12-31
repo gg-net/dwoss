@@ -20,8 +20,8 @@ import java.awt.Color;
 import java.util.*;
 import java.util.function.Function;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 
 import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.common.values.CustomerFlag;
@@ -67,7 +67,7 @@ public class CustomerExporterOperation implements CustomerExporter {
      * @param customers
      * @return
      */
-    public static FileJacket toXls(List<Customer> customers) {
+    public FileJacket toXls(List<Customer> customers) {
 
         STable table = new STable();
         table.setTableFormat(new CFormat(BLACK, WHITE, new CBorder(BLACK)));

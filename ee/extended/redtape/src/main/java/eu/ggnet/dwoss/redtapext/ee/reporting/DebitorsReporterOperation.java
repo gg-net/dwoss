@@ -29,9 +29,9 @@ import eu.ggnet.lucidcalc.LucidCalc;
 import java.io.File;
 import java.util.*;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
@@ -89,9 +89,9 @@ public class DebitorsReporterOperation implements DebitorsReporter {
         for (Document document : documents) {
             UiCustomer c = customerService.asUiCustomer(document.getDossier().getCustomerId());
             rows.add(new Object[]{
-                c.getId(),
+                c.id(),
                 document.getDossier().getIdentifier(),
-                c.getCompany(),
+                c.company(),
                 c.toNameLine(),
                 document.getDossier().getCrucialDirective().getName(),
                 document.getDossier().getComment(),

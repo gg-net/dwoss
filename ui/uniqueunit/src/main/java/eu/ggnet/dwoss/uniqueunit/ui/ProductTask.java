@@ -7,7 +7,7 @@ package eu.ggnet.dwoss.uniqueunit.ui;
 
 import java.util.List;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -18,11 +18,14 @@ import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  * Task to obtain all Products from the database with partial results.
  *
  * @author lucas.huelsen
  */
+@Dependent
 public class ProductTask extends Task<ObservableList<Product>> {
 
     @Inject

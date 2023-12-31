@@ -18,17 +18,20 @@ package eu.ggnet.dwoss.assembly.client.support;
 
 import java.util.concurrent.ExecutorService;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import javafx.scene.control.MenuItem;
 
 import eu.ggnet.dwoss.assembly.client.support.executor.Executor;
 import eu.ggnet.dwoss.core.widget.Progressor;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  *
  * @author oliver.guenther
  */
+@Dependent
 public class LocalProgressSimulatorMenuItem extends MenuItem {
 
     @Inject @Executor

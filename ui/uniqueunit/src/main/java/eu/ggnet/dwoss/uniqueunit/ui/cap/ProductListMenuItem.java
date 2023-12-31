@@ -16,18 +16,22 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ui.cap;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
+
+import jakarta.annotation.PostConstruct;
 
 import javafx.scene.control.MenuItem;
 
 import eu.ggnet.dwoss.uniqueunit.ui.product.ProductListController;
 import eu.ggnet.saft.core.Saft;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  *
  * @author Bastian Venz
  */
+@Dependent
 public class ProductListMenuItem extends MenuItem {
 
     @Inject

@@ -273,7 +273,7 @@ public class CustomerConnectorFascade {
     // p can be null ....
     private static CompletionStage<Customer> optionalEnhancedEditorAndStore(UiParent parent, CustomerCommand cc) {
         if ( !cc.enhance ) return CompletableFuture.completedFuture(cc.customer);
-        return Optional.of(parent).map(p -> Ui.build().parent(p)).orElse(Ui.build()).fxml().eval(() -> cc.customer, CustomerEnhanceController.class).cf()
+        return Optional.ofNullable(parent).map(p -> Ui.build().parent(p)).orElse(Ui.build()).fxml().eval(() -> cc.customer, CustomerEnhanceController.class).cf()
                 .thenApply(c -> {
                     if ( !c.isValid() ) ValidationUtil.validate(c);
                     return c;

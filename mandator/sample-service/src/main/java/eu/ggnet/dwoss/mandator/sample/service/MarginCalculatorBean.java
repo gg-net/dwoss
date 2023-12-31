@@ -20,10 +20,13 @@ import eu.ggnet.dwoss.report.ee.ViewReportResult;
 
 import eu.ggnet.dwoss.report.ee.api.MarginCalculator;
 
+import jakarta.enterprise.context.ApplicationScoped;
+
 /**
  *
  * @author Bastian Venz <bastian.venz at gg-net.de>
  */
+@ApplicationScoped
 public class MarginCalculatorBean implements MarginCalculator {
 
     @Override

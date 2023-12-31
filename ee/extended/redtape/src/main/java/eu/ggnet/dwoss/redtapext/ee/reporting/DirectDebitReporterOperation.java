@@ -19,9 +19,9 @@ package eu.ggnet.dwoss.redtapext.ee.reporting;
 import java.io.File;
 import java.util.*;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
@@ -85,7 +85,7 @@ public class DirectDebitReporterOperation implements DirectDebitReporter {
             UiCustomer customer = customerService.asUiCustomer(doc.getDossier().getCustomerId());
             rows.add(new Object[]{
                 doc.getDossier().getIdentifier(),
-                customer.getId(),
+                customer.id(),
                 customer.toNameCompanyLine(),
                 doc.getDirective().getName(),
                 DocumentFormater.toConditions(doc),
@@ -94,7 +94,7 @@ public class DirectDebitReporterOperation implements DirectDebitReporter {
                 doc.getPrice(),
                 doc.toAfterTaxPrice(),
                 doc.getDossier().getComment(),
-                customerService.defaultEmailCommunication(customer.getId())
+                customerService.defaultEmailCommunication(customer.id())
             });
         }
         m.worked(10);

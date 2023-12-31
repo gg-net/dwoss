@@ -20,9 +20,9 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 
 import org.apache.commons.lang3.builder.ToStringExclude;
 
@@ -32,7 +32,7 @@ import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.system.persistence.*;
 import eu.ggnet.dwoss.core.system.util.TwoDigits;
 
-import static javax.persistence.CascadeType.*;
+import static jakarta.persistence.CascadeType.*;
 
 /**
  * Represents a Product.
@@ -54,7 +54,7 @@ public class Product extends BaseEntity implements Serializable, EagerAble, Comp
     }
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private long id;
 
     @Version
@@ -90,7 +90,7 @@ public class Product extends BaseEntity implements Serializable, EagerAble, Comp
     @Basic(optional = false)
     private String partNo;
 
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(jakarta.persistence.TemporalType.DATE)
     private Date eol;
 
     @NotNull

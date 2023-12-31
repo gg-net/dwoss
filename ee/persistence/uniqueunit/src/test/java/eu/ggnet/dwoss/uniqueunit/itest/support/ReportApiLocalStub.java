@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.uniqueunit.itest.support;
 import java.util.Collections;
 import java.util.List;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 
 import eu.ggnet.dwoss.report.api.ReportApiLocal;
 import eu.ggnet.dwoss.report.api.SimpleReportUnit;

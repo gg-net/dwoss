@@ -16,14 +16,18 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ui.cap;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import eu.ggnet.dwoss.core.widget.*;
+
+import jakarta.annotation.PostConstruct;
+
 import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
 import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
 import eu.ggnet.dwoss.uniqueunit.ui.product.ProductHistoryController;
 import eu.ggnet.saft.core.Saft;
+
+import jakarta.enterprise.context.Dependent;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_PRODUCT_UNIT_HISTORY_REPORT;
 
@@ -32,6 +36,7 @@ import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_PRODUCT_UNIT_HISTORY_
  *
  * @author mirko.schulze
  */
+@Dependent
 public class ProductHistoryMenuItem extends AccessableMenuItem {
 
     @Inject

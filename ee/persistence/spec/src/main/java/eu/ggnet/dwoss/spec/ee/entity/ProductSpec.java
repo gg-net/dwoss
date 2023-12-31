@@ -20,12 +20,12 @@ import java.io.Serializable;
 import java.util.EnumSet;
 import java.util.Set;
 
-import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlTransient;
+import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlTransient;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.LoggerFactory;
@@ -35,7 +35,7 @@ import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 import eu.ggnet.dwoss.core.system.persistence.EagerAble;
 
-import static javax.persistence.CascadeType.*;
+import static jakarta.persistence.CascadeType.*;
 
 /**
  * The minimal abstract information about a ProductSpec.
@@ -129,7 +129,8 @@ public abstract class ProductSpec extends BaseEntity implements Serializable, Ea
             case SERVER:
                 return new Desktop();
             case DESKTOP_BUNDLE:
-                return new DesktopBundle();
+                throw new RuntimeException(group + " not supported. Think about");
+//                return new DesktopBundle();
             case ALL_IN_ONE:
                 return new AllInOne();
             case TABLET_SMARTPHONE:
@@ -151,7 +152,7 @@ public abstract class ProductSpec extends BaseEntity implements Serializable, Ea
 
     @XmlTransient
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private long id;
 
     @XmlTransient
@@ -251,7 +252,15 @@ public abstract class ProductSpec extends BaseEntity implements Serializable, Ea
 
     @Override
     public void fetchEager() {
-        if ( getModel() != null ) getModel().fetchEager();
+        if ( getModel() != null ) {
+            getModel().getSpecs().size();
+            if (getModel().getFamily() != null) {
+                getModel().getFamily().getModels().size();
+                if (getModel().getFamily().getSeries() != null) {
+                    getModel().getFamily().getSeries().getFamilys().size();
+                }
+            }
+        }
     }
 
     /**

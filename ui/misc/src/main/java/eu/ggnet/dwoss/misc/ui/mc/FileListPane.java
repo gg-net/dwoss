@@ -18,8 +18,9 @@ package eu.ggnet.dwoss.misc.ui.mc;
 
 import java.io.File;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
+
+import jakarta.annotation.PostConstruct;
 
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
@@ -28,10 +29,13 @@ import javafx.scene.layout.BorderPane;
 import eu.ggnet.dwoss.core.widget.FileUtil;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  *
  * @author oliver.guenther
  */
+@Dependent
 public class FileListPane extends BorderPane {
 
     @Inject

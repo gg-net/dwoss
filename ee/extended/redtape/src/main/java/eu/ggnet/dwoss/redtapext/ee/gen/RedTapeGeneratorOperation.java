@@ -18,8 +18,8 @@ package eu.ggnet.dwoss.redtapext.ee.gen;
 
 import java.util.*;
 
-import javax.ejb.*;
-import javax.inject.Inject;
+import jakarta.ejb.*;
+import jakarta.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +46,7 @@ import eu.ggnet.statemachine.StateTransition;
 import static eu.ggnet.dwoss.core.common.values.CustomerFlag.SYSTEM_CUSTOMER;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.REFURBISHED_ID;
 import static java.util.stream.Collectors.toList;
-import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
+import static jakarta.ejb.TransactionAttributeType.REQUIRES_NEW;
 
 /**
  *

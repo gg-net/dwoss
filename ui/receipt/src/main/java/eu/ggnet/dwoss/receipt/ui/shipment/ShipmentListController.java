@@ -20,7 +20,8 @@ import java.awt.EventQueue;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
+
 import javax.swing.JOptionPane;
 
 import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
@@ -29,8 +30,11 @@ import eu.ggnet.dwoss.stock.ee.entity.Shipment;
 import eu.ggnet.saft.core.Saft;
 import eu.ggnet.saft.core.ui.UiParent;
 
+import jakarta.enterprise.context.Dependent;
+
 import static javafx.stage.Modality.WINDOW_MODAL;
 
+@Dependent
 public class ShipmentListController {
 
     @Inject

@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
 
-import javax.enterprise.inject.Alternative;
+import jakarta.enterprise.inject.Alternative;
 
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.core.common.values.ReceiptOperation;
@@ -31,6 +31,7 @@ import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers.Key;
 import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.receipt.ee.*;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
+import eu.ggnet.dwoss.spec.ee.assist.SpecConstants;
 import eu.ggnet.dwoss.spec.ee.assist.SpecPu;
 import eu.ggnet.dwoss.spec.ee.entity.Desktop.Hdd;
 import eu.ggnet.dwoss.spec.ee.entity.Desktop.Odd;
@@ -110,8 +111,6 @@ public class ProductProcessorStub implements ProductProcessor {
     public AllInOne allInOne;
 
     public Monitor monitor;
-
-    public DesktopBundle desktopBundle;
 
     private final Random R = new Random();
 
@@ -355,19 +354,12 @@ public class ProductProcessorStub implements ProductProcessor {
 
         specs.put(allInOne.getPartNo(), allInOne);
 
-        desktopBundle = new DesktopBundle(desktop, monitor);
-        desktopBundle.setModel(bundleModel);
-        desktopBundle.setPartNo("DB.12345.AAA");
-
-        specs.put(desktopBundle.getPartNo(), desktopBundle);
-
         editProducts = Arrays.asList(
                 new EditProduct(one),
                 new EditProduct(monitor),
                 new EditProduct(desktop),
                 new EditProduct(notebook),
-                new EditProduct(allInOne),
-                new EditProduct(desktopBundle)
+                new EditProduct(allInOne)
         );
 
         // Stock
@@ -503,24 +495,24 @@ public class ProductProcessorStub implements ProductProcessor {
     public ProductModel create(final TradeName brand, final ProductGroup group, ProductSeries series, ProductFamily family, final String modelName) {
         if ( series == null ) { // implies, that family is also null
             for (ProductSeries s : serieses) {
-                if ( s.getBrand().equals(brand) && s.getGroup().equals(group) && s.getName().equals(SpecPu.DEFAULT_NAME) ) {
+                if ( s.getBrand().equals(brand) && s.getGroup().equals(group) && s.getName().equals(SpecConstants.DEFAULT_NAME) ) {
                     series = s;
                 }
             }
             if ( series == null ) {
-                series = soc.newProductSeries(brand, group, SpecPu.DEFAULT_NAME);
+                series = soc.newProductSeries(brand, group, SpecConstants.DEFAULT_NAME);
                 serieses.add(series);
             }
         }
         if ( family == null ) {
             for (ProductFamily f : series.getFamilys()) {
-                if ( f.getName().equals(SpecPu.DEFAULT_NAME) ) {
+                if ( f.getName().equals(SpecConstants.DEFAULT_NAME) ) {
                     family = f;
                 }
             }
             if ( family == null ) {
                 family = soc.newProductFamily();
-                family.setName(SpecPu.DEFAULT_NAME);
+                family.setName(SpecConstants.DEFAULT_NAME);
                 series.addFamily(family);
             }
         }
@@ -535,12 +527,12 @@ public class ProductProcessorStub implements ProductProcessor {
     public ProductFamily create(TradeName brand, ProductGroup group, ProductSeries series, String familyName) {
         if ( series == null ) {
             for (ProductSeries s : serieses) {
-                if ( s.getBrand().equals(brand) && s.getGroup().equals(group) && s.getName().equals(SpecPu.DEFAULT_NAME) ) {
+                if ( s.getBrand().equals(brand) && s.getGroup().equals(group) && s.getName().equals(SpecConstants.DEFAULT_NAME) ) {
                     series = s;
                 }
             }
             if ( series == null ) {
-                series = soc.newProductSeries(brand, group, SpecPu.DEFAULT_NAME);
+                series = soc.newProductSeries(brand, group, SpecConstants.DEFAULT_NAME);
                 serieses.add(series);
             }
         }
@@ -553,7 +545,7 @@ public class ProductProcessorStub implements ProductProcessor {
 
     @Override
     public ProductSeries create(TradeName brand, ProductGroup group, String seriesName) {
-        ProductSeries series = soc.newProductSeries(brand, group, SpecPu.DEFAULT_NAME);
+        ProductSeries series = soc.newProductSeries(brand, group, SpecConstants.DEFAULT_NAME);
         serieses.add(series);
         return series;
     }

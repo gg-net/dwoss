@@ -29,11 +29,14 @@ import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableModel;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  * The RedTape main component model containing all selection and list information needed.
  * <p>
  * @author pascal.perau
  */
+@Dependent
 public class RedTapeModel {
 
     private final static Logger L = LoggerFactory.getLogger(RedTapeModel.class);

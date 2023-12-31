@@ -19,16 +19,15 @@ package eu.ggnet.dwoss.spec.ee;
 import java.io.*;
 import java.util.*;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.xml.bind.JAXB;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.xml.bind.JAXB;
 
 import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
 import eu.ggnet.dwoss.core.system.progress.SubMonitor;
 import eu.ggnet.dwoss.spec.ee.assist.Specs;
 import eu.ggnet.dwoss.spec.ee.eao.ProductSpecEao;
-import eu.ggnet.dwoss.spec.ee.entity.DesktopBundle;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
 import eu.ggnet.dwoss.spec.ee.entity.xml.SpecsRoot;
 import eu.ggnet.dwoss.core.common.FileJacket;
@@ -71,7 +70,6 @@ public class SpecExporterOperation implements SpecExporter {
         for (int i = 0; i <= amount; i = i + step) {
             m.worked(step, "loading " + step + " Spec beginning by " + i);
             for (ProductSpec spec : specEao.findAll(i, step)) {
-                if ( spec instanceof DesktopBundle ) continue;
                 exportSpecs.add(spec);
             }
         }

@@ -19,9 +19,9 @@ package eu.ggnet.dwoss.redtape.ee.eao;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.persistence.*;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import jakarta.persistence.*;
 
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Condition;

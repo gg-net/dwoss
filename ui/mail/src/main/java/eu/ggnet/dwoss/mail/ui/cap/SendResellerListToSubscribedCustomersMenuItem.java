@@ -29,12 +29,15 @@ import eu.ggnet.dwoss.core.widget.Progressor;
 import eu.ggnet.dwoss.mail.ee.MailSalesListingService;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 import static javafx.scene.control.ButtonType.OK;
 
 /**
  *
  * @author oliver.guenther
  */
+@Dependent
 public class SendResellerListToSubscribedCustomersMenuItem extends MenuItem {
 
     private final static Logger L = LoggerFactory.getLogger(SendResellerListToSubscribedCustomersMenuItem.class);

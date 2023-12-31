@@ -24,11 +24,14 @@ import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.redtapext.ee.reporting.CreditMemoReporter;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  * Action to create the CreditMemo Report.
  *
  * @author pascal.perau
  */
+@Dependent
 public class CreditMemoReportAction extends AbstractAction {
 
     @SuppressWarnings("OverridableMethodCallInConstructor")

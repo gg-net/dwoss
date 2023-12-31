@@ -19,8 +19,8 @@ package eu.ggnet.dwoss.receipt.ui;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
+import jakarta.enterprise.inject.Instance;
+import jakarta.inject.Inject;
 
 import javafx.stage.Modality;
 
@@ -34,12 +34,15 @@ import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
 import eu.ggnet.saft.core.Saft;
 import eu.ggnet.saft.core.ui.UiParent;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  * Support Class for creation or edit of Products.
  * Not perfect, but a simple step to cleanup the ReceiptController.
  * <p/>
  * @author oliver.guenther
  */
+@Dependent
 public class ProductUiBuilder {
 
     @Inject

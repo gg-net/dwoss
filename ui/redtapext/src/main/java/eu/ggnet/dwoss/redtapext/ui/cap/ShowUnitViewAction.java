@@ -24,10 +24,13 @@ import javax.swing.AbstractAction;
 
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  *
  * @author oliver.guenther
  */
+@Dependent
 public class ShowUnitViewAction extends AbstractAction {
 
     public ShowUnitViewAction() {

@@ -19,17 +19,13 @@ package eu.ggnet.dwoss.stock.ee.itest;
 import java.util.List;
 import java.util.Optional;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.UserTransaction;
+import jakarta.inject.Inject;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.*;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.stock.ee.assist.ShipmentCount;
-import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.assist.gen.StockGeneratorOperation;
 import eu.ggnet.dwoss.stock.ee.eao.ShipmentEao;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
@@ -46,25 +42,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ShipmentCountIT extends ArquillianProjectArchive {
 
     @Inject
-    private UserTransaction utx;
-
-    @Inject
-    @Stocks
-    private EntityManager em;
-    
-    @Inject
     private StockGeneratorOperation stockGenerator;
-    
+
     @Inject
     private ShipmentEao shipmentEao;
-
-    @After
-    public void clearDataBase() throws Exception {
-        utx.begin();
-        em.joinTransaction();
-        Utils.clearH2Db(em);
-        utx.commit();
-    }
 
     @Test
     public void count() {

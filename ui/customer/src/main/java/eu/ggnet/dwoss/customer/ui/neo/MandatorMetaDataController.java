@@ -42,10 +42,13 @@ import eu.ggnet.saft.core.ui.FxController;
 import eu.ggnet.saft.core.ui.ResultProducer;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  *
  * @author jacob.weinhold
  */
+@Dependent
 public class MandatorMetaDataController implements Initializable, FxController, Consumer<MandatorMetadata>, ResultProducer<MandatorMetadata> {
 
     public static class SelectableSalesChannel {

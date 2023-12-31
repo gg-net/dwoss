@@ -18,12 +18,16 @@ package eu.ggnet.dwoss.receipt.ui.cap;
 
 import java.awt.event.ActionEvent;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
+
 import javax.swing.AbstractAction;
 
 import eu.ggnet.dwoss.receipt.ui.product.GpuListView;
 import eu.ggnet.saft.core.Saft;
 
+import jakarta.enterprise.context.Dependent;
+
+@Dependent
 public class OpenGpuListAction extends AbstractAction {
 
     @Inject

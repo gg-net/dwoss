@@ -2,9 +2,9 @@ package eu.ggnet.dwoss.stock.ee.itest;
 
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.UserTransaction;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.UserTransaction;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.*;
@@ -15,9 +15,11 @@ import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.eao.ShipmentEao;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
 import eu.ggnet.dwoss.stock.ee.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.core.common.values.ShipmentStatus;
 
+import eu.ggnet.dwoss.stock.ee.assist.gen.StockDeleteUtils;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
 /**
@@ -45,7 +47,8 @@ public class ShipmentIT extends ArquillianProjectArchive {
     public void clearDataBase() throws Exception {
         utx.begin();
         em.joinTransaction();
-        Utils.clearH2Db(em);
+        StockDeleteUtils.deleteAll(em);
+        assertThat(StockDeleteUtils.validateEmpty(em)).isNull();
         utx.commit();
     }
 
@@ -55,7 +58,7 @@ public class ShipmentIT extends ArquillianProjectArchive {
         em.joinTransaction();
         Shipment ship1 = new Shipment("001", TradeName.ONESELF, TradeName.HP, ShipmentStatus.OPENED);
         em.persist(ship1);
-        assertTrue(ship1.getId() > 0);
+        assertThat(ship1.getId()).isNotEqualTo(0);
         utx.commit();
 
         utx.begin();
@@ -70,8 +73,9 @@ public class ShipmentIT extends ArquillianProjectArchive {
         List<Shipment> list = eao.findAll();
         utx.commit();
 
-        assertNotNull(list);
-        assertEquals(2, list.size());
+        assertThat(list).isNotNull().isNotEmpty().hasSize(2);
+        assertThat(list.get(0).getId()).isNotEqualTo(0);
+        assertThat(list.get(1).getId()).isNotEqualTo(0);
     }
 
     @Test

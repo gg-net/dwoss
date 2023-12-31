@@ -18,13 +18,13 @@ package eu.ggnet.dwoss.stock.ee.entity;
 
 import java.io.Serializable;
 
-import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.Null;
+import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Null;
 
 import eu.ggnet.dwoss.core.system.persistence.EagerAble;
 
-import static javax.persistence.FetchType.EAGER;
+import static jakarta.persistence.FetchType.EAGER;
 
 /**
  * Represents a actual unit in the stock.
@@ -63,7 +63,7 @@ import static javax.persistence.FetchType.EAGER;
 public class StockUnit implements Serializable, EagerAble {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private int id;
 
     @Version

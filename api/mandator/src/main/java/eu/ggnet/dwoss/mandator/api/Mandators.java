@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.mandator.api;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.mandator.api.value.*;

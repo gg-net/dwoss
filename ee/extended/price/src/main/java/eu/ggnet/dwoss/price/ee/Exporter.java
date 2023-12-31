@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.price.ee;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 import eu.ggnet.dwoss.price.ee.engine.PriceEngineResult;
 import eu.ggnet.dwoss.core.common.FileJacket;

@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import javax.enterprise.inject.se.SeContainerInitializer;
+import jakarta.enterprise.inject.se.SeContainerInitializer;
 
 /**
  * Helper class to create a configuriation for a cdi SeContainer.

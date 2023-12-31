@@ -18,8 +18,9 @@ package eu.ggnet.dwoss.redtapext.ui.cap;
 
 import java.util.concurrent.CompletableFuture;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
+
+import jakarta.annotation.PostConstruct;
 
 import javafx.scene.control.MenuItem;
 
@@ -28,11 +29,14 @@ import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
 import eu.ggnet.dwoss.redtapext.ee.reporting.RedTapeCloserManual;
 import eu.ggnet.saft.core.Saft;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  * Count the actual stock.
  * 
  * @author oliver.guenther
  */
+@Dependent
 public class ActualStockCountMenuItem extends MenuItem {
 
     @Inject

@@ -25,10 +25,13 @@ import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.AlertType;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  *
  * @author oliver.guenther
  */
+@Dependent
 public class NextImageIdAction extends AbstractAction {
 
     public NextImageIdAction() {

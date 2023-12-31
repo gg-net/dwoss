@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.customer.ee;
 import java.io.Serializable;
 import java.util.*;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 import eu.ggnet.dwoss.core.system.persistence.RemoteAgent;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;

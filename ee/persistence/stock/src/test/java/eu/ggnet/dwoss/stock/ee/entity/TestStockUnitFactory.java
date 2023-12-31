@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.stock.ee.entity;
 
-import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
-
 /**
  *
  * @author olive

@@ -51,6 +51,8 @@ import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.core.ui.*;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.saft.core.ui.Bind.Type.TITLE;
 import static javafx.scene.control.ButtonBar.ButtonData.OK_DONE;
 import static javafx.scene.control.SelectionMode.MULTIPLE;
@@ -60,6 +62,7 @@ import static javafx.scene.control.SelectionMode.MULTIPLE;
  *
  * @author pascal.perau
  */
+@Dependent
 @Frame
 @StoreLocation
 public class ReportController implements Initializable, FxController, Consumer<ReportController.In> {

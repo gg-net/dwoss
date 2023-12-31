@@ -100,7 +100,7 @@ public class UniqueUnitAgentStub implements UniqueUnitAgent {
     }
 
     @Override
-    public <T> T findById(Class<T> entityClass, Object id, javax.persistence.LockModeType lockModeType) {
+    public <T> T findById(Class<T> entityClass, Object id, jakarta.persistence.LockModeType lockModeType) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -110,7 +110,7 @@ public class UniqueUnitAgentStub implements UniqueUnitAgent {
     }
 
     @Override
-    public <T> T findByIdEager(Class<T> entityClass, Object id, javax.persistence.LockModeType lockModeType) {
+    public <T> T findByIdEager(Class<T> entityClass, Object id, jakarta.persistence.LockModeType lockModeType) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

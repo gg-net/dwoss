@@ -20,9 +20,9 @@ import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.persistence.*;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import jakarta.persistence.*;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -189,7 +189,7 @@ public class UniqueUnitEao extends AbstractEao<UniqueUnit> {
         // TODO: Replace native Query
         Query query = em.createNativeQuery("SELECT count(a.id) FROM UniqueUnit as a join UniqueUnit_identifiers as b on a.id = b.UniqueUnit_id where b.identifiers like :search");
         query.setParameter("search", search.replaceAll("\\*", "%"));
-        return ((BigInteger)query.getSingleResult()).intValue();
+        return ((Long)query.getSingleResult()).intValue();
     }
 
     /**

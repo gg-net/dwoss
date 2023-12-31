@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.rights.api;
 
 import java.util.List;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 /**
  * Interface for the persistence layer of the Rights module for {@link Persona} entitites.

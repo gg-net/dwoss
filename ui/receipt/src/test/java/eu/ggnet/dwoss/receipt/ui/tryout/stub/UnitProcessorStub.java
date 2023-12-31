@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.receipt.ui.tryout.stub;
 import java.util.List;
 import java.util.Random;
 
-import javax.enterprise.inject.Alternative;
+import jakarta.enterprise.inject.Alternative;
 
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.common.values.ReceiptOperation;

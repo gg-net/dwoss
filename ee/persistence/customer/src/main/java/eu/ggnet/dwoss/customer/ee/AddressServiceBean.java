@@ -18,10 +18,10 @@ package eu.ggnet.dwoss.customer.ee;
 
 import java.util.Optional;
 
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
+import jakarta.enterprise.event.Event;
+import jakarta.inject.Inject;
 
 import eu.ggnet.dwoss.customer.api.AddressService;
 import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;

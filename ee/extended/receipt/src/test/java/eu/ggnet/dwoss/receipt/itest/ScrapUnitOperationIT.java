@@ -3,8 +3,8 @@ package eu.ggnet.dwoss.receipt.itest;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.ejb.EJB;
-import javax.inject.Inject;
+import jakarta.ejb.EJB;
+import jakarta.inject.Inject;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;

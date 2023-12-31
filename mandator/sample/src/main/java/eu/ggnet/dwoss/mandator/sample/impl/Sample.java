@@ -22,7 +22,7 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.*;
 
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Produces;
 
 import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.common.values.*;
@@ -35,15 +35,18 @@ import eu.ggnet.dwoss.mandator.api.value.partial.*;
 import eu.ggnet.dwoss.mandator.api.value.qualifier.CustomerAndOrdersIcon;
 import eu.ggnet.dwoss.mandator.api.value.qualifier.DeutscheWarenwirtschaftIcon;
 
+import jakarta.enterprise.context.ApplicationScoped;
+
 import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.*;
 
 /**
  *
  * @author oliver.guenther
  */
+@ApplicationScoped
 public class Sample {
 
-    static {
+    public Sample() {
         Company company = new Company.Builder()
                 .name("Example GmbH")
                 .street("Test Street 7")
@@ -88,11 +91,11 @@ public class Sample {
 
         Map<DocumentType, DocumentIdentifierGeneratorConfiguration> documentIdentifierGeneratorConfigurations = new HashMap<>();
         documentIdentifierGeneratorConfigurations.put(DocumentType.INVOICE,
-                DocumentIdentifierGeneratorConfiguration.create("RE.S-{PREFIX}/{COUNTER}", PrefixType.YYYY, new DecimalFormat("00000"),10000));
+                DocumentIdentifierGeneratorConfiguration.create("RE.S-{PREFIX}/{COUNTER}", PrefixType.YYYY, new DecimalFormat("00000"), 10000));
         documentIdentifierGeneratorConfigurations.put(DocumentType.ANNULATION_INVOICE,
-                DocumentIdentifierGeneratorConfiguration.create("ST.S-{PREFIX}/{COUNTER}", PrefixType.YYYY, new DecimalFormat("00000"),20000));
+                DocumentIdentifierGeneratorConfiguration.create("ST.S-{PREFIX}/{COUNTER}", PrefixType.YYYY, new DecimalFormat("00000"), 20000));
         documentIdentifierGeneratorConfigurations.put(DocumentType.CREDIT_MEMO,
-                DocumentIdentifierGeneratorConfiguration.create("GS.S-{PREFIX}/{COUNTER}", PrefixType.YYYY, new DecimalFormat("00000"),30000));
+                DocumentIdentifierGeneratorConfiguration.create("GS.S-{PREFIX}/{COUNTER}", PrefixType.YYYY, new DecimalFormat("00000"), 30000));
 
         MANDATOR = new Mandator.Builder()
                 .smtpConfiguration(smtpConfiguration)
@@ -115,16 +118,21 @@ public class Sample {
     }
 
     @Produces
-    public final static Mandator MANDATOR;
+    private final Mandator MANDATOR;
 
     @Produces
-    public final static DefaultCustomerSalesdata DEFAULT_CUSTOMER_SALES_DATA;
+    private final DefaultCustomerSalesdata DEFAULT_CUSTOMER_SALES_DATA;
 
     @Produces
-    public final static Contractors CONTRACTORS = new Contractors(EnumSet.of(ONESELF, ACER, HP, DELL), EnumSet.of(ACER, PACKARD_BELL, HP, DELL));
+    private final Contractors CONTRACTORS = new Contractors(EnumSet.of(ONESELF, ACER, HP, DELL), EnumSet.of(ACER, PACKARD_BELL, HP, DELL));
 
     @Produces
-    public final static ImageFinder IMAGE_FINDER = new ImageFinder(System.getProperty("java.io.tmpdir"));
+    private final ImageFinder IMAGE_FINDER = new ImageFinder(System.getProperty("java.io.tmpdir"));
+
+    // Helper for some Test.
+    public Mandator getMandator() {
+        return MANDATOR;
+    }
 
     static URL loadMailDocument() {
         return Sample.class.getResource("mailDocument.txt");
@@ -136,7 +144,7 @@ public class Sample {
 
     @Produces
     @DeutscheWarenwirtschaftIcon
-    public static FileJacket loadDwIcon() {
+    public FileJacket loadDwIcon() {
         try (InputStream is = Sample.class.getResourceAsStream("money.png")) {
             return new FileJacket("money", "png", is.readAllBytes());
         } catch (IOException | NullPointerException ex) {
@@ -146,7 +154,7 @@ public class Sample {
 
     @Produces
     @CustomerAndOrdersIcon
-    public static FileJacket loadCaoIcon() {
+    public FileJacket loadCaoIcon() {
         try (InputStream is = Sample.class.getResourceAsStream("cart.png")) {
             return new FileJacket("cart", "png", is.readAllBytes());
         } catch (IOException | NullPointerException ex) {

@@ -19,18 +19,18 @@ package eu.ggnet.dwoss.spec.ee.entity;
 import java.io.Serializable;
 import java.util.*;
 
-import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlTransient;
+import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlTransient;
 
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 import eu.ggnet.dwoss.core.system.persistence.EagerAble;
 
-import static javax.persistence.CascadeType.*;
+import static jakarta.persistence.CascadeType.*;
 
 /**
  *
@@ -47,7 +47,7 @@ public class ProductModel extends BaseEntity implements Serializable, INamed, Ea
 
     @XmlTransient
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private long id;
 
     @XmlTransient
@@ -94,28 +94,28 @@ public class ProductModel extends BaseEntity implements Serializable, INamed, Ea
     public String getName() {
         return name;
     }
-    
+
     public void setName(String name) {
         this.name = name;
     }
-    
+
     public Double getEconomicValue() {
         return economicValue;
     }
-    
+
     public void setEconomicValue(Double economicValue) {
         this.economicValue = economicValue;
     }
-    
+
     @Override
     public long getId() {
         return id;
     }
-    
+
     public short getOptLock() {
         return optLock;
     }
-    
+
     public ProductFamily getFamily() {
         return family;
     }
@@ -145,7 +145,12 @@ public class ProductModel extends BaseEntity implements Serializable, INamed, Ea
 
     @Override
     public void fetchEager() {
-        if ( getFamily() != null ) getFamily().getSeries();
+        if ( getFamily() != null ) {
+            getFamily().getModels().size();
+            if ( getFamily().getSeries() != null ) {
+                getFamily().getSeries().getFamilys().size();
+            }
+        }
         getSpecs().size();
     }
 

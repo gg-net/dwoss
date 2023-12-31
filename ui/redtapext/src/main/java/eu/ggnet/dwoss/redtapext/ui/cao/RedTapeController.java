@@ -24,11 +24,13 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.*;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
+
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
+
+import jakarta.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,6 +68,8 @@ import eu.ggnet.saft.core.impl.Swing;
 import eu.ggnet.saft.core.ui.UiParent;
 import eu.ggnet.statemachine.StateTransition;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_ANNULATION_INVOICE;
 
 /**
@@ -73,6 +77,7 @@ import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_ANNULATION_INVOICE;
  * <p>
  * @author pascal.perau
  */
+@Dependent
 public class RedTapeController implements IDossierSelectionHandler {
 
     @Inject

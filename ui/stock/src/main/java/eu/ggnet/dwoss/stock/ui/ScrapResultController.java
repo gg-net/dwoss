@@ -29,8 +29,11 @@ import eu.ggnet.dwoss.stock.api.StockApi;
 import eu.ggnet.saft.core.ui.Bind;
 import eu.ggnet.saft.core.ui.FxController;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
 
+@Dependent
 public class ScrapResultController implements FxController, Consumer<List<StockApi.Scraped>> {
 
     @FXML

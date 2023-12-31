@@ -23,6 +23,8 @@ import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.misc.ee.ImageIdHandler;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_IMAGE_IDS;
 
 /**
@@ -30,6 +32,7 @@ import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_IMAGE_IDS;
  *
  * @author oliver.guenther
  */
+@Dependent
 public class ImportImageIdsAction extends AccessableAction {
 
     public ImportImageIdsAction() {

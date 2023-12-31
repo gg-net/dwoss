@@ -29,8 +29,11 @@ import eu.ggnet.dwoss.core.widget.saft.ReplyUtil;
 import eu.ggnet.dwoss.redtapext.ee.reporting.CreditMemoReporter;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 import static javax.swing.Action.NAME;
 
+@Dependent
 public class OptimizedCreditMemoReportAction extends AbstractAction {
 
     private static final Logger L = LoggerFactory.getLogger(OptimizedCreditMemoReportAction.class);

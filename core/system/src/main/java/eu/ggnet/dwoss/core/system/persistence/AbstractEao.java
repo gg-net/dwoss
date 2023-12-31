@@ -18,8 +18,8 @@ package eu.ggnet.dwoss.core.system.persistence;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,22 +53,22 @@ public abstract class AbstractEao<T> {
     }
 
     public List<T> findAll() {
-        javax.persistence.criteria.CriteriaQuery<T> cq = getEntityManager().getCriteriaBuilder().createQuery(entityClass);
+        jakarta.persistence.criteria.CriteriaQuery<T> cq = getEntityManager().getCriteriaBuilder().createQuery(entityClass);
         cq.select(cq.from(entityClass));
         return getEntityManager().createQuery(cq).getResultList();
     }
 
     public List<T> findAll(int start, int amount) {
-        javax.persistence.criteria.CriteriaQuery<T> cq = getEntityManager().getCriteriaBuilder().createQuery(entityClass);
+        jakarta.persistence.criteria.CriteriaQuery<T> cq = getEntityManager().getCriteriaBuilder().createQuery(entityClass);
         cq.select(cq.from(entityClass));
         return getEntityManager().createQuery(cq).setFirstResult(start).setMaxResults(amount).getResultList();
     }
 
     public int count() {
-        javax.persistence.criteria.CriteriaQuery<Long> cq = getEntityManager().getCriteriaBuilder().createQuery(Long.class);
-        javax.persistence.criteria.Root<T> rt = cq.from(entityClass);
+        jakarta.persistence.criteria.CriteriaQuery<Long> cq = getEntityManager().getCriteriaBuilder().createQuery(Long.class);
+        jakarta.persistence.criteria.Root<T> rt = cq.from(entityClass);
         cq.select(getEntityManager().getCriteriaBuilder().count(rt));
-        javax.persistence.TypedQuery<Long> q = getEntityManager().createQuery(cq);
+        jakarta.persistence.TypedQuery<Long> q = getEntityManager().createQuery(cq);
         return q.getSingleResult().intValue();
     }
 }

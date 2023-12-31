@@ -7,8 +7,8 @@ import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import javax.ejb.EJB;
-import javax.inject.Inject;
+import jakarta.ejb.EJB;
+import jakarta.inject.Inject;
 import javax.naming.NamingException;
 
 import org.jboss.arquillian.junit.Arquillian;

@@ -19,9 +19,9 @@ package eu.ggnet.dwoss.redtape.ee.emo;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.core.common.values.PaymentMethod;
@@ -89,8 +89,8 @@ public class DossierEmo {
      * @param dossierId the dossierId
      */
     public void removeHistoryFromBlock(long dossierId) {
-        em.createNativeQuery("update document set predecessor_id = null where Dossier_id = ?1").setParameter(1, dossierId).executeUpdate();
-        em.createNativeQuery("delete from position where Document_id in (select id from document where Dossier_id = ?1 and active <> 1)").setParameter(1, dossierId).executeUpdate();
-        em.createNativeQuery("delete from document where Dossier_id = ?1 and active <> 1").setParameter(1, dossierId).executeUpdate();
+        em.createNativeQuery("update Document set predecessor_id = null where Dossier_id = ?1").setParameter(1, dossierId).executeUpdate();
+        em.createNativeQuery("delete from DocumentPosition where Document_id in (select id from document where Dossier_id = ?1 and active = false)").setParameter(1, dossierId).executeUpdate();
+        em.createNativeQuery("delete from Document where Dossier_id = ?1 and active = false").setParameter(1, dossierId).executeUpdate();
     }
 }

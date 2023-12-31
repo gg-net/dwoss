@@ -4,8 +4,8 @@ package eu.ggnet.dwoss.redtapext.op.itest;
  *
  * @author pascal.perau
  */
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
+import jakarta.enterprise.inject.Instance;
+import jakarta.inject.Inject;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;

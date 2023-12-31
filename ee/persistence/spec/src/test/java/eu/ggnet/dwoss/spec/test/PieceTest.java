@@ -6,9 +6,11 @@ import eu.ggnet.dwoss.spec.ee.entity.piece.Gpu;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.validation.*;
+import jakarta.validation.*;
 
 import org.junit.*;
+
+import eu.ggnet.dwoss.core.system.util.ValidationUtil;
 
 import static org.junit.Assert.*;
 
@@ -19,7 +21,7 @@ import static org.junit.Assert.*;
  */
 public class PieceTest {
 
-    private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+    private final Validator validator = ValidationUtil.createValidator();
 
     /**
      * Test of getExtras method, of class BasicSpec.

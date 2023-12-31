@@ -19,8 +19,8 @@ package eu.ggnet.dwoss.redtapext.ee;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.ejb.Remote;
-import javax.enterprise.event.Observes;
+import jakarta.ejb.Remote;
+import jakarta.enterprise.event.Observes;
 
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.common.values.DocumentType;

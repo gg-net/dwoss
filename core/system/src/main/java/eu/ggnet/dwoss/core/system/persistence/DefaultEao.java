@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.core.system.persistence;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 public class DefaultEao<T> extends AbstractEao<T> {
 

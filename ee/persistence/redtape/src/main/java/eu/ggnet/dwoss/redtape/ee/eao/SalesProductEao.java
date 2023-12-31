@@ -16,9 +16,9 @@
  */
 package eu.ggnet.dwoss.redtape.ee.eao;
 
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.Query;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.Query;
 
 import eu.ggnet.dwoss.redtape.ee.entity.SalesProduct;
 import eu.ggnet.dwoss.core.system.persistence.AbstractEao;

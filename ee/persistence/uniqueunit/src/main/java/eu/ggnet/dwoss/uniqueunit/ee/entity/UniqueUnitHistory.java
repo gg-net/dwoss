@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.uniqueunit.ee.entity;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringExclude;
@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 public class UniqueUnitHistory implements Serializable, Comparable<UniqueUnitHistory> {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private long id;
 
     @Basic
@@ -44,7 +44,7 @@ public class UniqueUnitHistory implements Serializable, Comparable<UniqueUnitHis
     @Column(length = 65536)
     private String comment;
 
-    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    @Temporal(jakarta.persistence.TemporalType.TIMESTAMP)
     @Column(columnDefinition = "DATETIME")
     private Date occurence;
 

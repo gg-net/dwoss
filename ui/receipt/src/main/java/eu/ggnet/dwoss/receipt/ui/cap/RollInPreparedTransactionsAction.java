@@ -26,6 +26,8 @@ import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.StockTransactionProcessor;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_ROLL_IN_OF_PREPARED_TRANSACTIONS;
 import static eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType.PREPARED;
 import static eu.ggnet.dwoss.stock.ee.entity.StockTransactionType.ROLL_IN;
@@ -34,6 +36,7 @@ import static eu.ggnet.dwoss.stock.ee.entity.StockTransactionType.ROLL_IN;
  *
  * @author oliver.guenther
  */
+@Dependent
 public class RollInPreparedTransactionsAction extends AccessableAction {
 
     public RollInPreparedTransactionsAction() {

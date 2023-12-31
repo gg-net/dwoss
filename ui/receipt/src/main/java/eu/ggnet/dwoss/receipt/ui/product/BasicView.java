@@ -35,10 +35,13 @@ import eu.ggnet.dwoss.spec.ee.entity.ProductSpec.Extra;
 import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
 import eu.ggnet.dwoss.uniqueunit.api.ShopCategory;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  *
  * @author pascal.perau
  */
+@Dependent
 public class BasicView extends AbstractView {
 
     CheckBoxTableNoteModel<Extra> extrasModel = new CheckBoxTableNoteModel(Arrays.asList(Extra.class.getEnumConstants()), "Ausstattung");

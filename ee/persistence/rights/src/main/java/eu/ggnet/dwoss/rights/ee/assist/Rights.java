@@ -20,7 +20,7 @@ import java.lang.annotation.*;
 
 import static java.lang.annotation.ElementType.*;
 
-import javax.inject.Qualifier;
+import jakarta.inject.Qualifier;
 
 /**
  * Rights Persistence Unit Injection Point.

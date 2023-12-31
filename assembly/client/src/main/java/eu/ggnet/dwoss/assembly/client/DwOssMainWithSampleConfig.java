@@ -23,7 +23,7 @@ package eu.ggnet.dwoss.assembly.client;
 public class DwOssMainWithSampleConfig {
 
     public static void main(String[] args) {
-        DwOssMain.main(new String[]{"--protocol=remote+http", "--host=localhost", "--port=8080", "--app=dwoss-server-sample", "--user=admin", "--pass=admin"});
+        DwOssMain.main(new String[]{"--protocol=remote+http", "--host=192.168.2.32", "--port=8080", "--app=dwoss-server-sample", "--user=admin", "--pass=admin"});
     }
 
 }

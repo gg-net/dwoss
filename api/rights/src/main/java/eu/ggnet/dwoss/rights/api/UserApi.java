@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.rights.api;
 
 import java.util.List;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 import eu.ggnet.dwoss.core.common.UserInfoException;
 

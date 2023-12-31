@@ -18,7 +18,8 @@ package eu.ggnet.dwoss.customer.ui.cap;
 
 import java.awt.event.ActionEvent;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
+
 import javax.swing.AbstractAction;
 
 import eu.ggnet.dwoss.core.widget.Progressor;
@@ -26,10 +27,13 @@ import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
 import eu.ggnet.dwoss.customer.ee.CustomerIndexManager;
 import eu.ggnet.saft.core.Saft;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  *
  * @author pascal.perau
  */
+@Dependent
 public class RecreateSearchIndex extends AbstractAction {
 
     @Inject

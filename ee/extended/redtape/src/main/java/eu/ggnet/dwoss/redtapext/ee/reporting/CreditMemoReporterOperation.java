@@ -31,9 +31,9 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
@@ -162,7 +162,7 @@ public class CreditMemoReporterOperation implements CreditMemoReporter {
                 position.getDocument().getDossier().getIdentifier(),
                 doc.getActual(),
                 position.getDocument().getIdentifier(),
-                customer.getId(),
+                customer.id(),
                 customer.toNameCompanyLine(),
                 customerPrice,
                 retailerPrice
@@ -237,13 +237,13 @@ public class CreditMemoReporterOperation implements CreditMemoReporter {
             }
             rows.add(new Object[]{
                 document.getDossier().getIdentifier(),
-                customer.getId(),
+                customer.id(),
                 salesDate,
                 document.getIdentifier(),
                 (full) ? "V" : "T",
                 price,
                 afterTaxPrice,
-                customer.getCompany(),
+                customer.company(),
                 customer.toNameLine(),
                 sopos,
                 document.getCreditMemoReason() != null ? document.getCreditMemoReason().description() : "Keine Angabe"

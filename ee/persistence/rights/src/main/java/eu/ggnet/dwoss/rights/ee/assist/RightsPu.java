@@ -16,17 +16,19 @@
  */
 package eu.ggnet.dwoss.rights.ee.assist;
 
-import javax.enterprise.inject.Produces;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 /**
  *
  * @author Bastian Venz
  */
+@ApplicationScoped
 public class RightsPu {
 
-    public final static String NAME = "rights-pu";
+    private final static String NAME = "rights-pu";
 
     @PersistenceContext(unitName = NAME)
     @Produces

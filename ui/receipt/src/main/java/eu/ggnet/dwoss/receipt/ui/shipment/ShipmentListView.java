@@ -16,8 +16,9 @@
  */
 package eu.ggnet.dwoss.receipt.ui.shipment;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
+
+import jakarta.annotation.PostConstruct;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -31,6 +32,8 @@ import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.core.common.values.ShipmentStatus;
 import eu.ggnet.saft.core.ui.*;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
 import static eu.ggnet.saft.core.ui.UiParent.of;
 
@@ -38,6 +41,7 @@ import static eu.ggnet.saft.core.ui.UiParent.of;
  *
  * @author pascal.perau
  */
+@Dependent
 @Title("Shipment")
 @StoreLocation
 public class ShipmentListView extends javax.swing.JPanel {

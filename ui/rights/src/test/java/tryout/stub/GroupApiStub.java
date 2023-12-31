@@ -43,7 +43,7 @@ public class GroupApiStub implements GroupApi {
         if ( isNameAlreadyUsedByAnotherGroup(-1, name) ) {
             throw new IllegalArgumentException("Submitted name " + name + " is already used.");
         }
-        Persona group = new Persona(UserApiStub.getGroupId(), 0, name, new ArrayList<>());
+        Persona group = new Persona(UserApiStub.getGroupId(), (short)0, name, new ArrayList<>());
         UserApiStub.getGroupsByIds().put(group.getId(), group);
         UserApiStub.incrementGroupId();
         L.debug("create()): added new Group {}", group);

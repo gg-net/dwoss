@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.rights.ee.op;
 
 import java.util.Set;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;

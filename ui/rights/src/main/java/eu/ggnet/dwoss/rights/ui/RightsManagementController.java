@@ -21,7 +21,7 @@ import java.util.*;
 import java.util.concurrent.CancellationException;
 import java.util.stream.Collectors;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -42,6 +42,8 @@ import eu.ggnet.dwoss.rights.ee.entity.Persona;
 import eu.ggnet.saft.core.Saft;
 import eu.ggnet.saft.core.ui.*;
 
+import jakarta.enterprise.context.Dependent;
+
 import static javafx.scene.control.ButtonType.OK;
 
 /**
@@ -49,6 +51,7 @@ import static javafx.scene.control.ButtonType.OK;
  *
  * @author mirko.schulze
  */
+@Dependent
 @Title("Rechte-Verwaltung")
 @Frame
 public class RightsManagementController implements Initializable, FxController {

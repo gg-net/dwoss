@@ -17,7 +17,6 @@
 package eu.ggnet.dwoss.redtapext.ee.workflow;
 
 import eu.ggnet.dwoss.core.common.values.PositionType;
-import eu.ggnet.dwoss.mandator.api.value.PostLedger;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.mandator.api.value.RepaymentCustomers;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
@@ -29,21 +28,16 @@ import eu.ggnet.dwoss.redtape.ee.entity.Document;
 
 import java.util.*;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 
-import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.eao.DocumentEao;
 import eu.ggnet.dwoss.redtape.ee.format.DocumentFormater;
-import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
 import eu.ggnet.dwoss.stock.ee.emo.LogicTransactionEmo;
 import eu.ggnet.dwoss.stock.ee.emo.StockTransactionEmo;
 import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
 import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
-import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 
@@ -52,36 +46,22 @@ import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
  *
  * @author oliver.guenther
  */
-@Stateless
 public class RedTapeUpdateRepaymentWorkflow extends RedTapeWorkflow {
 
-    @Inject
-    private RedTapeCreateDossierWorkflow createWorkflow;
+    private final RedTapeCreateDossierWorkflow createWorkflow;
 
-    @Inject
-    private RepaymentCustomers repaymentCustomers;
+    private final RepaymentCustomers repaymentCustomers;
 
-    @Inject
-    private PostLedger postLedger;
+    private final Document alteredDocument;
 
-    @Inject
-    public void setRedTapeEm(@RedTapes EntityManager redTapeEm) {
-        this.redTapeEm = redTapeEm;
-    }
+    private final Integer destinationId;
 
-    @Inject
-    public void setUniqueUnitEm(@UniqueUnits EntityManager uniqueUnitEm) {
-        this.uniqueUnitEm = uniqueUnitEm;
-    }
-
-    @Inject
-    public void setStockEm(@Stocks EntityManager stockEm) {
-        this.stockEm = stockEm;
-    }
-
-    @Inject
-    public void setMandator(Mandator mandator) {
-        this.mandator = mandator;
+    public RedTapeUpdateRepaymentWorkflow(EntityManager redTapeEm, EntityManager uniqueUnitEm, EntityManager stockEm, String arranger, Mandator mandator, RedTapeCreateDossierWorkflow createWorkflow, RepaymentCustomers repaymentCustomers, Document alteredDocument, Integer destinationId) {
+        super(redTapeEm, uniqueUnitEm, stockEm, arranger, mandator);
+        this.createWorkflow = createWorkflow;
+        this.repaymentCustomers = repaymentCustomers;
+        this.alteredDocument = alteredDocument;
+        this.destinationId = destinationId;
     }
 
     protected void validate(Document altered, Document previous, Integer destinationId) {
@@ -193,17 +173,9 @@ public class RedTapeUpdateRepaymentWorkflow extends RedTapeWorkflow {
                 .build());
     }
 
-    /**
-     * Executes the Workflow.
-     *
-     * @param alteredDocument
-     * @param destinationId
-     * @param aranger
-     * @return the updated Document.
-     */
-    public Document execute(Document alteredDocument, Integer destinationId, String aranger) {
+    @Override
+    public Document execute() {
         // TODO: don't do this in stateless, works for now.
-        this.arranger = aranger;
         Document previousDoc = new DocumentEao(redTapeEm).findById(alteredDocument.getId(), LockModeType.PESSIMISTIC_WRITE);
         validate(alteredDocument, previousDoc, destinationId);
         if ( alteredDocument.equalsContent(previousDoc) ) return alteredDocument;

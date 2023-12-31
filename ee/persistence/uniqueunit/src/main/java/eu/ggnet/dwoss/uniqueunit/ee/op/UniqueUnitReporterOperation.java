@@ -23,9 +23,9 @@ import java.text.SimpleDateFormat;
 import java.util.Map.Entry;
 import java.util.*;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import org.apache.commons.lang3.time.DateUtils;
 

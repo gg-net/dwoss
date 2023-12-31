@@ -25,9 +25,9 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Set;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,8 +101,8 @@ public class RedTapeCreateDossierWorkflow {
         AddressEmo adEmo = new AddressEmo(redTapeEm);
         String defaultInvoiceAddressLabel = addressService.defaultAddressLabel(customerId, AddressType.INVOICE);
         String defaultShippingAddressLabel = addressService.defaultAddressLabel(customerId, AddressType.SHIPPING);
-        L.info("defaultInvoiceAddressLabel " + defaultInvoiceAddressLabel);
-        L.info("defaultShippingAddressLabel " + defaultShippingAddressLabel);
+        L.debug("defaultInvoiceAddressLabel: " + defaultInvoiceAddressLabel.replaceAll("\n", "(newline)").replaceAll("\r", ""));
+        L.debug("defaultShippingAddressLabel: " + defaultShippingAddressLabel.replaceAll("\n", "(newline)").replaceAll("\r", ""));
 
         doc.setInvoiceAddress(adEmo.request(defaultInvoiceAddressLabel));
         doc.setShippingAddress(adEmo.request(defaultShippingAddressLabel));

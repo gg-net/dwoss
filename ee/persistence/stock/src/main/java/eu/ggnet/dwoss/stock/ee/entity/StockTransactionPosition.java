@@ -18,9 +18,9 @@ package eu.ggnet.dwoss.stock.ee.entity;
 
 import java.io.Serializable;
 
-import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * Represents one position on a transaction.
@@ -32,7 +32,7 @@ import javax.validation.constraints.NotNull;
 public class StockTransactionPosition implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private int id;
 
     @Version

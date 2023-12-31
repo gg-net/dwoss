@@ -18,10 +18,10 @@ package eu.ggnet.dwoss.search.ee;
 
 import java.util.*;
 
-import javax.ejb.LocalBean;
-import javax.ejb.Stateful;
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateful;
+import jakarta.enterprise.inject.Instance;
+import jakarta.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.misc.web.stub;
 
 import java.util.*;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 
 import eu.ggnet.dwoss.rights.api.*;
 

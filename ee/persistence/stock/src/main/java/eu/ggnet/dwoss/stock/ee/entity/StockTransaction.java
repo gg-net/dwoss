@@ -19,9 +19,9 @@ package eu.ggnet.dwoss.stock.ee.entity;
 import java.io.Serializable;
 import java.util.*;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 
 import eu.ggnet.dwoss.core.system.persistence.EagerAble;
 
@@ -93,7 +93,7 @@ public class StockTransaction implements Serializable, EagerAble {
     }
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private int id;
 
     @Version

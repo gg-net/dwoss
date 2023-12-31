@@ -20,10 +20,10 @@ import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.*;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlTransient;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlTransient;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -288,7 +288,7 @@ public class Display extends BaseEntity implements Serializable {
 
     @XmlTransient
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private long id;
 
     @XmlTransient
@@ -296,7 +296,7 @@ public class Display extends BaseEntity implements Serializable {
     private short optLock;
 
     @XmlAttribute
-    @Column(columnDefinition = "bit(1)")
+    @Column
     private boolean led;
 
     @XmlAttribute

@@ -21,15 +21,19 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
+
+import jakarta.annotation.PostConstruct;
+
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
 import eu.ggnet.dwoss.core.widget.swing.*;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.entity.*;
+
+import jakarta.enterprise.context.Dependent;
 
 /*
  * To change this template, choose Tools | Templates
@@ -39,6 +43,7 @@ import eu.ggnet.dwoss.spec.ee.entity.*;
  *
  * @author pascal.perau
  */
+@Dependent
 public class SpecListController {
 
     private class SpecFilter implements PojoFilter<ProductSpec> {

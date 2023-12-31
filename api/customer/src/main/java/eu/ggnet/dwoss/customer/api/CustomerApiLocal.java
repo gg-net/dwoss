@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.customer.api;
 
-import javax.ejb.Local;
+import jakarta.ejb.Local;
 
 /**
  * Local Customer API.

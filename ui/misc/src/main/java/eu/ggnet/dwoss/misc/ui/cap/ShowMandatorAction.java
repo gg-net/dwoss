@@ -26,10 +26,13 @@ import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  *
  * @author pascal.perau
  */
+@Dependent
 public class ShowMandatorAction extends AbstractAction {
 
     public ShowMandatorAction() {

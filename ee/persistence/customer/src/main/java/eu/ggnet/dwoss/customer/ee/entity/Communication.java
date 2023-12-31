@@ -19,14 +19,12 @@ package eu.ggnet.dwoss.customer.ee.entity;
 import java.io.Serializable;
 import java.util.Optional;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.lucene.analysis.core.KeywordTokenizerFactory;
-import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
-import org.hibernate.search.annotations.*;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.*;
 
 import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 
@@ -38,10 +36,6 @@ import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 @Entity
 @Indexed
 @SuppressWarnings("PersistenceUnitPresent")
-@AnalyzerDef(name = "emailAnalyser",
-             tokenizer = @TokenizerDef(factory = KeywordTokenizerFactory.class),
-             filters = @TokenFilterDef(factory = LowerCaseFilterFactory.class)
-)
 public class Communication extends BaseEntity implements Serializable {
 
     public static final String EMAIL_PATTERN = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$";
@@ -79,7 +73,7 @@ public class Communication extends BaseEntity implements Serializable {
     }
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private long id;
 
     @Version
@@ -97,8 +91,7 @@ public class Communication extends BaseEntity implements Serializable {
      * I.e. Phone: 0123 456789, E-Mail: max.mustermann@mustermail.de
      */
     @NotNull
-    @Field
-    @Analyzer(definition = "emailAnalyser")
+    @KeywordField
     private String identifier;
 
     public Communication() {

@@ -19,9 +19,9 @@ package eu.ggnet.dwoss.core.system.progress;
 
 import java.util.SortedSet;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 
 /**

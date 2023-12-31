@@ -18,10 +18,10 @@ package eu.ggnet.dwoss.rights.ee.assist.gen;
 
 import java.util.*;
 
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.ejb.Stateless;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
@@ -31,7 +31,7 @@ import eu.ggnet.dwoss.rights.ee.entity.Operator;
 import eu.ggnet.dwoss.rights.ee.entity.Persona;
 import eu.ggnet.dwoss.rights.ee.op.PasswordUtil;
 
-import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
+import static jakarta.ejb.TransactionAttributeType.REQUIRES_NEW;
 
 /**
  *

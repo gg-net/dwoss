@@ -18,11 +18,15 @@ package eu.ggnet.dwoss.receipt.ui.product;
 
 import java.awt.Window;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import eu.ggnet.saft.core.Saft;
+
+import jakarta.annotation.PostConstruct;
+
 import eu.ggnet.saft.core.impl.Swing;
+
+import jakarta.enterprise.context.Dependent;
 
 import static eu.ggnet.saft.core.ui.UiParent.of;
 
@@ -30,6 +34,7 @@ import static eu.ggnet.saft.core.ui.UiParent.of;
  *
  * @author pascal.perau
  */
+@Dependent
 public class CpuListView extends javax.swing.JPanel {
 
     @Inject

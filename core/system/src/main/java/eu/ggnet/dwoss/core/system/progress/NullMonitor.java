@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.core.system.progress;
 
-import javax.enterprise.inject.Alternative;
+import jakarta.enterprise.inject.Alternative;
 
 /**
  * Implementation of {@link IMonitor} to prevent null pointers.

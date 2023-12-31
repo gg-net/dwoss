@@ -29,12 +29,15 @@ import eu.ggnet.dwoss.customer.ee.entity.Company;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.*;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  * Controller class for the editor view of a Company. Allows the user to
  * change all values of the Company.
  *
  * @author jens.papenhagen
  */
+@Dependent
 @Title("Firma eintragen")
 public class CompanyAddController implements Initializable, FxController, ResultProducer<Company> {
 

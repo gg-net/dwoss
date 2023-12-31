@@ -19,8 +19,8 @@ package eu.ggnet.dwoss.misc.ui;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.inject.Inject;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -31,10 +31,13 @@ import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.FxController;
 import eu.ggnet.saft.core.ui.Title;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  *
  * @author oliver.guenther
  */
+@Dependent
 @Title("Über ...")
 public class AboutController implements FxController, Consumer<In> {
 

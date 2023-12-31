@@ -2,7 +2,7 @@ package eu.ggnet.dwoss.redtape.test;
 
 import java.util.Set;
 
-import javax.validation.*;
+import jakarta.validation.*;
 
 import org.junit.Test;
 
@@ -23,7 +23,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class PositionTest {
 
-    private final static Validator V = Validation.buildDefaultValidatorFactory().getValidator();
+    private final static Validator V = ValidationUtil.createValidator();
 
     Ledger L1 = new Ledger(1111, "DemoLedger 1");
 

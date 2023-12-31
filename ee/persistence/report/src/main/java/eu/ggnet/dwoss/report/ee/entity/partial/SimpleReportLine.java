@@ -19,8 +19,8 @@ package eu.ggnet.dwoss.report.ee.entity.partial;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -40,7 +40,7 @@ import eu.ggnet.dwoss.report.ee.entity.ReportLine.WorkflowStatus;
 public class SimpleReportLine extends BaseEntity implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private long id;
 
     /**
@@ -49,7 +49,7 @@ public class SimpleReportLine extends BaseEntity implements Serializable {
     @Version
     private int optLock;
 
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(jakarta.persistence.TemporalType.DATE)
     private Date reportingDate;
 
     private String refurbishId;

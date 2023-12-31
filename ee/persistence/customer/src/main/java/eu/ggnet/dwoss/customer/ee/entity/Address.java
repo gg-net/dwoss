@@ -18,15 +18,15 @@ package eu.ggnet.dwoss.customer.ee.entity;
 
 import java.io.Serializable;
 
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.*;
 
 import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
+
 
 /**
  * Address data.
@@ -35,27 +35,27 @@ import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
  */
 
 @Entity
-@Indexed
+@Indexed           
 @SuppressWarnings("PersistenceUnitPresent")
 public class Address extends BaseEntity implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private long id;
 
     @Version
     private short optLock;
 
     @NotNull
-    @Field
+    @FullTextField
     private String street;
 
     @NotNull
-    @Field
+    @FullTextField
     private String city;
 
     @NotNull
-    @Field
+    @FullTextField
     private String zipCode;
 
     /**
@@ -64,7 +64,7 @@ public class Address extends BaseEntity implements Serializable {
      */
     @NotNull
     @Size(min = 2, max = 2)
-    @Field
+    @KeywordField
     private String isoCountry = "DE";
 
     public Address() {

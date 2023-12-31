@@ -19,8 +19,8 @@ package eu.ggnet.dwoss.customer.ee;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 
 import eu.ggnet.dwoss.customer.api.ResellerListCustomer;
 import eu.ggnet.dwoss.customer.api.ResellerListService;

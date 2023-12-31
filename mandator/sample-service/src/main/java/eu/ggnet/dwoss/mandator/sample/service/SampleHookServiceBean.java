@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.mandator.sample.service;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.core.common.UserInfoException;

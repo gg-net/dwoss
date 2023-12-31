@@ -2,9 +2,9 @@ package eu.ggnet.dwoss.stock.ee.itest;
 
 import java.util.*;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.UserTransaction;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.UserTransaction;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.jboss.arquillian.junit.Arquillian;
@@ -15,7 +15,7 @@ import org.junit.runner.RunWith;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.entity.*;
 import eu.ggnet.dwoss.stock.ee.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.core.system.util.Utils;
+import eu.ggnet.dwoss.stock.ee.assist.gen.StockDeleteUtils;
 
 import com.querydsl.jpa.impl.JPAQuery;
 
@@ -36,7 +36,8 @@ public class PersistenceIT extends ArquillianProjectArchive {
     public void clearDataBase() throws Exception {
         utx.begin();
         em.joinTransaction();
-        Utils.clearH2Db(em);
+        StockDeleteUtils.deleteAll(em);
+        assertThat(StockDeleteUtils.validateEmpty(em)).isNull();
         utx.commit();
     }
 

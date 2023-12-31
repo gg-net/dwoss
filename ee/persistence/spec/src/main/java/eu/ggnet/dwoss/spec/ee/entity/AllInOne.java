@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.spec.ee.entity;
 
 import java.util.*;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 
 import eu.ggnet.dwoss.spec.ee.entity.piece.*;
 

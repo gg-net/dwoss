@@ -19,12 +19,12 @@ package eu.ggnet.dwoss.stock.ee;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.validation.*;
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
+import jakarta.enterprise.event.Event;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.validation.*;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;

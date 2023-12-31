@@ -23,8 +23,8 @@ import eu.ggnet.dwoss.core.common.values.DocumentType;
 import java.util.Arrays;
 import java.util.Date;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 
 import org.apache.commons.lang3.time.DateUtils;
 
@@ -42,9 +42,6 @@ import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 public class ResolveRepaymentBeanITHelper {
 
     @Inject
-    private ReportLineGenerator generator;
-
-    @Inject
     private ReportLineEao reportLineEao;
 
     @Inject
@@ -53,7 +50,7 @@ public class ResolveRepaymentBeanITHelper {
     public void generateLines(int amount) {
         for (int i = 0; i < amount;
                 i++) {
-            ReportLine makeReportLine = generator.makeReportLine(Arrays.asList(TradeName.AMAZON), DateUtils.addDays(new Date(), -30), 25);
+            ReportLine makeReportLine = ReportLineGenerator.makeReportLine(Arrays.asList(TradeName.AMAZON), DateUtils.addDays(new Date(), -30), 25);
             makeReportLine.setPositionType(PositionType.UNIT);
             makeReportLine.setDocumentType(DocumentType.ANNULATION_INVOICE);
             reportLineEao.getEntityManager().persist(makeReportLine);

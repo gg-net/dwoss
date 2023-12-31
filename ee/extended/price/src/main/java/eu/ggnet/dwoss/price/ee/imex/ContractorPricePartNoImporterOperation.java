@@ -21,9 +21,9 @@ import java.util.Map.Entry;
 import java.util.*;
 import java.util.regex.Matcher;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

@@ -19,8 +19,8 @@ package eu.ggnet.dwoss.stock.ee.itest.support;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Observes;
 
 import eu.ggnet.dwoss.stock.api.event.DeleteEvent;
 import eu.ggnet.dwoss.stock.api.event.ScrapEvent;

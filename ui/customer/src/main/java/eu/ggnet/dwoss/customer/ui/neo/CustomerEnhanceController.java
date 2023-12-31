@@ -53,6 +53,8 @@ import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.*;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.core.common.values.CustomerFlag.SYSTEM_CUSTOMER;
 import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.EMAIL;
 import static javafx.scene.control.Alert.AlertType.WARNING;
@@ -64,6 +66,7 @@ import static javafx.stage.Modality.WINDOW_MODAL;
  *
  * @author jens.papenhagen
  */
+@Dependent
 @Title("Erweiterte Kunden bearbeiten")
 public class CustomerEnhanceController implements Initializable, FxController, Consumer<Customer>, ResultProducer<Customer> {
 

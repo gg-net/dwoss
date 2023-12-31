@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 import java.util.Optional;
 import java.util.concurrent.CompletionException;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import javafx.scene.control.TextInputDialog;
 
@@ -32,6 +32,8 @@ import eu.ggnet.dwoss.receipt.ui.product.SimpleView;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.saft.core.Saft;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_PRODUCT;
 
 /**
@@ -39,6 +41,7 @@ import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_PRODUCT;
  * <p/>
  * @author oliver.guenther
  */
+@Dependent
 public class UpdateProductAction extends AccessableAction {
 
     @Inject

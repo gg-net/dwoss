@@ -18,10 +18,10 @@ package eu.ggnet.dwoss.spec.ee.entity;
 
 import java.util.*;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElementWrapper;
 
 import eu.ggnet.dwoss.core.common.INoteModel;
 

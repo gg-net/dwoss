@@ -21,9 +21,9 @@ import java.text.DateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 
 import eu.ggnet.dwoss.core.common.INoteModel;
 import eu.ggnet.dwoss.core.common.values.*;
@@ -37,7 +37,7 @@ import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
 
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Equipment.*;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.REFURBISHED_ID;
-import static javax.persistence.CascadeType.*;
+import static jakarta.persistence.CascadeType.*;
 
 /**
  * A UniqueUnit represents exactly one unit that is unique in the whole system.
@@ -435,7 +435,7 @@ public class UniqueUnit implements Serializable, EagerAble {
     }
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private int id;
 
     @Version

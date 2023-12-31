@@ -46,6 +46,8 @@ import eu.ggnet.dwoss.customer.ui.CustomerTaskService;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.*;
 
+import jakarta.enterprise.context.Dependent;
+
 import static java.lang.Double.MAX_VALUE;
 import static javafx.concurrent.Worker.State.READY;
 
@@ -54,6 +56,7 @@ import static javafx.concurrent.Worker.State.READY;
  *
  * @author jens.papenhagen
  */
+@Dependent
 @Title("Kunden Suche")
 public class CustomerSearchController implements Initializable, FxController, ClosedListener {
 

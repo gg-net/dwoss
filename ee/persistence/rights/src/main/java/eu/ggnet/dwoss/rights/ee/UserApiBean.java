@@ -18,11 +18,11 @@ package eu.ggnet.dwoss.rights.ee;
 
 import java.util.*;
 
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
+import jakarta.enterprise.inject.Instance;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;

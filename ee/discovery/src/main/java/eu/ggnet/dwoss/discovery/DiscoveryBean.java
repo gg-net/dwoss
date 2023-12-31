@@ -19,8 +19,8 @@ package eu.ggnet.dwoss.discovery;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import javax.ejb.Remote;
-import javax.ejb.Stateless;
+import jakarta.ejb.Remote;
+import jakarta.ejb.Stateless;
 import javax.naming.*;
 
 import org.slf4j.Logger;

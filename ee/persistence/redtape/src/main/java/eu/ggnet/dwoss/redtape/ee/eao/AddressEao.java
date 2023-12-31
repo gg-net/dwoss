@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.redtape.ee.eao;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import eu.ggnet.dwoss.redtape.ee.entity.Address;
 import eu.ggnet.dwoss.redtape.ee.entity.QAddress;

@@ -20,8 +20,8 @@ import eu.ggnet.dwoss.redtape.ee.entity.DocumentHistory;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 
-import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.redtape.ee.eao.DocumentEao;

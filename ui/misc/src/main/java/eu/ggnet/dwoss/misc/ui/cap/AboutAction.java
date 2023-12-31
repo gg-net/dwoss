@@ -24,10 +24,13 @@ import eu.ggnet.dwoss.misc.ui.AboutController.In;
 import eu.ggnet.dwoss.misc.ui.*;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  *
  * @author pascal.perau
  */
+@Dependent
 public class AboutAction extends AbstractAction {
 
     public AboutAction() {

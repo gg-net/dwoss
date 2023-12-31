@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.misc.ui.toolbar;
 import java.io.File;
 import java.net.URL;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
@@ -29,11 +29,14 @@ import eu.ggnet.dwoss.core.system.OutputPath;
 import eu.ggnet.dwoss.core.widget.FileUtil;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  * Button to start RedTape form the Toolbar.
  *
  * @author pascal.perau
  */
+@Dependent
 public class OpenDirectoryToolbarButton extends Button {
 
     @Inject

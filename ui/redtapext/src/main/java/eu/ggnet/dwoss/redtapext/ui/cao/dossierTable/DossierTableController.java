@@ -33,12 +33,15 @@ import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.IDossierSelectionHandler;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableController.IMAGE_NAME.*;
 
 /**
  *
  * @author pascal.perau
  */
+@Dependent
 public class DossierTableController {
 
     private final static Logger L = LoggerFactory.getLogger(DossierTableController.class);

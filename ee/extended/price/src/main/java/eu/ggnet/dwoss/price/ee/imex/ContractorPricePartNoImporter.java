@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.price.ee.imex;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;

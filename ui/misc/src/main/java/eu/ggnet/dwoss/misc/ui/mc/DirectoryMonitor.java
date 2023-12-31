@@ -28,7 +28,8 @@ import java.util.concurrent.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
+
 import javax.swing.AbstractListModel;
 
 import javafx.application.Platform;
@@ -36,6 +37,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import eu.ggnet.dwoss.core.system.OutputPath;
+
+import jakarta.enterprise.context.Dependent;
 
 import static java.nio.file.StandardWatchEventKinds.*;
 
@@ -45,6 +48,7 @@ import static java.nio.file.StandardWatchEventKinds.*;
  * <p/>
  * @author oliver.guenther
  */
+@Dependent
 public class DirectoryMonitor extends AbstractListModel<File> implements Runnable {
 
     private File directory;

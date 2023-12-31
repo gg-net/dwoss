@@ -11,10 +11,10 @@ import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import java.util.Date;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.transaction.UserTransaction;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.transaction.UserTransaction;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;

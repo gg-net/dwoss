@@ -1,9 +1,9 @@
 package eu.ggnet.dwoss.customer.ee.itest;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.transaction.UserTransaction;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.transaction.UserTransaction;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;

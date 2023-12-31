@@ -19,10 +19,10 @@ package eu.ggnet.dwoss.redtape.ee.eao;
 import java.util.Collection;
 import java.util.List;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;

@@ -21,9 +21,9 @@ import eu.ggnet.dwoss.core.common.values.PaymentSettlement;
 import java.io.Serializable;
 import java.util.*;
 
-import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
@@ -37,7 +37,7 @@ import eu.ggnet.dwoss.redtape.ee.format.DocumentFormater;
 import static eu.ggnet.dwoss.core.common.values.PositionType.COMMENT;
 import static eu.ggnet.dwoss.core.common.values.TaxType.GENERAL_SALES_TAX_DE_19_PERCENT;
 import static eu.ggnet.dwoss.redtape.ee.entity.util.DocumentEquals.Property.*;
-import static javax.persistence.CascadeType.*;
+import static jakarta.persistence.CascadeType.*;
 
 /**
  * Represents a Document, like the paper in a real dossier.
@@ -249,7 +249,7 @@ public class Document extends BaseEntity implements Serializable, Comparable<Doc
     }
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private long id;
 
     @Version
@@ -271,7 +271,7 @@ public class Document extends BaseEntity implements Serializable, Comparable<Doc
     @Embedded
     private DocumentHistory history;
 
-    @OneToOne(cascade = {DETACH})
+    @ManyToOne(cascade = {DETACH, REFRESH})
     private Document predecessor;
 
     @ManyToOne(cascade = {DETACH, MERGE, REFRESH, PERSIST}, optional = false)
@@ -904,7 +904,7 @@ public class Document extends BaseEntity implements Serializable, Comparable<Doc
         return "Document{" + "id=" + id + ", type=" + type + ", closed=" + closed + ",actual=" + actual + ", conditions=" + conditions
                 + ", directive=" + directive + ", positions=" + positions + "settlements=" + settlements
                 + ", active=" + active + ", history=" + history + ", predecessor.id=" + (predecessor == null ? null : predecessor.getId())
-                + ", dossier.id=" + (dossier == null ? null : dossier.getId()) + ", flags=" + flags + ", invoiceAddress=" + invoiceAddress
+                + ", dossier.id=" + (dossier == null ? null : dossier.getId()) + ", flags=" + flags + ", invoiceAddress=" + invoiceAddress 
                 + ", shippingAddress=" + shippingAddress + ", identifier=" + identifier + ", taxType=" + taxType + '}';
     }
 

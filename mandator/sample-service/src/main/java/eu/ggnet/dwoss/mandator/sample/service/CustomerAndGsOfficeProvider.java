@@ -16,9 +16,9 @@
  */
 package eu.ggnet.dwoss.mandator.sample.service;
 
-import javax.ejb.Singleton;
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
+import jakarta.ejb.Singleton;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Inject;
 
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
@@ -55,10 +55,10 @@ public class CustomerAndGsOfficeProvider {
     private SpecialSystemCustomers specialSystemCustomers;
 
     @Produces
-    public final static SageExporterConfig SAGE_EXPORTER_CONFIG = new DefaultSageExporterConfig(1, false,"1","1");
+    private final static SageExporterConfig SAGE_EXPORTER_CONFIG = new DefaultSageExporterConfig(1, false,"1","1");
 
     @Produces
-    public final static PostLedger NEW_POST_LEDGER = new PostLedger(
+    private final static PostLedger NEW_POST_LEDGER = new PostLedger(
             PostLedger.add()
                     .positionTypes(UNIT)
                     .taxTypes(GENERAL_SALES_TAX_DE_19_PERCENT)

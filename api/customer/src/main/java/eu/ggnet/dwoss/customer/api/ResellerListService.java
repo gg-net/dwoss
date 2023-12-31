@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.customer.api;
 
 import java.util.List;
 
-import javax.ejb.Local;
+import jakarta.ejb.Local;
 
 /**
  * Service implementation for the Reseller List.

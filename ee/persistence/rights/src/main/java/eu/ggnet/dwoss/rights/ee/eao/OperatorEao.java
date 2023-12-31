@@ -16,9 +16,9 @@
  */
 package eu.ggnet.dwoss.rights.ee.eao;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import eu.ggnet.dwoss.rights.ee.assist.Rights;
 import eu.ggnet.dwoss.rights.ee.entity.Operator;
@@ -35,6 +35,7 @@ import static eu.ggnet.dwoss.rights.ee.entity.QOperator.operator;
 @Stateless
 public class OperatorEao extends AbstractEao<Operator> {
 
+    
     @Inject
     @Rights
     private EntityManager em;

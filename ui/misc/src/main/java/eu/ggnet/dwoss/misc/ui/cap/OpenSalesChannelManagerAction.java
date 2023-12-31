@@ -29,6 +29,8 @@ import eu.ggnet.saft.core.Ui;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.saft.core.UiUtil;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.rights.api.AtomicRight.OPEN_SALES_CHANNEL_MANAGER;
 
 /**
@@ -36,6 +38,7 @@ import static eu.ggnet.dwoss.rights.api.AtomicRight.OPEN_SALES_CHANNEL_MANAGER;
  * <p>
  * @author oliver.guenther
  */
+@Dependent
 public class OpenSalesChannelManagerAction extends AccessableAction {
 
     public OpenSalesChannelManagerAction() {

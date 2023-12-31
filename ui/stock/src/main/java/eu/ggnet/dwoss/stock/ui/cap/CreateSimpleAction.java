@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.stock.ui.cap;
 import java.awt.event.ActionEvent;
 import java.util.*;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -37,6 +37,8 @@ import eu.ggnet.dwoss.stock.ui.transactions.*;
 import eu.ggnet.saft.core.Saft;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_TRANSACTION_FOR_SINGLE_UNIT;
 
 /**
@@ -44,6 +46,7 @@ import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_TRANSACTION_FOR_SINGL
  * <p>
  * @author oliver.guenther
  */
+@Dependent
 public class CreateSimpleAction extends AccessableAction {
 
     @Inject

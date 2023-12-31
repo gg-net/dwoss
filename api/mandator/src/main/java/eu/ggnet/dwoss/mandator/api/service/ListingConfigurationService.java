@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.mandator.api.service;
 
 import java.util.*;
 
-import javax.ejb.Local;
+import jakarta.ejb.Local;
 
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.common.FileJacket;

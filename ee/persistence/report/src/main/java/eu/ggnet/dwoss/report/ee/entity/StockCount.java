@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.report.ee.entity;
 
 import java.time.LocalDate;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 
@@ -31,7 +31,7 @@ import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 public class StockCount extends BaseEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private long id;
 
     @Version

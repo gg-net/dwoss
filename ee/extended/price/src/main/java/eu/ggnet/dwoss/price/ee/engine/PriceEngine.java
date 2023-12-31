@@ -18,8 +18,8 @@ package eu.ggnet.dwoss.price.ee.engine;
 
 import java.util.Objects;
 
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
+import jakarta.enterprise.inject.Instance;
+import jakarta.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +32,8 @@ import eu.ggnet.dwoss.price.ee.Estimator.Result;
 import eu.ggnet.dwoss.price.ee.engine.support.TraceCollector;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.*;
+
+import jakarta.enterprise.context.Dependent;
 
 import static eu.ggnet.dwoss.price.ee.engine.PriceEngineResult.Change.SET;
 
@@ -48,6 +50,7 @@ import static eu.ggnet.dwoss.price.ee.engine.PriceEngineResult.Change.SET;
  *
  * @author oliver.guenther
  */
+@Dependent
 public class PriceEngine {
 
     private final static Logger L = LoggerFactory.getLogger(PriceEngine.class);

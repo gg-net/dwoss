@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.assembly.client.support.exception;
 import java.util.*;
 import java.util.function.BiConsumer;
 
-import javax.validation.ConstraintViolationException;
+import jakarta.validation.ConstraintViolationException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

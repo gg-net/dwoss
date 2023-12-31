@@ -53,7 +53,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>eu.ggnet.dwoss.assembly.remote.Main</mainClass>
+                            <mainClass>eu.ggnet.dwoss.assembly.client.DwOssMainWithSampleConfig</mainClass>
                         </manifest>
                         <manifestEntries>
                             <Permissions>all-permissions</Permissions>
@@ -102,7 +102,7 @@
         <!-- Expresion factory for hibernate validator-->
         <dependency>
             <groupId>org.glassfish</groupId>
-            <artifactId>javax.el</artifactId>
+            <artifactId>jakarta.el</artifactId>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>

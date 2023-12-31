@@ -19,7 +19,8 @@ package eu.ggnet.dwoss.core.system.util;
 import java.util.*;
 
 import javax.swing.JOptionPane;
-import javax.validation.*;
+
+import jakarta.validation.*;
 
 /**
  * This is a simple utility class, which helps with validation
@@ -30,6 +31,10 @@ public class ValidationUtil {
 
     private final static Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
+    public static Validator createValidator() {
+        return validator;
+    }
+    
     /**
      * Validates a Object and throws a Exception if invalid.
      * <p>

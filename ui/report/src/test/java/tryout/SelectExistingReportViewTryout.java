@@ -18,7 +18,7 @@ package tryout;
 
 import java.util.*;
 
-import javax.persistence.LockModeType;
+import jakarta.persistence.LockModeType;
 import javax.swing.JLabel;
 
 import eu.ggnet.dwoss.core.common.values.DocumentType;

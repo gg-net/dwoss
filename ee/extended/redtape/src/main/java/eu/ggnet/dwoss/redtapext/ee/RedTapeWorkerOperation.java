@@ -18,9 +18,9 @@ package eu.ggnet.dwoss.redtapext.ee;
 
 import java.util.*;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +31,7 @@ import eu.ggnet.dwoss.customer.api.AddressChange;
 import eu.ggnet.dwoss.customer.ee.AddressServiceBean;
 import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
+import eu.ggnet.dwoss.mandator.api.value.RepaymentCustomers;
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.eao.DocumentEao;
 import eu.ggnet.dwoss.redtape.ee.eao.DossierEao;
@@ -74,9 +75,6 @@ public class RedTapeWorkerOperation implements RedTapeWorker {
     private AddressServiceBean addressService;
 
     @Inject
-    private RedTapeUpdateRepaymentWorkflow repaymentWorkflow;
-
-    @Inject
     private RedTapeCreateDossierWorkflow createDossierWorkflow;
 
     @Inject
@@ -92,6 +90,9 @@ public class RedTapeWorkerOperation implements RedTapeWorker {
 
     @Inject
     private CustomerServiceBean customerService;
+    
+    @Inject
+    private RepaymentCustomers repaymentCustomers;
 
     private final RedTapeStateMachine stateMachine = new RedTapeStateMachine();
 
@@ -298,12 +299,12 @@ public class RedTapeWorkerOperation implements RedTapeWorker {
     // TODO: Rename to represent the forced detached
     /**
      * Update changes from a Document by looking up the original from the database.
-     * <p/>
+     * 
      * A document is not equal if {@link Document#equalsContent(Document) } is false
      * or Document.getDossier.paymentMethod or Document.getDossier.dispatch are different.
      * Every Document manipulation is done by this method and handling all necessary manipulations in the SopoSoft system as well.
      * This method allways returns a detached entity. This is intended by design.
-     * <p/>
+     * 
      * <u>Dossier Handling</u>
      * <ul>
      * <li>Changes to {@link Dossier#paymentMethod} and {@link Dossier#dispatch} are persisted</li>
@@ -326,7 +327,6 @@ public class RedTapeWorkerOperation implements RedTapeWorker {
      * <li>Does the new Document contain no Position of Position.Type.UNIT the LogicTransaction will be deleted.</li>
      * <li>Should there be any clash of StockUnit Transaction information, a Exception is thrown</li>
      * </ul>
-     * <p/>
      *
      * @param doc         The Document that will be equalised against the original
      * @param destination In the case of CreditMemo, the destination for the units.
@@ -381,8 +381,13 @@ public class RedTapeWorkerOperation implements RedTapeWorker {
                 break;
             case CREDIT_MEMO:
             case ANNULATION_INVOICE:
-                return fetchEager(repaymentWorkflow.execute(doc, destination, arranger));
+                workflow = new RedTapeUpdateRepaymentWorkflow(
+                        redTapeEm, uuEm, stockEm,
+                        arranger, mandator, createDossierWorkflow, repaymentCustomers,
+                        doc, destination);
+                break;
             default:
+                throw new RuntimeException("No Workflow for Document.type=" + doc.getType());
         }
         Document result = workflow.execute();
         // TODO: Make a better fetch eager

@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.receipt.ui.tryout.stub;
 
 import java.util.List;
 
-import javax.persistence.LockModeType;
+import jakarta.persistence.LockModeType;
 
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;

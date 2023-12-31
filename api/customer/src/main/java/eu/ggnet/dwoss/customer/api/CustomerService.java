@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.customer.api;
 import java.util.List;
 import java.util.Set;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 import eu.ggnet.dwoss.core.common.values.CustomerFlag;
 

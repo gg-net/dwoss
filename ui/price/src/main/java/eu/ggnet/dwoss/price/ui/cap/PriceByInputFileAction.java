@@ -27,15 +27,18 @@ import eu.ggnet.dwoss.core.widget.saft.Reply;
 import eu.ggnet.dwoss.price.ee.Exporter;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_PRICE_BY_XLS;
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
 import static javafx.scene.control.ButtonType.OK;
 
 /**
  * Action to create an XLS Report of possible sales, initiated by an XLS File containing only partNo.
- * <p/>
+ * 
  * @author pascal.perau
  */
+@Dependent
 public class PriceByInputFileAction extends AccessableAction {
 
     public PriceByInputFileAction() {

@@ -18,16 +18,20 @@ package eu.ggnet.dwoss.receipt.ui.cap;
 
 import java.awt.event.ActionEvent;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
+
 import javax.swing.AbstractAction;
 
 import eu.ggnet.dwoss.receipt.ui.product.SpecListView;
 import eu.ggnet.saft.core.Saft;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  *
  * @author oliver.guenther
  */
+@Dependent
 public class OpenSpecListAction extends AbstractAction {
 
     @Inject

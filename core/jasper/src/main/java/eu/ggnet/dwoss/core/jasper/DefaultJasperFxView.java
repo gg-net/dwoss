@@ -20,10 +20,13 @@ import java.util.function.Consumer;
 
 import net.sf.jasperreports.engine.JasperPrint;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  *
  * @author oliver.guenther
  */
+@Dependent
 public class DefaultJasperFxView extends AbstractJasperFxView implements Consumer<JasperPrint> {
 
     @Override

@@ -8,7 +8,6 @@ import eu.ggnet.dwoss.spec.ee.entity.ProductFamily;
 import eu.ggnet.dwoss.spec.ee.entity.Notebook;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSeries;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Cpu;
-import eu.ggnet.dwoss.spec.ee.entity.DesktopBundle;
 import eu.ggnet.dwoss.spec.ee.entity.Desktop;
 import eu.ggnet.dwoss.spec.ee.entity.ProductModel;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
@@ -17,10 +16,10 @@ import eu.ggnet.dwoss.spec.itest.support.ArquillianProjectArchive;
 import java.util.EnumSet;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.transaction.UserTransaction;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.transaction.UserTransaction;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
@@ -149,23 +148,6 @@ public class PersistenceIT extends ArquillianProjectArchive {
         A231spec.setComment("Ein Kommentar");
         em.persist(A231spec);
 
-        // A Bundle
-        ProductSeries box = new ProductSeries(TradeName.ACER, ProductGroup.DESKTOP_BUNDLE, "Veriton");
-        em.persist(box);
-        ProductFamily boxf = new ProductFamily("M480");
-        boxf.setSeries(box);
-        em.persist(boxf);
-        ProductModel boxm = new ProductModel("M480G + A231MuhMäh");
-        boxm.setFamily(boxf);
-        em.persist(boxm);
-
-        DesktopBundle bundle = new DesktopBundle();
-        bundle.setPartNo("BL.32199.321");
-        bundle.setProductId(1L);
-        bundle.setDesktop(M480G_1);
-        bundle.setMonitor(A231spec);
-        bundle.setModel(boxm);
-        em.persist(bundle);
         utx.commit();
 
         utx.begin();

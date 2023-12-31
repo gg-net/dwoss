@@ -22,6 +22,9 @@ import java.util.Objects;
 import eu.ggnet.dwoss.receipt.ee.ProductProcessor.SpecAndModel;
 import eu.ggnet.dwoss.spec.ee.entity.Monitor;
 
+import jakarta.enterprise.context.Dependent;
+
+@Dependent
 public class MonitorView extends AbstractView {
 
     private BasicView basicView;

@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.uniqueunit.ee.op;
 
 import java.util.Date;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 import eu.ggnet.dwoss.core.system.util.Step;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;

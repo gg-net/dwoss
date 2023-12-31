@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.misc.api;
 
 import java.util.List;
 
-import javax.ejb.Local;
+import jakarta.ejb.Local;
 
 import eu.ggnet.dwoss.core.common.values.SalesChannel;
 import eu.ggnet.dwoss.core.common.FileJacket;

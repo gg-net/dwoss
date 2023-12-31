@@ -16,8 +16,8 @@
  */
 package eu.ggnet.dwoss.redtape.ee.sage.xml;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlType;
 
 @XmlType(propOrder={"attrname", "fieldtype","width"})
 public class Field {

@@ -20,9 +20,9 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 /**
  * A Class to Represent an Interval of Dates to realize the reminding of customers.
@@ -33,12 +33,12 @@ import javax.validation.constraints.Size;
 public class Reminder implements Serializable {
     
     @NotNull
-    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    @Temporal(jakarta.persistence.TemporalType.TIMESTAMP)
     @Column(columnDefinition="DATETIME")
     private Date reminded;
 
     @NotNull
-    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    @Temporal(jakarta.persistence.TemporalType.TIMESTAMP)
     @Column(columnDefinition="DATETIME")
     private Date expiration;
     

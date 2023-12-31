@@ -16,10 +16,12 @@
  */
 package eu.ggnet.dwoss.core.system;
 
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Produces;
 
 import eu.ggnet.dwoss.core.common.values.TaxType;
 import eu.ggnet.dwoss.core.system.util.Utils;
+
+import jakarta.enterprise.context.ApplicationScoped;
 
 import static eu.ggnet.dwoss.core.common.values.TaxType.GENERAL_SALES_TAX_DE_19_PERCENT;
 
@@ -31,11 +33,19 @@ import static eu.ggnet.dwoss.core.common.values.TaxType.GENERAL_SALES_TAX_DE_19_
  */
 public final class GlobalConfig {
 
+    @ApplicationScoped
+    public static class GlobalConfigProducer {
+
+        @Produces
+        @OutputPath
+        public String produceApplicationOutputPath() {
+            return APPLICATION_PATH_OUTPUT;
+        }
+    }
+
     /**
      * A central place there the client can put exports.
      */
-    @Produces
-    @OutputPath
     public static final String APPLICATION_PATH_OUTPUT = Utils.getTempDirectory("output") + "/";
 
     /**

@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.spec.ee.emo;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;

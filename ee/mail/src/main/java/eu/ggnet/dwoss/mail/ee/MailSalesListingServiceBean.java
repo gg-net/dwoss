@@ -19,11 +19,9 @@ package eu.ggnet.dwoss.mail.ee;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 
-import org.apache.commons.mail.EmailException;
-import org.apache.commons.mail.MultiPartEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +33,8 @@ import eu.ggnet.dwoss.customer.api.ResellerListCustomer;
 import eu.ggnet.dwoss.customer.api.ResellerListService;
 import eu.ggnet.dwoss.mail.demand.ResellerListSendSubscriptionConfiguration;
 import eu.ggnet.dwoss.mail.demand.SmtpConfiguration;
+import eu.ggnet.dwoss.core.common.apache.EmailException;
+import eu.ggnet.dwoss.core.common.apache.MultiPartEmail;
 import eu.ggnet.dwoss.misc.api.SalesListingService;
 
 /**
@@ -96,7 +96,7 @@ public class MailSalesListingServiceBean implements MailSalesListingService {
 
             for (FileJacket fj : lists) {
                 email.attach(
-                        new javax.mail.util.ByteArrayDataSource(fj.getContent(), "application/xls"),
+                        new jakarta.mail.util.ByteArrayDataSource(fj.getContent(), "application/xls"),
                         fj.getHead() + fj.getSuffix(), fj.getHead() + " für Händler");
             }
 

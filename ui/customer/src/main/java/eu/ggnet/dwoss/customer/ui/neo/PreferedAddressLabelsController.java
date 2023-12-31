@@ -38,6 +38,8 @@ import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.FxController;
 import eu.ggnet.saft.core.ui.ResultProducer;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.core.common.values.AddressType.INVOICE;
 import static eu.ggnet.dwoss.core.common.values.AddressType.SHIPPING;
 
@@ -46,6 +48,7 @@ import static eu.ggnet.dwoss.core.common.values.AddressType.SHIPPING;
  * @author jacob.weinhold
  *
  */
+@Dependent
 public class PreferedAddressLabelsController implements Initializable, FxController, Consumer<Customer>, ResultProducer<Collection<AddressLabelDto>> {
 
     @FXML

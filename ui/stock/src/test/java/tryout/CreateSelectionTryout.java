@@ -20,10 +20,10 @@ import java.awt.Dimension;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.enterprise.inject.Instance;
-import javax.enterprise.inject.se.SeContainer;
-import javax.enterprise.inject.se.SeContainerInitializer;
-import javax.persistence.LockModeType;
+import jakarta.enterprise.inject.Instance;
+import jakarta.enterprise.inject.se.SeContainer;
+import jakarta.enterprise.inject.se.SeContainerInitializer;
+import jakarta.persistence.LockModeType;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 

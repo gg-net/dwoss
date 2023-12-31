@@ -19,9 +19,9 @@ package eu.ggnet.dwoss.assembly.client;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.enterprise.event.Event;
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
+import jakarta.enterprise.event.Event;
+import jakarta.enterprise.inject.Instance;
+import jakarta.inject.Inject;
 
 import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
@@ -55,11 +55,14 @@ import eu.ggnet.dwoss.stock.ui.cap.*;
 import eu.ggnet.dwoss.uniqueunit.ui.cap.*;
 import eu.ggnet.saft.core.UiCore;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  * Main UI, consist of menubar, toolbar, statusline and main ui container.
  *
  * @author oliver.guenther
  */
+@Dependent
 public class DwOssClientController {
 
     @FXML

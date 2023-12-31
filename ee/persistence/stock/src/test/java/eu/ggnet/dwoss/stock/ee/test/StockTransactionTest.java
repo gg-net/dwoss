@@ -3,8 +3,7 @@ package eu.ggnet.dwoss.stock.ee.test;
 import java.util.Date;
 import java.util.HashSet;
 
-import javax.validation.Validation;
-import javax.validation.Validator;
+import jakarta.validation.Validator;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
@@ -17,7 +16,7 @@ import static org.junit.Assert.assertTrue;
 
 public class StockTransactionTest {
 
-    private final Validator V = Validation.buildDefaultValidatorFactory().getValidator();
+    private final Validator V = ValidationUtil.createValidator();
 
     @Test
     public void testTransferValid() throws InterruptedException {

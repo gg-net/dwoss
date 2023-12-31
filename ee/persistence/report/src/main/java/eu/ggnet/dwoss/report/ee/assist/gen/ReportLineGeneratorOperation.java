@@ -16,16 +16,16 @@
  */
 package eu.ggnet.dwoss.report.ee.assist.gen;
 
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.ejb.Stateless;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
 import eu.ggnet.dwoss.core.system.progress.SubMonitor;
 import eu.ggnet.dwoss.report.ee.assist.Reports;
 
-import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
+import static jakarta.ejb.TransactionAttributeType.REQUIRES_NEW;
 
 @Stateless
 @TransactionAttribute(REQUIRES_NEW)

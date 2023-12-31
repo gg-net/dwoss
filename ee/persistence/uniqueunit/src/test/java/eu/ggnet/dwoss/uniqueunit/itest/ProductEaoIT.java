@@ -1,8 +1,8 @@
 package eu.ggnet.dwoss.uniqueunit.itest;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.UserTransaction;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.UserTransaction;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
@@ -33,8 +33,6 @@ public class ProductEaoIT extends ArquillianProjectArchive {
     @UniqueUnits
     EntityManager em;
 
-    
-
     @Test
     public void testFindPartNo() throws Exception {
         utx.begin();
@@ -43,7 +41,7 @@ public class ProductEaoIT extends ArquillianProjectArchive {
         ShopCategory sh = new ShopCategory();
         sh.setName("Demo1");
         sh.setShopId(501);
-        p.setShopCategory(sh);        
+        p.setShopCategory(sh);
         em.persist(p);
         utx.commit();
 

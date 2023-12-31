@@ -18,10 +18,10 @@ package eu.ggnet.dwoss.customer.ee.assist.gen;
 
 import java.util.*;
 
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.ejb.Stateless;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +35,7 @@ import eu.ggnet.dwoss.customer.ee.assist.Customers;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.mandator.api.value.*;
 
-import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
+import static jakarta.ejb.TransactionAttributeType.REQUIRES_NEW;
 
 /**
  * Customer Generator.
@@ -221,6 +221,8 @@ public class CustomerGeneratorOperation {
             if ( customer.getFlags().contains(CustomerFlag.SYSTEM_CUSTOMER) )
                 L.error("Generated Customer with flag SystemCustomer, which defentifly should not be. {}", customer);
             em.persist(customer);
+//            em.flush();
+//            em.clear();
             ids.add(customer.getId());
         }
         em.flush(); // Solves some batching issues.

@@ -3,8 +3,8 @@ package eu.ggnet.dwoss.redtapext.op.itest;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.ejb.EJB;
-import javax.inject.Inject;
+import jakarta.ejb.EJB;
+import jakarta.inject.Inject;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
@@ -63,7 +63,7 @@ public class RedTapeCloserOperationOfWarrantyIT extends ArquillianProjectArchive
 
     }
 
-    private final static String WARRANTY_PART_NO = WarrantyServiceStup.WARRANTY_PART_NO;
+    private final static String WARRANTY_PART_NO = new WarrantyServiceStup().getWarrantyPartNo();
 
     @Inject
     private CustomerGeneratorOperation customerGenerator;

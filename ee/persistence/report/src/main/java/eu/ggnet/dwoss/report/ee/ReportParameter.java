@@ -25,8 +25,6 @@ import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ee.entity.Report.ViewMode;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 /**
  *
  * @author oliver.guenther
@@ -35,19 +33,19 @@ import static com.google.common.base.Preconditions.checkArgument;
 public interface ReportParameter extends Serializable {
 
     class Builder extends ReportParameter_Builder {
-        
+
         @SuppressWarnings("OverridableMethodCallInConstructor")
-        public Builder () {
-            viewMode(ViewMode.DEFAULT); 
+        public Builder() {
+            viewMode(ViewMode.DEFAULT);
         }
-        
+
         @Override
         public Builder reportName(String name) {
-            checkArgument(name != null, "Name must not be null");
-            checkArgument(name.length() > 1, "Name length must be > 1");
+            if ( name == null ) throw new NullPointerException("Name must not be null");
+            if ( name.length() <= 1 ) throw new IllegalArgumentException("Name length must be > 1");
             return super.reportName(name);
         }
-        
+
     };
 
     TradeName contractor();

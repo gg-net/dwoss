@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ui.cap;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import eu.ggnet.dwoss.core.widget.AccessableMenuItem;
 import eu.ggnet.dwoss.core.widget.Progressor;
@@ -26,12 +26,15 @@ import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
 import eu.ggnet.dwoss.uniqueunit.ui.HistoryView;
 import eu.ggnet.saft.core.Saft;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_COMMENT_UNIQUE_UNIT_HISTORY;
 
 /**
  *
  * @author oliver.guenther
  */
+@Dependent
 public class AddHistoryToUnitMenuItem extends AccessableMenuItem {
 
     @Inject

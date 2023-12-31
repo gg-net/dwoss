@@ -20,8 +20,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
 
 import javafx.concurrent.Task;
 
@@ -29,6 +28,8 @@ import org.slf4j.Logger;
 
 import eu.ggnet.dwoss.assembly.client.support.executor.Executor;
 import eu.ggnet.dwoss.core.widget.Progressor;
+
+import jakarta.enterprise.context.ApplicationScoped;
 
 /**
  * Client side monitor manager.
@@ -41,7 +42,7 @@ import eu.ggnet.dwoss.core.widget.Progressor;
  *
  * @author oliver.guenther
  */
-@Singleton
+@ApplicationScoped
 public class MonitorManager implements Progressor.Displayer {
 
     @Inject

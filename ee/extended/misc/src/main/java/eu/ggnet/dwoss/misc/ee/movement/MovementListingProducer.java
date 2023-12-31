@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.misc.ee.movement;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 import net.sf.jasperreports.engine.JasperPrint;
 

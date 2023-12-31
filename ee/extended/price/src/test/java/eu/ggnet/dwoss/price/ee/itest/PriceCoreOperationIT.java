@@ -7,8 +7,8 @@ import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 
 import java.util.List;
 
-import javax.ejb.EJB;
-import javax.inject.Inject;
+import jakarta.ejb.EJB;
+import jakarta.inject.Inject;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;

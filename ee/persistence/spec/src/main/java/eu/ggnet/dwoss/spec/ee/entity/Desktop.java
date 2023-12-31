@@ -18,10 +18,10 @@ package eu.ggnet.dwoss.spec.ee.entity;
 
 import java.util.*;
 
-import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.*;
+import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.*;
 
 import eu.ggnet.dwoss.core.common.INoteModel;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec.Extra;
@@ -29,7 +29,7 @@ import eu.ggnet.dwoss.spec.ee.entity.piece.Cpu;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Gpu;
 
 import static eu.ggnet.dwoss.spec.ee.entity.ProductSpec.Extra.*;
-import static javax.persistence.CascadeType.*;
+import static jakarta.persistence.CascadeType.*;
 
 /**
  * Represents a {@link Desktop} computer.

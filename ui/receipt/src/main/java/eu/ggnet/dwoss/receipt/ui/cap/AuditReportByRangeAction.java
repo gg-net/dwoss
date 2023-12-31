@@ -24,10 +24,13 @@ import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.receipt.ee.reporting.AuditReporter;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  *
  * @author oliver.guenther
  */
+@Dependent
 public class AuditReportByRangeAction extends AbstractAction {
 
     public AuditReportByRangeAction() {

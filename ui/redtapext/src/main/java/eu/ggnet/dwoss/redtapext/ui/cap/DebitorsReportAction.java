@@ -22,12 +22,15 @@ import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.redtapext.ee.reporting.DebitorsReporter;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_DEBITOR_REPORT;
 
 /**
  *
  * @author pascal.perau
  */
+@Dependent
 public class DebitorsReportAction extends AccessableAction {
 
     public DebitorsReportAction() {

@@ -27,12 +27,15 @@ import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.misc.ui.ResolveRepaymentController;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.rights.api.AtomicRight.RESOLVE_REPAYMENT;
 
 /**
  *
  * @author bastian.venz
  */
+@Dependent
 public class ResolveRepaymentAction extends AccessableAction {
 
     public ResolveRepaymentAction() {

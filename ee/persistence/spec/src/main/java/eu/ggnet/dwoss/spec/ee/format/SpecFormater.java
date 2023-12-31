@@ -41,14 +41,13 @@ public abstract class SpecFormater {
     }
 
     public static String toSource(ProductSpec spec) {
-        String var = randomVar();
-        String re = spec.getClass().getSimpleName() + " " + var + " = new " + spec.getClass().getName() + "();\n";
-
         if ( spec == null ) return "ProductSpec is null";
-        if ( spec instanceof DesktopBundle ) re += toDesktopBundleSource(var, (DesktopBundle)spec);
-        if ( spec instanceof Desktop ) re += toDesktopSpecSource(var, (Desktop)spec);
-        if ( spec instanceof DisplayAble ) re += toDisplaySource(var, ((DisplayAble)spec).getDisplay());
-        if ( spec instanceof BasicSpec ) re += toBasicSpecSource(var, (BasicSpec)spec);
+
+        String randomValue = randomVar();
+        String re = spec.getClass().getSimpleName() + " " + randomValue + " = new " + spec.getClass().getName() + "();\n";
+        if ( spec instanceof Desktop ) re += toDesktopSpecSource(randomValue, (Desktop)spec);
+        if ( spec instanceof DisplayAble ) re += toDisplaySource(randomValue, ((DisplayAble)spec).getDisplay());
+        if ( spec instanceof BasicSpec ) re += toBasicSpecSource(randomValue, (BasicSpec)spec);
         return re;
     }
 
@@ -123,19 +122,6 @@ public abstract class SpecFormater {
         return r;
     }
 
-    private static String toDesktopBundleSource(String var, DesktopBundle bundle) {
-        String r = "";
-        String v1 = randomVar();
-        String v2 = randomVar();
-        String desk = "Desktop " + v1 + " = new Desktop();\n" + toDesktopSpecSource(v1, (Desktop)bundle.getDesktop());
-        desk += toBasicSpecSource(v1, (Desktop)bundle.getDesktop());
-        String mon = "Monitor " + v2 + " = new Monitor();\n" + toDisplaySource(v2, ((Monitor)bundle.getMonitor()).getDisplay());
-        mon += toBasicSpecSource(v2, (Monitor)bundle.getMonitor());
-        if ( bundle.getDesktop() != null ) r += desk + var + ".setDesktop(" + v1 + ");\n";
-        if ( bundle.getMonitor() != null ) r += mon + var + ".setMonitor(" + v2 + ");\n";
-        return r;
-    }
-
     public static String toName(ProductSpec spec) {
         if ( spec == null ) return "ProductSpecification ist null";
         return spec.getModel().getFamily().getSeries().getBrand().getName() + " " + spec.getModel().getName();
@@ -163,10 +149,6 @@ public abstract class SpecFormater {
     public static String toSingleLine(ProductSpec spec) {
         if ( spec == null ) return "ProductSpec is null";
         List<String> r = new ArrayList<>();
-        if ( spec instanceof DesktopBundle ) {
-            DesktopBundle bundle = (DesktopBundle)spec;
-            return "Desktop: " + toSingleLine(bundle.getDesktop()) + ", Monitor: " + toSingleLine(bundle.getMonitor());
-        }
         if ( spec instanceof Desktop ) r.addAll(toSingleLineDesktop((Desktop)spec));
         if ( spec instanceof DisplayAble ) r.addAll(toSingleLineDisplayAble(((DisplayAble)spec).getDisplay()));
         if ( spec instanceof BasicSpec ) r.addAll(toSingleLineBasicSpec((BasicSpec)spec));
@@ -177,10 +159,6 @@ public abstract class SpecFormater {
     public static String toSingleHtmlLine(ProductSpec spec) {
         if ( spec == null ) return "ProductSpec is null";
         List<String> r = new ArrayList<>();
-        if ( spec instanceof DesktopBundle ) {
-            DesktopBundle bundle = (DesktopBundle)spec;
-            return "<u>Desktop:</u> " + toSingleLine(bundle.getDesktop()) + ", <u>Monitor:</u> " + toSingleLine(bundle.getMonitor());
-        }
         if ( spec instanceof Desktop ) r.addAll(toSingleLineDesktop((Desktop)spec));
         if ( spec instanceof DisplayAble ) r.addAll(toSingleLineDisplayAble(((DisplayAble)spec).getDisplay()));
         if ( spec instanceof BasicSpec ) r.addAll(toSingleLineBasicSpec((BasicSpec)spec));
@@ -274,7 +252,6 @@ public abstract class SpecFormater {
     public static String toHtml(ProductSpec spec) {
         if ( spec == null ) return "No description found !!";
         String re = toDetailedName(spec) + "<br />";
-        if ( spec instanceof DesktopBundle ) re += formatBundleToHtml((DesktopBundle)spec);
         if ( spec instanceof Desktop ) re += formatDesktopToHtml((Desktop)spec);
         if ( spec instanceof DisplayAble ) re += formatDisplayAbleToHtml(((DisplayAble)spec).getDisplay());
         if ( spec instanceof BasicSpec ) re += formatBasicSpecToHtml((BasicSpec)spec);
@@ -305,10 +282,4 @@ public abstract class SpecFormater {
         return re;
     }
 
-    private static String formatBundleToHtml(DesktopBundle bundle) {
-        String re = "<b><u>Bundle | Desktop:</u></b><br />" + toHtml((Desktop)bundle.getDesktop()) + "<br />";
-        re += "<b><u>Bundle | Monitor:</u></b><br />" + toDetailedName(bundle.getMonitor()) + "<br />";
-        re += toHtml((Monitor)bundle.getMonitor());
-        return re;
-    }
 }

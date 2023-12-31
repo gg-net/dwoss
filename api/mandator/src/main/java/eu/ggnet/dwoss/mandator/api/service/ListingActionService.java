@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.mandator.api.service;
 
 import java.util.*;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 /**
  *

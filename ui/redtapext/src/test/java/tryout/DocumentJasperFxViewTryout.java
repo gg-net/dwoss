@@ -55,7 +55,7 @@ public class DocumentJasperFxViewTryout {
 
         private DocumentJasper createDocumentJasper() throws UserInfoException {
             DocumentSupporterOperation documentSupporter = new DocumentSupporterOperation();
-            documentSupporter.setMandator(Sample.MANDATOR);;
+            documentSupporter.setMandator(new Sample().getMandator());
             DocumentJasperFxView jp = new DocumentJasperFxView();
             Document doc = RedTapeSamples.getDocument();
             DocumentJasper in = new DocumentJasper.Builder()

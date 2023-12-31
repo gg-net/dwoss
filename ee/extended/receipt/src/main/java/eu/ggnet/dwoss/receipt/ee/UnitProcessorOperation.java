@@ -19,10 +19,10 @@ package eu.ggnet.dwoss.receipt.ee;
 import java.util.Date;
 import java.util.Objects;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

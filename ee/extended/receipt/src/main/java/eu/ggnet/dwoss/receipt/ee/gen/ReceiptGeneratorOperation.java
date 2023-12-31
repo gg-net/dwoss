@@ -20,9 +20,9 @@ import eu.ggnet.dwoss.core.common.values.ShipmentStatus;
 
 import java.util.*;
 
-import javax.ejb.*;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.ejb.*;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +56,7 @@ import static eu.ggnet.dwoss.core.common.values.ProductGroup.COMMENTARY;
 import static eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType.PREPARED;
 import static eu.ggnet.dwoss.stock.ee.entity.StockTransactionType.ROLL_IN;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.REFURBISHED_ID;
-import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
+import static jakarta.ejb.TransactionAttributeType.REQUIRES_NEW;
 
 @Stateless
 @TransactionAttribute(REQUIRES_NEW)

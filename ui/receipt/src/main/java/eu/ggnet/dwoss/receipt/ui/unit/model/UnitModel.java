@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.receipt.ui.unit.model;
 import java.util.*;
 
 import javax.swing.Action;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 

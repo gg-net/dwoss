@@ -16,10 +16,10 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ee.op;
 
-import javax.ejb.Stateless;
-import javax.enterprise.event.Observes;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.ejb.Stateless;
+import jakarta.enterprise.event.Observes;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

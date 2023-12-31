@@ -18,8 +18,8 @@ package eu.ggnet.dwoss.rights.ee;
 
 import java.util.List;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 
 import eu.ggnet.dwoss.rights.api.User;
 import eu.ggnet.dwoss.rights.api.UserApiLocal;

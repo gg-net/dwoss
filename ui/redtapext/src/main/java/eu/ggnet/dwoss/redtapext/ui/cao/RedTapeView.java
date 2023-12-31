@@ -26,14 +26,16 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
+
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+import jakarta.annotation.PostConstruct;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -60,6 +62,8 @@ import eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableView;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.*;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.saft.core.ui.Bind.Type.ICONS;
 
 /**
@@ -70,6 +74,7 @@ import static eu.ggnet.saft.core.ui.Bind.Type.ICONS;
 @eu.ggnet.saft.core.ui.Frame
 @Title("Kunden und Aufträge")
 @StoreLocation
+@Dependent
 public class RedTapeView extends JPanel {
 
     public final static String ONCE_KEY = "RedTape";
@@ -569,7 +574,7 @@ public class RedTapeView extends JPanel {
     private void searchResultSelectionChanged(ListSelectionEvent evt) {//GEN-FIRST:event_searchResultSelectionChanged
         if ( model == null ) return;
         if ( evt.getValueIsAdjusting() || searchResultList.getSelectedIndex() == -1 ) return;
-        model.setSelectedSearchResult(((UiCustomer)searchResultList.getSelectedValue()).getId());
+        model.setSelectedSearchResult(((UiCustomer)searchResultList.getSelectedValue()).id());
     }//GEN-LAST:event_searchResultSelectionChanged
 
     private void newCustomerButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_newCustomerButtonActionPerformed

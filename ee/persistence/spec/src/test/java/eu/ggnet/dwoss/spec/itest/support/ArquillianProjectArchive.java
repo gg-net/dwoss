@@ -58,7 +58,6 @@ public class ArquillianProjectArchive {
                 .addClass(SampleDataSourceDefinition.class) // Alle Datasources. More than we need.
                 .addClass(Coordinate.class) // Need this cause of the maven resolver is part of the deployment
                 .addClass(ArquillianProjectArchive.class) // The local deployer configuration
-                .addClass(ContainerITGeneratorHelper.class)
                 .addAsResource(new ClassLoaderAsset("META-INF/persistence.xml"), "META-INF/persistence.xml")
                 .addAsResource(new ClassLoaderAsset("eu/ggnet/dwoss/spec/ee/assist/gen/specs.xml"), "eu/ggnet/dwoss/spec/ee/assist/gen/specs.xml") // Needed for the Specgenerator.
                 .addAsWebInfResource("jboss-deployment-structure.xml") // Needed for jboss/wildfly h2 enablement

@@ -20,17 +20,17 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
 
-import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
+import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 
 import eu.ggnet.dwoss.core.common.values.AddressType;
 import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 import eu.ggnet.dwoss.core.system.GlobalConfig;
 
-import static javax.persistence.CascadeType.*;
-import static javax.persistence.FetchType.EAGER;
+import static jakarta.persistence.CascadeType.*;
+import static jakarta.persistence.FetchType.EAGER;
 
 /**
  * A combination of address, optional company and contact.
@@ -42,7 +42,7 @@ import static javax.persistence.FetchType.EAGER;
 public class AddressLabel extends BaseEntity implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private long id;
 
     @Version

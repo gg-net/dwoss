@@ -6,13 +6,14 @@ import eu.ggnet.dwoss.spec.ee.entity.BasicSpec;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
 import eu.ggnet.dwoss.spec.ee.entity.ProductFamily;
 
-import javax.validation.Validation;
-import javax.validation.Validator;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 
 import org.junit.Test;
 
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.system.util.ValidationUtil;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
@@ -24,7 +25,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class ProductSpecTest {
 
-    private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+    private final Validator validator = ValidationUtil.createValidator();
 
     @Test
     public void testValidateProductSpec() {

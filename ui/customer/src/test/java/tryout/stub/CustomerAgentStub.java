@@ -20,7 +20,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.persistence.LockModeType;
+import jakarta.persistence.LockModeType;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

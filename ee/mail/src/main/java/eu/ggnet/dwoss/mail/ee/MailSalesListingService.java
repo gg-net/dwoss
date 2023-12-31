@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.mail.ee;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 /**
  * Mailing service for sales listings, needs an implementation of the misc-api

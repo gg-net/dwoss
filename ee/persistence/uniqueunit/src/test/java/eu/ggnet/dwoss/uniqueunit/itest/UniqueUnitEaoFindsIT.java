@@ -3,10 +3,10 @@ package eu.ggnet.dwoss.uniqueunit.itest;
 import java.util.Date;
 import java.util.Iterator;
 
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.UserTransaction;
+import jakarta.enterprise.inject.Instance;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.UserTransaction;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.jboss.arquillian.junit.Arquillian;
@@ -125,6 +125,8 @@ public class UniqueUnitEaoFindsIT extends ArquillianProjectArchive {
         assertThat(eao.findByPartialIdentifier(REFURBISHED_ID, "54*")).as("Result of 54* should contation unit2 and unit4").contains(unit2, unit4);
         assertThat(eao.findByPartialIdentifier(REFURBISHED_ID, "*22*")).as("Result of *22* should contation unit1 and unit2").contains(unit1, unit2);
 
+        int f = eao.countFind("*5*");
+        
         assertThat(eao.countFind("*5*")).as("Counting *5*").isEqualTo(3);
         assertThat(eao.find("*5*")).as("Find of *5*").contains(unit2, unit3, unit4);
         utx.commit();

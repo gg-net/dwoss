@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.rights.api;
 
 import java.util.List;
 
-import javax.ejb.Local;
+import jakarta.ejb.Local;
 
 /**
  * Local Rights Api.

@@ -23,9 +23,9 @@ import eu.ggnet.dwoss.search.api.ShortSearchResult;
 
 import java.util.*;
 
-import javax.annotation.ManagedBean;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
+import jakarta.annotation.ManagedBean;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

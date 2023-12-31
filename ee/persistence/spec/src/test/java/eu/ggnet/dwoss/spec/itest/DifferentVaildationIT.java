@@ -13,11 +13,11 @@ import eu.ggnet.dwoss.spec.itest.support.ArquillianProjectArchive;
 
 import java.util.EnumSet;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.UserTransaction;
-import javax.validation.Validation;
-import javax.validation.Validator;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.UserTransaction;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;

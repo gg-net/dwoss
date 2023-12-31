@@ -18,11 +18,11 @@ package eu.ggnet.dwoss.customer.ee.itest;
 
 import java.util.List;
 
-import javax.ejb.EJB;
-import javax.ejb.EJBException;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.UserTransaction;
+import jakarta.ejb.EJB;
+import jakarta.ejb.EJBException;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.UserTransaction;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.*;
@@ -38,7 +38,6 @@ import eu.ggnet.dwoss.customer.ee.assist.Customers;
 import eu.ggnet.dwoss.customer.ee.assist.gen.*;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.customer.ee.itest.support.Utils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -66,11 +65,12 @@ public class CustomerAgentDeleteIT extends ArquillianProjectArchive {
 
     private final static Logger L = LoggerFactory.getLogger(CustomerAgentDeleteIT.class);
 
-    @Before
+    @After
     public void teardown() throws Exception {
         utx.begin();
         em.joinTransaction();
-        Utils.clearH2Db(em);
+        CustomerDeleteUtils.deleteAll(em);
+        assertThat(CustomerDeleteUtils.validateEmpty(em)).isNull();
         utx.commit();
     }
 
@@ -89,7 +89,7 @@ public class CustomerAgentDeleteIT extends ArquillianProjectArchive {
         em.persist(customer);
         utx.commit();
 
-        Customer cus = agent.findByIdEager(Customer.class, 1l);
+        Customer cus = agent.findByIdEager(Customer.class, customer.getId());
         assertNotNull("No customer has been found.", cus);
         assertThat(cus.getCompanies().size()).as("Wrong amount of companies on the customer").isEqualTo(1);
 
@@ -102,7 +102,7 @@ public class CustomerAgentDeleteIT extends ArquillianProjectArchive {
 
         agent.delete(new Root(Company.class, company.getId()), company.getCommunications().get(0));
 
-        cus = agent.findByIdEager(Customer.class, 1l);
+        cus = agent.findByIdEager(Customer.class, customer.getId());
         company = cus.getCompanies().get(0);
         assertThat(company.getCommunications().size()).as("Wrong amount of communications on company").isEqualTo(0);
 
@@ -138,7 +138,7 @@ public class CustomerAgentDeleteIT extends ArquillianProjectArchive {
         utx.commit();
 
         //delete each address,contact and check if it got deleted correctly
-        Contact foundContact = agent.findByIdEager(Contact.class, 1l);
+        Contact foundContact = agent.findByIdEager(Contact.class, contact.getId());
         assertThat(foundContact.getAddresses().size()).as("Not the correct amount of addresses on the contact").isEqualTo(1);
         Address foundAddress = foundContact.getAddresses().get(0);
 //        foundAddress.setStreet("newStreet");
@@ -148,11 +148,11 @@ public class CustomerAgentDeleteIT extends ArquillianProjectArchive {
         long labelId = labels.get(0).getId();
 
         assertThatThrownBy(() -> {
-            agent.delete(new Root(Contact.class, 1l), foundAddress);
+            agent.delete(new Root(Contact.class, contact.getId()), foundAddress);
         }).as("Address in AddressLabel should not be deleteable.")
                 .hasCauseInstanceOf(LastDeletionExecption.class);
 
-        foundContact = agent.findByIdEager(Contact.class, 1l);
+        foundContact = agent.findByIdEager(Contact.class, contact.getId());
         assertThat(foundContact.getAddresses().isEmpty()).as("Delete somehow worked address for contact with referenced addresslabel").isFalse();
 
         utx.begin();
@@ -163,8 +163,8 @@ public class CustomerAgentDeleteIT extends ArquillianProjectArchive {
         labels = agent.findAll(AddressLabel.class);
         assertThat(labels.size()).as("No AddressLabel should have been found").isEqualTo(0);
 
-        agent.delete(new Root(Contact.class, 1l), foundAddress);
-        foundContact = agent.findByIdEager(Contact.class, 1l);
+        agent.delete(new Root(Contact.class, contact.getId()), foundAddress);
+        foundContact = agent.findByIdEager(Contact.class, contact.getId());
         assertThat(foundContact.getAddresses().isEmpty()).as("Delete didn't work on address for contact with referenced addresslabel").isTrue();
 
     }
@@ -178,7 +178,7 @@ public class CustomerAgentDeleteIT extends ArquillianProjectArchive {
         assertThat(customer.getContacts().size()).as("A simple consumer customer must have exactly one contact").isEqualTo(1);
         Contact foundContact = customer.getContacts().get(0);
 
-        assertThatThrownBy(() -> agent.delete(new Root(Customer.class, 1l), foundContact))
+        assertThatThrownBy(() -> agent.delete(new Root(Customer.class, customer.getId()), foundContact))
                 .as("Delete of last contact must cause a LastDeletionExecption")
                 .hasCauseInstanceOf(LastDeletionExecption.class);
 

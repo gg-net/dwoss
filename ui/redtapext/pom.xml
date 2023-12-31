@@ -32,11 +32,6 @@
             <artifactId>hibernate-validator</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency> <!-- Expresion factory for hibernate validator -->
-            <groupId>org.glassfish</groupId>
-            <artifactId>javax.el</artifactId>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>

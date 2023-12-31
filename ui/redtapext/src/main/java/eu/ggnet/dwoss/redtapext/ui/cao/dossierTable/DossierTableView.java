@@ -22,7 +22,8 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
+
 import javax.swing.RowFilter.Entry;
 import javax.swing.*;
 import javax.swing.table.TableRowSorter;
@@ -53,6 +54,8 @@ import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.saft.core.Saft;
 import eu.ggnet.saft.core.UiUtil;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableView.FilterType.LEGACY;
 import static javafx.scene.control.ButtonBar.ButtonData.OK_DONE;
 
@@ -61,6 +64,7 @@ import static javafx.scene.control.ButtonBar.ButtonData.OK_DONE;
  * <p>
  * @author pascal.perau
  */
+@Dependent
 public class DossierTableView extends javax.swing.JPanel {
 
     private static final Logger L = LoggerFactory.getLogger(DossierTableView.class);

@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.redtape.ee.api;
 
-import javax.ejb.Local;
+import jakarta.ejb.Local;
 
 /**
  * Bridge Interface if someone wants to supply a legacy system. This is the part used in the local system.

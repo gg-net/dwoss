@@ -24,11 +24,11 @@ import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.ejb.EJB;
+import jakarta.ejb.Stateless;
+import jakarta.enterprise.inject.Instance;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;

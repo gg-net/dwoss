@@ -24,10 +24,13 @@ import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.misc.ee.ImageIdHandler;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  *
  * @author oliver.guenther
  */
+@Dependent
 public class ExportImageIdsAction extends AbstractAction {
 
     public ExportImageIdsAction() {

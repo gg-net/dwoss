@@ -12,26 +12,6 @@
     <name>DwOss • Spec • EE (persistence)</name>
     <packaging>ejb</packaging>
 
-    <build>
-        <plugins>
-            <plugin>
-                <!--creates the mdsat sql script for the entire schema in mariadb as well as mysql with the GOAL: hibernate54-ddl:gen-ddl-->
-                <groupId>de.jpdigital</groupId>
-                <artifactId>hibernate54-ddl-maven-plugin</artifactId>
-                <configuration>
-                    <dialects>
-                        <param>MARIADB</param>
-                        <param>MYSQL</param>
-                    </dialects>
-                    <packages>
-                        <param>eu.ggnet.dwoss.spec.ee.entity</param>
-                        <param>eu.ggnet.dwoss.spec.ee.entity.piece</param>
-                    </packages>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -40,16 +20,14 @@
         </dependency>
         <!-- javax.xml. was removed in jdk 11 -->
         <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-impl</artifactId>
+            <groupId>org.glassfish</groupId>
+            <artifactId>jakarta.el</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

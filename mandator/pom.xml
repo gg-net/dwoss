@@ -10,10 +10,6 @@
     <packaging>pom</packaging>
     <name>DwOss • XReactor • Mandator-Sample</name>
 
-    <properties>
-        <org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_j2eeVersion>1.6</org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_j2eeVersion>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>${javaee.groupId}</groupId>
@@ -24,11 +20,6 @@
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>javax.el</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

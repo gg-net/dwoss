@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.core.widget.cdi;
 
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Produces;
 
 import org.slf4j.LoggerFactory;
 
@@ -26,23 +26,26 @@ import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.core.widget.dl.LocalDl;
 import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
 
+import jakarta.enterprise.context.ApplicationScoped;
+
 /**
  *
  * @author oliver.guenther
  */
+@ApplicationScoped
 public class WidgetProducers {
 
     @Produces
-    public static RemoteDl remoteDl = Dl.remote();
+    private RemoteDl remoteDl = Dl.remote();
 
     @Produces
-    public static LocalDl localDl = Dl.local();
+    private LocalDl localDl = Dl.local();
 
     @Produces
-    public static Progressor progressor = Progressor.global();
+    private Progressor progressor = Progressor.global();
 
     @Produces
-    public static Guardian guardian() {
+    public Guardian guardian() {
         Guardian g = localDl.lookup(Guardian.class);
         LoggerFactory.getLogger(WidgetProducers.class).debug("guardian() produces " + g);
         return g;

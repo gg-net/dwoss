@@ -21,12 +21,15 @@ import java.awt.event.ActionEvent;
 import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.customer.ee.CustomerExporter;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_ALL_CUSTOMERS;
 
 /**
  *
  * @author pascal.perau
  */
+@Dependent
 public class ExportAllCustomers extends AccessableAction {
 
     public ExportAllCustomers() {

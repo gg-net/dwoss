@@ -18,10 +18,10 @@ package eu.ggnet.dwoss.uniqueunit.itest.support;
 
 import java.util.Date;
 
-import javax.ejb.Stateless;
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.ejb.Stateless;
+import jakarta.enterprise.event.Event;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import org.apache.commons.lang3.time.DateUtils;
 

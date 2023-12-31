@@ -18,11 +18,13 @@ package eu.ggnet.dwoss.receipt.ui.cap;
 
 import java.awt.event.ActionEvent;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import eu.ggnet.dwoss.core.widget.AccessableAction;
 import eu.ggnet.dwoss.receipt.ui.shipment.ShipmentListView;
 import eu.ggnet.saft.core.Saft;
+
+import jakarta.enterprise.context.Dependent;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.READ_CREATE_UPDATE_DELETE_SHIPMENTS;
 
@@ -30,6 +32,7 @@ import static eu.ggnet.dwoss.rights.api.AtomicRight.READ_CREATE_UPDATE_DELETE_SH
  *
  * @author oliver.guenther
  */
+@Dependent
 public class OpenShipmentListAction extends AccessableAction {
 
     @Inject

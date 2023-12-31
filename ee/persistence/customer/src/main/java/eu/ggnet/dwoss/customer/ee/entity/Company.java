@@ -20,18 +20,19 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.search.annotations.*;
+import org.hibernate.search.mapper.pojo.automaticindexing.ReindexOnUpdate;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.*;
 
 import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 import eu.ggnet.dwoss.core.system.persistence.EagerAble;
 import eu.ggnet.dwoss.customer.ee.entity.stash.*;
 
-import static javax.persistence.CascadeType.ALL;
+import static jakarta.persistence.CascadeType.ALL;
 
 /**
  * Represents a company.
@@ -49,14 +50,14 @@ import static javax.persistence.CascadeType.ALL;
 public class Company extends BaseEntity implements Serializable, AddressStash, ContactStash, CommunicationStash, EagerAble {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private long id;
 
     /**
      * Name of the company.
      */
     @NotNull
-    @Field
+    @FullTextField
     private String name;
 
     @Size(max = 255)
@@ -65,6 +66,7 @@ public class Company extends BaseEntity implements Serializable, AddressStash, C
     /**
      * All contacts association with the customer.
      */
+    @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
     @OneToMany(cascade = ALL)
     @NotNull
     @IndexedEmbedded
@@ -73,6 +75,7 @@ public class Company extends BaseEntity implements Serializable, AddressStash, C
     /**
      * All {@link Address}<code>es</code> associated stored for the company.
      */
+    @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
     @OneToMany(cascade = ALL)
     @NotNull
     @IndexedEmbedded
@@ -81,6 +84,7 @@ public class Company extends BaseEntity implements Serializable, AddressStash, C
     /**
      * All ways of {@link Communication}<code>s</code> stored for the company.
      */
+    @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
     @OneToMany(cascade = ALL)
     @NotNull
     @IndexedEmbedded

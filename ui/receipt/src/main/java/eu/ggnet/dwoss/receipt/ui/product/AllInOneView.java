@@ -18,10 +18,13 @@ package eu.ggnet.dwoss.receipt.ui.product;
 
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  *
  * @author oliver.guenther
  */
+@Dependent
 public class AllInOneView extends DisplayAbleView {
 
     public AllInOneView() {

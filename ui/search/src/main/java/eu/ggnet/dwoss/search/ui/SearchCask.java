@@ -40,10 +40,11 @@ import eu.ggnet.dwoss.core.widget.ops.Selector;
 import eu.ggnet.dwoss.search.api.SearchRequest;
 import eu.ggnet.dwoss.search.api.ShortSearchResult;
 import eu.ggnet.dwoss.search.ee.Searcher;
-import eu.ggnet.dwoss.search.ui.HtmlPane;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.*;
+
+import jakarta.enterprise.context.Dependent;
 
 import static eu.ggnet.dwoss.search.api.GlobalKey.Component.UNIQUE_UNIT;
 import static java.lang.Double.MAX_VALUE;
@@ -56,6 +57,7 @@ import static javafx.scene.input.MouseButton.PRIMARY;
  *
  * @author oliver.guenther
  */
+@Dependent
 @Title("Suche")
 @Frame
 public class SearchCask extends BorderPane implements ClosedListener {

@@ -28,6 +28,8 @@ import eu.ggnet.dwoss.report.ui.main.ReportController;
 import eu.ggnet.dwoss.report.ui.main.ReportController.In;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_SALES_REPORT;
 
 /**
@@ -35,6 +37,7 @@ import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_SALES_REPORT;
  *
  * @author pascal.perau
  */
+@Dependent
 public class CreateNewReportAction extends AccessableAction {
 
     public CreateNewReportAction() {

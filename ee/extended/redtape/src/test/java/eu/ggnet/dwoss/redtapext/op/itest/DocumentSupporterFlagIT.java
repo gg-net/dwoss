@@ -4,8 +4,8 @@ import eu.ggnet.dwoss.core.common.values.PaymentMethod;
 import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.core.common.values.AddressType;
 
-import javax.ejb.EJB;
-import javax.inject.Inject;
+import jakarta.ejb.EJB;
+import jakarta.inject.Inject;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.*;
@@ -63,7 +63,7 @@ public class DocumentSupporterFlagIT extends ArquillianProjectArchive {
         cleaner.clear();
     }
 
-    @Test
+    @Test    
     public void testDocumentFlags() {
         Document doc = testBriefed();
         doc = testOrder(doc);

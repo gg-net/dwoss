@@ -2,8 +2,8 @@ package eu.ggnet.dwoss.customer.ee.itest;
 
 import java.util.List;
 
-import javax.ejb.EJB;
-import javax.inject.Inject;
+import jakarta.ejb.EJB;
+import jakarta.inject.Inject;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Ignore;
@@ -31,7 +31,6 @@ public class CustomerSearchIT extends ArquillianProjectArchive {
     private CustomerAgent agent;
 
     @Test
-    @Ignore
     public void testLucenceSearch() throws Exception {
         SimpleCustomer c1 = makeSimpleCustomer("Die Firma", "Herr", "Max", "Mustermann", "Keine Bemerkungen", "Helle Strasse 22", "12345", "Musterhausen");
         c1.setLandlinePhone("040 1232123");

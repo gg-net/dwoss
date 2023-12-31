@@ -25,6 +25,8 @@ import eu.ggnet.dwoss.stock.ui.transactions.RemoveQuestionView;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.AlertType;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.rights.api.AtomicRight.REMOVE_SINGE_UNIT_FROM_TRANSACTION;
 
 /**
@@ -32,6 +34,7 @@ import static eu.ggnet.dwoss.rights.api.AtomicRight.REMOVE_SINGE_UNIT_FROM_TRANS
  * <p/>
  * @author oliver.guenther
  */
+@Dependent
 public class RemoveUnitFromTransactionAction extends AccessableAction {
 
     public RemoveUnitFromTransactionAction() {

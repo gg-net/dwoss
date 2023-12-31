@@ -20,11 +20,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.ManagedBean;
-import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
+import jakarta.annotation.ManagedBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

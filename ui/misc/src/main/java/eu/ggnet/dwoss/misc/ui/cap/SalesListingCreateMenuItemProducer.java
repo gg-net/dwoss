@@ -19,9 +19,9 @@ package eu.ggnet.dwoss.misc.ui.cap;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import javax.enterprise.inject.Instance;
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
+import jakarta.enterprise.inject.Instance;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Inject;
 
 import eu.ggnet.dwoss.core.common.values.SalesChannel;
 import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration;
@@ -30,13 +30,18 @@ import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration.Type;
 import eu.ggnet.dwoss.mandator.api.service.ListingActionService;
 import eu.ggnet.dwoss.core.widget.Dl;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.Dependent;
+
 /**
  * Producer for all Saleslisting menu items.
  *
  * @author oliver.guenther
  */
+@ApplicationScoped
 public class SalesListingCreateMenuItemProducer {
 
+    @Dependent
     public static class SalesListingCreateMenus {
 
         public final List<SalesListingCreateMenuItem> items;

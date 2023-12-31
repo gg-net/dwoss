@@ -31,6 +31,8 @@ import eu.ggnet.dwoss.price.ee.engine.support.PriceEngineResultFormater;
 import eu.ggnet.dwoss.core.widget.saft.Reply;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_ONE_PRICE;
 import static javafx.stage.Modality.WINDOW_MODAL;
 
@@ -38,6 +40,7 @@ import static javafx.stage.Modality.WINDOW_MODAL;
  *
  * @author pascal.perau
  */
+@Dependent
 public class GenerateOnePriceAction extends AccessableAction {
 
     public GenerateOnePriceAction() {

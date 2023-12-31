@@ -16,9 +16,9 @@
  */
 package eu.ggnet.dwoss.redtape.ee;
 
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
-import javax.inject.Inject;
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 
 import eu.ggnet.dwoss.redtape.api.RedTapeApi;
 import eu.ggnet.dwoss.redtape.api.UnitAvailability;

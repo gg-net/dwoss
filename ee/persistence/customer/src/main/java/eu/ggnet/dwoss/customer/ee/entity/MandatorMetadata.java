@@ -25,8 +25,8 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -43,7 +43,7 @@ import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 public class MandatorMetadata extends BaseEntity implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private long id;
 
     @Version

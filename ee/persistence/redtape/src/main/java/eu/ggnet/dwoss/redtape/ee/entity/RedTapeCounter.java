@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.redtape.ee.entity;
 import java.io.Serializable;
 import java.util.Objects;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -88,7 +88,7 @@ public class RedTapeCounter implements Serializable {
     private long value;
 
     @Version
-    private long optLock;
+    private short optLock = 0;
 
     public RedTapeCounter() {
     }

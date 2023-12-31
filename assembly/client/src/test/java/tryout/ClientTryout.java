@@ -36,6 +36,8 @@ import eu.ggnet.dwoss.rights.api.Operator;
 import eu.ggnet.dwoss.stock.api.*;
 import eu.ggnet.dwoss.stock.api.StockApi.Scraped;
 
+import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.*;
+
 /**
  *
  * @author oliver.guenther
@@ -114,7 +116,7 @@ public class ClientTryout {
         Dl.remote().add(Mandators.class, new Mandators() {
             @Override
             public Mandator loadMandator() {
-                return Sample.MANDATOR;
+                return new Sample().getMandator();
             }
 
             @Override
@@ -134,7 +136,7 @@ public class ClientTryout {
 
             @Override
             public Contractors loadContractors() {
-                return Sample.CONTRACTORS;
+                return new Contractors(EnumSet.of(ONESELF, ACER, HP, DELL), EnumSet.of(ACER, PACKARD_BELL, HP, DELL));
             }
 
             @Override

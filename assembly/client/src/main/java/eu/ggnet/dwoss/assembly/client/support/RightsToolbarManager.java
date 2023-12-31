@@ -19,9 +19,9 @@ package eu.ggnet.dwoss.assembly.client.support;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Observes;
+import jakarta.inject.Inject;
 
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -36,6 +36,8 @@ import org.slf4j.Logger;
 import eu.ggnet.dwoss.core.widget.event.UserChange;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  * Manager for the RightsToolBar Node.
  *
@@ -44,6 +46,7 @@ import eu.ggnet.saft.core.Ui;
 @ApplicationScoped // Can only be added to classe with non final methods. And everything extending node has final methodes.
 public class RightsToolbarManager {
 
+    @Dependent
     public static class ToolbarNode extends HBox {
 
         private final TextField userField;

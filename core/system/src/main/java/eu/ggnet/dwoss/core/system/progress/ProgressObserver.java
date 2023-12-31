@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.core.system.progress;
 
 import java.util.SortedSet;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 /*
  Having the Remote Progress concept so deep in the API is just solution for now.

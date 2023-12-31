@@ -22,12 +22,15 @@ import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.misc.ee.ImageIdHandler;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.core.common.values.SalesChannel.CUSTOMER;
 
 /**
  *
  * @author oliver.guenther
  */
+@Dependent
 public class ExportImageIdsForCustomerMenuItem extends MenuItem {
 
     public ExportImageIdsForCustomerMenuItem() {

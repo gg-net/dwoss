@@ -21,8 +21,6 @@ import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.util.*;
 
-import org.apache.commons.lang3.StringUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import eu.ggnet.dwoss.core.common.values.PaymentMethod;
@@ -41,6 +39,7 @@ import static eu.ggnet.dwoss.core.common.values.TaxType.REVERSE_CHARGE;
 import static java.time.ZoneId.systemDefault;
 import static org.assertj.core.api.Assertions.assertThat;
 
+//Todo (OG): Wenn man den Test auf Server umbaut, kann die Depenency für Jakarta XML Binding aus dem Projekt
 public class SageExporterEngineTest {
 
     private final static String VALID = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>\n"

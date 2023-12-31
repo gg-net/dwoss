@@ -22,10 +22,13 @@ import javax.swing.AbstractAction;
 
 import eu.ggnet.dwoss.customer.ui.neo.CustomerConnectorFascade;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  *
  * @author pascal.perau
  */
+@Dependent
 public class AddCustomerAction extends AbstractAction {
 
     public AddCustomerAction() {

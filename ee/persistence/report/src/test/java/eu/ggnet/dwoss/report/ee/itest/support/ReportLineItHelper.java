@@ -22,9 +22,9 @@ import eu.ggnet.dwoss.core.common.values.DocumentType;
 
 import java.util.Date;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import eu.ggnet.dwoss.report.ee.assist.Reports;
 import eu.ggnet.dwoss.report.ee.assist.gen.ReportLineGenerator;

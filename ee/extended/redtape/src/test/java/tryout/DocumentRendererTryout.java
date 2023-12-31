@@ -43,7 +43,7 @@ public class DocumentRendererTryout {
     private static JasperPrint makeStaticDocument() throws UserInfoException {
         @SuppressWarnings("UseInjectionInsteadOfInstantion")
         DocumentSupporterOperation documentSupporter = new DocumentSupporterOperation();
-        documentSupporter.setMandator(Sample.MANDATOR);
+        documentSupporter.setMandator(new Sample().getMandator());
 
         Dossier dos = new Dossier();
         dos.setPaymentMethod(PaymentMethod.ADVANCE_PAYMENT);

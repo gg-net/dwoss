@@ -24,9 +24,11 @@ import java.time.temporal.TemporalAccessor;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.slf4j.Logger;
+
+import jakarta.enterprise.context.Dependent;
 
 /**
  * Class to store and load the Timeout and if it's active.
@@ -34,6 +36,7 @@ import org.slf4j.Logger;
  *
  * @author oliver.guenther
  */
+@Dependent
 public class LoggedInTimeoutStorage {
 
     @Inject

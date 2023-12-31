@@ -12,9 +12,11 @@ import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
 import java.util.Date;
 import java.util.Set;
 
-import javax.validation.*;
+import jakarta.validation.*;
 
 import org.junit.Test;
+
+import eu.ggnet.dwoss.core.system.util.ValidationUtil;
 
 import static eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType.*;
 import static org.junit.Assert.*;
@@ -24,7 +26,7 @@ import static org.junit.Assert.*;
  */
 public class ValidationTest {
 
-    private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+    private final Validator validator = ValidationUtil.createValidator();
 
     @Test
     public void testStockUnit() {

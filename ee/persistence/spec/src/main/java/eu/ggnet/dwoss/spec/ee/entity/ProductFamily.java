@@ -19,17 +19,18 @@ package eu.ggnet.dwoss.spec.ee.entity;
 import java.io.Serializable;
 import java.util.*;
 
-import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlTransient;
+import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlTransient;
 
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
+import eu.ggnet.dwoss.core.system.persistence.EagerAble;
 
-import static javax.persistence.CascadeType.*;
+import static jakarta.persistence.CascadeType.*;
 
 /**
  * @composed 1 - n ProductSeries
@@ -39,11 +40,11 @@ import static javax.persistence.CascadeType.*;
 @NamedQuery(name = "ProductFamily.byName", query = "select s from ProductFamily s where s.name = ?1")
 @NamedQuery(name = "ProductFamily.byNameSeries", query = "select s from ProductFamily s where s.name = ?4 and s.series.brand = ?1 and s.series.group = ?2 and s.series.name = ?3")
 @SuppressWarnings("PersistenceUnitPresent")
-public class ProductFamily extends BaseEntity implements Serializable, INamed {
+public class ProductFamily extends BaseEntity implements Serializable, INamed, EagerAble {
 
     @XmlTransient
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private long id;
 
     @XmlTransient
@@ -61,7 +62,7 @@ public class ProductFamily extends BaseEntity implements Serializable, INamed {
 
     @XmlTransient
     @NotNull
-    @OneToMany(cascade = {DETACH, REFRESH, PERSIST}, mappedBy = "family", fetch = FetchType.EAGER)
+    @OneToMany(cascade = {DETACH, REFRESH, PERSIST}, mappedBy = "family")
     Set<ProductModel> models = new HashSet<>();
 
     @XmlAttribute
@@ -141,6 +142,12 @@ public class ProductFamily extends BaseEntity implements Serializable, INamed {
     @Override
     public String toString() {
         return "ProductFamily{" + "id=" + id + ", series=" + series + ", name=" + name + ", economicValue=" + economicValue + '}';
+    }
+
+    @Override
+    public void fetchEager() {       
+        if (getSeries() != null) getSeries().getFamilys().size();
+        getModels().forEach(m -> m.getSpecs().size());
     }
 
 }

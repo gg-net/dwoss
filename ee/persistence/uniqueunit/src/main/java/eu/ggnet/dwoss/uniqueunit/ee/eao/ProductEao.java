@@ -18,9 +18,9 @@ package eu.ggnet.dwoss.uniqueunit.ee.eao;
 
 import java.util.*;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;

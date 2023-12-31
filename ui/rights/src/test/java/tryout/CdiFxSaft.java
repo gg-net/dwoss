@@ -18,12 +18,13 @@ package tryout;
 
 import java.util.concurrent.Executors;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Instance;
+import jakarta.inject.Inject;
 
 import eu.ggnet.saft.core.Saft;
+
+import jakarta.annotation.PostConstruct;
 import eu.ggnet.saft.core.impl.Fx;
 import eu.ggnet.saft.core.ui.LocationStorage;
 

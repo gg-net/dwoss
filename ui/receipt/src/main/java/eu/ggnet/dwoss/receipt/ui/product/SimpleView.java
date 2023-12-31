@@ -47,8 +47,11 @@ import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.*;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
 
+@Dependent
 @Title("Artikelkonfiguration")
 public class SimpleView extends javax.swing.JPanel implements Consumer<SimpleView.CreateOrEdit>, ResultProducer<SpecAndModel> {
 
@@ -184,7 +187,7 @@ public class SimpleView extends javax.swing.JPanel implements Consumer<SimpleVie
 
         this.manufacturer = in.manufacturer();
         // TODO: put in some background thread.
-        allSeries = remote.lookup(SpecAgent.class).findAll(ProductSeries.class);
+        allSeries = remote.lookup(SpecAgent.class).findAllEager(ProductSeries.class);
         brandBox.setModel(new DefaultComboBoxModel<>(manufacturer.getBrands().toArray()));
         partNoField.setText(in.partNo());
 
@@ -699,7 +702,7 @@ public class SimpleView extends javax.swing.JPanel implements Consumer<SimpleVie
         // TODO: And show the active backgroundprogress.
         JOptionPane.showMessageDialog(this, "Modell " + model.getName() + " wurde hinzugefügt.\nAktualisiere Lokale Liste.");
         // TODO: Put in background and add loadingblock
-        allSeries = remote.lookup(SpecAgent.class).findAll(ProductSeries.class);
+        allSeries = remote.lookup(SpecAgent.class).findAllEager(ProductSeries.class);
         updateSeries();
         updateFamily();
         updateModel();
@@ -731,7 +734,7 @@ public class SimpleView extends javax.swing.JPanel implements Consumer<SimpleVie
         // TODO: And show the active backgroundprogress.
         JOptionPane.showMessageDialog(this, "Familie " + family.getName() + " wurde hinzugefügt.\nAktualisiere Lokale Liste.");
         // TODO: Put in background and add loadingblock
-        allSeries = remote.lookup(SpecAgent.class).findAll(ProductSeries.class);
+        allSeries = remote.lookup(SpecAgent.class).findAllEager(ProductSeries.class);
         updateSeries();
         updateFamily();
         updateModel();
@@ -776,7 +779,7 @@ public class SimpleView extends javax.swing.JPanel implements Consumer<SimpleVie
         ProductSeries series = reply.getPayload();
         JOptionPane.showMessageDialog(this, "Serie " + series.getName() + " wurde hinzugefügt.\nAktualisiere Lokale Liste.");
         // TODO: Put in background and add loadingblock
-        allSeries = remote.lookup(SpecAgent.class).findAll(ProductSeries.class);
+        allSeries = remote.lookup(SpecAgent.class).findAllEager(ProductSeries.class);
         updateSeries();
         updateFamily();
         updateModel();

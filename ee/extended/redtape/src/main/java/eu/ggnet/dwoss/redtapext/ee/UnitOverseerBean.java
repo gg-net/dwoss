@@ -19,10 +19,10 @@ package eu.ggnet.dwoss.redtapext.ee;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.ejb.Stateless;
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.ejb.Stateless;
+import jakarta.enterprise.inject.Instance;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -162,7 +162,7 @@ public class UnitOverseerBean implements UnitOverseer {
             if ( customer == null )
                 throw new UserInfoException("SopoNr " + refurbishId + " is on Dossier " + dos.getIdentifier() + ", but Customer " + dos.getCustomerId() + " does not exist.");
             throw new UserInfoException("SopoNr " + refurbishId + " ist schon vergeben"
-                    + "\nKID = " + customer.getId()
+                    + "\nKID = " + customer.id()
                     + "\nKunde = " + customer.toTitleNameLine()
                     + "\n\nVorgang = " + dos.getIdentifier());
         }

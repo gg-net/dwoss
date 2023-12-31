@@ -26,13 +26,16 @@ import eu.ggnet.dwoss.spec.ee.SpecExporter;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.UiCore;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.rights.api.AtomicRight.READ_PRODUCT_SPEC_FOR_XML_EXPORT;
 
 /**
  * Action to Export the ProductSpecs to XML.
- * <p/>
+ * 
  * @author oliver.guenther
  */
+@Dependent
 public class ProductSpecExportAction extends AccessableAction {
 
     public ProductSpecExportAction() {

@@ -180,7 +180,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements VetoableOn
      */
     public void setCustomerValues(long customerId) {
         this.customerId = customerId;
-        String labelText = Dl.remote().lookup(CustomerService.class).asUiCustomer(customerId).getSimpleHtml();
+        String labelText = Dl.remote().lookup(CustomerService.class).asUiCustomer(customerId).simpleHtml();
         recentCustomerLabel.setText("<html><div align=\"center\" width=\"120px\"><i>" + labelText + "</i></div></html>");
         recentCustomerLabel.setToolTipText("<html>" + labelText + "</html>");
         paymentMethodLabel.setText(paymentMethodLabel.getText() + " " + Dl.remote().lookup(CustomerService.class).asCustomerMetaData(customerId).paymentMethod().getNote());

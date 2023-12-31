@@ -23,11 +23,14 @@ import javax.swing.AbstractAction;
 import eu.ggnet.dwoss.redtapext.ui.dbs.DossierFilterView;
 import eu.ggnet.saft.core.UiCore;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  * @author bastian.venz
  * @author oliver.guenther
  * @author pascal.perau
  */
+@Dependent
 public class DossiersByStatusAction extends AbstractAction {
 
     public DossiersByStatusAction() {

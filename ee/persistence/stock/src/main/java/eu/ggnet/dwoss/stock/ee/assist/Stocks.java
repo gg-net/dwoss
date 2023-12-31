@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.stock.ee.assist;
 
 import java.lang.annotation.*;
 
-import javax.inject.Qualifier;
+import jakarta.inject.Qualifier;
 
 /**
  * Stock Persistence Unit Injection Point

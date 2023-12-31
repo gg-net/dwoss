@@ -16,31 +16,28 @@
  */
 package eu.ggnet.dwoss.rights.itest;
 
-import javax.ejb.EJB;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.UserTransaction;
+import jakarta.ejb.EJB;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.UserTransaction;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.*;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.rights.api.*;
 import eu.ggnet.dwoss.rights.ee.assist.Rights;
+import eu.ggnet.dwoss.rights.ee.assist.gen.RightsDeleteUtils;
 import eu.ggnet.dwoss.rights.ee.entity.Operator;
 import eu.ggnet.dwoss.rights.ee.entity.Persona;
 import eu.ggnet.dwoss.rights.ee.op.PasswordUtil;
 import eu.ggnet.dwoss.rights.itest.support.ArquillianProjectArchive;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.hamcrest.CoreMatchers.isA;
+import static org.assertj.core.api.Assertions.*;
 
 @RunWith(Arquillian.class)
 public class UserApiIT extends ArquillianProjectArchive {
@@ -81,12 +78,10 @@ public class UserApiIT extends ArquillianProjectArchive {
     public void tearDown() throws Exception {
         utx.begin();
         em.joinTransaction();
-        Utils.clearH2Db(em);
+        RightsDeleteUtils.deleteAll(em);
+        assertThat(RightsDeleteUtils.validateEmpty(em)).isNull();
         utx.commit();
     }
-
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
 
     @Test
     public void testAuthenticate() throws Exception {
@@ -113,8 +108,9 @@ public class UserApiIT extends ArquillianProjectArchive {
         em.persist(op);
         utx.commit();
 
-        Throwable thrown = catchThrowable(() -> userApi.authenticate(UPDATED_NAME, PASSWORD));
-        assertThat(thrown).isInstanceOf(UserInfoException.class).hasMessageContaining("Benutzer " + UPDATED_NAME + " existiert nicht.");
+        assertThatThrownBy(() -> {
+            userApi.authenticate(UPDATED_NAME, PASSWORD);
+        }).isInstanceOf(UserInfoException.class).hasMessageContaining("Benutzer " + UPDATED_NAME + " existiert nicht.");
     }
 
     @Test
@@ -127,8 +123,9 @@ public class UserApiIT extends ArquillianProjectArchive {
         em.persist(op);
         utx.commit();
 
-        Throwable thrown = catchThrowable(() -> userApi.authenticate(BLANK, PASSWORD));
-        assertThat(thrown).isInstanceOf(UserInfoException.class).hasMessageContaining("Kein Nutzername angegeben.");
+        assertThatThrownBy(() -> {
+            userApi.authenticate(BLANK, PASSWORD);
+        }).isInstanceOf(UserInfoException.class).hasMessageContaining("Kein Nutzername angegeben.");
     }
 
     @Test
@@ -141,8 +138,8 @@ public class UserApiIT extends ArquillianProjectArchive {
         em.persist(op);
         utx.commit();
 
-        Throwable thrown = catchThrowable(() -> userApi.authenticate(NAME, EMPTY_PASSWORD));
-        assertThat(thrown).isInstanceOf(UserInfoException.class).hasMessageContaining("Kein Passwort angegeben.");
+        assertThatThrownBy(() -> userApi.authenticate(NAME, EMPTY_PASSWORD))
+                .isInstanceOf(UserInfoException.class).hasMessageContaining("Kein Passwort angegeben.");
     }
 
     @Test
@@ -155,8 +152,8 @@ public class UserApiIT extends ArquillianProjectArchive {
         em.persist(op);
         utx.commit();
 
-        Throwable thrown = catchThrowable(() -> userApi.authenticate(null, PASSWORD));
-        assertThat(thrown).isInstanceOf(UserInfoException.class).hasMessageContaining("Kein Nutzername angegeben.");
+        assertThatThrownBy(() -> userApi.authenticate(null, PASSWORD))
+                .isInstanceOf(UserInfoException.class).hasMessageContaining("Kein Nutzername angegeben.");
     }
 
     @Test
@@ -169,8 +166,8 @@ public class UserApiIT extends ArquillianProjectArchive {
         em.persist(op);
         utx.commit();
 
-        Throwable thrown = catchThrowable(() -> userApi.authenticate(NAME, null));
-        assertThat(thrown).isInstanceOf(UserInfoException.class).hasMessageContaining("Kein Passwort angegeben.");
+        assertThatThrownBy(() -> userApi.authenticate(NAME, null))
+                .isInstanceOf(UserInfoException.class).hasMessageContaining("Kein Passwort angegeben.");
     }
 
     @Test
@@ -182,9 +179,9 @@ public class UserApiIT extends ArquillianProjectArchive {
         op.setSalt(SALT);
         em.persist(op);
         utx.commit();
-        
-        Throwable thrown = catchThrowable(() -> userApi.authenticate(NAME, WRONG_PASSWORD));
-        assertThat(thrown).isInstanceOf(UserInfoException.class).hasMessageContaining("Authentifizierung nicht gelungen!");
+
+        assertThatThrownBy(() -> userApi.authenticate(NAME, WRONG_PASSWORD))
+                .isInstanceOf(UserInfoException.class).hasMessageContaining("Authentifizierung nicht gelungen!");
     }
 
     @Test
@@ -196,15 +193,15 @@ public class UserApiIT extends ArquillianProjectArchive {
         op.setSalt(WRONG_SALT);
         em.persist(op);
         utx.commit();
-        
-        Throwable thrown = catchThrowable(() -> userApi.authenticate(NAME, PASSWORD));
-        assertThat(thrown).isInstanceOf(UserInfoException.class).hasMessageContaining("Authentifizierung nicht gelungen!");
+
+        assertThatThrownBy(() -> userApi.authenticate(NAME, PASSWORD))
+                .isInstanceOf(UserInfoException.class).hasMessageContaining("Authentifizierung nicht gelungen!");
     }
 
     @Test
     public void testCreate() throws Exception {
         assertThat(userApi.findAll().size()).as("No existing Users").isZero();
-        
+
         userApi.create(NAME);
 
         assertThat(userApi.findAll().size()).as("One existing User").isEqualTo(1);
@@ -213,17 +210,13 @@ public class UserApiIT extends ArquillianProjectArchive {
     }
 
     @Test
-    public void testCreateUsernameIsBlank() throws Exception {
-        expectedException.expectCause(isA(IllegalArgumentException.class));
-
-        userApi.create(BLANK);
+    public void testCreateUsernameIsBlank() {
+        assertThatThrownBy(() -> userApi.create(BLANK)).hasCauseInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     public void testCreateUsernameIsNull() throws Exception {
-        expectedException.expectCause(isA(NullPointerException.class));
-
-        userApi.create(null);
+        assertThatThrownBy(() -> userApi.create(null)).hasCauseInstanceOf(NullPointerException.class);
     }
 
     @Test
@@ -248,9 +241,7 @@ public class UserApiIT extends ArquillianProjectArchive {
         em.persist(user);
         utx.commit();
 
-        expectedException.expectCause(isA(IllegalArgumentException.class));
-
-        userApi.updateUsername(user.getId() + 1, UPDATED_NAME);
+        assertThatThrownBy(() -> userApi.updateUsername(user.getId() + 1, UPDATED_NAME)).hasCauseInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -261,9 +252,7 @@ public class UserApiIT extends ArquillianProjectArchive {
         em.persist(user);
         utx.commit();
 
-        expectedException.expectCause(isA(IllegalArgumentException.class));
-
-        userApi.updateUsername(user.getId(), BLANK);
+        assertThatThrownBy(() -> userApi.updateUsername(user.getId(), BLANK)).hasCauseInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -274,9 +263,7 @@ public class UserApiIT extends ArquillianProjectArchive {
         em.persist(user);
         utx.commit();
 
-        expectedException.expectCause(isA(NullPointerException.class));
-
-        userApi.updateUsername(user.getId(), null);
+        assertThatThrownBy(() -> userApi.updateUsername(user.getId(), null)).hasCauseInstanceOf(NullPointerException.class);
     }
 
     @Test
@@ -287,9 +274,7 @@ public class UserApiIT extends ArquillianProjectArchive {
         em.persist(user);
         utx.commit();
 
-        expectedException.expectCause(isA(IllegalArgumentException.class));
-
-        userApi.updatePassword(user.getId() + 1, PASSWORD);
+        assertThatThrownBy(() -> userApi.updatePassword(user.getId() + 1, PASSWORD)).hasCauseInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -300,9 +285,7 @@ public class UserApiIT extends ArquillianProjectArchive {
         em.persist(user);
         utx.commit();
 
-        expectedException.expectCause(isA(IllegalArgumentException.class));
-
-        userApi.updatePassword(user.getId(), EMPTY_PASSWORD);
+        assertThatThrownBy(() -> userApi.updatePassword(user.getId(), EMPTY_PASSWORD)).hasCauseInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -313,9 +296,7 @@ public class UserApiIT extends ArquillianProjectArchive {
         em.persist(user);
         utx.commit();
 
-        expectedException.expectCause(isA(NullPointerException.class));
-
-        userApi.updatePassword(user.getId(), null);
+        assertThatThrownBy(() -> userApi.updatePassword(user.getId(), null)).hasCauseInstanceOf(NullPointerException.class);
     }
 
     @Test
@@ -342,9 +323,7 @@ public class UserApiIT extends ArquillianProjectArchive {
         em.persist(user);
         utx.commit();
 
-        expectedException.expectCause(isA(IllegalArgumentException.class));
-
-        userApi.addRight(user.getId() + 1, R);
+        assertThatThrownBy(() -> userApi.addRight(user.getId() + 1, R)).hasCauseInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -356,9 +335,7 @@ public class UserApiIT extends ArquillianProjectArchive {
         user.add(R);
         utx.commit();
 
-        expectedException.expectCause(isA(IllegalArgumentException.class));
-
-        userApi.addRight(user.getId(), R);
+        assertThatThrownBy(() -> userApi.addRight(user.getId(), R)).hasCauseInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -369,9 +346,7 @@ public class UserApiIT extends ArquillianProjectArchive {
         em.persist(user);
         utx.commit();
 
-        expectedException.expectCause(isA(NullPointerException.class));
-
-        userApi.addRight(user.getId(), null);
+        assertThatThrownBy(() -> userApi.addRight(user.getId(), null)).hasCauseInstanceOf(NullPointerException.class);
     }
 
     @Test
@@ -400,9 +375,7 @@ public class UserApiIT extends ArquillianProjectArchive {
         em.persist(user);
         utx.commit();
 
-        expectedException.expectCause(isA(IllegalArgumentException.class));
-
-        userApi.removeRight(user.getId() + 1, R);
+        assertThatThrownBy(() -> userApi.removeRight(user.getId() + 1, R)).hasCauseInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -413,9 +386,7 @@ public class UserApiIT extends ArquillianProjectArchive {
         em.persist(user);
         utx.commit();
 
-        expectedException.expectCause(isA(IllegalArgumentException.class));
-
-        userApi.removeRight(user.getId(), R);
+        assertThatThrownBy(() -> userApi.removeRight(user.getId(), R)).hasCauseInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -426,9 +397,7 @@ public class UserApiIT extends ArquillianProjectArchive {
         em.persist(user);
         utx.commit();
 
-        expectedException.expectCause(isA(NullPointerException.class));
-
-        userApi.removeRight(user.getId(), null);
+        assertThatThrownBy(() -> userApi.removeRight(user.getId(), null)).hasCauseInstanceOf(NullPointerException.class);
     }
 
     @Test
@@ -459,9 +428,7 @@ public class UserApiIT extends ArquillianProjectArchive {
         em.persist(group);
         utx.commit();
 
-        expectedException.expectCause(isA(IllegalArgumentException.class));
-
-        userApi.addGroup(user.getId() + 1, group.getId());
+        assertThatThrownBy(() -> userApi.addGroup(user.getId() + 1, group.getId())).hasCauseInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -474,9 +441,7 @@ public class UserApiIT extends ArquillianProjectArchive {
         em.persist(group);
         utx.commit();
 
-        expectedException.expectCause(isA(IllegalArgumentException.class));
-
-        userApi.addGroup(user.getId(), group.getId() + 1);
+        assertThatThrownBy(() -> userApi.addGroup(user.getId(), group.getId() + 1)).hasCauseInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -490,9 +455,7 @@ public class UserApiIT extends ArquillianProjectArchive {
         em.persist(group);
         utx.commit();
 
-        expectedException.expectCause(isA(IllegalArgumentException.class));
-
-        userApi.addGroup(user.getId(), group.getId());
+        assertThatThrownBy(() -> userApi.addGroup(user.getId(), group.getId())).hasCauseInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -524,9 +487,7 @@ public class UserApiIT extends ArquillianProjectArchive {
         em.persist(group);
         utx.commit();
 
-        expectedException.expectCause(isA(IllegalArgumentException.class));
-
-        userApi.removeGroup(user.getId() + 1, group.getId());
+        assertThatThrownBy(() -> userApi.removeGroup(user.getId() + 1, group.getId())).hasCauseInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -539,9 +500,7 @@ public class UserApiIT extends ArquillianProjectArchive {
         em.persist(group);
         utx.commit();
 
-        expectedException.expectCause(isA(IllegalArgumentException.class));
-
-        userApi.removeGroup(user.getId(), group.getId() + 1);
+        assertThatThrownBy(() -> userApi.removeGroup(user.getId(), group.getId() + 1)).hasCauseInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -554,9 +513,7 @@ public class UserApiIT extends ArquillianProjectArchive {
         em.persist(group);
         utx.commit();
 
-        expectedException.expectCause(isA(IllegalArgumentException.class));
-
-        userApi.removeGroup(user.getId(), group.getId());
+        assertThatThrownBy(() -> userApi.removeGroup(user.getId(), group.getId())).hasCauseInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -582,8 +539,6 @@ public class UserApiIT extends ArquillianProjectArchive {
         em.persist(user);
         utx.commit();
 
-        expectedException.expectCause(isA(IllegalArgumentException.class));
-
-        userApi.delete(user.getId() + 1);
+        assertThatThrownBy(() -> userApi.delete(user.getId() + 1)).hasCauseInstanceOf(IllegalArgumentException.class);
     }
 }

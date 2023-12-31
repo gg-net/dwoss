@@ -29,6 +29,8 @@ import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.*;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  * Controller class for the editor view of a Contact. Allows the user to
  * change all values of the Contact.
@@ -37,6 +39,7 @@ import eu.ggnet.saft.core.ui.*;
  *
  * @author jens.papenhagen
  */
+@Dependent
 @Title("Kontakt eintragen")
 public class ContactAddController implements Initializable, FxController, ResultProducer<Contact> {
 

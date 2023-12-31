@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.redtape.api;
 
-import javax.ejb.Local;
+import jakarta.ejb.Local;
 
 /**
  * Viewer for Dossiers.

@@ -19,8 +19,8 @@ package tryout;
 import java.util.Arrays;
 import java.util.Collections;
 
-import javax.enterprise.inject.se.SeContainer;
-import javax.enterprise.inject.se.SeContainerInitializer;
+import jakarta.enterprise.inject.se.SeContainer;
+import jakarta.enterprise.inject.se.SeContainerInitializer;
 
 import javafx.application.Application;
 import javafx.scene.Scene;

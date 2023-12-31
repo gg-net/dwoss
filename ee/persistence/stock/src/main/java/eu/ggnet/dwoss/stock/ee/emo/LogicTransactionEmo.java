@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.stock.ee.emo;
 
 import java.util.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

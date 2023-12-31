@@ -16,8 +16,8 @@
  */
 package eu.ggnet.dwoss.spec.ee.eao;
 
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 
 import eu.ggnet.dwoss.core.system.persistence.AbstractEao;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Gpu;

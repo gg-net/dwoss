@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.receipt.ee;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 /**
  *

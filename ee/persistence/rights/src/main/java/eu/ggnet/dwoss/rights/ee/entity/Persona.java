@@ -19,8 +19,8 @@ package eu.ggnet.dwoss.rights.ee.entity;
 import java.io.Serializable;
 import java.util.*;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -28,6 +28,8 @@ import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 import eu.ggnet.dwoss.core.system.persistence.EagerAble;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Group;
+
+import static jakarta.persistence.GenerationType.IDENTITY;
 
 /**
  * This Class represent a Persona
@@ -39,14 +41,11 @@ import eu.ggnet.dwoss.rights.api.Group;
 public class Persona extends BaseEntity implements Serializable, Comparable<Persona>, EagerAble {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = IDENTITY)
     private long id;
 
-    /**
-     * Integer value for optimistic locking.
-     */
     @Version
-    private int optLock;
+    private short optLock = 0;
 
     @NotNull
     private String name;
@@ -67,7 +66,7 @@ public class Persona extends BaseEntity implements Serializable, Comparable<Pers
      * @param name          the name
      * @param personaRights collection of the persona rights.
      */
-    public Persona(long id, int optLock, String name, List<AtomicRight> personaRights) {
+    public Persona(long id, short optLock, String name, List<AtomicRight> personaRights) {
         this();
         this.id = id;
         this.optLock = optLock;
@@ -122,7 +121,7 @@ public class Persona extends BaseEntity implements Serializable, Comparable<Pers
     public Group toApiGroup(){
         return new Group.Builder()
                 .setId(Optional.of(this.id))
-                .setOptLock(Optional.of(this.optLock))
+                .setOptLock(this.optLock)
                 .setName(this.name)
                 .addAllRights(this.personaRights)
                 .build();

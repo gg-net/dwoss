@@ -20,10 +20,10 @@ import java.io.Serializable;
 import java.lang.ProcessBuilder.Redirect.Type;
 import java.util.*;
 
-import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
-import javax.validation.groups.Default;
+import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+import jakarta.validation.groups.Default;
 
 import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.core.common.values.PositionType;
@@ -31,7 +31,7 @@ import eu.ggnet.dwoss.mandator.api.value.Ledger;
 import eu.ggnet.dwoss.redtape.ee.entity.Position.Key;
 import eu.ggnet.dwoss.core.system.util.TwoDigits;
 
-import static javax.persistence.CascadeType.*;
+import static jakarta.persistence.CascadeType.*;
 
 /**
  * A Position of a Document. A Position has an id and a document associated, but all changes to these values are all done
@@ -58,6 +58,7 @@ import static javax.persistence.CascadeType.*;
 @NamedQuery(name = "Position.countByDocumentId", query = "SELECT COUNT(p) FROM Position p WHERE p.document.id = ?1")
 @NamedQuery(name = "Position.findByUniqueUnitId", query = "SELECT p FROM Position p WHERE p.uniqueUnitId = ?1")
 @SuppressWarnings("PersistenceUnitPresent")
+@Table(name = "DocumentPosition")
 public class Position implements Serializable, Comparable<Position> {
 
     /**

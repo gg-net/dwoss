@@ -20,8 +20,6 @@ import java.util.List;
 
 import org.inferred.freebuilder.FreeBuilder;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 /**
  * Parameter Class for {@link StockTransactionEmo#prepare(eu.ggnet.dwoss.stock.emo.Transfer, eu.ggnet.saft.api.progress.IMonitor) }.
  * <p>
@@ -31,41 +29,48 @@ import static com.google.common.base.Preconditions.checkArgument;
 public interface Transfer {
 
     class Builder extends Transfer_Builder {
-        
+
         @Override
         public Transfer build() {
-            checkArgument(stockUnitIds().size() > 0, "stockUnitIds must not be empty");
-            checkArgument(maxTransactionSize() > 0, "maxTransactionSize must be > 0");
+
+            if ( stockUnitIds().isEmpty() ) throw new IllegalArgumentException("stockUnitIds must not be empty");
+            if ( maxTransactionSize() <= 0 ) throw new IllegalArgumentException("maxTransactionSize must be > 0");
             return super.build();
         }
-        
+
     }
+
     /**
      * The stockIds to transfer.
+     *
      * @return stockunit ids
      */
     List<Integer> stockUnitIds();
 
     /**
      * The id of the destination stock.
+     *
      * @return destination stock id
      */
     int destinationStockId();
 
     /**
      * A optional arranger.
+     *
      * @return arranger
      */
     String arranger();
 
     /**
      * A optional comment.
+     *
      * @return comment
      */
     String comment();
 
     /**
      * The maximum amount of units a trasaction should hold.
+     *
      * @return the max transcation size
      */
     int maxTransactionSize();

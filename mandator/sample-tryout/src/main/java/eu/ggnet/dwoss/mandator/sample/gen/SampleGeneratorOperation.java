@@ -20,8 +20,8 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.EnumSet;
 
-import javax.ejb.*;
-import javax.inject.Inject;
+import jakarta.ejb.*;
+import jakarta.inject.Inject;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
@@ -44,8 +44,8 @@ import eu.ggnet.dwoss.stock.ee.assist.gen.StockGeneratorOperation;
 import eu.ggnet.dwoss.stock.ee.eao.StockEao;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 
-import static javax.ejb.LockType.READ;
-import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
+import static jakarta.ejb.LockType.READ;
+import static jakarta.ejb.TransactionAttributeType.REQUIRES_NEW;
 
 /**
  * Sample Genaerator.

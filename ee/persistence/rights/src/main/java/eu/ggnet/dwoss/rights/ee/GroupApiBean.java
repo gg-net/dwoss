@@ -18,10 +18,10 @@ package eu.ggnet.dwoss.rights.ee;
 
 import java.util.*;
 
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.ejb.EJB;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import eu.ggnet.dwoss.core.system.autolog.AutoLogger;
 import eu.ggnet.dwoss.rights.api.*;

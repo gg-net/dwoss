@@ -16,9 +16,9 @@
  */
 package eu.ggnet.dwoss.redtape.itest.eao;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.UserTransaction;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.UserTransaction;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
@@ -26,8 +26,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.core.common.values.DocumentType;
-import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
+import eu.ggnet.dwoss.redtape.ee.assist.gen.RedTapeDeleteUtils;
 import eu.ggnet.dwoss.redtape.ee.eao.RedTapeCounterEao;
 import eu.ggnet.dwoss.redtape.ee.entity.RedTapeCounter;
 import eu.ggnet.dwoss.redtape.itest.ArquillianProjectArchive;
@@ -49,14 +49,15 @@ public class RedTapeCounterEaoIT extends ArquillianProjectArchive {
     private UserTransaction utx;
 
     private final String PREFIX = "2000";
-    
+
     private final long VALUE = 10000;
 
     @After
     public void clearDataBase() throws Exception {
         utx.begin();
         em.joinTransaction();
-        Utils.clearH2Db(em);
+        RedTapeDeleteUtils.deleteAll(em);
+        assertThat(RedTapeDeleteUtils.validateEmpty(em)).isNull();
         utx.commit();
     }
 

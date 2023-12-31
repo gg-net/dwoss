@@ -19,24 +19,23 @@ package eu.ggnet.dwoss.customer.ee.itest;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.ejb.EJB;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.UserTransaction;
+import jakarta.ejb.EJB;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.UserTransaction;
 
 import org.jboss.arquillian.junit.Arquillian;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.assist.Customers;
+import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerDeleteUtils;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
 import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.customer.ee.itest.support.Utils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -60,11 +59,12 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
     @Inject
     private CustomerEao eao;
 
-    @Before
+    @After
     public void teardown() throws Exception {
         utx.begin();
         em.joinTransaction();
-        Utils.clearH2Db(em);
+        CustomerDeleteUtils.deleteAll(em);
+        assertThat(CustomerDeleteUtils.validateEmpty(em)).isNull();
         utx.commit();
     }
 

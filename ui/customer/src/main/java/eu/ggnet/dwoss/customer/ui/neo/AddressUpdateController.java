@@ -32,12 +32,15 @@ import eu.ggnet.dwoss.customer.ee.entity.Country;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.*;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  * Controller class for the editor view of a Address. Allows the user to
  * change all values of the Address.
  *
  * @author jens.papenhagen
  */
+@Dependent
 @Title("Kunden Adresse bearbeiten")
 public class AddressUpdateController implements Initializable, FxController, Consumer<Address>, ResultProducer<Address> {
 

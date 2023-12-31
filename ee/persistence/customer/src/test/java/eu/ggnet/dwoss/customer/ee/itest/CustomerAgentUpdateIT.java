@@ -18,14 +18,13 @@ package eu.ggnet.dwoss.customer.ee.itest;
 
 import java.util.List;
 
-import javax.ejb.EJB;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.UserTransaction;
+import jakarta.ejb.EJB;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.UserTransaction;
 
 import org.jboss.arquillian.junit.Arquillian;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +35,6 @@ import eu.ggnet.dwoss.customer.ee.assist.Customers;
 import eu.ggnet.dwoss.customer.ee.assist.gen.*;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.customer.ee.itest.support.Utils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -62,11 +60,12 @@ public class CustomerAgentUpdateIT extends ArquillianProjectArchive {
     @Inject
     private CustomerGeneratorOperation cgo;
 
-    @Before
+    @After
     public void teardown() throws Exception {
         utx.begin();
         em.joinTransaction();
-        Utils.clearH2Db(em);
+        CustomerDeleteUtils.deleteAll(em);
+        assertThat(CustomerDeleteUtils.validateEmpty(em)).isNull();
         utx.commit();
     }
 
@@ -83,26 +82,25 @@ public class CustomerAgentUpdateIT extends ArquillianProjectArchive {
         utx.commit();
 
         //update each address,contact and check if it got updated correctly
-        Contact found = agent.findByIdEager(Contact.class, 1l);
+        Contact found = agent.findByIdEager(Contact.class, contact.getId());
         assertThat(found.getAddresses().size()).as("Not the correct amount of addresses on the contact").isEqualTo(1);
         Address foundAddress = found.getAddresses().get(0);
         foundAddress.setStreet("newStreet");
         agent.update(foundAddress);
-        found = agent.findByIdEager(Contact.class, 1l);
+        found = agent.findByIdEager(Contact.class, contact.getId());
         assertThat(found.getAddresses().get(0).getStreet()).as("Update didn't work on address for contact").isEqualTo("newStreet");
 
         assertThat(found.getCommunications().size()).as("Not the correct amount of communications on the contact").isEqualTo(1);
         Communication foundCommunication = found.getCommunications().get(0);
         foundCommunication.setIdentifier("newIdentifier");
         agent.update(foundCommunication);
-        found = agent.findByIdEager(Contact.class, 1l);
+        found = agent.findByIdEager(Contact.class, contact.getId());
         assertThat(found.getCommunications().get(0).getIdentifier()).as("Update didn't work on communication for contact").isEqualTo("newIdentifier");
 
     }
 
     @Test
     public void testUpdateOnCustomer() {
-
         long cid = cgo.makeCustomer(new Assure.Builder().simple(true).consumer(true).mutateMandatorMetadataMatchCodes(c -> c.add("MMM")).build());
 
         //update each contact and mandatorMetadata and check if it got updated correctly
@@ -158,10 +156,10 @@ public class CustomerAgentUpdateIT extends ArquillianProjectArchive {
 
     }
 
-    @Test
     /**
      * Wierd UI situation, if we add more that one flage, the addessalabeles get duplicated.
      */
+    @Test
     public void multipleFlagesCreateMultipeAddresslabels() throws Exception {
         L.info("Test: multipleFlagesCreateMultipeAddresslabels()");
 

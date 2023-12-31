@@ -16,15 +16,18 @@
  */
 package eu.ggnet.dwoss.receipt.ui.product;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import eu.ggnet.saft.core.ui.Title;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.Dependent;
 
 /**
  *
  * @author pascal.perau
  */
+@Dependent
 @Title("Brand-Familiy-Model-Series")
 public class SpecListView extends javax.swing.JPanel {
 

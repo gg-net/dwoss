@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -117,7 +117,7 @@ public abstract class AbstractAgentBean implements RemoteAgent {
     public <T> List<T> findAll(Class<T> entityClass) {
         L.debug("findAll({}) called", entityClass);
         validate(entityClass);
-        javax.persistence.criteria.CriteriaQuery<T> cq = getEntityManager().getCriteriaBuilder().createQuery(entityClass);
+        jakarta.persistence.criteria.CriteriaQuery<T> cq = getEntityManager().getCriteriaBuilder().createQuery(entityClass);
         cq.select(cq.from(entityClass));
         return getEntityManager().createQuery(cq).getResultList();
     }
@@ -149,7 +149,7 @@ public abstract class AbstractAgentBean implements RemoteAgent {
     public <T> List<T> findAll(Class<T> entityClass, int start, int amount) {
         L.debug("findAll({},{},{}) called", entityClass, start, amount);
         validate(entityClass);
-        javax.persistence.criteria.CriteriaQuery<T> cq = getEntityManager().getCriteriaBuilder().createQuery(entityClass);
+        jakarta.persistence.criteria.CriteriaQuery<T> cq = getEntityManager().getCriteriaBuilder().createQuery(entityClass);
         cq.select(cq.from(entityClass));
         return getEntityManager().createQuery(cq).setFirstResult(start).setMaxResults(amount).getResultList();
     }
@@ -173,10 +173,10 @@ public abstract class AbstractAgentBean implements RemoteAgent {
     @Override
     public <T> long count(Class<T> entityClass) {
         validate(entityClass);
-        javax.persistence.criteria.CriteriaQuery<Long> cq = getEntityManager().getCriteriaBuilder().createQuery(Long.class);
-        javax.persistence.criteria.Root<T> rt = cq.from(entityClass);
+        jakarta.persistence.criteria.CriteriaQuery<Long> cq = getEntityManager().getCriteriaBuilder().createQuery(Long.class);
+        jakarta.persistence.criteria.Root<T> rt = cq.from(entityClass);
         cq.select(getEntityManager().getCriteriaBuilder().count(rt));
-        javax.persistence.TypedQuery<Long> q = getEntityManager().createQuery(cq);
+        jakarta.persistence.TypedQuery<Long> q = getEntityManager().createQuery(cq);
         return q.getSingleResult();
     }
 

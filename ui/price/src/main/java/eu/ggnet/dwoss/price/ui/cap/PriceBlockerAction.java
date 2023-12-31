@@ -31,12 +31,15 @@ import eu.ggnet.dwoss.price.ee.engine.PriceEngineResult.Change;
 import eu.ggnet.dwoss.price.ui.PriceBlockerViewCask;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_SET_UNIT_PRICE;
 
 /**
  *
  * @author oliver.guenther
  */
+@Dependent
 public class PriceBlockerAction extends AccessableAction {
 
     public PriceBlockerAction() {

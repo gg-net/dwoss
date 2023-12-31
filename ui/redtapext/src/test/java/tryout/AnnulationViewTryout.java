@@ -18,7 +18,7 @@ package tryout;
 
 import java.util.*;
 
-import javax.persistence.LockModeType;
+import jakarta.persistence.LockModeType;
 
 import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.dl.RemoteLookup;

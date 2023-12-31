@@ -22,6 +22,8 @@ import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.price.ee.Exporter;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_PRICEMANAGMENT;
 
 /**
@@ -29,6 +31,7 @@ import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_PRICEMANAGMENT;
  *
  * @author pascal.perau
  */
+@Dependent
 public class PriceExportAction extends AccessableAction {
 
     public PriceExportAction() {

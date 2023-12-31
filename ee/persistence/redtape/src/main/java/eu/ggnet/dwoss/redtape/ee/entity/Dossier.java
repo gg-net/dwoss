@@ -24,9 +24,9 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.Min;
+import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 
 import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Condition;
@@ -86,11 +86,11 @@ public class Dossier extends BaseEntity implements Serializable, EagerAble {
     }
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private long id;
 
     @Version
-    private Short optLock = 0;
+    private short optLock = 0;
 
     @Lob
     @Column(length = 65536)

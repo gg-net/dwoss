@@ -22,7 +22,7 @@ import eu.ggnet.dwoss.search.api.GlobalKey;
 
 import java.util.List;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 import eu.ggnet.dwoss.core.common.IsStateful;
 

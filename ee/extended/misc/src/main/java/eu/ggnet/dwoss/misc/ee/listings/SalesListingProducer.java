@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.misc.ee.listings;
 
 import java.util.List;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration;
 import eu.ggnet.dwoss.core.common.FileJacket;

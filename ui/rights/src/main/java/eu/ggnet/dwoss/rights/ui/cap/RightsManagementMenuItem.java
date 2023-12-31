@@ -16,14 +16,17 @@
  */
 package eu.ggnet.dwoss.rights.ui.cap;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
+
+import jakarta.annotation.PostConstruct;
 
 import javafx.scene.control.MenuItem;
 
 import eu.ggnet.dwoss.core.widget.AccessableMenuItem;
 import eu.ggnet.dwoss.rights.ui.RightsManagementController;
 import eu.ggnet.saft.core.Saft;
+
+import jakarta.enterprise.context.Dependent;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_UPDATE_RIGHTS;
 
@@ -32,6 +35,7 @@ import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_UPDATE_RIGHTS;
  *
  * @author mirko.schulze
  */
+@Dependent
 public class RightsManagementMenuItem extends AccessableMenuItem {
 
     @Inject

@@ -59,11 +59,6 @@
         <developerConnection>scm:git:git@github.com:gg-net/dwoss.git</developerConnection>
     </scm>
 
-    <issueManagement>
-        <system>JIRA</system>
-        <url>https://jira.cybertron.global/browse/DWOSS</url>
-    </issueManagement>
-
     <licenses>
         <license>
             <name>GNU General Public License Version 3 (GPL v3)</name>
@@ -75,19 +70,19 @@
         <maven.compiler.release>11</maven.compiler.release>
         <netbeans.hint.jdkPlatform>JDK_11</netbeans.hint.jdkPlatform>
         <netbeans.version>RELEASE111</netbeans.version>
-        <openjfx.version>15.0.1</openjfx.version>
+        <openjfx.version>19.0.2.1</openjfx.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <slf4j.version>1.7.30</slf4j.version>
         <saft.version>2.1</saft.version>
-        <javaee.groupId>javax</javaee.groupId>
-        <javaee.artifactId>javaee-api</javaee.artifactId>
-        <javaee.version>8.0.1</javaee.version>
+        <javaee.groupId>jakarta.platform</javaee.groupId>
+        <javaee.artifactId>jakarta.jakartaee-api</javaee.artifactId>
+        <javaee.version>10.0.0</javaee.version>
         <netbeans.hint.license>gpl30</netbeans.hint.license>
         <netbeans.compile.on.save>all</netbeans.compile.on.save>
         <redtape-pu.default-datasource>
           <![CDATA[
-                <provider>org.hibernate.ejb.HibernatePersistence</provider>
+                <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
                 <jta-data-source>java:comp/env/redtapeDataSource</jta-data-source>
           ]]>
         </redtape-pu.default-datasource>
@@ -104,7 +99,7 @@
         </redtape-pu.classes>
         <customer-pu.default-datasource>
           <![CDATA[
-                <provider>org.hibernate.ejb.HibernatePersistence</provider>
+                <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
                 <jta-data-source>java:comp/env/customerDataSource</jta-data-source>
           ]]>
         </customer-pu.default-datasource>
@@ -112,11 +107,12 @@
           <![CDATA[
                 <properties>
                     <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
-                    <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
-                    <property name="hibernate.search.default.directory_provider" value="ram" />
-                    <property name="hibernate.search.default.indexmanager" value="near-real-time"/>
-                    <property name="hibernate.search.default.worker.execution" value="sync"/>
-                    <property name="hibernate.search.default.worker.thread_pool.size" value="3"/>
+                    <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>
+                    <property name="jakarta.persistence.schema-generation.scripts.action" value="drop-and-create"/>
+                    <property name="jakarta.persistence.schema-generation.scripts.create-target" value="${project.build.directory}\create.sql"/>
+                    <property name="jakarta.persistence.schema-generation.scripts.drop-target" value="${project.build.directory}\drop.sql"/>
+                    <property name="hibernate.search.backend.directory.type" value="local-heap" />
+                    <property name="hibernate.search.backend.type" value="lucene"/>
                 </properties>
           ]]>
         </customer-pu.test-create-drop-properties>
@@ -134,7 +130,7 @@
         </customer-pu.classes>
         <report-pu.default-datasource>
           <![CDATA[
-                <provider>org.hibernate.ejb.HibernatePersistence</provider>
+                <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
                 <jta-data-source>java:comp/env/reportDataSource</jta-data-source>
           ]]>
         </report-pu.default-datasource>
@@ -149,7 +145,7 @@
         </report-pu.classes>
         <rights-pu.default-datasource>
           <![CDATA[
-                <provider>org.hibernate.ejb.HibernatePersistence</provider>
+                <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
                 <jta-data-source>java:comp/env/rightsDataSource</jta-data-source>
           ]]>
         </rights-pu.default-datasource>
@@ -162,7 +158,7 @@
         </rights-pu.classes>
         <spec-pu.default-datasource>
           <![CDATA[
-                <provider>org.hibernate.ejb.HibernatePersistence</provider>
+                <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
                 <jta-data-source>java:comp/env/specDataSource</jta-data-source>
           ]]>
         </spec-pu.default-datasource>
@@ -188,7 +184,7 @@
         </spec-pu.classes>
         <stock-pu.default-datasource>
           <![CDATA[
-                <provider>org.hibernate.ejb.HibernatePersistence</provider>
+                <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
                 <jta-data-source>java:comp/env/stockDataSource</jta-data-source>
           ]]>
         </stock-pu.default-datasource>
@@ -207,7 +203,7 @@
         </stock-pu.classes>
         <uniqueunit-pu.default-datasource>
           <![CDATA[
-                <provider>org.hibernate.ejb.HibernatePersistence</provider>
+                <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
                 <jta-data-source>java:comp/env/uniqueunitDataSource</jta-data-source>
           ]]>
         </uniqueunit-pu.default-datasource>
@@ -227,7 +223,10 @@
           <![CDATA[
                 <properties>
                     <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
-                    <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
+                    <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>
+                    <property name="jakarta.persistence.schema-generation.scripts.action" value="drop-and-create"/>
+                    <property name="jakarta.persistence.schema-generation.scripts.create-target" value="${project.build.directory}\create.sql"/>
+                    <property name="jakarta.persistence.schema-generation.scripts.drop-target" value="${project.build.directory}\drop.sql"/>
                 </properties>
           ]]>
         </all-pu.test-create-drop-properties>
@@ -321,11 +320,11 @@
                     <version>3.3.0</version>
                 </plugin>
                 <plugin>
-                    <!-- creates the SQL-DDL from the entities in mariadb as well as mysql with the GOAL: hibernate54-ddl:gen-ddl. 
+                    <!-- creates the SQL-DDL from the entities in mariadb as well as mysql with the GOAL: hibernate56-ddl:gen-ddl. 
                     Set ddl-gen.packages property on subproject -->
                     <groupId>de.jpdigital</groupId>
-                    <artifactId>hibernate54-ddl-maven-plugin</artifactId>
-                    <version>2.3.0</version>
+                    <artifactId>hibernate56-ddl-maven-plugin</artifactId>
+                    <version>2.5.0</version>
                     <configuration>
                         <dialects>
                             <param>MARIADB</param>
@@ -335,23 +334,6 @@
                             <param>${ddl-gen.packages}</param>
                         </packages>
                     </configuration>
-                </plugin>
-                <plugin>
-                    <!-- Default Config for Query DSL, add plugin to project build to actually activate it -->
-                    <groupId>com.mysema.maven</groupId>
-                    <artifactId>apt-maven-plugin</artifactId>
-                    <version>1.1.3</version>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>process</goal>
-                            </goals>
-                            <configuration>
-                                <outputDirectory>target/generated-sources/querydsl</outputDirectory>
-                                <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
-                            </configuration>
-                        </execution>
-                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -442,10 +424,11 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- Client und Tests (Wildfly 30 = 5.1.2) -->
             <dependency>
                 <groupId>org.jboss.weld.se</groupId>
                 <artifactId>weld-se-core</artifactId>
-                <version>3.1.5.SP1</version>
+                <version>5.1.2.Final</version>
             </dependency>
             <dependency>
                 <groupId>com.beust</groupId>
@@ -529,21 +512,6 @@
                 <version>1.25</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-email</artifactId>
-                <version>1.5</version>
-                <exclusions>
-                    <exclusion>
-                        <artifactId>activation</artifactId>
-                        <groupId>javax.activation</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>mail</artifactId>
-                        <groupId>javax.mail</groupId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j.version}</version>
@@ -552,47 +520,32 @@
             <dependency>
                 <groupId>com.querydsl</groupId>
                 <artifactId>querydsl-apt</artifactId>
-                <version>4.4.0</version>
+                <version>5.0.0</version>
+                <classifier>jakarta</classifier>
             </dependency>
-            <dependency> <!-- Must be same as server for ejb connection -->
+            <dependency> <!-- Must be same as server for ejb connection. TODO: muss noch auf 30 umgestellt werden. -->
                 <groupId>org.wildfly</groupId>
                 <artifactId>wildfly-ejb-client-bom</artifactId>
-                <version>18.0.1.Final</version>
+                <version>30.0.0.Final</version>
                 <type>pom</type>
             </dependency>
-            <dependency> <!-- For Indexer connection - keep in sync with wildfly, w12 = 5.5.8.Final, w15 = 5.10.3.Final, w18 = 5.10.7.Final -->
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-search-orm</artifactId>
-                <version>5.10.7.Final</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.hibernate.javax.persistence</groupId>
-                        <artifactId>hibernate-jpa-2.1-api</artifactId>
-                    </exclusion>
-                </exclusions>
+            <dependency> <!-- For Indexer connection - keep in sync with wildfly, w18 = 5.10.7.Final, w29 = 6.2.final (groupid changed also) -->
+                <groupId>org.hibernate.search</groupId>
+                <artifactId>hibernate-search-mapper-orm-orm6</artifactId>
+                <version>6.2.0.Final</version>
             </dependency>
             <!-- Runtime EE - Persistence Dependencies -->
             <dependency>
                 <groupId>com.querydsl</groupId>
                 <artifactId>querydsl-jpa</artifactId>
-                <version>4.4.0</version>
-            </dependency>
-            <dependency>
-                <groupId>com.querydsl</groupId>
-                <artifactId>querydsl-hibernate-search</artifactId>
-                <version>4.4.0</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.hibernate.javax.persistence</groupId>
-                        <artifactId>hibernate-jpa-2.0-api</artifactId>
-                    </exclusion>
-                </exclusions>
+                <version>5.0.0</version>
+                <classifier>jakarta</classifier>
             </dependency>
             <!-- Runtime EE - Extended Dependencise -->
             <dependency>
                 <groupId>net.sf.jasperreports</groupId>
                 <artifactId>jasperreports</artifactId>
-                <version>6.17.0</version>
+                <version>6.20.6</version>
                 <exclusions>
                     <exclusion>
                         <groupId>xml-apis</groupId>
@@ -655,30 +608,25 @@
             <dependency> <!-- Needed for Fonts in PDF -->
                 <groupId>net.sf.jasperreports</groupId>
                 <artifactId>jasperreports-fonts</artifactId>
-                <version>6.17.0</version>
+                <version>6.20.6</version>
             </dependency>
             <!-- Runtime UI -->
-            <dependency> <!-- Clientside for the collections, w18 = 5.3.13 -->
+            <dependency> <!-- Clientside for the collections, w18 = 5.3.13 , w30 = 6.2.13-->
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-core</artifactId>
-                <version>5.3.13.Final</version>
-                <exclusions> <!-- Is in the JDK-->
-                    <exclusion>
-                        <groupId>xml-apis</groupId>
-                        <artifactId>xml-apis</artifactId>
-                    </exclusion>
-                </exclusions>
+                <version>6.2.13.Final</version>
             </dependency>
             <!-- Client Side Validation -->
             <dependency>
-                <groupId>org.hibernate.validator</groupId> <!-- W18 = 6.0.18 -->
+                <groupId>org.hibernate.validator</groupId> <!-- W18 = 6.0.18, w29 = 8.0.0 -->
                 <artifactId>hibernate-validator</artifactId>
-                <version>6.0.22.Final</version>
+                <version>8.0.0.Final</version>
             </dependency>
-            <dependency> <!-- Expresion factory for hibernate validator -->
+            <!--  Expresion factory for hibernate validator -->
+            <dependency>
                 <groupId>org.glassfish</groupId>
-                <artifactId>javax.el</artifactId>
-                <version>3.0.1-b11</version>
+                <artifactId>jakarta.el</artifactId>
+                <version>4.0.2</version>
             </dependency>
             <dependency> <!-- Candidat for removal after switch to JDK9 as Services are declared in module.info -->
                 <groupId>org.netbeans.api</groupId>
@@ -769,12 +717,12 @@
             <dependency>
                 <groupId>org.wildfly.arquillian</groupId>
                 <artifactId>wildfly-arquillian-container-remote</artifactId>
-                <version>3.0.1.Final</version>
+                <version>5.0.1.Final</version>
             </dependency>
             <dependency>
                 <groupId>org.wildfly.arquillian</groupId>
                 <artifactId>wildfly-arquillian-container-managed</artifactId>
-                <version>3.0.1.Final</version>
+                <version>5.0.1.Final</version>
             </dependency>
             <dependency>
                 <groupId>org.openjfx</groupId>
@@ -797,20 +745,10 @@
                 <version>${openjfx.version}</version>
             </dependency>
             <!-- XML Bindings, which got removed in JDK 11. Will return with jarkata ee, used in (SageExporter) -->
-            <dependency>
-                <groupId>javax.xml.bind</groupId>
-                <artifactId>jaxb-api</artifactId>
-                <version>2.3.1</version>
-            </dependency>
-            <dependency>
-                <groupId>com.sun.xml.bind</groupId>
-                <artifactId>jaxb-core</artifactId>
-                <version>2.3.0</version>
-            </dependency>
-            <dependency>
-                <groupId>com.sun.xml.bind</groupId>
-                <artifactId>jaxb-impl</artifactId>
-                <version>2.3.1</version>
+            <dependency> <!-- jaxb runtime für tests -->
+                <groupId>org.glassfish.jaxb</groupId>
+                <artifactId>jaxb-runtime</artifactId>
+                <version>4.0.3</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

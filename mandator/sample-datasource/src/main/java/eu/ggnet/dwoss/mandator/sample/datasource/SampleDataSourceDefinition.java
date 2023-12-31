@@ -16,9 +16,10 @@
  */
 package eu.ggnet.dwoss.mandator.sample.datasource;
 
-import javax.annotation.sql.DataSourceDefinition;
-import javax.annotation.sql.DataSourceDefinitions;
-import javax.faces.bean.ManagedBean;
+
+import jakarta.annotation.ManagedBean;
+import jakarta.annotation.sql.DataSourceDefinition;
+import jakarta.annotation.sql.DataSourceDefinitions;
 
 import static eu.ggnet.dwoss.mandator.sample.datasource.SampleDataSourceDefinition.*;
 

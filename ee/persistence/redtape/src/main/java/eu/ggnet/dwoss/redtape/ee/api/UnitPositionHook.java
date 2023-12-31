@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.redtape.ee.api;
 
 import java.util.List;
 
-import javax.ejb.Local;
+import jakarta.ejb.Local;
 
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.core.common.UserInfoException;

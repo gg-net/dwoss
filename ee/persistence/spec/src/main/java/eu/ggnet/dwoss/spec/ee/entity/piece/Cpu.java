@@ -20,10 +20,10 @@ import java.io.Serializable;
 import java.util.EnumSet;
 import java.util.Set;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.xml.bind.annotation.*;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.xml.bind.annotation.*;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -134,7 +134,7 @@ public class Cpu extends BaseEntity implements Serializable {
 
     @XmlTransient
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private long id;
 
     @XmlTransient

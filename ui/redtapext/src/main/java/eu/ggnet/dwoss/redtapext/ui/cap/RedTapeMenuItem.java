@@ -22,10 +22,13 @@ import javafx.scene.image.ImageView;
 import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeView;
 import eu.ggnet.saft.core.UiCore;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  *
  * @author pascal.perau
  */
+@Dependent
 public class RedTapeMenuItem extends MenuItem {
 
     public RedTapeMenuItem() {

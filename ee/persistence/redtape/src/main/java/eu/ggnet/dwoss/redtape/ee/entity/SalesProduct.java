@@ -21,8 +21,8 @@ import java.beans.PropertyChangeSupport;
 import java.io.*;
 import java.util.Objects;
 
-import javax.persistence.*;
-import javax.validation.constraints.Min;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 
 /**
  * A SalesProduct represents a saleable non "SoPo" unit associated with a UniqueUnit.Product.

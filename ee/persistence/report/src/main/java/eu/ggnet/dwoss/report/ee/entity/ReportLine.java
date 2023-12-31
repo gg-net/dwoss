@@ -21,8 +21,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -227,7 +227,7 @@ public class ReportLine extends BaseEntity implements Serializable, EagerAble, C
     }
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private long id;
 
     /**
@@ -242,7 +242,7 @@ public class ReportLine extends BaseEntity implements Serializable, EagerAble, C
     /**
      * The date when this {@link ReportLine} was reported.
      */
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(jakarta.persistence.TemporalType.DATE)
     private Date reportingDate;
 
     /**
@@ -278,7 +278,7 @@ public class ReportLine extends BaseEntity implements Serializable, EagerAble, C
     /**
      * The date when the newest Document was created.
      */
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(jakarta.persistence.TemporalType.DATE)
     private Date actual;
 
     @NotNull
@@ -397,7 +397,7 @@ public class ReportLine extends BaseEntity implements Serializable, EagerAble, C
     /**
      * The manufacture date.
      */
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(jakarta.persistence.TemporalType.DATE)
     private Date mfgDate;
 
     /**

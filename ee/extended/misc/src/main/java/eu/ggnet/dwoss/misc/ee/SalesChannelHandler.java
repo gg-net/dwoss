@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.misc.ee;
 
 import java.util.List;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 import eu.ggnet.dwoss.stock.ee.emo.StockTransactionEmo;
 import eu.ggnet.dwoss.stock.ee.model.SalesChannelLine;

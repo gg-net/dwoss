@@ -18,9 +18,9 @@ package eu.ggnet.dwoss.receipt.ee;
 
 import java.util.Objects;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.spec.ee.assist.SpecConstants;
 import eu.ggnet.dwoss.spec.ee.assist.SpecPu;
 import eu.ggnet.dwoss.spec.ee.assist.Specs;
 import eu.ggnet.dwoss.spec.ee.eao.*;
@@ -168,19 +169,19 @@ public class ProductProcessorOperation implements ProductProcessor {
                 series = seriesEao.findById(series.getId());
             } else {
                 ProductSeriesEao seriesEao = new ProductSeriesEao(em);
-                series = seriesEao.find(brand, group, SpecPu.DEFAULT_NAME);
+                series = seriesEao.find(brand, group, SpecConstants.DEFAULT_NAME);
                 if ( series == null ) {
-                    series = new ProductSeries(brand, group, SpecPu.DEFAULT_NAME);
+                    series = new ProductSeries(brand, group, SpecConstants.DEFAULT_NAME);
                     em.persist(series);
                 }
             }
             for (ProductFamily f : series.getFamilys()) {
-                if ( f.getName().equals(SpecPu.DEFAULT_NAME) ) {
+                if ( f.getName().equals(SpecConstants.DEFAULT_NAME) ) {
                     family = f;
                 }
             }
             if ( family == null ) {
-                family = new ProductFamily(SpecPu.DEFAULT_NAME);
+                family = new ProductFamily(SpecConstants.DEFAULT_NAME);
                 family.setSeries(series);
                 em.persist(family);
             }
@@ -228,9 +229,9 @@ public class ProductProcessorOperation implements ProductProcessor {
         } else {
             // 4. get or create default series
             ProductSeriesEao seriesEao = new ProductSeriesEao(em);
-            series = seriesEao.find(brand, group, SpecPu.DEFAULT_NAME);
+            series = seriesEao.find(brand, group, SpecConstants.DEFAULT_NAME);
             if ( series == null ) {
-                series = new ProductSeries(brand, group, SpecPu.DEFAULT_NAME);
+                series = new ProductSeries(brand, group, SpecConstants.DEFAULT_NAME);
                 em.persist(series);
             }
         }
@@ -247,7 +248,7 @@ public class ProductProcessorOperation implements ProductProcessor {
 
         // Hint: Normally the column unique option should do that, but HSQLDB somehow lost it.
         if ( new ProductEao(uuEm).findByPartNo(spec.getPartNo()) != null )
-            throw new IllegalArgumentException("PartNo=" + spec.getPartNo() + " exists allready, but create is calles");
+            throw new IllegalArgumentException("PartNo=" + spec.getPartNo() + " exists allready, but create is called");
 
         ProductModelEmo productModelEmo = new ProductModelEmo(specEm);
         model = productModelEmo.request(
@@ -272,14 +273,6 @@ public class ProductProcessorOperation implements ProductProcessor {
             Gpu gpu = new GpuEao(specEm).findById(desktop.getGpu().getId());
             if ( cpu != null ) desktop.setCpu(cpu);
             if ( gpu != null ) desktop.setGpu(gpu);
-        }
-        if ( spec instanceof DesktopBundle ) {
-            DesktopBundle bundle = (DesktopBundle)spec;
-            if ( bundle.getDesktop().getId() == 0 || bundle.getMonitor().getId() == 0 )
-                throw new IllegalArgumentException("Monitor or Desktop are new. Impossible");
-            ProductSpecEao specEao = new ProductSpecEao(specEm);
-            bundle.setDesktop(specEao.findById(bundle.getDesktop().getId()));
-            bundle.setMonitor(specEao.findById(bundle.getMonitor().getId()));
         }
 
         L.info("create({}) persiting including model change={}", SpecFormater.toDetailedName(spec), (model == spec.getModel()));

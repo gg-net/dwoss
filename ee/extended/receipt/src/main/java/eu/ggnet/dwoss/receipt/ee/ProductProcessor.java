@@ -20,7 +20,7 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.common.values.ProductGroup;

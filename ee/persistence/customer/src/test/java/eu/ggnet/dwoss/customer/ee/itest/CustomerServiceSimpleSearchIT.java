@@ -2,8 +2,8 @@ package eu.ggnet.dwoss.customer.ee.itest;
 
 import java.util.List;
 
-import javax.ejb.EJB;
-import javax.inject.Inject;
+import jakarta.ejb.EJB;
+import jakarta.inject.Inject;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Ignore;
@@ -36,7 +36,6 @@ public class CustomerServiceSimpleSearchIT extends ArquillianProjectArchive {
     @Inject
     private CustomerEao eao;
 
-    @Ignore
     @Test
     public void testFind() {
 
@@ -55,35 +54,68 @@ public class CustomerServiceSimpleSearchIT extends ArquillianProjectArchive {
         agent.store(c3);
         agent.store(c4);
 
-        assertEquals("Finding all Customers", 4, eao.findAll().size());
+        assertThat(eao.findAll()).as("findAll()").hasSize(4);
 
-        List<UiCustomer> asUiCustomers = customerService.asUiCustomers("Die Firma", null, "", "   ", true);
-        assertThat(asUiCustomers).hasSize(1);
-        L.info("Y(" + asUiCustomers.size() + "):" + asUiCustomers);
+        List<UiCustomer> r = customerService.asUiCustomers("Die Firma", null, null, null, true);
+        assertThat(r).as("called asUiCustomers('Die Firma', null, null, null, true) found: " + r)
+                .hasSize(1)
+                .first().returns(c1.getCompanyName(), UiCustomer::company);
 
-        asUiCustomers = customerService.asUiCustomers("Die Fi", "Max", "", "   ", true);
-        L.info("Y(" + asUiCustomers.size() + "):" + asUiCustomers);
+        r = customerService.asUiCustomers("Die Firma", null, "", "   ", true);
+        assertThat(r).as("called asUiCustomers('Die Firma', null, '', '   ', true) found: " + r)
+                .hasSize(1)
+                .first().returns(c1.getCompanyName(), UiCustomer::company);
 
-        asUiCustomers = customerService.asUiCustomers("Die Fi", "Max", "Muster", "   ", true);
-        L.info("Y(" + asUiCustomers.size() + "):" + asUiCustomers);
+        r = customerService.asUiCustomers("Die Firma", "Max", null, null, true);
+        assertThat(r).as("called asUiCustomers('Die Firma', 'Max', null, null, true) found: " + r)
+                .hasSize(1)
+                .first().returns(c1.getCompanyName(), UiCustomer::company);
 
-        asUiCustomers = customerService.asUiCustomers("Die Fi", "Moritz", "", "   ", true);
-        L.info("N(" + asUiCustomers.size() + "):" + asUiCustomers);
+        r = customerService.asUiCustomers("Die Fi", "Max", null, null, true);
+        assertThat(r).as("called asUiCustomers('Die Fi', 'Max', null, null, true) found: " + r)
+                .hasSize(1)
+                .first().returns(c1.getCompanyName(), UiCustomer::company);
 
-        asUiCustomers = customerService.asUiCustomers("Die Fi", null, "", "   ", false);
-        L.info("N(" + asUiCustomers.size() + "):" + asUiCustomers);
+        r = customerService.asUiCustomers("Die Fi", "Max", "", "   ", true);
+        assertThat(r).as("called asUiCustomers('Die Fi', 'Max', '', '   ', true)" + r)
+                .hasSize(1)
+                .first().returns(c1.getCompanyName(), UiCustomer::company);
 
-        asUiCustomers = customerService.asUiCustomers("Die Fam", null, "", "   ", true);
-        L.info("N(" + asUiCustomers.size() + "):" + asUiCustomers);
+        r = customerService.asUiCustomers("Die Fi", "Max", "Muster", "   ", true);
+        assertThat(r).as("called asUiCustomers('Die Fi', 'Max', 'Muster', '   ', true)" + r)
+                .hasSize(1)
+                .first().returns(c1.getCompanyName(), UiCustomer::company);
 
-        asUiCustomers = customerService.asUiCustomers(null, null, null, "lisa", true);
-        L.info("Y(" + asUiCustomers.size() + "):" + asUiCustomers);
+        r = customerService.asUiCustomers("Die Fi", "Moritz", "", "   ", true);
+        assertThat(r).as("called asUiCustomers('Die Fi', 'Moritz', '', '   ', true)" + r)
+                .isEmpty();
 
-        assertEquals("Finding all Customers", 4, customerService.asUiCustomers(null, null, "", "   ", true).size());
-        assertEquals(1, customerService.asUiCustomers("Die Firma", null, null, null, true).size());
-        assertEquals(1, customerService.asUiCustomers("Schla", null, null, null, true).size());
-        assertEquals(1, customerService.asUiCustomers(null, "Mic", null, null, true).size());
-        assertEquals(3, customerService.asUiCustomers(null, "M", null, null, true).size());
+        r = customerService.asUiCustomers("Die Fam", null, "", "   ", true);
+        assertThat(r).as("called asUiCustomers('Die Fam', null, '', '   ', true)" + r)
+                .hasSize(0);
+
+        r = customerService.asUiCustomers(null, null, null, "lisa", true);
+        assertThat(r).as("called asUiCustomers(null, null, null, 'lisa', true)" + r)
+                .hasSize(1)
+                .first().returns(c4.getLastName(), UiCustomer::lastName);
+
+        r = customerService.asUiCustomers("Die Fi", null, "", "   ", false);
+        assertThat(r).as("called asUiCustomers('Die Fi', null, '', '   ', false)" + r)
+                .hasSize(0);
+
+        r = customerService.asUiCustomers("Schla", null, null, null, true);
+        assertThat(r).as("called asUiCustomers('Schla', null, null, null, true) found: " + r)
+                .hasSize(1)
+                .first().returns(c3.getCompanyName(), UiCustomer::company);
+
+                r = customerService.asUiCustomers(null, "Marr", null, null, true);
+        assertThat(r).as("called asUiCustomers(null,'Marr', null, null, true) found: " + r)
+                .hasSize(1)
+                .first().returns(c2.getLastName(), UiCustomer::lastName);
+
+                r = customerService.asUiCustomers(null,"M", null, null, true);
+        assertThat(r).as("called asUiCustomers(null, 'M', null, null, true) found: " + r)
+                .hasSize(3);
     }
 
     private SimpleCustomer makeSimpleCustomer(String firma, String titel, String vorname, String nachname, String anmerkung, String REAdresse, String REPlz, String REOrt) {

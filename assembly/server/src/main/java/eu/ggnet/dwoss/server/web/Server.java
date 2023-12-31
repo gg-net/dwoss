@@ -18,10 +18,9 @@ package eu.ggnet.dwoss.server.web;
 
 import java.io.Serializable;
 
-import javax.annotation.ManagedBean;
-import javax.enterprise.context.SessionScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +32,6 @@ import eu.ggnet.dwoss.mandator.api.value.Mandator;
  * @author oliver.guenther
  */
 @Named
-@ManagedBean
 @SessionScoped
 public class Server implements Serializable {
 

@@ -20,7 +20,7 @@ import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.mandator.api.service.ClientLocation;
 import eu.ggnet.dwoss.mandator.api.service.MandatorService;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 
 
 /**

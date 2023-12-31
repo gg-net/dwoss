@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.mandator.sample.gen.itest;
 
 import java.io.File;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -57,8 +57,6 @@ public class SampleGeneratorIT {
         WebArchive war = ShrinkWrap.create(WebArchive.class, "sample-persistence-test.war")
                 .addPackages(true, projectPackage.getName())
                 .addClass(Coordinate.class) // Need this cause of the maven resolver is part of the deployment
-                .addClass(SampleDataSourceDefinition.class) // Alle Datasources. More than we need.
-                // Testresources.
                 .addAsResource(new ClassLoaderAsset("META-INF/persistence.xml"), "META-INF/persistence.xml")
                 .addAsWebInfResource("jboss-deployment-structure.xml") // Needed for jboss/wildfly h2 enablement
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")

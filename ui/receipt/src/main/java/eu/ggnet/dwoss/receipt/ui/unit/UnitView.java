@@ -28,7 +28,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
+
 import javax.swing.*;
 
 import javafx.beans.property.BooleanProperty;
@@ -68,6 +69,8 @@ import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.StaticInternalComment;
 import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.ui.*;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.core.common.values.ReceiptOperation.IN_SALE;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.REFURBISHED_ID;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.SERIAL;
@@ -80,6 +83,7 @@ import static javafx.scene.control.ButtonType.YES;
  *
  * @author bastian.venz, oliver.guenther
  */
+@Dependent
 @Title("Aufnahme")
 @StoreLocation
 public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In>, ResultProducer<UnitView.Out> {

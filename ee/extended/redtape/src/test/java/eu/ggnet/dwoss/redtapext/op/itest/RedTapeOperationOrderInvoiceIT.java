@@ -3,11 +3,10 @@ package eu.ggnet.dwoss.redtapext.op.itest;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import javax.ejb.EJB;
-import javax.inject.Inject;
+import jakarta.ejb.EJB;
+import jakarta.inject.Inject;
 
 import org.apache.commons.lang3.time.DateUtils;
-import org.bouncycastle.util.Strings;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
 import org.junit.Test;
@@ -327,7 +326,7 @@ public class RedTapeOperationOrderInvoiceIT extends ArquillianProjectArchive {
         Date end = DateUtils.addDays(now, 1);
 
         FileJacket fj = sageExporter.toXml(start, end);
-        String result = Strings.fromByteArray(fj.getContent());
+        String result = new String(fj.getContent());
         assertThat(result).as("SageXml spot Test")
                 .isNotBlank()
                 .contains(dos.getIdentifier(), dos2.getIdentifier())

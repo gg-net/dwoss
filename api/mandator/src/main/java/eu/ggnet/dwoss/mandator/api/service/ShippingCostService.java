@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.mandator.api.service;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 import eu.ggnet.dwoss.core.common.values.PaymentMethod;
 import eu.ggnet.dwoss.core.common.values.ShippingCondition;

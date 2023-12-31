@@ -26,6 +26,8 @@ import eu.ggnet.dwoss.report.ui.main.ReportController;
 import eu.ggnet.dwoss.report.ui.main.ReportController.In;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.rights.api.AtomicRight.READ_STORED_REPORTS;
 
 /**
@@ -33,6 +35,7 @@ import static eu.ggnet.dwoss.rights.api.AtomicRight.READ_STORED_REPORTS;
  *
  * @author pascal.perau, oliver.guenther
  */
+@Dependent
 public class SelectExistingReportAction extends AccessableAction {
 
     public SelectExistingReportAction() {

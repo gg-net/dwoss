@@ -26,10 +26,13 @@ import eu.ggnet.dwoss.price.ee.imex.ContractorPricePartNoImporter;
 import eu.ggnet.dwoss.price.ui.cap.ImportResultView;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  *
  * @author oliver.guenther
  */
+@Dependent
 public class ContractorImportMenuItem extends MenuItem {
 
     public ContractorImportMenuItem() {

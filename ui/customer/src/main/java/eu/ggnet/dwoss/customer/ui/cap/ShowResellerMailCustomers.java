@@ -28,11 +28,14 @@ import eu.ggnet.dwoss.customer.ui.neo.ResellerListView;
 import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  * Zeigt die liste aller eMail Adressen, die die Händlerliste erhalten.
  *
  * @author oliver.guenther
  */
+@Dependent
 public class ShowResellerMailCustomers extends AbstractAction {
 
     private final static Logger L = LoggerFactory.getLogger(ShowResellerMailCustomers.class);

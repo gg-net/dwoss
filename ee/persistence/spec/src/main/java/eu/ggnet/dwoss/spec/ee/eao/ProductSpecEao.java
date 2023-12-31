@@ -18,10 +18,10 @@ package eu.ggnet.dwoss.spec.ee.eao;
 
 import java.util.*;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 
 import eu.ggnet.dwoss.spec.ee.assist.Specs;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;

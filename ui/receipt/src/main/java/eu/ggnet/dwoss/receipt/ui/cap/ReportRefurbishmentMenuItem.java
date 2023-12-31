@@ -16,8 +16,9 @@
  */
 package eu.ggnet.dwoss.receipt.ui.cap;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
+
+import jakarta.annotation.PostConstruct;
 
 import javafx.scene.control.MenuItem;
 
@@ -28,10 +29,13 @@ import eu.ggnet.dwoss.receipt.ee.reporting.RefurbishmentReporter;
 import eu.ggnet.dwoss.receipt.ui.ReportRefurbishmentController;
 import eu.ggnet.saft.core.Saft;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  *
  * @author mirko.schulze
  */
+@Dependent
 public class ReportRefurbishmentMenuItem extends MenuItem {
 
     @Inject

@@ -16,11 +16,13 @@
  */
 package eu.ggnet.dwoss.spec.ee.emo;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import eu.ggnet.dwoss.core.system.persistence.AbstractEao;
 import eu.ggnet.dwoss.spec.ee.eao.DisplayEao;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Display;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Entity Access Object for the CPU.
@@ -44,14 +46,19 @@ public class DisplayEmo extends AbstractEao<Display> {
     /**
      * Returns a Display by its components, or an unpersisted entity.
      *
-     * @param size       the size
-     * @param resolution the resolution
-     * @param type       the type
-     * @param ration     the ration
+     * @param size       the size must not be null
+     * @param resolution the resolution must not be null
+     * @param type       the type must not be null
+     * @param ration     the ration must not be null
      * @return a Display by its components, or an unpersisted entity.
+     * @throws NullPointerException if any parameter is null.
      */
-    public Display weakRequest(Display.Size size, Display.Resolution resolution, Display.Type type, Display.Ration ration) {
-        Display display = new DisplayEao(em).find(size, resolution, type, ration);
+    public Display weakRequest(Display.Size size, Display.Resolution resolution, Display.Type type, Display.Ration ration) throws NullPointerException {       
+        Display display = new DisplayEao(em).find(
+                requireNonNull(size, "size must not be null"), 
+                requireNonNull(resolution, "resolution must not be null"),
+                requireNonNull(type,"type must not be null"),
+                requireNonNull(ration, "ration must not be null"));
         if (display == null) {
             display = new Display(size, resolution, type, ration);
         }

@@ -18,11 +18,11 @@ package eu.ggnet.dwoss.price.ui.cap.build;
 
 import java.util.*;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
-import javax.enterprise.inject.Instance;
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Observes;
+import jakarta.enterprise.inject.Instance;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Inject;
 
 import javafx.scene.control.Menu;
 
@@ -30,6 +30,8 @@ import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.widget.event.UserChange;
 import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.core.widget.Dl;
+
+import jakarta.enterprise.context.Dependent;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_MISSING_CONTRACTOR_PRICES_DATA;
 
@@ -40,6 +42,7 @@ import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_MISSING_CONTRACTOR_PR
 @ApplicationScoped // Pojos, managed beans cannot observe events, a new instance is created than.
 public class PriceSubMenuBuilder {
 
+    @Dependent
     public static class PriceSubMenu {
 
         public final Menu menu;

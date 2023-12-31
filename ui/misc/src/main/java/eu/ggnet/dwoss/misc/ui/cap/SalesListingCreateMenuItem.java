@@ -27,12 +27,15 @@ import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration;
 import eu.ggnet.dwoss.misc.ee.listings.SalesListingProducer;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  * Saleslistingmenuitem, used in CDI discovery and later configuration.
  * Workaround, if an unknown amount of differnt Instances is needed.
  *
  * @author oliver.guenther
  */
+@Dependent
 public class SalesListingCreateMenuItem extends MenuItem {
 
     public void setConfig(ListingActionConfiguration config) {

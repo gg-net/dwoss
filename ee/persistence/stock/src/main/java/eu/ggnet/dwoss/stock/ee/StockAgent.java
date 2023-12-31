@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.stock.ee;
 
 import java.util.List;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 import eu.ggnet.dwoss.core.system.persistence.RemoteAgent;
 import eu.ggnet.dwoss.stock.ee.entity.*;

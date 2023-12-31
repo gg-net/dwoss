@@ -11,6 +11,15 @@
     <artifactId>dwoss-core-common</artifactId>
     <name>DwOss • Core • Common</name>
 
+    <dependencies>
+        <dependency>
+            <groupId>${javaee.groupId}</groupId>
+            <artifactId>${javaee.artifactId}</artifactId>
+            <version>${javaee.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
 </project>
 
 

@@ -22,13 +22,9 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-search-orm</artifactId>
+            <groupId>org.hibernate.search</groupId>
+            <artifactId>hibernate-search-mapper-orm-orm6</artifactId>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.querydsl</groupId>
-            <artifactId>querydsl-hibernate-search</artifactId>
         </dependency>
         <dependency>
             <groupId>eu.ggnet.lucidcalc</groupId>

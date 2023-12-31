@@ -18,9 +18,9 @@ package eu.ggnet.dwoss.stock.ee;
 
 import java.util.List;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import eu.ggnet.dwoss.core.system.persistence.AbstractAgentBean;
 import eu.ggnet.dwoss.core.system.persistence.BaseEntity;

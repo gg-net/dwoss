@@ -6,9 +6,9 @@ import java.time.Month;
 import java.util.Map.Entry;
 import java.util.*;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.UserTransaction;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.UserTransaction;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.jboss.arquillian.junit.Arquillian;
@@ -21,6 +21,7 @@ import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.system.util.Step;
 import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.report.ee.assist.Reports;
+import eu.ggnet.dwoss.report.ee.assist.gen.ReportDeleteUtils;
 import eu.ggnet.dwoss.report.ee.assist.gen.ReportLineGenerator;
 import eu.ggnet.dwoss.report.ee.eao.ReportLineEao;
 import eu.ggnet.dwoss.report.ee.eao.Revenue;
@@ -28,8 +29,6 @@ import eu.ggnet.dwoss.report.ee.entity.ReportLine.WorkflowStatus;
 import eu.ggnet.dwoss.report.ee.entity.*;
 import eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine;
 import eu.ggnet.dwoss.report.ee.itest.support.ArquillianProjectArchive;
-
-import com.querydsl.jpa.impl.JPADeleteClause;
 
 import static eu.ggnet.dwoss.core.common.values.DocumentType.ANNULATION_INVOICE;
 import static eu.ggnet.dwoss.core.common.values.DocumentType.INVOICE;
@@ -56,8 +55,6 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
     @Inject
     private UserTransaction utx;
 
-    private final ReportLineGenerator generator = new ReportLineGenerator();
-
     private static Date startEarly;
 
     private static Date startMid;
@@ -78,19 +75,18 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
     public void clearDatabase() throws Exception {
         utx.begin();
         em.joinTransaction();
-        new JPADeleteClause(em, QReport.report).execute();
-        new JPADeleteClause(em, QReportLine.reportLine).execute();
+        ReportDeleteUtils.deleteAll(em);
+        assertThat(ReportDeleteUtils.validateEmpty(em)).isNull();
         utx.commit();
     }
 
-    //  @Ignore
     @Test
     public void testFindAllSimple() throws Exception {
         utx.begin();
         em.joinTransaction();
 
         for (int i = 0; i < 300; i++) {
-            ReportLine l = generator.makeReportLine(Arrays.asList(TradeName.DELL), startEarly, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
+            ReportLine l = ReportLineGenerator.makeReportLine(Arrays.asList(TradeName.DELL), startEarly, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
             em.persist(l);
         }
         utx.commit();
@@ -104,14 +100,13 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
         utx.commit();
     }
 
-    //  @Ignore
     @Test
     public void findUnreportedOpenComplaints() throws Exception {
         utx.begin();
         em.joinTransaction();
 
         for (int i = 0; i < 300; i++) {
-            ReportLine l = generator.makeReportLine(Arrays.asList(TradeName.DELL), startEarly, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
+            ReportLine l = ReportLineGenerator.makeReportLine(Arrays.asList(TradeName.DELL), startEarly, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
             em.persist(l);
         }
 
@@ -139,7 +134,6 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
         utx.commit();
     }
 
-    //   @Ignore
     @Test
     public void testFindProductIdMissingContractorPartNo() throws Exception {
         utx.begin();
@@ -174,37 +168,36 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
         utx.commit();
     }
 
-    //  @Ignore
     @Test
     public void testFindLastReported() throws Exception {
         utx.begin();
         em.joinTransaction();
 
         for (int i = 0; i < 300; i++) {
-            ReportLine l = generator.makeReportLine(Arrays.asList(TradeName.DELL), startEarly, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
+            ReportLine l = ReportLineGenerator.makeReportLine(Arrays.asList(TradeName.DELL), startEarly, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
             em.persist(l);
         }
         for (int i = 0; i < 300; i++) {
-            ReportLine l = generator.makeReportLine(Arrays.asList(TradeName.DELL), startMid, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
+            ReportLine l = ReportLineGenerator.makeReportLine(Arrays.asList(TradeName.DELL), startMid, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
             em.persist(l);
         }
         for (int i = 0; i < 300; i++) {
-            ReportLine l = generator.makeReportLine(Arrays.asList(TradeName.DELL), startMid, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
+            ReportLine l = ReportLineGenerator.makeReportLine(Arrays.asList(TradeName.DELL), startMid, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
             em.persist(l);
         }
 
         for (int i = 0; i < 300; i++) {
-            ReportLine l = generator.makeReportLine(Arrays.asList(TradeName.DELL), startFuture, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
+            ReportLine l = ReportLineGenerator.makeReportLine(Arrays.asList(TradeName.DELL), startFuture, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
             em.persist(l);
         }
 
         for (int i = 0; i < 50; i++) {
-            ReportLine l = generator.makeReportLine(Arrays.asList(TradeName.HP), startMid, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
+            ReportLine l = ReportLineGenerator.makeReportLine(Arrays.asList(TradeName.HP), startMid, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
             em.persist(l);
         }
 
         for (int i = 0; i < 300; i++) {
-            ReportLine l = generator.makeReportLine(Arrays.asList(TradeName.DELL), startMid, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
+            ReportLine l = ReportLineGenerator.makeReportLine(Arrays.asList(TradeName.DELL), startMid, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
             em.persist(l);
             Report r = new Report("Report Test " + l.getId(), DELL, addDays(l.getReportingDate(), -1), addDays(l.getReportingDate(), 1));
             r.add(l);
@@ -266,30 +259,30 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
         em.joinTransaction();
 
         for (int i = 0; i < 300; i++) {
-            ReportLine l = generator.makeReportLine(Arrays.asList(TradeName.DELL), startEarly, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
+            ReportLine l = ReportLineGenerator.makeReportLine(Arrays.asList(TradeName.DELL), startEarly, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
             em.persist(l);
         }
         for (int i = 0; i < 300; i++) {
-            ReportLine l = generator.makeReportLine(Arrays.asList(TradeName.DELL), startMid, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
+            ReportLine l = ReportLineGenerator.makeReportLine(Arrays.asList(TradeName.DELL), startMid, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
             em.persist(l);
         }
         for (int i = 0; i < 300; i++) {
-            ReportLine l = generator.makeReportLine(Arrays.asList(TradeName.DELL), startMid, 7, Arrays.asList(PositionType.COMMENT), Arrays.asList(DocumentType.INVOICE));
+            ReportLine l = ReportLineGenerator.makeReportLine(Arrays.asList(TradeName.DELL), startMid, 7, Arrays.asList(PositionType.COMMENT), Arrays.asList(DocumentType.INVOICE));
             em.persist(l);
         }
 
         for (int i = 0; i < 300; i++) {
-            ReportLine l = generator.makeReportLine(Arrays.asList(TradeName.DELL), startFuture, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
+            ReportLine l = ReportLineGenerator.makeReportLine(Arrays.asList(TradeName.DELL), startFuture, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
             em.persist(l);
         }
 
         for (int i = 0; i < 50; i++) {
-            ReportLine l = generator.makeReportLine(Arrays.asList(TradeName.HP), startMid, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
+            ReportLine l = ReportLineGenerator.makeReportLine(Arrays.asList(TradeName.HP), startMid, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
             em.persist(l);
         }
 
         for (int i = 0; i < 300; i++) {
-            ReportLine l = generator.makeReportLine(Arrays.asList(TradeName.DELL), startMid, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
+            ReportLine l = ReportLineGenerator.makeReportLine(Arrays.asList(TradeName.DELL), startMid, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
             em.persist(l);
             Report r = new Report("Report Test " + l.getId(), DELL, DateUtils.addDays(l.getReportingDate(), -1), DateUtils.addDays(l.getReportingDate(), 1));
             r.add(l);
@@ -313,30 +306,30 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
         em.joinTransaction();
 
         for (int i = 0; i < 300; i++) {
-            ReportLine l = generator.makeReportLine(Arrays.asList(TradeName.DELL), startEarly, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
+            ReportLine l = ReportLineGenerator.makeReportLine(Arrays.asList(TradeName.DELL), startEarly, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
             em.persist(l);
         }
         for (int i = 0; i < 300; i++) {
-            ReportLine l = generator.makeReportLine(Arrays.asList(TradeName.DELL), startMid, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
+            ReportLine l = ReportLineGenerator.makeReportLine(Arrays.asList(TradeName.DELL), startMid, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
             em.persist(l);
         }
         for (int i = 0; i < 300; i++) {
-            ReportLine l = generator.makeReportLine(Arrays.asList(TradeName.DELL), startMid, 7, Arrays.asList(PositionType.COMMENT), Arrays.asList(DocumentType.INVOICE));
+            ReportLine l = ReportLineGenerator.makeReportLine(Arrays.asList(TradeName.DELL), startMid, 7, Arrays.asList(PositionType.COMMENT), Arrays.asList(DocumentType.INVOICE));
             em.persist(l);
         }
 
         for (int i = 0; i < 300; i++) {
-            ReportLine l = generator.makeReportLine(Arrays.asList(TradeName.DELL), startFuture, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
+            ReportLine l = ReportLineGenerator.makeReportLine(Arrays.asList(TradeName.DELL), startFuture, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
             em.persist(l);
         }
 
         for (int i = 0; i < 50; i++) {
-            ReportLine l = generator.makeReportLine(Arrays.asList(TradeName.HP), startMid, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
+            ReportLine l = ReportLineGenerator.makeReportLine(Arrays.asList(TradeName.HP), startMid, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
             em.persist(l);
         }
 
         for (int i = 0; i < 300; i++) {
-            ReportLine l = generator.makeReportLine(Arrays.asList(TradeName.DELL), startMid, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
+            ReportLine l = ReportLineGenerator.makeReportLine(Arrays.asList(TradeName.DELL), startMid, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
             em.persist(l);
             Report r = new Report("Report Test " + l.getId(), DELL, DateUtils.addDays(l.getReportingDate(), -1), DateUtils.addDays(l.getReportingDate(), 1));
             r.add(l);
@@ -514,7 +507,7 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
     }
 
     private ReportLine make(TradeName contractor, long productId, String contractorPartNo) {
-        ReportLine line = generator.makeReportLine();
+        ReportLine line = ReportLineGenerator.makeReportLine();
         line.setPositionType(PositionType.UNIT);
         line.setContractor(contractor);
         line.setProductId(productId);

@@ -63,7 +63,6 @@ public class ArquillianProjectArchive {
                 .addClass(Coordinate.class) // Need this cause of the maven resolver is part of the deployment
                 .addClass(ArquillianProjectArchive.class) // The local deployer configuration
                 .addClass(StaticCustomerMaker.class)
-                .addClass(Utils.class)
                 .addAsResource(new ClassLoaderAsset("META-INF/persistence.xml"), "META-INF/persistence.xml")
                 .addAsWebInfResource("jboss-deployment-structure.xml") // Needed for jboss/wildfly h2 enablement
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")

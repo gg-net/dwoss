@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.stock.ui.transactions;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -29,11 +29,14 @@ import eu.ggnet.dwoss.stock.ee.entity.Stock;
 import eu.ggnet.saft.core.Saft;
 import eu.ggnet.saft.core.ui.*;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  * FXML Controller class
  *
  * @author oliver.guenther
  */
+@Dependent
 @Title("Umfuhr für (ein) einzelne(s) Gerät(e)")
 public class CreateSelectionController implements FxController, ResultProducer<CreateSelectionController> {
 

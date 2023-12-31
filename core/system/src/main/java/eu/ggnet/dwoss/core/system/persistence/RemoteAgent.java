@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.core.system.persistence;
 
 import java.util.List;
 
-import javax.persistence.LockModeType;
+import jakarta.persistence.LockModeType;
 
 /**
  * Interface for usage of a Agent in the Remote way.

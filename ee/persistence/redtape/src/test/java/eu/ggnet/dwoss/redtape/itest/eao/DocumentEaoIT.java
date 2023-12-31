@@ -3,9 +3,9 @@ package eu.ggnet.dwoss.redtape.itest.eao;
 import java.util.Date;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.UserTransaction;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.UserTransaction;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
@@ -18,7 +18,7 @@ import eu.ggnet.dwoss.redtape.ee.emo.AddressEmo;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtape.itest.ArquillianProjectArchive;
 import eu.ggnet.dwoss.core.common.values.PaymentMethod;
-import eu.ggnet.dwoss.core.system.util.Utils;
+import eu.ggnet.dwoss.redtape.ee.assist.gen.RedTapeDeleteUtils;
 
 import static eu.ggnet.dwoss.redtape.ee.entity.Document.Directive.BALANCE_REPAYMENT;
 import static eu.ggnet.dwoss.redtape.ee.entity.Document.Directive.NONE;
@@ -43,7 +43,8 @@ public class DocumentEaoIT extends ArquillianProjectArchive {
     public void clearDataBase() throws Exception {
         utx.begin();
         em.joinTransaction();
-        Utils.clearH2Db(em);
+        RedTapeDeleteUtils.deleteAll(em);
+        assertThat(RedTapeDeleteUtils.validateEmpty(em)).isNull();
         utx.commit();
     }
 

@@ -3,11 +3,10 @@ package eu.ggnet.dwoss.redtapext.op.itest;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import javax.ejb.EJB;
-import javax.inject.Inject;
+import jakarta.ejb.EJB;
+import jakarta.inject.Inject;
 
 import org.apache.commons.lang3.time.DateUtils;
-import org.bouncycastle.util.Strings;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -77,7 +76,7 @@ public class RedTapeOperationAnnulationInvoiceIT extends ArquillianProjectArchiv
     private final String YYYY = new SimpleDateFormat("yyyy").format(new Date());
 
     @Test
-    public void testCreditMemo() throws UserInfoException {
+    public void testAnnulationInvoice() throws UserInfoException {
         List<Stock> allStocks = stockGenerator.makeStocksAndLocations(2); // We need two stocks at least.
         long customerId = customerGenerator.makeCustomer();
         List<UniqueUnit> uus = receiptGenerator.makeUniqueUnits(4, true, true);
@@ -106,7 +105,7 @@ public class RedTapeOperationAnnulationInvoiceIT extends ArquillianProjectArchiv
         doc.append(batch);
         doc.append(shipping);
 
-        //add units to LogicTransaction
+        //Lock 4 units, but only 3 are on the document. After the redTapeWorker.update only uu1, uu2 and uu3 remain on the logic transaction.
         unitOverseer.lockStockUnit(dos.getId(), uu1.getIdentifier(UniqueUnit.Identifier.REFURBISHED_ID));
         unitOverseer.lockStockUnit(dos.getId(), uu2.getIdentifier(UniqueUnit.Identifier.REFURBISHED_ID));
         unitOverseer.lockStockUnit(dos.getId(), uu3.getIdentifier(UniqueUnit.Identifier.REFURBISHED_ID));
@@ -121,8 +120,8 @@ public class RedTapeOperationAnnulationInvoiceIT extends ArquillianProjectArchiv
         doc = redTapeWorker.update(doc, null, "JUnit");
 
         LogicTransaction lt = support.findByDossierId(doc.getDossier().getId());
-        assertNotNull("A LogicTrasaction must exists", lt);
-        assertEquals("The Size of the LogicTransaction", 3, lt.getUnits().size());
+        assertThat(lt).as("LogicTransaction of Dossier").isNotNull();
+        assertThat(lt.getUnits()).as("The Size of the LogicTransaction").hasSize(3); // One less than the locked phase.
 
         //A CreditMemo for Unit1, negate prices on Annulation Invoice.
         for (Position pos : new ArrayList<>(doc.getPositions().values())) {
@@ -185,7 +184,7 @@ public class RedTapeOperationAnnulationInvoiceIT extends ArquillianProjectArchiv
 
         Document invoice = doc.getDossier().getActiveDocuments(DocumentType.INVOICE).get(0);
 
-        //A CreditMemo for a Unit, which is Rolled Out before.
+        //A second AnnulationInvoice for Unit 2, which will be Rolled Out before.
         for (Position pos : new ArrayList<>(invoice.getPositions().values())) {
             if ( pos.getType() != PositionType.UNIT ) invoice.remove(pos);
             else if ( pos.getUniqueUnitId() != uu2.getId() ) invoice.remove(pos);
@@ -239,7 +238,7 @@ public class RedTapeOperationAnnulationInvoiceIT extends ArquillianProjectArchiv
         Date end = DateUtils.addDays(now, 1);
 
         FileJacket fj = sageExporter.toXml(start, end);
-        String result = Strings.fromByteArray(fj.getContent());
+        String result = new String(fj.getContent());
         assertThat(result).as("SageXml spot Test")
                 .isNotBlank()
                 .contains(dos.getIdentifier())

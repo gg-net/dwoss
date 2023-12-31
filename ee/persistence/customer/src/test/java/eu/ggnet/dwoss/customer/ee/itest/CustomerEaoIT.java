@@ -3,37 +3,30 @@ package eu.ggnet.dwoss.customer.ee.itest;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.ejb.EJB;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.UserTransaction;
+import jakarta.ejb.EJB;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.UserTransaction;
 
 import org.jboss.arquillian.junit.Arquillian;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.assist.Customers;
-import eu.ggnet.dwoss.customer.ee.assist.gen.Assure;
-import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
+import eu.ggnet.dwoss.customer.ee.assist.gen.*;
 import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
 import eu.ggnet.dwoss.customer.ee.entity.Communication;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.customer.ee.itest.support.Utils;
 
 import static eu.ggnet.dwoss.core.common.values.DocumentType.INVOICE;
 import static eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField.COMMUNICATION;
 import static java.util.EnumSet.of;
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- *
- * @author pascal.perau
- */
 @RunWith(Arquillian.class)
 public class CustomerEaoIT extends ArquillianProjectArchive {
 
@@ -53,11 +46,12 @@ public class CustomerEaoIT extends ArquillianProjectArchive {
     @EJB
     private CustomerAgent agent;
 
-    @Before
+    @After
     public void teardown() throws Exception {
         utx.begin();
         em.joinTransaction();
-        Utils.clearH2Db(em);
+        CustomerDeleteUtils.deleteAll(em);
+        assertThat(CustomerDeleteUtils.validateEmpty(em)).isNull();
         utx.commit();
     }
 
@@ -127,7 +121,7 @@ public class CustomerEaoIT extends ArquillianProjectArchive {
 
         agent.store(c1);
 
-        assertThat(agent.search("lisa@xxx.com", of(COMMUNICATION))).hasSize(1);
+        assertThat(agent.search("lisa@xxx.com", of(COMMUNICATION))).as("search of lisa@xxx.com").hasSize(1);
         assertThat(agent.search("LiSa@xxX.com", of(COMMUNICATION))).hasSize(1);
         assertThat(agent.search("lisa*", of(COMMUNICATION))).hasSizeGreaterThan(0);
         assertThat(agent.search("isa@xxx.com", of(COMMUNICATION))).isEmpty();

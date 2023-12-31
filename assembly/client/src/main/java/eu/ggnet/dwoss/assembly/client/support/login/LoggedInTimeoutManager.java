@@ -25,10 +25,10 @@ import java.time.temporal.ChronoField;
 import java.time.temporal.TemporalAccessor;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.event.Observes;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.enterprise.event.Observes;
+import jakarta.inject.Inject;
+
+import jakarta.annotation.PostConstruct;
 
 import javafx.animation.*;
 import javafx.beans.property.IntegerProperty;
@@ -46,12 +46,14 @@ import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.saft.core.*;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
 
+import jakarta.enterprise.context.ApplicationScoped;
+
 /**
  * CDI Bean to enable disable the timeout and set it.
  *
  * @author oliver.guenther
  */
-@Singleton
+@ApplicationScoped
 public class LoggedInTimeoutManager {
 
     /**

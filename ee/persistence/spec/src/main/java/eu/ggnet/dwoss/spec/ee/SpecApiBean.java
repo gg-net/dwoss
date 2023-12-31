@@ -16,9 +16,9 @@
  */
 package eu.ggnet.dwoss.spec.ee;
 
-import javax.ejb.Remote;
-import javax.ejb.Stateless;
-import javax.inject.Inject;
+import jakarta.ejb.Remote;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 
 import eu.ggnet.dwoss.spec.api.SpecApi;
 import eu.ggnet.dwoss.spec.ee.eao.ProductSpecEao;

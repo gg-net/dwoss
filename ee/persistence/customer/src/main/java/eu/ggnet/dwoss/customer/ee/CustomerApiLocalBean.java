@@ -16,8 +16,8 @@
  */
 package eu.ggnet.dwoss.customer.ee;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 
 import eu.ggnet.dwoss.customer.api.CustomerApiLocal;
 import eu.ggnet.dwoss.customer.api.UiCustomer;

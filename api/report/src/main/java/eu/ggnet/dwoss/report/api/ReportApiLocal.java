@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.report.api;
 
 import java.util.List;
 
-import javax.ejb.Local;
+import jakarta.ejb.Local;
 
 /**
  * Local Report Api.

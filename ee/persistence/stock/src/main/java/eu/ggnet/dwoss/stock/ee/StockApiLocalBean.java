@@ -19,8 +19,8 @@ package eu.ggnet.dwoss.stock.ee;
 import java.util.List;
 import java.util.Optional;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 
 import eu.ggnet.dwoss.stock.api.*;
 import eu.ggnet.dwoss.stock.ee.eao.StockEao;

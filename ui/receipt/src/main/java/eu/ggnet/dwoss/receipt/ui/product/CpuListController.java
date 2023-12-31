@@ -20,18 +20,23 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
+
+import jakarta.annotation.PostConstruct;
+
 import eu.ggnet.dwoss.core.widget.swing.*;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Cpu;
+
+import jakarta.enterprise.context.Dependent;
 
 /**
  *
  * @author pascal.perau
  */
+@Dependent
 public class CpuListController {
 
     private class CpuFilter implements PojoFilter<Cpu> {

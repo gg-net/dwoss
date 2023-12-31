@@ -16,10 +16,10 @@
  */
 package eu.ggnet.dwoss.rights.itest;
 
-import javax.ejb.EJB;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.UserTransaction;
+import jakarta.ejb.EJB;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.UserTransaction;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.*;
@@ -29,10 +29,12 @@ import org.junit.runner.RunWith;
 import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.rights.api.*;
 import eu.ggnet.dwoss.rights.ee.assist.Rights;
+import eu.ggnet.dwoss.rights.ee.assist.gen.RightsDeleteUtils;
 import eu.ggnet.dwoss.rights.ee.entity.Persona;
 import eu.ggnet.dwoss.rights.itest.support.ArquillianProjectArchive;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.hamcrest.CoreMatchers.isA;
 
 @RunWith(Arquillian.class)
@@ -60,12 +62,10 @@ public class GroupApiIT extends ArquillianProjectArchive {
     public void tearDown() throws Exception {
         utx.begin();
         em.joinTransaction();
-        Utils.clearH2Db(em);
+        RightsDeleteUtils.deleteAll(em);
+        assertThat(RightsDeleteUtils.validateEmpty(em)).isNull();
         utx.commit();
     }
-
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
 
     @Test
     public void testCreate() throws Exception {
@@ -79,26 +79,19 @@ public class GroupApiIT extends ArquillianProjectArchive {
 
     @Test
     public void testCreateNameIsBlank() throws Exception {
-        expectedException.expectCause(isA(IllegalArgumentException.class));
-
-        groupApi.create(BLANK);
+        assertThatThrownBy(() -> groupApi.create(BLANK)).hasCauseInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     public void testCreateNameIsNull() throws Exception {
-        expectedException.expectCause(isA(NullPointerException.class));
-
-        groupApi.create(null);
-
+        assertThatThrownBy(() -> groupApi.create(null)).hasCauseInstanceOf(NullPointerException.class);
     }
 
     @Test
     public void testCreateNameIsDuplicate() throws Exception {
         groupApi.create(NAME);
 
-        expectedException.expectCause(isA(IllegalArgumentException.class));
-
-        groupApi.create(NAME);
+        assertThatThrownBy(() -> groupApi.create(NAME)).hasCauseInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -123,9 +116,7 @@ public class GroupApiIT extends ArquillianProjectArchive {
         em.persist(group);
         utx.commit();
 
-        expectedException.expectCause(isA(IllegalArgumentException.class));
-
-        groupApi.updateName(group.getId() + 1, UPDATED_NAME);
+        assertThatThrownBy(() -> groupApi.updateName(group.getId() + 1, UPDATED_NAME)).hasCauseInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -136,9 +127,7 @@ public class GroupApiIT extends ArquillianProjectArchive {
         em.persist(group);
         utx.commit();
 
-        expectedException.expectCause(isA(IllegalArgumentException.class));
-
-        groupApi.updateName(group.getId(), BLANK);
+        assertThatThrownBy(() -> groupApi.updateName(group.getId(), BLANK)).hasCauseInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -149,9 +138,7 @@ public class GroupApiIT extends ArquillianProjectArchive {
         em.persist(group);
         utx.commit();
 
-        expectedException.expectCause(isA(NullPointerException.class));
-
-        groupApi.updateName(group.getId(), null);
+        assertThatThrownBy(() -> groupApi.updateName(group.getId(), null)).hasCauseInstanceOf(NullPointerException.class);
     }
 
     @Test
@@ -164,9 +151,7 @@ public class GroupApiIT extends ArquillianProjectArchive {
         em.persist(anotherGroup);
         utx.commit();
 
-        expectedException.expectCause(isA(IllegalArgumentException.class));
-
-        groupApi.updateName(group.getId(), UPDATED_NAME);
+        assertThatThrownBy(() -> groupApi.updateName(group.getId(), UPDATED_NAME)).hasCauseInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -192,9 +177,7 @@ public class GroupApiIT extends ArquillianProjectArchive {
         em.persist(group);
         utx.commit();
 
-        expectedException.expectCause(isA(IllegalArgumentException.class));
-
-        groupApi.addRight(group.getId() + 1, R);
+        assertThatThrownBy(() -> groupApi.addRight(group.getId() + 1, R)).hasCauseInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -206,9 +189,7 @@ public class GroupApiIT extends ArquillianProjectArchive {
         em.persist(group);
         utx.commit();
 
-        expectedException.expectCause(isA(IllegalArgumentException.class));
-
-        groupApi.addRight(group.getId(), R);
+        assertThatThrownBy(() -> groupApi.addRight(group.getId(), R)).hasCauseInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -219,9 +200,7 @@ public class GroupApiIT extends ArquillianProjectArchive {
         em.persist(group);
         utx.commit();
 
-        expectedException.expectCause(isA(NullPointerException.class));
-
-        groupApi.addRight(group.getId(), null);
+        assertThatThrownBy(() -> groupApi.addRight(group.getId(), null)).hasCauseInstanceOf(NullPointerException.class);
     }
 
     @Test
@@ -248,9 +227,7 @@ public class GroupApiIT extends ArquillianProjectArchive {
         em.persist(group);
         utx.commit();
 
-        expectedException.expectCause(isA(IllegalArgumentException.class));
-
-        groupApi.removeRight(group.getId() + 1, R);
+        assertThatThrownBy(() -> groupApi.removeRight(group.getId() + 1, R)).hasCauseInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -261,9 +238,7 @@ public class GroupApiIT extends ArquillianProjectArchive {
         em.persist(group);
         utx.commit();
 
-        expectedException.expectCause(isA(IllegalArgumentException.class));
-
-        groupApi.removeRight(group.getId(), R);
+        assertThatThrownBy(() -> groupApi.removeRight(group.getId(), R)).hasCauseInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -274,9 +249,7 @@ public class GroupApiIT extends ArquillianProjectArchive {
         em.persist(group);
         utx.commit();
 
-        expectedException.expectCause(isA(NullPointerException.class));
-
-        groupApi.removeRight(group.getId(), null);
+        assertThatThrownBy(() -> groupApi.removeRight(group.getId(), null)).hasCauseInstanceOf(NullPointerException.class);
     }
 
     @Test
@@ -302,8 +275,6 @@ public class GroupApiIT extends ArquillianProjectArchive {
         em.persist(group);
         utx.commit();
 
-        expectedException.expectCause(isA(IllegalArgumentException.class));
-
-        groupApi.delete(group.getId() + 1);
+        assertThatThrownBy(() -> groupApi.delete(group.getId() + 1)).hasCauseInstanceOf(IllegalArgumentException.class);
     }
 }

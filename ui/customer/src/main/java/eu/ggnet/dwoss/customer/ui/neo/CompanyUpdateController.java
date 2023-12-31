@@ -38,6 +38,8 @@ import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.*;
 
+import jakarta.enterprise.context.Dependent;
+
 import static javafx.stage.Modality.WINDOW_MODAL;
 
 /**
@@ -46,6 +48,7 @@ import static javafx.stage.Modality.WINDOW_MODAL;
  *
  * @author jens.papenhagen
  */
+@Dependent
 @Title("Firmen Editieren")
 public class CompanyUpdateController implements Initializable, FxController, Consumer<Company>, ResultProducer<Company> {
 

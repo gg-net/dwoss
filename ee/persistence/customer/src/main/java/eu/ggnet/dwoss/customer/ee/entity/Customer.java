@@ -21,12 +21,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.search.annotations.*;
+import org.hibernate.search.mapper.pojo.automaticindexing.ReindexOnUpdate;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.*;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.common.values.CustomerFlag;
@@ -40,8 +41,8 @@ import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import static eu.ggnet.dwoss.core.common.values.AddressType.INVOICE;
 import static eu.ggnet.dwoss.core.common.values.AddressType.SHIPPING;
 import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.*;
-import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.FetchType.EAGER;
+import static jakarta.persistence.CascadeType.ALL;
+import static jakarta.persistence.FetchType.EAGER;
 
 /**
  * The datamodel of a purchaser from the view of GG-Net.
@@ -63,14 +64,46 @@ public class Customer extends BaseEntity implements Serializable, EagerAble, Con
      * Fields for detailed Search.
      */
     public enum SearchField {
-        ID,
-        FIRSTNAME,
-        LASTNAME,
-        COMPANY,
-        ADDRESS,
-        COMMUNICATION
-    }
+        ID, // Hint: In Hibernate Search 5.6 war das customer.id. In 6.x wird die Id nicht mehr in den Index gepackt.
+        FIRSTNAME("companies.contacts.firstName","contacts.firstName"),
+        LASTNAME("companies.contacts.lastName","contacts.lastName"),
+        COMPANY("companies.name"),
+        ADDRESS("companies.addresses.street","companies.addresses.city","companies.addresses.zipCode",
+                "contacts.addresses.street","contacts.addresses.city","contacts.addresses.zipCode"),
+        COMMUNICATION("companies.communications.identifier","companies.contacts.communications.identifier","contacts.communications.identifier");
+        
+        private final String[] queryFields;
 
+        private SearchField(String ... in) {
+            if (in == null) this.queryFields = new String[0];
+            else this.queryFields = in;
+        }
+
+        public String[] queryFields() {
+            return queryFields;
+        }
+        
+        /**
+         * Returns a array containing all queryfields of the corresponding SearchFields.
+         * In case of null or an empty set, all queryFields will be returned. 
+         * 
+         * @param searchFields the searchFields
+         * @return a array containing all queryfields of the corresponding SearchFields.
+         */
+        public static String[] toQueryFields(Collection<SearchField> searchFields) {
+            if (searchFields == null ||searchFields.isEmpty()) {
+                return EnumSet.allOf(SearchField.class).stream()
+                    .flatMap((sf) -> Arrays.asList(sf.queryFields).stream())
+                    .toArray(String[]::new);
+            } else {
+            return searchFields.stream()
+                    .flatMap((sf) -> Arrays.asList(sf.queryFields).stream())
+                    .toArray(String[]::new);
+            }
+        }
+        
+    }
+ 
     public enum Source {
         EXISTING("Bestandskunde"),
         JH_CAM_TOOL("CAM Tool T&S"),
@@ -105,7 +138,7 @@ public class Customer extends BaseEntity implements Serializable, EagerAble, Con
     }
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private long id;
 
     @Version
@@ -114,6 +147,7 @@ public class Customer extends BaseEntity implements Serializable, EagerAble, Con
     /**
      * A list of {@link Company}<code>s</code> represented by the customer.
      */
+    @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
     @NotNull
     @OneToMany(cascade = ALL)
     @IndexedEmbedded
@@ -122,6 +156,7 @@ public class Customer extends BaseEntity implements Serializable, EagerAble, Con
     /**
      * All contacts association with the customer.
      */
+    @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
     @NotNull
     @OneToMany(cascade = ALL)
     @IndexedEmbedded
@@ -149,7 +184,7 @@ public class Customer extends BaseEntity implements Serializable, EagerAble, Con
 
     @Lob
     @Column(length = 65535)
-    @Field
+    @FullTextField
     private String comment;
 
     @OneToOne

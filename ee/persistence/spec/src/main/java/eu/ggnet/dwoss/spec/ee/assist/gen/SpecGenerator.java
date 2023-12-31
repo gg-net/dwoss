@@ -20,11 +20,19 @@ import java.io.*;
 import java.util.List;
 import java.util.Random;
 
-import javax.xml.bind.JAXB;
+import eu.ggnet.dwoss.spec.ee.eao.CpuEao;
+import eu.ggnet.dwoss.spec.ee.eao.GpuEao;
+import eu.ggnet.dwoss.spec.ee.emo.DisplayEmo;
+import eu.ggnet.dwoss.spec.ee.emo.ProductModelEmo;
+import eu.ggnet.dwoss.spec.ee.entity.*;
+import eu.ggnet.dwoss.spec.ee.entity.piece.Cpu;
+import eu.ggnet.dwoss.spec.ee.entity.piece.Gpu;
 
-import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
+import jakarta.xml.bind.JAXB;
+
 import eu.ggnet.dwoss.spec.ee.entity.xml.SpecsRoot;
-import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
+
+import jakarta.persistence.EntityManager;
 
 /**
  * SpecGenerator, creates instances without changing any persistence layer.
@@ -52,8 +60,7 @@ public class SpecGenerator {
 
     private synchronized void initSerialized() {
         if ( productSpecs != null && !productSpecs.isEmpty() ) return;
-        try (InputStream is = getClass().getResourceAsStream("specs.ser");
-                ObjectInputStream ois = new ObjectInputStream(is)) {
+        try (InputStream is = getClass().getResourceAsStream("specs.ser"); ObjectInputStream ois = new ObjectInputStream(is)) {
             SpecsRoot root = (SpecsRoot)ois.readObject();
 
             productSpecs = root.getProductSpecs();
@@ -84,8 +91,7 @@ public class SpecGenerator {
      */
     public static void writeSerialized(String filename, List<? extends ProductSpec> productSpecs) {
         try {
-            try (FileOutputStream fileOut = new FileOutputStream(filename);
-                    ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
+            try (FileOutputStream fileOut = new FileOutputStream(filename); ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
                 out.writeObject(new SpecsRoot(productSpecs));
             }
         } catch (IOException i) {
@@ -103,36 +109,26 @@ public class SpecGenerator {
         return productSpecs.remove(R.nextInt(productSpecs.size()));
     }
 
-    public static void main(String[] args) {
-        SpecGenerator g = new SpecGenerator();
-        for (int i = 0; i < 10; i++) {
-            ProductSpec spec = g.makeSpec();
-            System.out.println(spec);
+    public ProductSpec makeRandom(EntityManager specEm) {
+        ProductSpec spec = makeSpec();
+        ProductModel model = spec.getModel();
+        ProductModelEmo productModelEmo = new ProductModelEmo(specEm);
+        model = productModelEmo.request(model.getFamily().getSeries().getBrand(), model.getFamily().getSeries().getGroup(), model.getFamily().getSeries().getName(), model.getFamily().getName(), model.getName());
+        spec.setModel(model);
+        if ( spec instanceof DisplayAble ) {
+            DisplayAble da = (DisplayAble)spec;
+            da.setDisplay(new DisplayEmo(specEm).weakRequest(da.getDisplay().getSize(), da.getDisplay().getResolution(), da.getDisplay().getType(), da.getDisplay().getRation()));
         }
-        ProductSpec spec = g.makeSpec();
-        System.out.println();
-        System.out.println("toName");
-        System.out.println("------------");
-        System.out.println(SpecFormater.toName(spec));
-        System.out.println();
-        System.out.println("toDetailedName");
-        System.out.println("------------");
-        System.out.println(SpecFormater.toDetailedName(spec));
-        System.out.println();
-        System.out.println("toSingleLine");
-        System.out.println("------------");
-        System.out.println(SpecFormater.toSingleLine(spec));
-        System.out.println();
-        System.out.println("toSingleHtmlLine");
-        System.out.println("------------");
-        System.out.println(SpecFormater.toSingleHtmlLine(spec));
-        System.out.println();
-        System.out.println("toHtml");
-        System.out.println("------------");
-        System.out.println(SpecFormater.toHtml(spec));
-        System.out.println();
-        System.out.println("toSource");
-        System.out.println("------------");
-        System.out.println(SpecFormater.toSource(spec));
+        if ( spec instanceof Desktop ) {
+            Desktop desktop = (Desktop)spec;
+            if ( desktop.getCpu() == null || desktop.getGpu() == null ) throw new IllegalArgumentException("Cpu or Gpu of a Desktop are null. " + desktop);
+            Cpu cpu = new CpuEao(specEm).findById(desktop.getCpu().getId());
+            Gpu gpu = new GpuEao(specEm).findById(desktop.getGpu().getId());
+            if ( cpu != null ) desktop.setCpu(cpu);
+            if ( gpu != null ) desktop.setGpu(gpu);
+        }
+        specEm.persist(spec);
+        return spec;
     }
+
 }

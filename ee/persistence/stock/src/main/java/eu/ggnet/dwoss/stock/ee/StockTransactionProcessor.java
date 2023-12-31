@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.stock.ee;
 import java.util.List;
 import java.util.SortedMap;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;

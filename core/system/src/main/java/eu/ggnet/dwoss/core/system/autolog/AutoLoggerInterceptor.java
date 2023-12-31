@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.core.system.autolog;
 
 import java.util.Arrays;
 
-import javax.interceptor.*;
+import jakarta.interceptor.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

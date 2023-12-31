@@ -18,14 +18,15 @@ package eu.ggnet.dwoss.customer.ee.eao;
 
 import java.util.*;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.lucene.search.Query;
-import org.hibernate.search.jpa.*;
-import org.hibernate.search.query.dsl.*;
+import org.hibernate.search.engine.search.query.SearchQuery;
+import org.hibernate.search.engine.search.query.SearchResult;
+import org.hibernate.search.mapper.orm.Search;
+import org.hibernate.search.mapper.orm.session.SearchSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,9 +38,7 @@ import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
 
 import com.querydsl.core.NonUniqueResultException;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.impl.AbstractJPAQuery;
-import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.*;
 
 import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.EMAIL;
 import static eu.ggnet.dwoss.customer.ee.entity.QCommunication.communication;
@@ -48,11 +47,6 @@ import static eu.ggnet.dwoss.customer.ee.entity.QContact.contact;
 import static eu.ggnet.dwoss.customer.ee.entity.QCustomer.customer;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
-/**
- * CustomerEao.
- * <p>
- * @author oliver.guenther
- */
 @Stateless
 public class CustomerEao extends AbstractEao<Customer> {
 
@@ -64,6 +58,7 @@ public class CustomerEao extends AbstractEao<Customer> {
         private final boolean appendWildcard;
 
         public String trim(String s) {
+            if ( isBlank(s) ) return "%"; // Blank means ignore
             return s.toLowerCase() + (appendWildcard ? "%" : "");
         }
 
@@ -74,39 +69,6 @@ public class CustomerEao extends AbstractEao<Customer> {
     }
 
     private final static Logger L = LoggerFactory.getLogger(CustomerEao.class);
-
-    private static final Set<String> SEARCH_FIRSTNAME = new HashSet<>();
-
-    private static final Set<String> SEARCH_LASTNAME = new HashSet<>();
-
-    private static final Set<String> SEARCH_COMPANY = new HashSet<>();
-
-    private static final Set<String> SEARCH_ADDRESS = new HashSet<>();
-
-    private static final Set<String> SEARCH_COMMUNICATIONS = new HashSet<>();
-
-    static {
-
-        SEARCH_FIRSTNAME.add("companies.contacts.firstName");
-        SEARCH_FIRSTNAME.add("contacts.firstName");
-
-        SEARCH_LASTNAME.add("companies.contacts.lastName");
-        SEARCH_LASTNAME.add("contacts.lastName");
-
-        SEARCH_COMPANY.add("companies.name");
-
-        SEARCH_ADDRESS.add("companies.addresses.street");
-        SEARCH_ADDRESS.add("companies.addresses.city");
-        SEARCH_ADDRESS.add("companies.addresses.zipCode");
-
-        SEARCH_ADDRESS.add("contacts.addresses.street");
-        SEARCH_ADDRESS.add("contacts.addresses.city");
-        SEARCH_ADDRESS.add("contacts.addresses.zipCode");
-
-        SEARCH_COMMUNICATIONS.add("companies.communications.identifier");
-        SEARCH_COMMUNICATIONS.add("companies.contacts.communications.identifier");
-        SEARCH_COMMUNICATIONS.add("contacts.communications.identifier");
-    }
 
     @Inject
     @Customers
@@ -139,39 +101,39 @@ public class CustomerEao extends AbstractEao<Customer> {
      * @return a list of customers matching the paramters.
      */
     public List<Customer> find(String companyName, String firstName, String lastName, String email, boolean appendWildcard) {
+        // No Search, Empty Result.
+        if ( isBlank(companyName) && isBlank(firstName) && isBlank(lastName) && isBlank(email) ) return Collections.emptyList(); 
+
         WildCardHelper W = new WildCardHelper(appendWildcard);
-        JPAQuery<Customer> query = new JPAQuery<Customer>(em).from(customer);
-        if ( !isBlank(companyName) ) {
-            query.join(customer.companies, company)
-                    .on(company.name.lower()
-                            .like(W.trim(companyName)));
-        }
-        if ( !isBlank(firstName) || !isBlank(lastName) ) {
-            query.join(customer.contacts, contact).on();
-            BooleanExpression on = null;
-            if ( !isBlank(firstName) ) {
-                on = contact.firstName.lower().like(W.trim(firstName));
-            }
-            if ( !isBlank(lastName) ) {
-                BooleanExpression second = contact.lastName.lower().like(W.trim(lastName));
-                if ( on != null ) {
-                    on = on.and(second);
-                } else {
-                    on = second;
-                }
-            }
-            query.on(on);
-        }
-        if ( !isBlank(email) ) {
-            query.join(customer.contacts, contact)
-                    .join(contact.communications, communication)
-                    .on(communication.type.eq(EMAIL)
-                            .and(communication.identifier.lower().like(W.trim(email))));
-        }
-        L.debug("calling query");
-        List<Customer> list = query.fetch();
-        L.debug("Query successful wiht {}", list);
-        return list;
+        // Company Tree        
+        JPAQuery<Customer> query = new JPAQuery<Customer>(em)
+                .distinct()
+                .from(customer)
+                .join(customer.companies, company)
+                .on(company.name.lower().like(W.trim(companyName)))
+                .join(company.contacts, contact)
+                .on(contact.firstName.lower().like(W.trim(firstName)).and(contact.lastName.lower().like(W.trim(lastName))))
+                .join(contact.communications, communication)
+                .on(communication.identifier.lower().like(W.trim(email)));
+
+        L.debug("calling Query 1 (Company) {}", query);
+        Set<Customer> result = new HashSet<>();
+        result.addAll(query.fetch());
+
+        // Only companyNme is given, second search not needed.
+        if ( isBlank(firstName) && isBlank(lastName) && isBlank(email) ) return new ArrayList<>(result); 
+
+        query = new JPAQuery<Customer>(em)
+                .distinct()
+                .from(customer)
+                .join(customer.contacts, contact)
+                .on(contact.firstName.lower().like(W.trim(firstName)).and(contact.lastName.lower().like(W.trim(lastName))))
+                .join(contact.communications, communication)
+                .on(communication.identifier.lower().like(W.trim(email)));
+
+        L.debug("calling Query 2 (Customer) {}", query);
+        result.addAll(query.fetch());
+        return new ArrayList<>(result);
     }
 
     /**
@@ -231,30 +193,18 @@ public class CustomerEao extends AbstractEao<Customer> {
      * @return the result of the search
      */
     public List<Customer> find(String search, Set<SearchField> searchField, int start, int limit) {
-        if ( StringUtils.isBlank(search) ) {
-            return new ArrayList<>();
-        }
-        //fill the searchField
-        if ( searchField == null || searchField.isEmpty() ) {
-            searchField = new HashSet<>(Arrays.asList(SearchField.values()));
-        }
-
+        if ( StringUtils.isBlank(search) ) return Collections.emptyList();
         search = search.trim();
-        // Ensure, that the first result is the customer, if the search is a matching customer id.
         List<Customer> result = new ArrayList<>();
-        if ( start == 0 ) {
-            findCustomerIfSearchIsId(search).ifPresent(e -> result.add(e));
-        }
+        // Ensure, that the first result is the customer, if the search is a matching customer id.
+        if ( start == 0 ) findCustomerIfSearchIsId(search).ifPresent(e -> result.add(e));
+        // If only the id was given, no search is needed.
+        if ( EnumSet.of(SearchField.ID).equals(searchField) ) return result;
 
-        // If only the id is given, no lucene search is needed.
-        if ( searchField.equals(EnumSet.of(SearchField.ID)) ) return result;
+        SearchQuery<Customer> sq = buildSearchQuery(search, searchField);
+        SearchResult<Customer> sr = (limit > 0 ? sq.fetch(start, limit) : sq.fetchAll());
 
-        FullTextQuery query = buildSearchQuery(search, searchField);
-        if ( start >= 0 && limit > 0 ) {
-            query = query.setFirstResult(start).setMaxResults(limit);
-        }
-        List resultList = query.getResultList();
-        result.addAll(resultList);
+        result.addAll(sr.hits());
         return result;
     }
 
@@ -268,15 +218,9 @@ public class CustomerEao extends AbstractEao<Customer> {
     public int countFind(String search, Set<SearchField> searchField) {
         if ( StringUtils.isBlank(search) ) return 0;
         search = search.trim();
-        //fill the searchField if it does not contain any fields
-        if ( searchField == null || searchField.isEmpty() ) searchField = new HashSet<>(Arrays.asList(SearchField.values()));
-
-        // Shortcut if only the kid is searched.
-        if ( searchField.equals(EnumSet.of(SearchField.ID)) ) {
-            return findCustomerIfSearchIsId(search).isPresent() ? 1 : 0;
-        }
-
-        return buildSearchQuery(search, searchField).getResultSize();
+        if ( EnumSet.of(SearchField.ID).equals(searchField) ) return findCustomerIfSearchIsId(search).isPresent() ? 1 : 0;
+        SearchQuery<Customer> sq = buildSearchQuery(search, searchField);
+        return (int)sq.fetchTotalHitCount();
     }
 
     /**
@@ -290,85 +234,24 @@ public class CustomerEao extends AbstractEao<Customer> {
                 .fetch();
     }
 
-    private Set<String> getSearchFieldStringSet(Set<SearchField> searchField) {
-        Set<String> searchFieldStringSet = new HashSet<>();
+    private SearchQuery<Customer> buildSearchQuery(String search, Collection<SearchField> searchFields) {
+        SearchSession ss = Search.session(em);
 
-        if ( searchField == null ) {
-            return searchFieldStringSet;
-        }
-
-        for (SearchField sf : searchField) {
-            switch (sf) {
-                case FIRSTNAME:
-                    searchFieldStringSet.addAll(SEARCH_FIRSTNAME);
-                    break;
-                case LASTNAME:
-                    searchFieldStringSet.addAll(SEARCH_LASTNAME);
-                    break;
-                case COMPANY:
-                    searchFieldStringSet.addAll(SEARCH_COMPANY);
-                    break;
-                case ADDRESS:
-                    searchFieldStringSet.addAll(SEARCH_ADDRESS);
-                    break;
-                case COMMUNICATION:
-                    searchFieldStringSet.addAll(SEARCH_COMMUNICATIONS);
-                default:
-                    break;
-            }
-        }
-        L.debug("Searchfields {} generated hibernate search string values {}", searchField, searchFieldStringSet);
-        return searchFieldStringSet;
-    }
-
-    private FullTextQuery buildSearchQuery(String search, Set<SearchField> searchField) {
-        FullTextEntityManager ftem = Search.getFullTextEntityManager(em);
-        QueryBuilder qb = ftem.getSearchFactory().buildQueryBuilder().forEntity(Customer.class).get();
-        Query query;
-        Set<String> searchFieldStringSet = getSearchFieldStringSet(searchField);
-
-        if ( StringUtils.containsWhitespace(search) ) {
-            // Multiple Words
-            TermContext keyword = qb.keyword();
-            TermMatchingContext onField = null;
-
-            if ( !searchFieldStringSet.isEmpty() ) {
-                for (String string : searchFieldStringSet) {
-                    if ( onField == null ) {
-                        onField = keyword.onField(string);
-                    } else {
-                        onField = onField.andField(string);
-                    }
-                }
-            }
-
-            if ( onField == null ) {
-                onField = keyword.onField("customer.id");
-            }
-
-            query = onField.matching(search.toLowerCase()).createQuery();
+        if ( !StringUtils.containsWhitespace(search) ) { // One Word, Wildcards allowed.
+            return ss.search(Customer.class)
+                    .where(f -> f
+                    .wildcard()
+                    .fields(SearchField.toQueryFields(searchFields))
+                    .matching(search.toLowerCase()))
+                    .toQuery();
         } else {
-            // One Word, wildcards are possibel
-            WildcardContext keyword = qb.keyword().wildcard();
-            TermMatchingContext onField = null;
-            if ( !searchFieldStringSet.isEmpty() ) {
-                for (String string : searchFieldStringSet) {
-                    if ( onField == null ) {
-                        onField = keyword.onField(string);
-                    } else {
-                        onField = onField.andField(string);
-                    }
-                }
-            }
-
-            if ( onField == null ) {
-                onField = keyword.onField("");
-            }
-
-            query = onField.matching(search.toLowerCase()).createQuery();
+            return ss.search(Customer.class)
+                    .where(f -> f
+                    .match()
+                    .fields(SearchField.toQueryFields(searchFields))
+                    .matching(search.toLowerCase()))
+                    .toQuery();
         }
-        L.debug("buildSearchQuery(search={},searchFields={}) query={}", search, searchField, query);
-        return ftem.createFullTextQuery(query, Customer.class);
     }
 
     private Optional<Customer> findCustomerIfSearchIsId(String search) {

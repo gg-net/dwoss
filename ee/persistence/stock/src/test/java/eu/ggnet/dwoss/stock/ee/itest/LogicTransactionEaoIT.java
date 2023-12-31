@@ -4,9 +4,9 @@ import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
 import eu.ggnet.dwoss.stock.ee.entity.LogicTransaction;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.UserTransaction;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.UserTransaction;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;

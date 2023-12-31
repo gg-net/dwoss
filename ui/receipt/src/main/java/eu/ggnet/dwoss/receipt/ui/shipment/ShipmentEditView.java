@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -44,6 +44,8 @@ import eu.ggnet.saft.core.Saft;
 import eu.ggnet.saft.core.ui.Bind;
 import eu.ggnet.saft.core.ui.ResultProducer;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.core.common.values.ShipmentStatus.OPENED;
 import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
 import static java.lang.Double.MAX_VALUE;
@@ -53,6 +55,7 @@ import static java.lang.Double.MAX_VALUE;
  * <p>
  * @author pascal.perau
  */
+@Dependent
 public class ShipmentEditView extends BorderPane implements Consumer<Shipment>, ResultProducer<Shipment> {
 
     private class TradeNameListCell extends ListCell<TradeName> {

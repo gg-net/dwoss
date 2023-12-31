@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.spec.ee.assist;
 
 import java.lang.annotation.*;
 
-import javax.inject.Qualifier;
+import jakarta.inject.Qualifier;
 
 import static java.lang.annotation.ElementType.*;
 

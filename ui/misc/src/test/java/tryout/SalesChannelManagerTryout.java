@@ -2,7 +2,7 @@ package tryout;
 
 import java.util.*;
 
-import javax.persistence.LockModeType;
+import jakarta.persistence.LockModeType;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 

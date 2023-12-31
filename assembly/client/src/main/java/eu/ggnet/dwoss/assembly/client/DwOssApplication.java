@@ -23,12 +23,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-import javax.enterprise.inject.Instance;
-import javax.enterprise.inject.se.SeContainer;
-import javax.enterprise.inject.se.SeContainerInitializer;
+import jakarta.enterprise.inject.Instance;
+import jakarta.enterprise.inject.se.SeContainer;
+import jakarta.enterprise.inject.se.SeContainerInitializer;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.validation.ConstraintViolationException;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -68,6 +67,7 @@ import eu.ggnet.saft.core.impl.Swing;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
+import jakarta.validation.ConstraintViolationException;
 
 /**
  * The DwOssApplication.
@@ -304,8 +304,10 @@ public class DwOssApplication extends Application {
      *
      * @return the created pane.
      */
-    private Pane initMainPane() {
-        // TODO: If Saft uses CDI, we can start unsing it here.
+    private Pane initMainPane() {        
+        instance.select(DwOssClientController.class).get();
+        
+        
         FXMLLoader mainLoader = new FXMLLoader(DwOssClientController.class.getResource("DwOssClientView.fxml"), null, null, p -> instance.select(p).get(), StandardCharsets.UTF_8);
         try {
             mainLoader.load();

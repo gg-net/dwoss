@@ -16,10 +16,11 @@
  */
 package eu.ggnet.dwoss.misc.web.stub;
 
-import javax.annotation.ManagedBean;
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Produces;
 
 import eu.ggnet.dwoss.core.common.values.DocumentType;
+
+import jakarta.annotation.ManagedBean;
 import eu.ggnet.dwoss.core.system.util.MapBuilder;
 import eu.ggnet.dwoss.mandator.api.value.*;
 

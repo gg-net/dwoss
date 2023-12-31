@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.redtape.ee.eao;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.core.system.persistence.AbstractEao;

@@ -21,13 +21,13 @@ import java.util.Map.Entry;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import javax.ejb.Schedule;
-import javax.ejb.Singleton;
-import javax.enterprise.event.Event;
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.validation.*;
+import jakarta.ejb.Schedule;
+import jakarta.ejb.Singleton;
+import jakarta.enterprise.event.Event;
+import jakarta.enterprise.inject.Instance;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.validation.*;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -466,15 +466,15 @@ public class RedTapeCloserAutomaticOperation {
 
         for (Dossier dossier : openDossiers) {
             m.worked(1, " selecting " + dossier.getIdentifier());
-
+            L.info("{} selected, checking reportable conditions",dossier.getIdentifier());
             // Shortcut Only Order
             if ( dossier.getActiveDocuments().size() == 1 && dossier.getActiveDocuments(DocumentType.ORDER).size() == 1 ) {
                 Document doc = dossier.getActiveDocuments(DocumentType.ORDER).get(0);
                 if ( doc.getConditions().contains(CANCELED) ) { // Only Order Canceled -> Close
                     closeable.add(doc);
-                    L.info("findReportable() {} closeable {}, canceled only order", doc.getDossier().getIdentifier(), doc.getType().description);
+                    L.info("{} closeable {}, canceled only order", doc.getDossier().getIdentifier(), doc.getType().description);
                 } else {
-                    L.info("findReportable() {} not closeable {}, open only order", doc.getDossier().getIdentifier(), doc.getType().description);
+                    L.info("{} not closeable {}, open only order", doc.getDossier().getIdentifier(), doc.getType().description);
                 }
                 continue; // Shortcut
             }
@@ -483,7 +483,7 @@ public class RedTapeCloserAutomaticOperation {
                 Document doc = dossier.getActiveDocuments(DocumentType.CAPITAL_ASSET).get(0);
                 if ( doc.getConditions().contains(CANCELED) ) {
                     closeable.add(doc);
-                    L.info("findReportable() {} closeable {}, canceled capital asset", doc.getDossier().getIdentifier(), doc.getType().description);
+                    L.info("{} closeable {}, canceled capital asset", doc.getDossier().getIdentifier(), doc.getType().description);
                     continue; // Shortcut
                 }
             }
@@ -492,7 +492,7 @@ public class RedTapeCloserAutomaticOperation {
                 Document doc = dossier.getActiveDocuments(DocumentType.RETURNS).get(0);
                 if ( doc.getConditions().contains(CANCELED) ) {
                     closeable.add(doc);
-                    L.info("findReportable() {} closeable {}, canceled returs", doc.getDossier().getIdentifier(), doc.getType().description);
+                    L.info("{} closeable {}, canceled returs", doc.getDossier().getIdentifier(), doc.getType().description);
                     continue; // Shortcut
                 }
             }
@@ -540,10 +540,10 @@ public class RedTapeCloserAutomaticOperation {
                     if ( document.isClosed() ) continue; // Don't close it twice
                     closeable.add(document);
                 }
-                L.info("findReportable() {} closeable, all active documents are in close condition: {}", dossier.getIdentifier(),
+                L.info("{} closeable, all active documents are in close condition: {}", dossier.getIdentifier(),
                         dossier.getActiveDocuments().stream().map(Document::toTypeConditions).collect(Collectors.toList()));
-            } else if ( L.isDebugEnabled() ) {
-                L.info("findReportable() {} not closeable, cause: contains not closeable document(s): {}", dossier.getIdentifier(),
+            } else {
+                L.info("{} not closeable, cause: contains not closeable document(s): {}", dossier.getIdentifier(),
                         activeDocuments.stream().map(Document::toTypeConditions).collect(Collectors.toList()));
             }
         }
@@ -663,9 +663,9 @@ public class RedTapeCloserAutomaticOperation {
 
                 UiCustomer c = customerService.asUiCustomer(document.getDossier().getCustomerId());
                 if ( c != null ) {
-                    l.setCustomerCompany(c.getCompany());
+                    l.setCustomerCompany(c.company());
                     l.setCustomerName(c.toTitleNameLine());
-                    l.setCustomerEmail(c.getEmail());
+                    l.setCustomerEmail(c.email());
                 }
                 // A Credit Memo gets its prices inverted
                 if ( document.getType() == DocumentType.CREDIT_MEMO ) {

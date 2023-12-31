@@ -25,8 +25,9 @@ import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
 
 import java.util.HashMap;
 
-import javax.annotation.ManagedBean;
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Produces;
+
+import jakarta.enterprise.context.Dependent;
 
 
 /**
@@ -34,25 +35,25 @@ import javax.enterprise.inject.Produces;
  *
  * @author oliver.guenther
  */
-@ManagedBean
+@Dependent
 public class MandatorSupportProducer {
 
     @Produces
-    public static ReceiptCustomers c = new ReceiptCustomers(new HashMap<>());
+    private ReceiptCustomers c = new ReceiptCustomers(new HashMap<>());
 
     @Produces
-    public static SpecialSystemCustomers sc = new SpecialSystemCustomers(new HashMap<>());
+    private SpecialSystemCustomers sc = new SpecialSystemCustomers(new HashMap<>());
 
     @Produces
-    public static PostLedger pl = new PostLedger();
+    private PostLedger pl = new PostLedger();
 
     @Produces
-    public static RepaymentCustomers rc = new RepaymentCustomers(new HashMap<>());
+    private RepaymentCustomers rc = new RepaymentCustomers(new HashMap<>());
 
     @Produces
-    public static ScrapCustomers scrap = new ScrapCustomers(new HashMap<>());
+    private ScrapCustomers scrap = new ScrapCustomers(new HashMap<>());
 
     @Produces
-    public static DeleteCustomers dc = new DeleteCustomers(new HashMap<>());
+    private DeleteCustomers dc = new DeleteCustomers(new HashMap<>());
 
 }

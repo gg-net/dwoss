@@ -16,9 +16,9 @@
  */
 package eu.ggnet.dwoss.receipt.ui.tryout;
 
-import javax.enterprise.inject.Instance;
-import javax.enterprise.inject.se.SeContainer;
-import javax.enterprise.inject.se.SeContainerInitializer;
+import jakarta.enterprise.inject.Instance;
+import jakarta.enterprise.inject.se.SeContainer;
+import jakarta.enterprise.inject.se.SeContainerInitializer;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 

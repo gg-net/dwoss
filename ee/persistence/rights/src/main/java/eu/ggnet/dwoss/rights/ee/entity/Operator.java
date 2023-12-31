@@ -19,15 +19,15 @@ package eu.ggnet.dwoss.rights.ee.entity;
 import java.io.Serializable;
 import java.util.*;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 import eu.ggnet.dwoss.core.system.persistence.EagerAble;
 import eu.ggnet.dwoss.rights.api.*;
-import eu.ggnet.dwoss.rights.ee.entity.Operator;
 
-import static javax.persistence.FetchType.EAGER;
+import static jakarta.persistence.FetchType.EAGER;
+import static jakarta.persistence.GenerationType.IDENTITY;
 
 /**
  * This Entity represent a Operator in the Database with his rights.
@@ -39,14 +39,14 @@ import static javax.persistence.FetchType.EAGER;
 public class Operator extends BaseEntity implements Serializable, EagerAble {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = IDENTITY)
     private long id;
 
     /**
      * Integer value for optimistic locking.
      */
     @Version
-    private int optLock;
+    private short optLock = 0;
 
     private int quickLoginKey;
 
@@ -73,7 +73,7 @@ public class Operator extends BaseEntity implements Serializable, EagerAble {
     @NotNull
     private List<Persona> personas = new ArrayList<>();
 
-    public Operator(long id, int optLock, int quickLoginKey, String username, byte[] salt, byte[] password, List<Persona> personas, List<AtomicRight> rights) {
+    public Operator(long id, short optLock, int quickLoginKey, String username, byte[] salt, byte[] password, List<Persona> personas, List<AtomicRight> rights) {
         this.id = id;
         this.optLock = optLock;
         this.quickLoginKey = quickLoginKey;
@@ -208,7 +208,7 @@ public class Operator extends BaseEntity implements Serializable, EagerAble {
         this.personas.forEach(p -> groups.add(p.toApiGroup()));
         return new User.Builder()
                 .setId(Optional.of(this.id))
-                .setOptLock(Optional.of(this.optLock))
+                .setOptLock(this.optLock)
                 .setUsername(this.username)
                 .addAllRights(this.rights)
                 .addAllGroups(groups)

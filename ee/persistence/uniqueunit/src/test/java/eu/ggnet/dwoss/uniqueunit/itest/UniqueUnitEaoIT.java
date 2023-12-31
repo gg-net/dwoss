@@ -4,9 +4,9 @@ import java.time.LocalDate;
 import java.util.Map.Entry;
 import java.util.*;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.UserTransaction;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.UserTransaction;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.*;
@@ -17,15 +17,17 @@ import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
+import eu.ggnet.dwoss.uniqueunit.ee.assist.gen.UniqueUnitsDeleteUtils;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.BrandContractorCount;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.*;
 import eu.ggnet.dwoss.uniqueunit.itest.support.ArquillianProjectArchive;
 
 import static eu.ggnet.dwoss.core.system.util.Step.WEEK;
+import static eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.RETAILER;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.REFURBISHED_ID;
 import static java.time.ZoneId.systemDefault;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
@@ -75,6 +77,12 @@ public class UniqueUnitEaoIT extends ArquillianProjectArchive {
         em.joinTransaction();
 
         product = new Product(ProductGroup.MONITOR, TradeName.ACER, PARTNO_1, "The Notebook");
+        // Prices are here to validate the cleaner implicit.
+        product.setPrice(RETAILER, 10, "Price 1");
+        MILLISECONDS.sleep(100);
+        product.setPrice(RETAILER, 12, "Price 2");
+        MILLISECONDS.sleep(100);
+        product.setPrice(RETAILER, 15, "Price 3");
         em.persist(product);
 
         Product p2 = new Product(ProductGroup.MONITOR, TradeName.ACER, PARTNO_2, "The Notebook");
@@ -133,7 +141,8 @@ public class UniqueUnitEaoIT extends ArquillianProjectArchive {
     public void clearDataBase() throws Exception {
         utx.begin();
         em.joinTransaction();
-        Utils.clearH2Db(em);
+        UniqueUnitsDeleteUtils.deleteAll(em);
+        assertThat(UniqueUnitsDeleteUtils.validateEmpty(em)).isNull();
         utx.commit();
     }
 

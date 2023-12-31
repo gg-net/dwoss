@@ -20,7 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.function.Consumer;
 
-import javax.validation.*;
+import jakarta.validation.*;
 
 import eu.ggnet.dwoss.core.widget.saft.VetoableOnOk;
 import eu.ggnet.dwoss.receipt.ee.ProductProcessor.SpecAndModel;
@@ -44,7 +44,6 @@ public abstract class AbstractView extends javax.swing.JPanel implements Vetoabl
         if ( spec instanceof Desktop ) return DesktopView.class;
         if ( spec instanceof Monitor ) return MonitorView.class;
         if ( spec instanceof BasicSpec ) return BasicView.class;
-        if ( spec instanceof DesktopBundle ) return DesktopBundleView.class;
         throw new IllegalArgumentException(spec.getClass().getSimpleName() + " not yet implemented");
     }
 

@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.redtape.api;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 /**
  * Redtape Api.

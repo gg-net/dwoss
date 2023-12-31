@@ -2,8 +2,8 @@ package eu.ggnet.dwoss.uniqueunit.itest;
 
 import eu.ggnet.dwoss.uniqueunit.itest.support.UniqurUnitItHelper;
 
-import javax.ejb.EJB;
-import javax.inject.Inject;
+import jakarta.ejb.EJB;
+import jakarta.inject.Inject;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;

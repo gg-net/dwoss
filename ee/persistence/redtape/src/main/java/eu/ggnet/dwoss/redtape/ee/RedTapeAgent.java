@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.redtape.ee;
 
 import java.util.List;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.redtape.ee.entity.SalesProduct;

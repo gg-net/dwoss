@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.stock.ee.entity;
 import java.io.Serializable;
 import java.util.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * This is a Status that a {@link StockTransaction} will have.
@@ -32,7 +32,7 @@ import javax.persistence.*;
 public class StockTransactionStatus implements Serializable, Comparable<StockTransactionStatus> {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private int id;
 
     @Version

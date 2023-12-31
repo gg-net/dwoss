@@ -18,13 +18,13 @@ package eu.ggnet.dwoss.customer.ee;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-import javax.ejb.*;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.ejb.*;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
-import org.hibernate.search.MassIndexer;
-import org.hibernate.search.batchindexing.impl.SimpleIndexingProgressMonitor;
-import org.hibernate.search.jpa.Search;
+import org.hibernate.search.mapper.orm.Search;
+import org.hibernate.search.mapper.orm.massindexing.MassIndexer;
+import org.hibernate.search.mapper.pojo.massindexing.MassIndexingMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,8 +64,8 @@ public class CustomerIndexManagerBean implements CustomerIndexManager {
         final SubMonitor m = monitorFactory.newSubMonitor("Recreationg Searchindex");
         m.start();
         try {
-            MassIndexer indexer = Search.getFullTextEntityManager(em).createIndexer();
-            indexer.progressMonitor(new SimpleIndexingProgressMonitor() {
+            MassIndexer indexer = Search.session(em).massIndexer();
+            indexer.monitor(new MassIndexingMonitor() {
 
                 private final AtomicLong documentsDoneCounter = new AtomicLong();
 
@@ -74,24 +74,32 @@ public class CustomerIndexManagerBean implements CustomerIndexManager {
                 private final AtomicLong entitiesLoaded = new AtomicLong();
 
                 @Override
-                public void entitiesLoaded(int size) {
-                    entitiesLoaded.set(size);
-                }
-
-                @Override
                 public void addToTotalCount(long count) {
-                    super.addToTotalCount(count);
                     totalCounter.addAndGet(count);
                 }
 
                 @Override
                 public void documentsAdded(long increment) {
-                    super.documentsAdded(increment);
                     long current = documentsDoneCounter.addAndGet(increment);
-                    if ( current % getStatusMessagePeriod() == 0 ) {
+//                    if ( current % getStatusMessagePeriod() == 0 ) {
                         m.message("Prozess " + current + "/" + totalCounter.get()
                                 + " | Entities loaded: " + entitiesLoaded.get());
-                    }
+  //                  }
+                }
+
+                @Override
+                public void documentsBuilt(long l) {
+                    // ingnore
+                }
+
+                @Override
+                public void entitiesLoaded(long l) {
+                    entitiesLoaded.set(l);
+                }
+
+                @Override
+                public void indexingCompleted() {
+                    m.finish();
                 }
 
             });

@@ -19,15 +19,18 @@ package eu.ggnet.dwoss.redtapext.op.itest.support;
 import eu.ggnet.dwoss.mandator.api.service.WarrantyService;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 
+import jakarta.enterprise.context.ApplicationScoped;
+
 import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.ONESELF;
 
 /**
  *
  * @author oliver
  */
+@ApplicationScoped
 public class WarrantyServiceStup implements WarrantyService {
 
-    public static final String WARRANTY_PART_NO = "DEH2381234";
+    private static final String WARRANTY_PART_NO = "DEH2381234";
 
     @Override
     public boolean isWarranty(String partNo) {
@@ -39,4 +42,8 @@ public class WarrantyServiceStup implements WarrantyService {
         return ONESELF;
     }
 
+    public String getWarrantyPartNo() {
+        return WARRANTY_PART_NO;
+    }
+    
 };

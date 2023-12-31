@@ -26,12 +26,15 @@ import eu.ggnet.dwoss.misc.ui.cap.support.OkCancelStage;
 import eu.ggnet.dwoss.uniqueunit.ee.op.UniqueUnitReporter;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_INPUT_REPORT;
 
 /**
  *
  * @author pascal.perau
  */
+@Dependent
 public class ExportInputReportAction extends AccessableAction {
 
     public ExportInputReportAction() {

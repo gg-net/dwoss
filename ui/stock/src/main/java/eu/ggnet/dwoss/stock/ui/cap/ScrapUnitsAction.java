@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import javafx.scene.control.TextInputDialog;
 
@@ -35,6 +35,8 @@ import eu.ggnet.dwoss.stock.ui.ScrapResultController;
 import eu.ggnet.saft.core.Saft;
 import eu.ggnet.saft.core.UiUtil;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.rights.api.AtomicRight.SCRAP_UNIT;
 
 /**
@@ -42,6 +44,7 @@ import static eu.ggnet.dwoss.rights.api.AtomicRight.SCRAP_UNIT;
  *
  * @author oliver.guenther
  */
+@Dependent
 public class ScrapUnitsAction extends AccessableAction {
 
     @Inject

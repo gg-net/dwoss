@@ -19,10 +19,10 @@ package eu.ggnet.dwoss.core.system.progress;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.annotation.PreDestroy;
-import javax.ejb.Schedule;
-import javax.ejb.Singleton;
+import jakarta.ejb.Schedule;
+import jakarta.ejb.Singleton;
 
+import jakarta.annotation.PreDestroy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

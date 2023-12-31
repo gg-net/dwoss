@@ -16,25 +16,24 @@
  */
 package eu.ggnet.dwoss.customer.ee.itest;
 
-import javax.ejb.EJB;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.UserTransaction;
+import jakarta.ejb.EJB;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.UserTransaction;
 
 import org.jboss.arquillian.junit.Arquillian;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.core.common.values.SalesChannel;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.assist.Customers;
+import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerDeleteUtils;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
 import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.customer.ee.itest.support.Utils;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 
@@ -68,9 +67,6 @@ public class CustomerAgentNormalizedStoreMadatorMetadataIT extends ArquillianPro
     UserTransaction utx;
 
     @Inject
-    private CustomerGenerator GEN;
-
-    @Inject
     private DefaultCustomerSalesdata dcs;
 
     @Inject
@@ -82,15 +78,17 @@ public class CustomerAgentNormalizedStoreMadatorMetadataIT extends ArquillianPro
     public void clearDatabaseAndCreateOneSimpleCustomer() throws Exception {
         utx.begin();
         em.joinTransaction();
-        Utils.clearH2Db(em);
+        customer = CustomerGenerator.makeSimpleConsumerCustomer();
+        em.persist(customer);
         utx.commit();
-
+    }
+        
+    @After
+    public void teardown() throws Exception {
         utx.begin();
         em.joinTransaction();
-
-        customer = GEN.makeSimpleConsumerCustomer();
-        em.persist(customer);
-
+        CustomerDeleteUtils.deleteAll(em);
+        assertThat(CustomerDeleteUtils.validateEmpty(em)).isNull();
         utx.commit();
     }
 

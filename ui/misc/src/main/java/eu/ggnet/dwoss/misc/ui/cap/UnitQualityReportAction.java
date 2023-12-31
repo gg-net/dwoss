@@ -25,10 +25,13 @@ import eu.ggnet.dwoss.misc.ui.cap.support.DateRangeAndContractorChooserView;
 import eu.ggnet.dwoss.uniqueunit.ee.op.UniqueUnitReporter;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  *
  * @author pascal.perau
  */
+@Dependent
 public class UnitQualityReportAction extends AbstractAction {
 
     public UnitQualityReportAction() {

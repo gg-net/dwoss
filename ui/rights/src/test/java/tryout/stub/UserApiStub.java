@@ -66,7 +66,7 @@ public class UserApiStub implements UserApi {
     public UserApiStub() {
         L.debug("Entering UserApiStub constructor");
         for (int i = 1; i < 4; i++) {
-            Persona group = new Persona(groupId, 0, "Gruppe " + i, getRandomRights());
+            Persona group = new Persona(groupId, (short)0, "Gruppe " + i, getRandomRights());
             groupsByIds.put(group.getId(), group);
             groupId++;
             L.debug("constructor: Added Group {}", group);
@@ -74,7 +74,7 @@ public class UserApiStub implements UserApi {
         for (int j = 1; j < 4; j++) {
             int endIndex = (int)(Math.random() * 3 - 1);
             List<Persona> groups = new ArrayList<>(groupsByIds.values()).subList(0, endIndex);
-            Operator user = new Operator(userId, 0, 0, "Benutzer " + j, RandomStringUtils.randomAlphanumeric(6).getBytes(),
+            Operator user = new Operator(userId, (short)0, 0, "Benutzer " + j, RandomStringUtils.randomAlphanumeric(6).getBytes(),
                     RandomStringUtils.randomAlphanumeric(5).getBytes(), groups, getRandomRights());
             usersByIds.put(user.getId(), user);
             userId++;
@@ -105,7 +105,7 @@ public class UserApiStub implements UserApi {
         if ( username.isBlank() ) {
             throw new IllegalArgumentException("Submitted username is blank.");
         }
-        Operator user = new Operator(userId, 0, 0, username, null, null, new ArrayList<>(), new ArrayList<>());
+        Operator user = new Operator(userId, (short)0, 0, username, null, null, new ArrayList<>(), new ArrayList<>());
 
         usersByIds.put(user.getId(), user);
         userId++;

@@ -23,6 +23,8 @@ import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.price.ee.Importer;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_AND_IMPORT_PRICEMANAGMENT;
 
 /**
@@ -30,6 +32,7 @@ import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_AND_IMPORT_PRICEMANAG
  *
  * @author pascal.perau
  */
+@Dependent
 public class PriceExportImportAction extends AccessableAction {
 
     public PriceExportImportAction() {

@@ -23,7 +23,7 @@ import eu.ggnet.dwoss.search.api.GlobalKey;
 
 import java.util.*;
 
-import javax.ejb.Stateful;
+import jakarta.ejb.Stateful;
 
 import eu.ggnet.dwoss.search.api.GlobalKey.Component;
 

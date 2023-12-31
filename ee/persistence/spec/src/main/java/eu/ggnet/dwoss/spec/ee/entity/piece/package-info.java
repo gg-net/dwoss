@@ -21,6 +21,6 @@
 @XmlAccessorType(XmlAccessType.FIELD)
 package eu.ggnet.dwoss.spec.ee.entity.piece;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
 

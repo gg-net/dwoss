@@ -16,9 +16,9 @@
  */
 package eu.ggnet.dwoss.spec.ee;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import eu.ggnet.dwoss.spec.ee.assist.Specs;
 import eu.ggnet.dwoss.spec.ee.eao.ProductSpecEao;

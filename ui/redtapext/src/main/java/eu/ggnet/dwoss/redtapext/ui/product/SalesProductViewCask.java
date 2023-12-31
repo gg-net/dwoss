@@ -20,12 +20,15 @@ import java.awt.HeadlessException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
+
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import eu.ggnet.dwoss.core.common.Css;
+
+import jakarta.annotation.PostConstruct;
+
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.widget.HtmlPane;
 import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
@@ -38,12 +41,13 @@ import eu.ggnet.saft.core.Saft;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.ResultProducer;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
- * A UI to add a {@link SalesProduct} for Sale. <br />
+ * A UI to add a {@link SalesProduct} for Sale. 
  * They are used in {@link DocumentUpdateView} to add {@link Position}s of type PRODUCT_BATCH to a {@link Document}.
- * <p/>
- * @author bastian.venz
  */
+@Dependent
 public class SalesProductViewCask extends javax.swing.JPanel implements ResultProducer<Integer> {
 
     public class SalesProductTableModel extends PojoTableModel<SalesProduct> {

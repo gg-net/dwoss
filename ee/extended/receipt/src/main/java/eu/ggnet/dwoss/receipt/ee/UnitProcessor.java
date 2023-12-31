@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.receipt.ee;
 
 import java.io.Serializable;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.common.values.ReceiptOperation;

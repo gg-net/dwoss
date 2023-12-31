@@ -21,8 +21,8 @@ import eu.ggnet.dwoss.core.common.values.ShipmentStatus;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
@@ -33,7 +33,7 @@ public class Shipment extends BaseEntity implements Serializable {
 
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private long id;
 
     private String shipmentId;

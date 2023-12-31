@@ -1,7 +1,7 @@
 package eu.ggnet.dwoss.receipt.itest;
 
-import javax.ejb.EJB;
-import javax.inject.Inject;
+import jakarta.ejb.EJB;
+import jakarta.inject.Inject;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
@@ -12,13 +12,11 @@ import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
 import eu.ggnet.dwoss.receipt.itest.support.*;
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
-import eu.ggnet.dwoss.spec.ee.assist.SpecPu;
+import eu.ggnet.dwoss.spec.ee.assist.SpecConstants;
 import eu.ggnet.dwoss.spec.ee.entity.ProductFamily;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSeries;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 @RunWith(Arquillian.class)
 public class ReceiptProductLogicProductFamilyIT extends ArquillianProjectArchive {
@@ -40,52 +38,47 @@ public class ReceiptProductLogicProductFamilyIT extends ArquillianProjectArchive
     @Test
     public void testCreateProductFamily() {
         ProductFamily productFamily = productProcessor.create(TradeName.DELL, ProductGroup.NOTEBOOK, null, "TestPC");
-        assertThat(productFamily).isNotNull(); //Test if the created ProductFamily is not Null
-        assertTrue(productFamily.getId() > 0); // Test if the ProductFamily has a ID
-        assertEquals(SpecPu.DEFAULT_NAME, productFamily.getSeries().getName()); // Test if the Name of the created Series the Default Name is
+        assertThat(productFamily).as("Created Instance must not be null").isNotNull();
+        assertThat(productFamily.getId()).as("ProductFamiliy.id should be set be GeneratedValue").isNotEqualTo(0);
+        assertThat(productFamily.getSeries().getName()).as("Default name should be set").isEqualTo(SpecConstants.DEFAULT_NAME);
         ProductFamily productFamily2 = productProcessor.create(TradeName.DELL, ProductGroup.NOTEBOOK, null, "TestPC2");
-        assertNotNull(productFamily2); //Test if the created ProductFamily is not Null
-        assertTrue(productFamily2.getId() > 0); // Test if the ProductFamily has a ID
-        assertFalse(productFamily.equals(productFamily2)); //Test if the first created ProductFamily != the secound is!
-        assertTrue(productFamily2.getSeries().getName().equals(SpecPu.DEFAULT_NAME));// Test if the Name of the created Series the Default Name is
-        assertEquals(productFamily.getSeries(), productFamily2.getSeries());//Test if the ID of the Series is the same
+        assertThat(productFamily2).as("ProductFamiliy instance should be created").isNotNull();
+        assertThat(productFamily2.getId()).as("ProductFamiliy.id should be set be GeneratedValue").isNotEqualTo(0);
+        assertThat(productFamily).as("The two created instances should be different").isNotEqualTo(productFamily2);
+        assertThat(productFamily2.getSeries().getName()).as("Default name should be set").isEqualTo(SpecConstants.DEFAULT_NAME);
+        assertThat(productFamily2.getSeries()).as("The Series of both ProductFamilies should be equal").isEqualTo(productFamily.getSeries());
 
+        final String PRODUCT_SERIES_NAME = "Der Name";
         //Create a ProductSeries and persist it.
-        ProductSeries series = bean.makeSeries(TradeName.DELL, ProductGroup.MISC, "Der Name");
+        ProductSeries series = bean.makeSeries(TradeName.DELL, ProductGroup.MISC, PRODUCT_SERIES_NAME);
 
         ProductFamily productFamily3 = productProcessor.create(TradeName.DELL, ProductGroup.NOTEBOOK, series, "TestPC3");
-        assertNotNull(productFamily3);//Test if the created ProductFamily is not Null
-        assertTrue(productFamily3.getId() > 0);// Test if the ProductFamily has a ID
-        assertEquals("Der Name", productFamily3.getSeries().getName()); //Test if the Name of the Series now the same name is as on the creation
-        assertNotSame(productFamily3.getSeries(), productFamily.getSeries());
-        // Test if the Series not the Same is as the DefaultSeries
-
-        ProductFamily productFamily4 = productProcessor.create(TradeName.DELL, ProductGroup.NOTEBOOK, series, "TestPC4");
-        assertNotNull(productFamily4);//Test if the created ProductFamily is not Null
-        assertTrue(productFamily4.getId() > 0);// Test if the ProductFamily has a ID
-        assertTrue(productFamily3.getSeries().equals(productFamily4.getSeries())); //Test if the Both ProdcutFamily have the same series
-
+        assertThat(productFamily3).as("Created ProductFamily must not be null").isNotNull();
+        assertThat(productFamily3.getId()).as("ProductFamiliy.id should be set be GeneratedValue").isNotEqualTo(0);
+        assertThat(productFamily3.getSeries().getName()).as("Name of ProductSeries must match").isEqualTo(PRODUCT_SERIES_NAME);
+        
+        assertThat(productFamily3.getSeries()).isNotEqualTo(productFamily.getSeries());
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void testCreateProductFamilyExceptionSameName() {
-        //Test if two Products where created with the same name that will be throw a exception
-        productProcessor.create(TradeName.DELL, ProductGroup.NOTEBOOK, null, "TestPC");
-        productProcessor.create(TradeName.DELL, ProductGroup.NOTEBOOK, null, "TestPC");
-
-        failBecauseExceptionWasNotThrown(RuntimeException.class);
+        assertThatExceptionOfType(RuntimeException.class)
+                .as("Creating two idendical ProductFamily must fail")
+                .isThrownBy(() -> {
+                    productProcessor.create(TradeName.DELL, ProductGroup.NOTEBOOK, null, "TestPC");
+                    productProcessor.create(TradeName.DELL, ProductGroup.NOTEBOOK, null, "TestPC");
+                });
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void testCreateProductFamilyExceptionSameNameDifferentSeries() {
-
-        ProductSeries series = bean.makeSeries(TradeName.DELL, ProductGroup.MISC, "Die Exception");
-
-        //Test if two Products where created with the same name but different ProductSeries that will be throw a exception
-        productProcessor.create(TradeName.DELL, ProductGroup.NOTEBOOK, series, "TestPC");
-        productProcessor.create(TradeName.DELL, ProductGroup.NOTEBOOK, null, "TestPC");
-
-        failBecauseExceptionWasNotThrown(RuntimeException.class);
+        assertThatExceptionOfType(RuntimeException.class)
+                .as("Creating two idendical ProductFamily, even with different series, must fail")
+                .isThrownBy(() -> {
+                    ProductSeries series = bean.makeSeries(TradeName.DELL, ProductGroup.MISC, "Die Exception");
+                    productProcessor.create(TradeName.DELL, ProductGroup.NOTEBOOK, series, "TestPC");
+                    productProcessor.create(TradeName.DELL, ProductGroup.NOTEBOOK, null, "TestPC");
+                });
 
     }
 

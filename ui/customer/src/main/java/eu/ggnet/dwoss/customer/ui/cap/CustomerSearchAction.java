@@ -23,10 +23,13 @@ import javax.swing.AbstractAction;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerSearchController;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  *
  * @author pascal.perau
  */
+@Dependent
 public class CustomerSearchAction extends AbstractAction {
 
     public CustomerSearchAction() {

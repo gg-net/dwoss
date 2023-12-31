@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.redtapext.ee.workflow;
 import java.util.ArrayList;
 import java.util.Date;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,9 +77,7 @@ public abstract class RedTapeWorkflow {
         this.mandator = mandator;
     }
 
-    public Document execute() {
-        throw new UnsupportedOperationException("Not Yet Implemented");
-    }
+    public abstract Document execute();
 
     protected void removeLogicTransaction(Document document) {
         equilibrateOrRemoveLogicTransaction(document, true);

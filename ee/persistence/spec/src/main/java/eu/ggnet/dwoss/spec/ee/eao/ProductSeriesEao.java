@@ -16,9 +16,9 @@
  */
 package eu.ggnet.dwoss.spec.ee.eao;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.persistence.*;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import jakarta.persistence.*;
 
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;

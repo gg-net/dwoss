@@ -35,6 +35,8 @@ import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.*;
 
+import jakarta.enterprise.context.Dependent;
+
 import static javafx.scene.text.FontPosture.ITALIC;
 
 /**
@@ -43,6 +45,7 @@ import static javafx.scene.text.FontPosture.ITALIC;
  *
  * @author jens.papenhagen
  */
+@Dependent
 public class CommunicationUpdateController implements Initializable, FxController, Consumer<Communication>, ResultProducer<Communication> {
     
     public final static String WRONG_PHONE = "Rufnummernformat nicht zulässig.\n"

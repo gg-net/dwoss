@@ -20,24 +20,24 @@ import java.io.*;
 import java.net.URL;
 import java.util.*;
 
-import javax.ejb.Stateless;
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
-import javax.mail.util.ByteArrayDataSource;
-import javax.persistence.EntityManager;
+import jakarta.ejb.Stateless;
+import jakarta.enterprise.inject.Instance;
+import jakarta.inject.Inject;
+import jakarta.mail.util.ByteArrayDataSource;
+import jakarta.persistence.EntityManager;
 
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.mail.EmailException;
-import org.apache.commons.mail.MultiPartEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.common.UserInfoException;
+import eu.ggnet.dwoss.core.common.apache.EmailException;
+import eu.ggnet.dwoss.core.common.apache.MultiPartEmail;
 import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.customer.api.UiCustomer;

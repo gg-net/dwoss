@@ -17,7 +17,7 @@
 package eu.ggnet.dwoss.core.system.progress;
 
 
-import javax.enterprise.inject.Alternative;
+import jakarta.enterprise.inject.Alternative;
 
 /**
  *

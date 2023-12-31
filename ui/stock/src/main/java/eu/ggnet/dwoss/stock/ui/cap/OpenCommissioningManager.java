@@ -23,10 +23,13 @@ import javax.swing.AbstractAction;
 import eu.ggnet.dwoss.stock.ui.*;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  *
  * @author oliver.guenther
  */
+@Dependent
 public class OpenCommissioningManager extends AbstractAction {
 
     public OpenCommissioningManager() {

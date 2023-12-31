@@ -15,7 +15,8 @@
     <properties>
         <mandator.name>Example GmbH</mandator.name> <!-- Don't remember, why we need this -->
         <!-- Without that, the run dialog doesnt show the wildfly servers in nb11 -->
-        <org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_j2eeVersion>1.7-web</org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_j2eeVersion>
+        <org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_j2eeVersion>10-web</org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_j2eeVersion>
+        <netbeans.hint.jdkPlatform>@@DEFAULT@@</netbeans.hint.jdkPlatform>
     </properties>
 
 
@@ -44,6 +45,24 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-mandator-sample-startupgenerator</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-annotations</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-databind</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.dataformat</groupId>
+                    <artifactId>jackson-dataformat-xml</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 </project>

@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.assembly.client.support.monitor;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -35,6 +35,8 @@ import javafx.scene.layout.VBox;
 import eu.ggnet.dwoss.assembly.client.support.executor.Executor;
 import eu.ggnet.saft.core.Saft;
 
+import jakarta.enterprise.context.Dependent;
+
 import static java.lang.Double.MAX_VALUE;
 
 /**
@@ -42,6 +44,7 @@ import static java.lang.Double.MAX_VALUE;
  *
  * @author oliver.guenther
  */
+@Dependent
 public class MonitorPane extends BorderPane {
 
     private final ListView<Task<?>> taskListView;

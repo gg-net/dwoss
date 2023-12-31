@@ -16,18 +16,20 @@
  */
 package eu.ggnet.dwoss.redtape.ee.assist;
 
-import javax.enterprise.inject.Produces;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 /**
  * Persistence Unit Support Class.
  *
  * @author oliver.guenther
  */
+@ApplicationScoped
 public class RedTapePu {
 
-    public final static String NAME = "redtape-pu";
+    private final static String NAME = "redtape-pu";
 
     @PersistenceContext(unitName = NAME)
     @Produces

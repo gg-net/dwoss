@@ -20,7 +20,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 
@@ -35,7 +35,7 @@ import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 public class Address extends BaseEntity implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private long id;
 
     @Basic(optional = false)
@@ -107,7 +107,7 @@ public class Address extends BaseEntity implements Serializable {
     @Override
     public String toString() {
         String des = description;
-        if ( des != null ) des = des.replaceAll("\\n", "\\\\n");
+        if ( des != null ) des = des.replaceAll("\n", "(newline)").replaceAll("\r", "");
         return "Address{" + "id=" + id + ", description=" + des + '}';
     }
 }

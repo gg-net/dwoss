@@ -49,6 +49,8 @@ import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.*;
 
+import jakarta.enterprise.context.Dependent;
+
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
@@ -57,6 +59,7 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
  *
  * @author jens.papenhagen
  */
+@Dependent
 @Title("Kunden Anlegen und Bearbeiten")
 public class CustomerSimpleController implements Initializable, FxController, Consumer<Customer>, ResultProducer<CustomerCommand>, ClosedListener {
 

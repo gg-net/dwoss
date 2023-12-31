@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.stock.ee.entity;
 
 import java.io.Serializable;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 /**
  * Someone (a real person) which participates in the transaction at a defined point
@@ -31,7 +31,7 @@ import javax.persistence.*;
 public class StockTransactionParticipation implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private int id;
 
     @Version
@@ -44,7 +44,7 @@ public class StockTransactionParticipation implements Serializable {
     private String participantName;
 
     @Basic(optional = false)
-    @Column(columnDefinition = "bit(1)")
+    @Column
     private boolean signed = false;
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})

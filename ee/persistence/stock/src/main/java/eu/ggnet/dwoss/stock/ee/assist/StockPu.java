@@ -16,13 +16,15 @@
  */
 package eu.ggnet.dwoss.stock.ee.assist;
 
-import javax.enterprise.inject.Produces;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
+@ApplicationScoped
 public class StockPu {
 
-    public final static String NAME = "stock-pu";
+    private final static String NAME = "stock-pu";
 
     @PersistenceContext(unitName = NAME)
     @Produces

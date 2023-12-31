@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import javafx.application.Platform;
 import javafx.beans.property.*;
@@ -32,6 +32,8 @@ import eu.ggnet.saft.core.Saft;
 import eu.ggnet.saft.core.ui.Bind;
 import eu.ggnet.saft.core.ui.FxController;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
 import static javafx.scene.control.SelectionMode.MULTIPLE;
 
@@ -41,6 +43,7 @@ import static javafx.scene.control.SelectionMode.MULTIPLE;
  *
  * @author lucas.huelsen
  */
+@Dependent
 public class ProductListController implements Initializable, FxController {
 
     private static final Logger L = LoggerFactory.getLogger(ProductListController.class);

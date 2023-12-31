@@ -23,10 +23,13 @@ import javax.swing.AbstractAction;
 import eu.ggnet.dwoss.search.ui.SearchCask;
 import eu.ggnet.saft.core.UiCore;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  *
  * @author oliver.guenther
  */
+@Dependent
 public class OpenSearchAction extends AbstractAction {
 
     public OpenSearchAction() {

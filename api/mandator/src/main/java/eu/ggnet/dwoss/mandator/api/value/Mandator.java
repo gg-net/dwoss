@@ -20,10 +20,10 @@ import java.io.Serializable;
 import java.util.Map.Entry;
 import java.util.*;
 
-import org.apache.commons.mail.EmailException;
-import org.apache.commons.mail.MultiPartEmail;
 import org.inferred.freebuilder.FreeBuilder;
 
+import eu.ggnet.dwoss.core.common.apache.EmailException;
+import eu.ggnet.dwoss.core.common.apache.MultiPartEmail;
 import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.mandator.api.value.partial.*;
 

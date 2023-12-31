@@ -68,12 +68,12 @@ public class DefaultSageExporterConfig implements SageExporterConfig, Serializab
 
     @Override
     public String buchText(Document doc, UiCustomer customer) {
-        String buchungsText = customer.company;
+        String buchungsText = customer.company();
         if ( StringUtils.isBlank(buchungsText) ) {
-            buchungsText = customer.lastName;
+            buchungsText = customer.lastName();
         }
         if ( StringUtils.isBlank(buchungsText) ) {
-            buchungsText = "Kundenummer=" + customer.id;
+            buchungsText = "Kundenummer=" + customer.id();
         }
         buchungsText = buchungsText.replaceAll("-", "_");
         buchungsText += " - " + doc.getIdentifier();
@@ -82,7 +82,7 @@ public class DefaultSageExporterConfig implements SageExporterConfig, Serializab
 
     @Override
     public String wawiBeleg(Document doc, UiCustomer customer) {
-        return "K" + customer.id + "/" + doc.getIdentifier();
+        return "K" + customer.id() + "/" + doc.getIdentifier();
     }
 
     @Override

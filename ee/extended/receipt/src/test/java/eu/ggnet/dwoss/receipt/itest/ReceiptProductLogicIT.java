@@ -3,7 +3,7 @@ package eu.ggnet.dwoss.receipt.itest;
 import java.util.EnumSet;
 import java.util.List;
 
-import javax.ejb.EJB;
+import jakarta.ejb.EJB;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;

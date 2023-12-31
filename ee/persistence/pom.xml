@@ -14,34 +14,21 @@
         <global-resources-path>../..</global-resources-path>
     </properties>
 
-    <build>
-        <plugins>
-            <plugin>
-                <!-- Config in Master Pom, Enables QueryDSL Classes -->
-                <groupId>com.mysema.maven</groupId>
-                <artifactId>apt-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
-
     <dependencies>
         <dependency>
             <groupId>com.querydsl</groupId>
             <artifactId>querydsl-apt</artifactId>
             <scope>provided</scope>
+            <classifier>jakarta</classifier>
         </dependency>
         <dependency>
             <groupId>com.querydsl</groupId>
             <artifactId>querydsl-jpa</artifactId>
+            <classifier>jakarta</classifier>
         </dependency>
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>javax.el</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

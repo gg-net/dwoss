@@ -22,6 +22,8 @@ import eu.ggnet.dwoss.core.widget.AccessableAction;
 import eu.ggnet.dwoss.report.ui.RawReportView;
 import eu.ggnet.saft.core.UiCore;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.rights.api.AtomicRight.READ_RAW_REPORT_DATA;
 
 /**
@@ -29,6 +31,7 @@ import static eu.ggnet.dwoss.rights.api.AtomicRight.READ_RAW_REPORT_DATA;
  *
  * @author oliver.guenther
  */
+@Dependent
 public class OpenRawReportLinesAction extends AccessableAction {
 
     public OpenRawReportLinesAction() {

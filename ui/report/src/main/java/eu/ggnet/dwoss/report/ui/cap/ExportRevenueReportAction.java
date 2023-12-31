@@ -23,6 +23,8 @@ import eu.ggnet.dwoss.report.ee.op.RevenueReporter;
 import eu.ggnet.dwoss.report.ui.cap.support.RevenueReportSelectionView;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_REVENUE_REPORT;
 
 /**
@@ -30,6 +32,7 @@ import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_REVENUE_REPORT;
  *
  * @author pascal.perau
  */
+@Dependent
 public class ExportRevenueReportAction extends AccessableAction {
 
     public ExportRevenueReportAction() {

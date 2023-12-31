@@ -34,7 +34,8 @@ public enum ProductGroup implements INoteModel {
     COMMENTARY("!!"),
     MISC("Sonstige"),
     DESKTOP("Desktop"),
-    DESKTOP_BUNDLE("Desktop/Monitor Bundle"),
+    @Deprecated // Wurde aus dem Datenmodel entfernt.
+    DESKTOP_BUNDLE("*Nicht verwenden*"),
     ALL_IN_ONE("All in one PC"),
     NOTEBOOK("Notebook"),
     MONITOR("Monitor"),

@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.redtape.ee.sage;
 import java.io.OutputStream;
 import java.util.*;
 
-import javax.xml.bind.*;
+import jakarta.xml.bind.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -125,7 +125,7 @@ public class SageExporterEngine {
             Map<Integer, Row> bookingRates = new HashMap<>();
             for (Position position : doc.getPositions().values()) {
                 if ( !position.getBookingAccount().isPresent() ) {
-                    L.warn("Export contains Position without BookingAccount. Kid={},Dossier={},Pos={}", customer.id, doc.getDossier().getIdentifier(), position);
+                    L.warn("Export contains Position without BookingAccount. Kid={},Dossier={},Pos={}", customer.id(), doc.getDossier().getIdentifier(), position);
                     continue;
                 }
                 Row row;

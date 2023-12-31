@@ -18,11 +18,11 @@ package eu.ggnet.dwoss.report.ee;
 
 import java.util.*;
 
-import javax.ejb.Stateless;
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
+import jakarta.ejb.Stateless;
+import jakarta.enterprise.inject.Instance;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

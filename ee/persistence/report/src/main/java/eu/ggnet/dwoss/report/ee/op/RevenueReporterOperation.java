@@ -23,8 +23,8 @@ import eu.ggnet.dwoss.core.common.values.SalesChannel;
 import java.util.Map.Entry;
 import java.util.*;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 
 import eu.ggnet.dwoss.core.system.util.Step;
 import eu.ggnet.dwoss.mandator.api.value.Contractors;

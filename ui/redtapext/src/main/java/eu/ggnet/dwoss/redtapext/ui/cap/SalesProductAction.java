@@ -18,11 +18,14 @@ package eu.ggnet.dwoss.redtapext.ui.cap;
 
 import java.awt.event.ActionEvent;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
+
 import javax.swing.AbstractAction;
 
 import eu.ggnet.dwoss.redtapext.ui.product.SalesProductViewCask;
 import eu.ggnet.saft.core.Saft;
+
+import jakarta.enterprise.context.Dependent;
 
 /**
  * @author bastian.venz
@@ -30,6 +33,7 @@ import eu.ggnet.saft.core.Saft;
  * @author pascal.perau
  * @author jens.papenhagen
  */
+@Dependent
 public class SalesProductAction extends AbstractAction {
 
     @Inject

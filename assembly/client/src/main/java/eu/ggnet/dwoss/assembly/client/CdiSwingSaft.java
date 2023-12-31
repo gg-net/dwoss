@@ -20,12 +20,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Instance;
+import jakarta.inject.Inject;
 
 import eu.ggnet.saft.core.Saft;
+
+import jakarta.annotation.PostConstruct;
 import eu.ggnet.saft.core.impl.Swing;
 import eu.ggnet.saft.core.ui.LocationStorage;
 

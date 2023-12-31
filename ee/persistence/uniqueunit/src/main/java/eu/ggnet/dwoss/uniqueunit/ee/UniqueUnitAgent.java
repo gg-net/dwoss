@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ee;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 import eu.ggnet.dwoss.uniqueunit.ee.entity.*;
 import eu.ggnet.dwoss.core.system.persistence.RemoteAgent;

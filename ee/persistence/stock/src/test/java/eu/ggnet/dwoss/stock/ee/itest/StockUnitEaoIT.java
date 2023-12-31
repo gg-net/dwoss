@@ -3,16 +3,16 @@ package eu.ggnet.dwoss.stock.ee.itest;
 import java.util.Date;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.*;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.*;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.*;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
+import eu.ggnet.dwoss.stock.ee.assist.gen.StockDeleteUtils;
 import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
 import eu.ggnet.dwoss.stock.ee.entity.*;
 import eu.ggnet.dwoss.stock.ee.itest.support.ArquillianProjectArchive;
@@ -37,7 +37,8 @@ public class StockUnitEaoIT extends ArquillianProjectArchive {
     public void clearDataBase() throws Exception {
         utx.begin();
         em.joinTransaction();
-        Utils.clearH2Db(em);
+        StockDeleteUtils.deleteAll(em);
+        assertThat(StockDeleteUtils.validateEmpty(em)).isNull();
         utx.commit();
     }
 

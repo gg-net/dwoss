@@ -4,8 +4,8 @@ import eu.ggnet.dwoss.spec.ee.entity.ProductModel;
 import eu.ggnet.dwoss.spec.ee.entity.ProductFamily;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSeries;
 
-import javax.ejb.EJB;
-import javax.inject.Inject;
+import jakarta.ejb.EJB;
+import jakarta.inject.Inject;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
@@ -16,9 +16,9 @@ import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
 import eu.ggnet.dwoss.receipt.itest.support.*;
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
-import eu.ggnet.dwoss.spec.ee.assist.SpecPu;
+import eu.ggnet.dwoss.spec.ee.assist.SpecConstants;
 
-import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
@@ -41,53 +41,53 @@ public class ReceiptProductLogicProductModelIT extends ArquillianProjectArchive 
     @Test
     public void testCreateProductModell() {
         ProductModel productModel = productProcessor.create(TradeName.HP, ProductGroup.DESKTOP, null, null, "ProductModel1");
-        assertNotNull(productModel);
-        assertTrue(productModel.getId() > 0);
-        assertEquals(SpecPu.DEFAULT_NAME, productModel.getFamily().getSeries().getName());
+        assertThat(productModel).as("Created Instance must not be null").isNotNull();
+        assertThat(productModel.getId()).as("ProductModel.id should be set be GeneratedValue").isNotEqualTo(0);
+        assertThat(productModel.getFamily().getSeries().getName()).as("Default name should be set").isEqualTo(SpecConstants.DEFAULT_NAME);
+
+        assertEquals(SpecConstants.DEFAULT_NAME, productModel.getFamily().getSeries().getName());
 
         ProductModel productModel2 = productProcessor.create(TradeName.HP, ProductGroup.DESKTOP, null, null, "ProductModel2");
-        assertNotNull(productModel2);
-        assertTrue(productModel2.getId() > 0);
-        assertEquals(SpecPu.DEFAULT_NAME, productModel2.getFamily().getSeries().getName());
-
+        assertThat(productModel2).as("Created Instance must not be null").isNotNull();
+        assertThat(productModel2.getId()).as("ProductModel.id should be set be GeneratedValue").isNotEqualTo(0);
+        assertThat(productModel2.getFamily().getSeries().getName()).as("Default name should be set").isEqualTo(SpecConstants.DEFAULT_NAME);
         //Create a ProductSeries and persist it.
-        ProductSeries series = specStore.makeSeries(TradeName.HP, ProductGroup.MISC, "Der Name2");
+
+        final String PRODUCT_SERIES_NAME = "Der Name2";
+
+        ProductSeries series = specStore.makeSeries(TradeName.HP, ProductGroup.MISC, PRODUCT_SERIES_NAME);
         ProductFamily family = specStore.makeFamily("Family 2", series);
 
         ProductModel productModel3 = productProcessor.create(TradeName.HP, ProductGroup.DESKTOP, series, family, "ProductModel3");
-        assertNotNull(productModel3);
-        assertTrue(productModel3.getId() > 0);
-        assertEquals("Der Name2", productModel3.getFamily().getSeries().getName());
-
-        ProductModel productModel4 = productProcessor.create(TradeName.HP, ProductGroup.DESKTOP, series, family, "ProductModel4");
-        assertNotNull(productModel4);
-        assertTrue(productModel4.getId() > 0);
-        assertEquals("Der Name2", productModel4.getFamily().getSeries().getName());
-
+        assertThat(productModel3).as("Created Instance must not be null").isNotNull();
+        assertThat(productModel3.getId()).as("ProductModel.id should be set be GeneratedValue").isNotEqualTo(0);
+        assertThat(productModel3.getFamily().getSeries().getName()).as("Extra name should be set").isEqualTo(PRODUCT_SERIES_NAME);
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void testCreateProductModellExceptionSameName() {
-
-        //Test if two Products where created with the same name that will be throw a exception
-        productProcessor.create(TradeName.HP, ProductGroup.DESKTOP, null, null, "ModelException");
-        productProcessor.create(TradeName.HP, ProductGroup.DESKTOP, null, null, "ModelException");
-        failBecauseExceptionWasNotThrown(RuntimeException.class);
+        assertThatExceptionOfType(RuntimeException.class)
+                .as("Creating two idendical ProductModells must fail")
+                .isThrownBy(() -> {
+                    productProcessor.create(TradeName.HP, ProductGroup.DESKTOP, null, null, "ModelException");
+                    productProcessor.create(TradeName.HP, ProductGroup.DESKTOP, null, null, "ModelException");
+                });
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void testCreateProductModellExceptionSameNameDifferentSeries() {
+        assertThatExceptionOfType(RuntimeException.class)
+                .as("Creating two idendical ProductModells must fail")
+                .isThrownBy(() -> {
 
-        //Create a ProductSeries and persist it.
-        ProductSeries series = specStore.makeSeries(TradeName.HP, ProductGroup.MISC, "Die Exception2");
-        ProductFamily family = specStore.makeFamily("Family Exception", series);
+                    //Create a ProductSeries and persist it.
+                    ProductSeries series = specStore.makeSeries(TradeName.HP, ProductGroup.MISC, "Die Exception2");
+                    ProductFamily family = specStore.makeFamily("Family Exception", series);
 
-        //Test if two Products where created with the same name but different ProductSeries that will be throw a exception
-        productProcessor.create(TradeName.HP, ProductGroup.DESKTOP, series, family, "Model1");
-        productProcessor.create(TradeName.HP, ProductGroup.DESKTOP, series, family, "Model1");
-
-        failBecauseExceptionWasNotThrown(RuntimeException.class);
-
+                    //Test if two Products where created with the same name but different ProductSeries that will be throw a exception
+                    productProcessor.create(TradeName.HP, ProductGroup.DESKTOP, series, family, "Model1");
+                    productProcessor.create(TradeName.HP, ProductGroup.DESKTOP, series, family, "Model1");
+                });
     }
 
 }

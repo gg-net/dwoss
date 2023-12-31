@@ -42,6 +42,8 @@ import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 import static javafx.scene.text.FontPosture.ITALIC;
 
 /**
@@ -49,6 +51,7 @@ import static javafx.scene.text.FontPosture.ITALIC;
  *
  * @author oliver.guenther
  */
+@Dependent
 public class UnitAvailabilityPane extends BorderPane {
 
     private final static Font VERDANA = Font.font("Verdana", 12);

@@ -49,6 +49,8 @@ import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.Frame;
 import eu.ggnet.saft.core.ui.Title;
 
+import jakarta.enterprise.context.Dependent;
+
 import static javafx.geometry.Pos.CENTER_LEFT;
 import static javafx.scene.control.SelectionMode.MULTIPLE;
 
@@ -56,6 +58,7 @@ import static javafx.scene.control.SelectionMode.MULTIPLE;
  *
  * @author oliver.guenther
  */
+@Dependent
 @Frame
 @Title("Report Daten")
 public class RawReportView extends BorderPane {

@@ -18,10 +18,10 @@ package eu.ggnet.dwoss.redtape.ee;
 
 import java.util.TreeSet;
 
-import javax.ejb.Stateless;
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.ejb.Stateless;
+import jakarta.enterprise.inject.Instance;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import eu.ggnet.dwoss.customer.api.CustomerApiLocal;
 import eu.ggnet.dwoss.redtape.api.DossierViewer;

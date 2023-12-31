@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.uniqueunit.itest.support;
 
-import javax.ejb.Stateless;
+import jakarta.ejb.Stateless;
 
 import eu.ggnet.dwoss.stock.api.SimpleStockUnit;
 import eu.ggnet.dwoss.stock.api.StockApiLocal;

@@ -18,9 +18,9 @@ package eu.ggnet.dwoss.report.ee.emo;
 
 import java.util.Date;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import eu.ggnet.dwoss.report.ee.assist.Reports;
 import eu.ggnet.dwoss.report.ee.entity.Report;

@@ -3,8 +3,7 @@ package eu.ggnet.dwoss.spec.test;
 import java.util.EnumSet;
 import java.util.Set;
 
-import javax.validation.Validation;
-import javax.validation.Validator;
+import jakarta.validation.Validator;
 
 import org.junit.Test;
 
@@ -13,6 +12,8 @@ import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.spec.ee.entity.*;
 import eu.ggnet.dwoss.spec.ee.entity.piece.*;
 import eu.ggnet.dwoss.core.system.util.ValidationUtil;
+
+import jakarta.validation.Validation;
 
 import static org.junit.Assert.assertTrue;
 
@@ -23,11 +24,11 @@ import static org.junit.Assert.assertTrue;
  */
 public class SpecTest {
 
-    private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+    private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
-    private BasicSpec basicSpec;
+    private final BasicSpec basicSpec;
 
-    private Desktop desktop;
+    private final Desktop desktop;
 
     public SpecTest() {
         basicSpec = new BasicSpec();

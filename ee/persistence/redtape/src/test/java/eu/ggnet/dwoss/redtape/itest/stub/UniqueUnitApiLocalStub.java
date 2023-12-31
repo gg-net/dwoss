@@ -21,10 +21,13 @@ import java.util.List;
 import eu.ggnet.dwoss.uniqueunit.api.SimpleUniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApiLocal;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  *
  * @author oliver.guenther
  */
+@Dependent
 public class UniqueUnitApiLocalStub implements UniqueUnitApiLocal {
 
     @Override

@@ -19,9 +19,9 @@ package eu.ggnet.dwoss.rights.ee.op;
 import java.util.Arrays;
 import java.util.Set;
 
-import javax.ejb.Stateless;
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
+import jakarta.ejb.Stateless;
+import jakarta.enterprise.inject.Instance;
+import jakarta.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -20,12 +20,14 @@ import java.util.Objects;
 import java.util.SortedSet;
 import java.util.concurrent.ConcurrentSkipListSet;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.slf4j.Logger;
 
 import eu.ggnet.dwoss.core.system.progress.ProgressObserver;
 import eu.ggnet.dwoss.core.widget.Dl;
+
+import jakarta.enterprise.context.ApplicationScoped;
 
 /**
  * Polls the progress from the {@link ProgressObserver} for all serverside activity.
@@ -34,6 +36,7 @@ import eu.ggnet.dwoss.core.widget.Dl;
  *
  * @author oliver.guenther
  */
+@ApplicationScoped
 public class ServerAllProgressPoller implements Runnable {
 
     private final SortedSet<Integer> localKeys = new ConcurrentSkipListSet<>();

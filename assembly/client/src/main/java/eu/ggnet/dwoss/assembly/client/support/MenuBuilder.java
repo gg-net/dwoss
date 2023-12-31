@@ -20,8 +20,9 @@ import java.awt.event.ActionEvent;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
+import jakarta.enterprise.inject.Instance;
+import jakarta.inject.Inject;
+
 import javax.swing.Action;
 
 import javafx.application.Platform;
@@ -35,11 +36,14 @@ import eu.ggnet.dwoss.core.widget.auth.Accessable;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  * Util to build javafx menuitems via CDI wrapping swing actions.
  *
  * @author oliver.guenther
  */
+@Dependent
 public class MenuBuilder {
 
     private static class MenuActionAccessable implements Accessable {

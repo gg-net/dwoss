@@ -20,18 +20,19 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.search.annotations.*;
+import org.hibernate.search.mapper.pojo.automaticindexing.ReindexOnUpdate;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.*;
 
 import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 import eu.ggnet.dwoss.customer.ee.entity.stash.AddressStash;
 import eu.ggnet.dwoss.customer.ee.entity.stash.CommunicationStash;
 import eu.ggnet.dwoss.core.system.persistence.EagerAble;
 
-import static javax.persistence.CascadeType.ALL;
+import static jakarta.persistence.CascadeType.ALL;
 
 /**
  * A contact bound by a specific customer.
@@ -66,7 +67,7 @@ public class Contact extends BaseEntity implements Serializable, AddressStash, C
     }
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private long id;
 
     @Version
@@ -81,20 +82,21 @@ public class Contact extends BaseEntity implements Serializable, AddressStash, C
     /**
      * All titles the contact carries.
      */
-    @Field
+    @FullTextField
     private String title;
 
     @NotNull
-    @Field
+    @FullTextField
     private String firstName;
 
     @NotNull
-    @Field
+    @FullTextField
     private String lastName;
 
     /**
      * All {@link Address}<code>es</code> associated with the contact.
      */
+    @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
     @OneToMany(cascade = ALL)
     @NotNull
     @IndexedEmbedded
@@ -103,6 +105,7 @@ public class Contact extends BaseEntity implements Serializable, AddressStash, C
     /**
      * All {@link Address}<code>es</code> associated with the contact.
      */
+    @IndexingDependency(reindexOnUpdate = ReindexOnUpdate.SHALLOW)
     @OneToMany(cascade = ALL)
     @NotNull
     @IndexedEmbedded

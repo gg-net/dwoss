@@ -22,8 +22,9 @@ import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
 
 import java.util.HashMap;
 
-import javax.annotation.ManagedBean;
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Produces;
+
+import jakarta.annotation.ManagedBean;
 
 
 /**

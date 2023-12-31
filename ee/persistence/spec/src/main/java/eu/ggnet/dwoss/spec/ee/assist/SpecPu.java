@@ -16,18 +16,15 @@
  */
 package eu.ggnet.dwoss.spec.ee.assist;
 
-import javax.enterprise.inject.Produces;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
+@ApplicationScoped
 public class SpecPu {
 
-    /**
-     * A default name for ProductSeries and ProductFamily as fallback.
-     */
-    public final static String DEFAULT_NAME = "Allgemein";
-
-    public final static String NAME = "spec-pu";
+    private final static String NAME = "spec-pu";
 
     @PersistenceContext(unitName = NAME)
     @Produces

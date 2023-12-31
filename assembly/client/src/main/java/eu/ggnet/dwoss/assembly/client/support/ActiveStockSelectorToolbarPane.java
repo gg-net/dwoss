@@ -20,8 +20,9 @@ import java.net.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
+
+import jakarta.annotation.PostConstruct;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -36,11 +37,14 @@ import eu.ggnet.dwoss.stock.api.StockApi;
 import eu.ggnet.dwoss.stock.spi.ActiveStock;
 import eu.ggnet.dwoss.core.widget.Dl;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  * Toolbar object to select the active stock.
  *
  * @author oliver.guenther
  */
+@Dependent
 public class ActiveStockSelectorToolbarPane extends VBox {
 
     private final ComboBox<Integer> stockComboBox;

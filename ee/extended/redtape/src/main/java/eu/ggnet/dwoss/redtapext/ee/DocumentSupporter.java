@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.redtapext.ee;
 
-import javax.ejb.Remote;
+import jakarta.ejb.Remote;
 
 import net.sf.jasperreports.engine.JasperPrint;
 

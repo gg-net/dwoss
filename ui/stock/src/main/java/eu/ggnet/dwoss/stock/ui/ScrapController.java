@@ -32,8 +32,11 @@ import eu.ggnet.dwoss.stock.api.SimpleStockUnit;
 import eu.ggnet.dwoss.stock.ui.ScrapController.Scrapen;
 import eu.ggnet.saft.core.ui.*;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
 
+@Dependent
 public class ScrapController implements FxController, Consumer<Map<String, SimpleStockUnit>>, ResultProducer<Scrapen> {
 
     public static class Scrapen {

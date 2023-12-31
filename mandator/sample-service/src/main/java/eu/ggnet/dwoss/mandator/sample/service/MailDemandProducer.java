@@ -16,23 +16,26 @@
  */
 package eu.ggnet.dwoss.mandator.sample.service;
 
-import javax.enterprise.inject.Produces;
+import jakarta.enterprise.inject.Produces;
 
 import eu.ggnet.dwoss.mail.demand.ResellerListSendSubscriptionConfiguration;
 import eu.ggnet.dwoss.mail.demand.SmtpConfiguration;
+
+import jakarta.enterprise.context.ApplicationScoped;
 
 /**
  *
  * @author oliver.guenther
  */
+@ApplicationScoped
 public class MailDemandProducer {
 
     @Produces
-    public final static ResellerListSendSubscriptionConfiguration CONFIGURATION
+    private final static ResellerListSendSubscriptionConfiguration CONFIGURATION
             = new ResellerListSendSubscriptionConfiguration("company@example.local", "Company", "company@example.local", "Händlerliste", "Hier ist die Händlerliste");
 
     @Produces
-    public final static SmtpConfiguration SMTP_CONFIGURATION
+    private final static SmtpConfiguration SMTP_CONFIGURATION
             = new SmtpConfiguration("localhost", "user", "user", "UTF-8", false,false);
 
 }

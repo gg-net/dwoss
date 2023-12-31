@@ -25,6 +25,9 @@ import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.misc.ee.PersistenceValidator;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
+@Dependent
 public class DatabaseValidationAction extends AbstractAction {
 
     public DatabaseValidationAction() {

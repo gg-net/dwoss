@@ -19,9 +19,9 @@ package eu.ggnet.dwoss.misc.ui.cap;
 import java.io.File;
 import java.util.*;
 
-import javax.enterprise.inject.Instance;
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
+import jakarta.enterprise.inject.Instance;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Inject;
 
 import javafx.scene.control.*;
 
@@ -39,6 +39,9 @@ import eu.ggnet.dwoss.stock.api.PicoStock;
 import eu.ggnet.dwoss.stock.api.StockApi;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.Dependent;
+
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
 import static javafx.scene.control.ButtonType.OK;
 
@@ -47,8 +50,10 @@ import static javafx.scene.control.ButtonType.OK;
  *
  * @author oliver.guenther
  */
+@ApplicationScoped
 public class MovmentMenuItemsProducer {
 
+    @Dependent
     public static class MovementXlsMenuItem extends MenuItem {
 
         public void setStockAndType(MovementListingProducer.ListType listType, PicoStock stock) {
@@ -63,6 +68,7 @@ public class MovmentMenuItemsProducer {
         }
     }
 
+    @Dependent
     public static class MovementPdfMenuItem extends MenuItem {
 
         public void setStockAndType(MovementListingProducer.ListType listType, PicoStock stock) {
@@ -75,6 +81,7 @@ public class MovmentMenuItemsProducer {
         }
     }
 
+    @Dependent
     public static class StockTakingMenuItem extends CustomMenuItem {
 
         public StockTakingMenuItem nullableStock(PicoStock stock) {
@@ -105,6 +112,7 @@ public class MovmentMenuItemsProducer {
         }
     }
 
+    @Dependent
     public static class MovementLists {
 
         public final Menu shippingOrPickup;

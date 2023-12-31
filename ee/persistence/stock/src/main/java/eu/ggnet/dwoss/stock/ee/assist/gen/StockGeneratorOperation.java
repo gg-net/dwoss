@@ -18,10 +18,10 @@ package eu.ggnet.dwoss.stock.ee.assist.gen;
 
 import java.util.*;
 
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.ejb.Stateless;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +34,7 @@ import eu.ggnet.dwoss.stock.ee.entity.Stock;
 import eu.ggnet.dwoss.core.system.generator.NameGenerator;
 import eu.ggnet.dwoss.stock.ee.entity.*;
 
-import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
+import static jakarta.ejb.TransactionAttributeType.REQUIRES_NEW;
 
 /**
  *

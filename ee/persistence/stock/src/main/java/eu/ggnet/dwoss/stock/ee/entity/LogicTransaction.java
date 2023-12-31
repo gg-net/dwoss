@@ -19,9 +19,9 @@ package eu.ggnet.dwoss.stock.ee.entity;
 import java.io.Serializable;
 import java.util.*;
 
-import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 
@@ -38,7 +38,7 @@ import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 @SuppressWarnings("PersistenceUnitPresent")
 public class LogicTransaction extends BaseEntity implements Serializable {
 
-    @GeneratedValue
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     @Id
     private long id;
 

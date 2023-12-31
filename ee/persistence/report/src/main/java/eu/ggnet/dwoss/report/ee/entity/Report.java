@@ -19,8 +19,8 @@ package eu.ggnet.dwoss.report.ee.entity;
 import java.io.Serializable;
 import java.util.*;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.time.DateUtils;
@@ -32,7 +32,7 @@ import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.core.system.persistence.EagerAble;
 
 import static eu.ggnet.dwoss.report.ee.entity.Report.ViewMode.DEFAULT;
-import static javax.persistence.GenerationType.IDENTITY;
+import static jakarta.persistence.GenerationType.IDENTITY;
 
 //TODO: Name: Zusammenfassung, Comulation. Gruppierung.
 /**
@@ -114,7 +114,7 @@ public class Report extends BaseEntity implements Serializable, EagerAble {
     }
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private long id;
 
     @Version
@@ -140,14 +140,14 @@ public class Report extends BaseEntity implements Serializable, EagerAble {
      * This date represent a point where the span of the report start.
      */
     @NotNull
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(jakarta.persistence.TemporalType.DATE)
     private Date startingDate;
 
     /**
      * This date represent a point where the span of the report ends.
      */
     @NotNull
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(jakarta.persistence.TemporalType.DATE)
     private Date endingDate;
 
     @Lob

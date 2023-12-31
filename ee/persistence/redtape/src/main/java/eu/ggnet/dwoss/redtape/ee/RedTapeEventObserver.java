@@ -18,9 +18,9 @@ package eu.ggnet.dwoss.redtape.ee;
 
 import java.util.*;
 
-import javax.ejb.Stateless;
-import javax.enterprise.event.Observes;
-import javax.inject.Inject;
+import jakarta.ejb.Stateless;
+import jakarta.enterprise.event.Observes;
+import jakarta.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

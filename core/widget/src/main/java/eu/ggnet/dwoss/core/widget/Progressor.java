@@ -28,6 +28,8 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.saft.core.UiUtil;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  * Direct connection to the progress display in the ui.
  * <p>
@@ -35,6 +37,7 @@ import eu.ggnet.saft.core.UiUtil;
  *
  * @author mirko.schulze
  */
+@Dependent
 public class Progressor {
 
     public static interface Displayer {

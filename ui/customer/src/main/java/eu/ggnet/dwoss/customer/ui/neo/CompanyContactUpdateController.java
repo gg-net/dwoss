@@ -37,6 +37,8 @@ import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.*;
 
+import jakarta.enterprise.context.Dependent;
+
 import static javafx.stage.Modality.WINDOW_MODAL;
 
 /**
@@ -47,6 +49,7 @@ import static javafx.stage.Modality.WINDOW_MODAL;
  *
  * @author pascal.perau
  */
+@Dependent
 public class CompanyContactUpdateController implements Initializable, FxController, Consumer<Contact>, ResultProducer<Contact> {
 
     @FXML

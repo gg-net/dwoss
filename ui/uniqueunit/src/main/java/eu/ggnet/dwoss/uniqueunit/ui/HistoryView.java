@@ -22,12 +22,15 @@ import javafx.beans.property.SimpleBooleanProperty;
 import eu.ggnet.dwoss.uniqueunit.ui.HistoryView.Comment;
 import eu.ggnet.saft.core.ui.*;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
 
 /**
  *
  * @author oliver.guenther
  */
+@Dependent
 @Title("History Kommentar zu einer Unit hinzufügen")
 public class HistoryView extends javax.swing.JPanel implements ResultProducer<Comment> {
 

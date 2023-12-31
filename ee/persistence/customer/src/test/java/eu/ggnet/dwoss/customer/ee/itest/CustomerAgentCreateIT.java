@@ -16,11 +16,11 @@
  */
 package eu.ggnet.dwoss.customer.ee.itest;
 
-import javax.ejb.EJB;
-import javax.ejb.EJBException;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.UserTransaction;
+import jakarta.ejb.EJB;
+import jakarta.ejb.EJBException;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.UserTransaction;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.*;
@@ -33,7 +33,6 @@ import eu.ggnet.dwoss.customer.ee.assist.gen.*;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.customer.ee.itest.support.Utils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -57,11 +56,12 @@ public class CustomerAgentCreateIT extends ArquillianProjectArchive {
     @Inject
     UserTransaction utx;
 
-    @Before
+    @After
     public void teardown() throws Exception {
         utx.begin();
         em.joinTransaction();
-        Utils.clearH2Db(em);
+        CustomerDeleteUtils.deleteAll(em);
+        assertThat(CustomerDeleteUtils.validateEmpty(em)).isNull();
         utx.commit();
     }
 
@@ -81,10 +81,11 @@ public class CustomerAgentCreateIT extends ArquillianProjectArchive {
         utx.commit();
 
         Address address = CustomerGenerator.makeAddress();
+        assertThat(contact.getId()).isNotEqualTo(0);
 
         //create the address in the contact and check if it got added
-        agent.create(new Root(Contact.class, 1l), address);
-        Contact found = agent.findByIdEager(Contact.class, 1l);
+        agent.create(new Root(Contact.class, contact.getId()), address);
+        Contact found = agent.findByIdEager(Contact.class, contact.getId());
         assertThat(found.getAddresses().size()).as("Not the correct amount of addresses on the contact").isGreaterThan(1);
 
         //communication that gets created on the contact
@@ -93,8 +94,8 @@ public class CustomerAgentCreateIT extends ArquillianProjectArchive {
         communication.setIdentifier("identifier");
 
         //create the communication on the contact and check if it got added
-        agent.create(new Root(Contact.class, 1l), communication);
-        found = agent.findByIdEager(Contact.class, 1l);
+        agent.create(new Root(Contact.class, contact.getId()), communication);
+        found = agent.findByIdEager(Contact.class, contact.getId());
         assertThat(found.getCommunications().size()).as("Not the correct amount of communications on the contact").isLessThanOrEqualTo(5);
 
     }
@@ -134,7 +135,7 @@ public class CustomerAgentCreateIT extends ArquillianProjectArchive {
         String unsupportedRaw = "stringInstance";
 
         try {
-            agent.create(new Root(Contact.class, 1l), unsupportedRaw);
+            agent.create(new Root(Contact.class, contact.getId()), unsupportedRaw);
         } catch (EJBException e) {
             assertThat(e.getCausedByException() instanceof IllegalArgumentException)
                     .as("Trying to catch IllegalArgumentException of creating a unsupportedRaw on a existing Contact failed")
@@ -146,21 +147,21 @@ public class CustomerAgentCreateIT extends ArquillianProjectArchive {
 
     @Test
     public void testCreateOnCustomer() throws Exception {
-        final long CID = cgo.makeCustomer(new Assure.Builder().consumer(true).build());
+        final long customerId = cgo.makeCustomer(new Assure.Builder().consumer(true).build());
 
-        Customer customer = agent.findByIdEager(Customer.class, CID);
+        Customer customer = agent.findByIdEager(Customer.class, customerId);
         assertThat(customer).isNotNull();
         int amountBeforAdd = customer.getContacts().size();
 
         Contact contact = CustomerGenerator.makeFullContact();
-        agent.create(new Root(Customer.class, CID), contact); // creates a contact on the customer, which is only allowed on a conusmer
-        customer = agent.findByIdEager(Customer.class, CID);
+        agent.create(new Root(Customer.class, customerId), contact); // creates a contact on the customer, which is only allowed on a conusmer
+        customer = agent.findByIdEager(Customer.class, customerId);
         assertThat(customer.getContacts().size()).as("Size of contacts must be " + amountBeforAdd + "+1 after add").isEqualTo(amountBeforAdd + 1);
     }
 
     @Test
     @Ignore
-    // TODO: Test ist falsch, da er fehlerhafte Annahmen über make Customer trift. Außerdem wird blind 1 als db id angenommen.
+    // TODO(OG): Test ist falsch, da er fehlerhafte Annahmen über make Customer trift. Außerdem wird blind 1 als db id angenommen.
     public void testCreateOnCompany() throws Exception {
         utx.begin();
         em.joinTransaction();

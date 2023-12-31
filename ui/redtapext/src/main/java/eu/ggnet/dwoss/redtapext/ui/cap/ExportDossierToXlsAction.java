@@ -25,6 +25,8 @@ import eu.ggnet.dwoss.core.widget.*;
 import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_DOSSIER_TO_XLS;
 import static javafx.scene.control.ButtonType.OK;
 
@@ -32,6 +34,7 @@ import static javafx.scene.control.ButtonType.OK;
  *
  * @author oliver.guenther
  */
+@Dependent
 public class ExportDossierToXlsAction extends AccessableAction {
 
     public ExportDossierToXlsAction() {

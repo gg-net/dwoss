@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextInputDialog;
@@ -45,6 +45,8 @@ import eu.ggnet.saft.core.Saft;
 import eu.ggnet.saft.core.UiUtil;
 import eu.ggnet.saft.core.ui.AlertType;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_UNIQUE_UNIT;
 import static javafx.scene.control.ButtonType.NO;
 import static javafx.scene.control.ButtonType.YES;
@@ -54,6 +56,7 @@ import static javafx.scene.control.ButtonType.YES;
  *
  * @author mirko.schulze
  */
+@Dependent
 public class EditUnitAction extends AccessableAction {
 
     @Inject

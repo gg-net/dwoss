@@ -29,6 +29,8 @@ import eu.ggnet.dwoss.price.ee.Importer;
 import eu.ggnet.dwoss.core.widget.saft.Reply;
 import eu.ggnet.saft.core.Ui;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_PRICEMANGMENT;
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
 import static javafx.scene.control.ButtonType.OK;
@@ -37,6 +39,7 @@ import static javafx.scene.control.ButtonType.OK;
  *
  * @author pascal.perau
  */
+@Dependent
 public class PriceImportAction extends AccessableAction {
 
     public PriceImportAction() {

@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.mandator.api.value.qualifier;
 
 import java.lang.annotation.*;
 
-import javax.inject.Qualifier;
+import jakarta.inject.Qualifier;
 
 /**
  * Injection Qualifier for the Images of the Customer and Order Ui.
