@@ -132,15 +132,6 @@
             <artifactId>logback-classic</artifactId>
         </dependency>
         <dependency>
-            <groupId>de.huxhorn.lilith</groupId>
-            <artifactId>de.huxhorn.lilith.logback.encoder.classic</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.huxhorn.lilith</groupId>
-            <artifactId>de.huxhorn.lilith.logback.appender.multiplex-classic</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-price-ui</artifactId>
             <version>${project.version}</version>
