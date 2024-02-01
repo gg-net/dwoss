@@ -150,7 +150,7 @@ public enum AtomicRight {
     /**
      * Allows to create a DebitorsReport.
      */
-    CREATE_DEBITOR_REPORT("Erstellen eines Debitorenreport"),
+    CREATE_DEBITOR_REPORT("Debitorenreport Rechnung"),
     /**
      * Allows to export dossiers to XLS.
      */

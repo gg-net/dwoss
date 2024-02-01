@@ -133,26 +133,28 @@ public class StockTakingOperation implements StockTaking {
             if ( stu != null ) found.add(stu);
             if ( uu == null ) {
                 result.add(new Object[]{stockTaking, "Fehler: Gerät exitiert nicht !", refurbishId,
-                    null, null, null, null, null, null, null, null, null, null, null});
+                    null, null, null, null, null, null, null, null, null, null, null, null, null});
             } else {
                 String partNo = uu.getProduct().getPartNo();
                 String contractorPartNo = uu.getProduct().getAdditionalPartNo(uu.getContractor());
                 String name = ProductFormater.toName(uu.getProduct());
+                String shopCategory = uu.getProduct().getShopCategory() != null ? uu.getProduct().getShopCategory().getName() : null;
+                Long shopCategoryId = uu.getProduct().getShopCategory() != null ? uu.getProduct().getShopCategory().getId() : null;
                 if ( stu == null ) {
                     result.add(new Object[]{stockTaking, "Nicht im Lager", refurbishId,
-                        partNo, uu.getSerial(), name, uu.getContractor(), null, uu.getSalesChannel(), null, null, null, contractorPartNo, null});
+                        partNo, uu.getSerial(), name, uu.getContractor(), null, uu.getSalesChannel(), null, null, null, contractorPartNo, null, shopCategory, shopCategoryId});
                     notFound.add(uu.getId());
                 } else {
                     // jetzt schauen was mit st ist
                     String stock = (stu.getStock() == null ? stu.getTransaction().toSimpleLine() : stu.getStock().getName());
                     if ( stu.getLogicTransaction() == null ) {
                         result.add(new Object[]{stockTaking, "verfügbar", refurbishId,
-                            partNo, uu.getSerial(), name, uu.getContractor(), stock, uu.getSalesChannel(), null, null, null, contractorPartNo, null});
+                            partNo, uu.getSerial(), name, uu.getContractor(), stock, uu.getSalesChannel(), null, null, null, contractorPartNo, null, shopCategory, shopCategoryId});
                     } else {
                         Dossier dos = dossierEao.findById(stu.getLogicTransaction().getDossierId());
                         result.add(new Object[]{stockTaking, dos.isClosed() ? "abgeschlossen" : "in transfer", refurbishId,
                             partNo, uu.getSerial(), name, uu.getContractor(), stock, uu.getSalesChannel(), dos.getCrucialDirective().getName(),
-                            dos.getCustomerId(), dos.getIdentifier(), contractorPartNo, customerService.asUiCustomer(dos.getCustomerId()).toNameCompanyLine()});
+                            dos.getCustomerId(), dos.getIdentifier(), contractorPartNo, customerService.asUiCustomer(dos.getCustomerId()).toNameCompanyLine(), shopCategory, shopCategoryId});
                     }
                 }
             }
@@ -169,17 +171,19 @@ public class StockTakingOperation implements StockTaking {
             String partNo = uu.getProduct().getPartNo();
             String contractorPartNo = uu.getProduct().getAdditionalPartNo(uu.getContractor());
             String name = ProductFormater.toName(uu.getProduct());
+            String shopCategory = uu.getProduct().getShopCategory() != null ? uu.getProduct().getShopCategory().getName() : null;
+            Long shopCategoryId = uu.getProduct().getShopCategory() != null ? uu.getProduct().getShopCategory().getId() : null;
 
             // jetzt schauen was mit st ist
             String stock = (stu.getStock() == null ? stu.getTransaction().toString() : stu.getStock().getName());
             if ( stu.getLogicTransaction() == null ) {
                 result.add(new Object[]{stockTaking, "verfügbar", uu.getRefurbishId(),
-                    partNo, uu.getSerial(), name, uu.getContractor(), stock, uu.getSalesChannel(), null, null, null, contractorPartNo, null});
+                    partNo, uu.getSerial(), name, uu.getContractor(), stock, uu.getSalesChannel(), null, null, null, contractorPartNo, null, shopCategory, shopCategoryId});
             } else {
                 Dossier dos = dossierEao.findById(stu.getLogicTransaction().getDossierId());
                 result.add(new Object[]{stockTaking, dos.isClosed() ? "abgeschlossen" : "in transfer", uu.getRefurbishId(),
                     partNo, uu.getSerial(), name, uu.getContractor(), stock, uu.getSalesChannel(), dos.getCrucialDirective().getName(),
-                    dos.getCustomerId(), dos.getIdentifier(), contractorPartNo, customerService.asUiCustomer(dos.getCustomerId()).toNameCompanyLine()});
+                    dos.getCustomerId(), dos.getIdentifier(), contractorPartNo, customerService.asUiCustomer(dos.getCustomerId()).toNameCompanyLine(), shopCategory, shopCategoryId});
             }
         }
         // Possible open reklas
@@ -190,13 +194,15 @@ public class StockTakingOperation implements StockTaking {
         openComplaints = openComplaints.stream().filter(sru -> !allUniqueUnitIds.contains(sru.uniqueUnitId().intValue())).collect(Collectors.toList());
         for (SimpleReportUnit sru : openComplaints) {
             UniqueUnit uu = uniqueUnitEao.findById(sru.uniqueUnitId().intValue());
+            String shopCategory = uu.getProduct().getShopCategory() != null ? uu.getProduct().getShopCategory().getName() : null;
+            Long shopCategoryId = uu.getProduct().getShopCategory() != null ? uu.getProduct().getShopCategory().getId() : null;
             result.add(new Object[]{"möglicherweise", "nicht verfügbar", sru.lines().get(0).refurbishId(),
                 uu.getProduct().getPartNo(), uu.getSerial(), ProductFormater.toName(uu.getProduct()), uu.getContractor(), null, uu.getSalesChannel(),
-                "offene Reklamation", null, sru.lines().get(0).dossierIdentifier(), null, null});
+                "offene Reklamation", null, sru.lines().get(0).dossierIdentifier(), null, null, shopCategory, shopCategoryId});
         }
 
         for (String error : read.errors) {
-            result.add(new Object[]{"Lesefehler", error, null, null, null, null, null, null, null, null, null, null, null, null});
+            result.add(new Object[]{"Lesefehler", error, null, null, null, null, null, null, null, null, null, null, null, null, null, null});
         }
         m.message("Erzeuge Tabelle");
         CSheet sheet = new CSheet("Inventur");
@@ -205,7 +211,8 @@ public class StockTakingOperation implements StockTaking {
         table.add(new STableColumn("Inventur", 12)).add(new STableColumn("Status", 10)).add(new STableColumn("SopoNr", 10)).add(new STableColumn("ArtikelNr", 16));
         table.add(new STableColumn("Seriennummer", 30)).add(new STableColumn("Name", 50)).add(new STableColumn("Contractor", 14)).add(new STableColumn("Lager", 25));
         table.add(new STableColumn("Verkaufskanal", 16)).add(new STableColumn("Directive", 20)).add(new STableColumn("Kid", 8)).add(new STableColumn("VorgangsId", 10));
-        table.add(new STableColumn("LieferantenPartNo", 16)).add(new STableColumn("Kunde", 40));
+        table.add(new STableColumn("LieferantenPartNo", 16)).add(new STableColumn("Kunde", 40)).add(new STableColumn("ShopCategory", 12)).add(new STableColumn("ShopCategoryId", 12));
+        // ShopCategory, ShopCategoryId
         table.setModel(new STableModelList(result));
         sheet.addBelow(table);
         CCalcDocument document = new TempCalcDocument();

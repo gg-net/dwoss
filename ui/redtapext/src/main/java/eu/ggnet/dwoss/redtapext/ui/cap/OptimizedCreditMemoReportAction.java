@@ -39,7 +39,7 @@ public class OptimizedCreditMemoReportAction extends AbstractAction {
     private static final Logger L = LoggerFactory.getLogger(OptimizedCreditMemoReportAction.class);
 
     public OptimizedCreditMemoReportAction() {
-        putValue(NAME, "Stornoreport gekürzt");
+        putValue(NAME, "Debitorenreport Storno");
     }
 
     @Override

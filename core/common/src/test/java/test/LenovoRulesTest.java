@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
+ * Copyright (C) 2024 GG-Net GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,30 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.core.common.values.tradename;
+package test;
 
+import org.junit.Test;
 
-import java.util.regex.Pattern;
+import eu.ggnet.dwoss.core.common.values.tradename.LenovoPartNoSupport;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  *
- * @author bastian.venz
+ * @author oliver.guenther
  */
-public class LenovoPartNoSupport implements PartNoSupport {
-
-    private static final String LONG_PATTERN = "[A-Z0-9]{8,12}";
-
-    @Override
-    public boolean isValid(String partNo) {
-        return violationMessages(partNo) == null;
+public class LenovoRulesTest {
+    
+        @Test
+    public void testValidatePartNo() {
+            LenovoPartNoSupport support = new LenovoPartNoSupport();
+            assertThat(support.isValid("21D2002FGE")).isTrue();
     }
-
-    @Override
-    public String violationMessages(String partNo) {
-        if ( !(Pattern.matches(LONG_PATTERN, partNo)) ) {
-            return "Part No Don't match patterns " + LONG_PATTERN;
-        }
-        return null;
-    }
-
+    
 }

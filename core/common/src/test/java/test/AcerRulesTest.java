@@ -2,7 +2,6 @@ package test;
 
 import eu.ggnet.dwoss.core.common.values.AcerRules;
 
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 

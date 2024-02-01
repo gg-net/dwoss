@@ -36,13 +36,13 @@ public class CreditMemoReportAction extends AbstractAction {
 
     @SuppressWarnings("OverridableMethodCallInConstructor")
     public CreditMemoReportAction() {
-        putValue(NAME, "Stornoreport lang");
+        putValue(NAME, "Rekla/Storno-Report");
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.build().title("Stornoreport Zeitraum").fx().eval(() -> new DateRangeChooserView()).opt()
+            Ui.build().title("Rekla/Storno-Report Zeitraum").fx().eval(() -> new DateRangeChooserView()).opt()
                     .ifPresent(r -> FileUtil.osOpen(Progressor.global().run(() -> Dl.remote().lookup(CreditMemoReporter.class).toXls(r.startAsDate(), r.endAsDate()).toTemporaryFile())));
         });
     }
