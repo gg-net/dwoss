@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
  */
 public class LenovoPartNoSupport implements PartNoSupport {
 
-    private static final String LONG_PATTERN = "[A-Z0-9]{8,12}";
+    private static final String LONG_PATTERN = "[A-Z0-9]{8,}?";
 
     @Override
     public boolean isValid(String partNo) {

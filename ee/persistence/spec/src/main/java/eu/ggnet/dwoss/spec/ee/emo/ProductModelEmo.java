@@ -20,18 +20,28 @@ import jakarta.persistence.EntityManager;
 
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.spec.ee.assist.Specs;
 import eu.ggnet.dwoss.spec.ee.eao.*;
 import eu.ggnet.dwoss.spec.ee.entity.*;
+
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 
 /**
  * Product Model Entity Manipulation Object.
  * <p>
  * @author oliver.guenther
  */
+@Stateless
 public class ProductModelEmo {
 
+    @Inject
+    @Specs
     private EntityManager em;
 
+    public ProductModelEmo() {
+    }
+    
     public ProductModelEmo(EntityManager em) {
         this.em = em;
     }

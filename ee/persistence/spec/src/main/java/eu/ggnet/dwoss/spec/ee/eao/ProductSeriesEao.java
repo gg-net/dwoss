@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.spec.ee.eao;
 
+import java.util.List;
+
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import jakarta.persistence.*;
@@ -25,7 +27,9 @@ import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.spec.ee.assist.Specs;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSeries;
 import eu.ggnet.dwoss.core.system.persistence.AbstractEao;
+import eu.ggnet.dwoss.spec.api.SpecApi;
 
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 
 import static eu.ggnet.dwoss.spec.ee.entity.QProductSeries.productSeries;
@@ -72,4 +76,13 @@ public class ProductSeriesEao extends AbstractEao<ProductSeries> {
     public ProductSeries find(String name) {
         return new JPAQuery<ProductSeries>(em).from(productSeries).where(productSeries.name.eq(name)).fetchFirst();
     }
+    
+    public List<SpecApi.NameId> findAsNameId(TradeName brand, ProductGroup group) {
+        return new JPAQuery<SpecApi.NameId>(em)
+                .select(Projections.constructor(SpecApi.NameId.class, productSeries.id,productSeries.name))
+                .from(productSeries)
+                .where(productSeries.brand.eq(brand).and(productSeries.group.eq(group)))
+                .orderBy(productSeries.name.asc())
+                .fetch();
+    } 
 }

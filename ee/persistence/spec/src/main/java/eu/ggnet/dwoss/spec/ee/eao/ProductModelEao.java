@@ -24,16 +24,32 @@ import jakarta.persistence.TypedQuery;
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.system.persistence.AbstractEao;
+import eu.ggnet.dwoss.spec.api.SpecApi;
+import eu.ggnet.dwoss.spec.ee.assist.Specs;
 import eu.ggnet.dwoss.spec.ee.entity.ProductModel;
+
+import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.impl.JPAQuery;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+
+import static eu.ggnet.dwoss.spec.ee.entity.QProductModel.productModel;
 
 /**
  * Entity Access Object for the CPU.
  *
  * @author oliver.guenther
  */
+@Stateless
 public class ProductModelEao extends AbstractEao<ProductModel> {
 
+    @Inject
+    @Specs
     private EntityManager em;
+
+    public ProductModelEao() {
+        super(ProductModel.class);
+    }
 
     public ProductModelEao(EntityManager em) {
         super(ProductModel.class);
@@ -47,13 +63,13 @@ public class ProductModelEao extends AbstractEao<ProductModel> {
 
     /**
      * Finds a Model or null if not existent.
-     * 
+     *
      * @param seriesBrand the brand of the series
      * @param seriesGroup the group of the series
-     * @param seriesName the name of the series
-     * @param familyName the name of the family
-     * @param modelName the name of the Model
-     * 
+     * @param seriesName  the name of the series
+     * @param familyName  the name of the family
+     * @param modelName   the name of the Model
+     *
      * @return the model, or null if not existent.
      */
     public ProductModel find(final TradeName seriesBrand, final ProductGroup seriesGroup, final String seriesName, final String familyName, final String modelName) {
@@ -64,22 +80,31 @@ public class ProductModelEao extends AbstractEao<ProductModel> {
         query.setParameter(4, familyName);
         query.setParameter(5, modelName);
         List<ProductModel> models = query.getResultList();
-        if (models.isEmpty()) return null;
+        if ( models.isEmpty() ) return null;
         return models.get(0);
     }
-    
+
     /**
      * Finds a Model or null if not existent.
-     * 
+     *
      * @param modelName the name of the Model
-     * 
+     *
      * @return the model, or null if not existent.
      */
     public ProductModel find(String modelName) {
         TypedQuery<ProductModel> query = em.createNamedQuery("ProductModel.byName", ProductModel.class);
         query.setParameter(1, modelName);
         List<ProductModel> models = query.getResultList();
-        if (models.isEmpty()) return null;
+        if ( models.isEmpty() ) return null;
         return models.get(0);
+    }
+
+    public List<SpecApi.NameId> findAsNameId(long familyId) {
+        return new JPAQuery<SpecApi.NameId>(em)
+                .select(Projections.constructor(SpecApi.NameId.class, productModel.id, productModel.name))
+                .from(productModel)
+                .where(productModel.family.id.eq(familyId))
+                .orderBy(productModel.name.asc())
+                .fetch();
     }
 }

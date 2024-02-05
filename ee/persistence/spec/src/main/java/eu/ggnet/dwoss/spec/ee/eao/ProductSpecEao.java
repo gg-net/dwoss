@@ -76,4 +76,5 @@ public class ProductSpecEao extends AbstractEao<ProductSpec> {
         if ( productIds == null || productIds.isEmpty() ) return Collections.EMPTY_LIST;
         return em.createNamedQuery("ProductSpec.byProductIds", ProductSpec.class).setParameter(1, productIds).getResultList();
     }
+    
 }

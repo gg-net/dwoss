@@ -66,8 +66,7 @@ public abstract class AbstractView extends javax.swing.JPanel implements Vetoabl
 
         Set<ConstraintViolation> violations = new HashSet<>();
         violations.addAll(v.validate(sam.spec()));
-        violations.addAll(v.validate(sam.model()));
-        //TODO: If there is time, make this more beutiful.        //TODO: If there is time, make this more beutiful.
+        //TODO: If there is time, make this more beutiful.
 
         if ( violations.isEmpty() ) return true;
         StringBuilder sb = new StringBuilder();

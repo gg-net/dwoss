@@ -22,6 +22,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
+
 import jakarta.enterprise.inject.Alternative;
 
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
@@ -30,9 +32,9 @@ import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers.Key;
 import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.receipt.ee.*;
+import eu.ggnet.dwoss.spec.api.SpecApi;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.assist.SpecConstants;
-import eu.ggnet.dwoss.spec.ee.assist.SpecPu;
 import eu.ggnet.dwoss.spec.ee.entity.Desktop.Hdd;
 import eu.ggnet.dwoss.spec.ee.entity.Desktop.Odd;
 import eu.ggnet.dwoss.spec.ee.entity.Desktop.Os;
@@ -437,6 +439,10 @@ public class ProductProcessorStub implements ProductProcessor {
     public UniqueUnitAgent uniqueUnitAgent() {
         return new UniqueUnitAgentStub(uniqueUnits, products);
     }
+    
+    public SpecApi specApi() {
+        return new SpecApiStub(serieses);
+    }
 
     @Override
     public ProductSpec create(SpecAndModel sam) {
@@ -478,44 +484,12 @@ public class ProductProcessorStub implements ProductProcessor {
         return newGpu;
     }
 
-    /**
-     * Creates a new ProductModel and Persists it.
-     * <p>
-     * How this works: If series is null, family is also as null asumed. - so a default series and a default family is selected. If family is null, a default
-     * one is selecte at the series. In both cases, if no default exists, createOrUpdate on. Now createOrUpdate a ProductModel with the family.
-     *
-     * @param brand     may not be null
-     * @param group     may not be null
-     * @param series    if null, default is used
-     * @param family    if null, default is used
-     * @param modelName the name of the model
-     * @return
-     */
     @Override
-    public ProductModel create(final TradeName brand, final ProductGroup group, ProductSeries series, ProductFamily family, final String modelName) {
-        if ( series == null ) { // implies, that family is also null
-            for (ProductSeries s : serieses) {
-                if ( s.getBrand().equals(brand) && s.getGroup().equals(group) && s.getName().equals(SpecConstants.DEFAULT_NAME) ) {
-                    series = s;
-                }
-            }
-            if ( series == null ) {
-                series = soc.newProductSeries(brand, group, SpecConstants.DEFAULT_NAME);
-                serieses.add(series);
-            }
-        }
-        if ( family == null ) {
-            for (ProductFamily f : series.getFamilys()) {
-                if ( f.getName().equals(SpecConstants.DEFAULT_NAME) ) {
-                    family = f;
-                }
-            }
-            if ( family == null ) {
-                family = soc.newProductFamily();
-                family.setName(SpecConstants.DEFAULT_NAME);
-                series.addFamily(family);
-            }
-        }
+    public ProductModel createModel(long familyId, final String modelName) throws UserInfoException {
+        ProductFamily family = serieses.stream()
+                .flatMap(s -> s.getFamilys().stream())
+                .filter(p -> p.getId() == familyId).findFirst()
+                .orElseThrow(()-> new UserInfoException("Family mit Id " + familyId + " existiert nicht"));;
         // TODO: Check if name exists, just to be sure
         ProductModel model = soc.newProductModel();
         model.setName(modelName);
@@ -524,18 +498,9 @@ public class ProductProcessorStub implements ProductProcessor {
     }
 
     @Override
-    public ProductFamily create(TradeName brand, ProductGroup group, ProductSeries series, String familyName) {
-        if ( series == null ) {
-            for (ProductSeries s : serieses) {
-                if ( s.getBrand().equals(brand) && s.getGroup().equals(group) && s.getName().equals(SpecConstants.DEFAULT_NAME) ) {
-                    series = s;
-                }
-            }
-            if ( series == null ) {
-                series = soc.newProductSeries(brand, group, SpecConstants.DEFAULT_NAME);
-                serieses.add(series);
-            }
-        }
+    public ProductFamily createFamily(long seriesId, String familyName) throws UserInfoException {
+        ProductSeries series = serieses.stream().filter(p -> p.getId() == seriesId).findFirst()
+                .orElseThrow(()-> new UserInfoException("Series mit Id " + seriesId + " existiert nicht"));
         // TODO: Check if name exists, just to be sure
         ProductFamily family = soc.newProductFamily();
         family.setName(familyName);
@@ -544,8 +509,8 @@ public class ProductProcessorStub implements ProductProcessor {
     }
 
     @Override
-    public ProductSeries create(TradeName brand, ProductGroup group, String seriesName) {
-        ProductSeries series = soc.newProductSeries(brand, group, SpecConstants.DEFAULT_NAME);
+    public ProductSeries createSeries(TradeName brand, ProductGroup group, String seriesName) {
+        ProductSeries series = soc.newProductSeries(brand, group, seriesName);
         serieses.add(series);
         return series;
     }

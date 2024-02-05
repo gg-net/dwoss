@@ -38,10 +38,13 @@ import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.FxController;
 import eu.ggnet.saft.core.ui.ResultProducer;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  *
  * @author mirko.schulze
  */
+@Dependent
 public class UserManagementController implements Initializable, FxController, Consumer<User>, ResultProducer<Result> {
 
     private static final Logger L = LoggerFactory.getLogger(UserManagementController.class);

@@ -50,7 +50,7 @@ public class BasicView extends AbstractView {
 
     private BasicSpec basicSpec;
 
-    private ProductModel model;
+    private long modelId;
 
     /** Creates new form BasicView */
     public BasicView() {
@@ -81,7 +81,7 @@ public class BasicView extends AbstractView {
     @Override
     public void accept(SpecAndModel sam) {
         BasicSpec inSpec = (BasicSpec)Objects.requireNonNull(sam, "sam must not be null").spec();
-        model = sam.model();
+        modelId = sam.modelId();
         gtinTextField.setText(Long.toString(sam.gtin()));        
         shopCategoryComboBox.setSelectedItem(sam.nullableShopCategory());
         rchCheckBox.setSelected(sam.rch());
@@ -102,7 +102,7 @@ public class BasicView extends AbstractView {
         basicSpec.setExtras(extrasModel.getMarked());
         basicSpec.setVideoPorts(videoPortModel.getMarked());
         basicSpec.setComment(noteArea.getText());
-        return new SpecAndModel(basicSpec, model, getGtin(),shopCategoryComboBox.getItemAt(shopCategoryComboBox.getSelectedIndex()),rchCheckBox.isSelected());
+        return new SpecAndModel(basicSpec, modelId, getGtin(),shopCategoryComboBox.getItemAt(shopCategoryComboBox.getSelectedIndex()),rchCheckBox.isSelected());
     }
 
     // only internal use

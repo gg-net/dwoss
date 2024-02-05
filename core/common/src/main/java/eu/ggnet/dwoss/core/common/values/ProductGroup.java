@@ -69,4 +69,6 @@ public enum ProductGroup implements INoteModel {
     public String getName() {
         return description;
     }
+    
+    
 }

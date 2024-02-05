@@ -16,12 +16,17 @@
  */
 package eu.ggnet.dwoss.spec.ee;
 
+import java.util.List;
+
+import eu.ggnet.dwoss.core.common.values.ProductGroup;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+
 import jakarta.ejb.Remote;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 
 import eu.ggnet.dwoss.spec.api.SpecApi;
-import eu.ggnet.dwoss.spec.ee.eao.ProductSpecEao;
+import eu.ggnet.dwoss.spec.ee.eao.*;
 
 /**
  *
@@ -34,9 +39,33 @@ public class SpecApiBean implements SpecApi {
     @Inject
     private ProductSpecEao eao;
 
+    @Inject
+    private ProductSeriesEao psEao;
+
+    @Inject
+    private ProductModelEao pmEao;
+
+    @Inject
+    private ProductFamilyEao pfEao;
+
     @Override
     public boolean hasSpec(long productId) {
         return eao.findByProductId(productId) != null;
+    }
+
+    @Override
+    public List<NameId> findProductSeries(TradeName brand, ProductGroup group) {
+        return psEao.findAsNameId(brand, group);
+    }
+
+    @Override
+    public List<NameId> findProductFamilies(long seriesId) {
+        return pfEao.findAsNameId(seriesId);
+    }
+
+    @Override
+    public List<NameId> findProductModels(long familyId) {
+        return pmEao.findAsNameId(familyId);
     }
 
 }

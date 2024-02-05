@@ -1,5 +1,7 @@
 package eu.ggnet.dwoss.spec.itest;
 
+import java.util.List;
+
 import eu.ggnet.dwoss.spec.ee.entity.ProductSeries;
 import eu.ggnet.dwoss.spec.ee.entity.ProductModel;
 import eu.ggnet.dwoss.spec.ee.entity.ProductFamily;
@@ -15,9 +17,11 @@ import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.spec.api.SpecApi;
 import eu.ggnet.dwoss.spec.ee.assist.Specs;
 import eu.ggnet.dwoss.spec.ee.eao.ProductModelEao;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
 /**
@@ -33,6 +37,8 @@ public class ProductModelEaoIT extends ArquillianProjectArchive {
 
     @Inject
     private UserTransaction utx;
+    
+    private final String NAME = "Model 1";
 
     @Test
     public void testFind() throws Exception {
@@ -43,7 +49,7 @@ public class ProductModelEaoIT extends ArquillianProjectArchive {
         em.persist(series);
         family.setSeries(series);
         em.persist(family);
-        ProductModel model = new ProductModel("Model 1");
+        ProductModel model = new ProductModel(NAME);
         model.setFamily(family);
         em.persist(model);
         utx.commit();
@@ -55,6 +61,11 @@ public class ProductModelEaoIT extends ArquillianProjectArchive {
         assertNotNull(productModel);
         assertEquals(model, productModel);
         assertNull(productModelEao.find("No Model"));
+
+        List<SpecApi.NameId> result = productModelEao.findAsNameId(family.getId());
+        assertThat(result).isNotEmpty().hasSize(1);
+        assertThat(result.get(0).name()).isEqualTo(NAME);
+
         utx.commit();
     }
 }

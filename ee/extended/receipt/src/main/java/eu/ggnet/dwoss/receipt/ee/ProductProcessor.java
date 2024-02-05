@@ -41,7 +41,7 @@ public interface ProductProcessor {
 
         private final ProductSpec spec;
 
-        private final ProductModel model;
+        private final long modelId;
 
         private final long gtin;
         
@@ -49,9 +49,9 @@ public interface ProductProcessor {
         
         private final boolean rch;
 
-        public SpecAndModel(ProductSpec spec, ProductModel model, long gtin, ShopCategory shopCategory, boolean rch) {
+        public SpecAndModel(ProductSpec spec, long modelId, long gtin, ShopCategory shopCategory, boolean rch) {
             this.spec = Objects.requireNonNull(spec, "spec must not be null");
-            this.model = Objects.requireNonNull(model, "model must not be null");
+            this.modelId = modelId;
             this.shopCategory = shopCategory; // May be null;
             this.gtin = gtin;
             this.rch = rch;
@@ -61,8 +61,8 @@ public interface ProductProcessor {
             return spec;
         }
 
-        public ProductModel model() {
-            return model;
+        public long modelId() {
+            return modelId;
         }
 
         public long gtin() {
@@ -79,7 +79,7 @@ public interface ProductProcessor {
 
         @Override
         public String toString() {
-            return "SpecAndModel{" + "spec=" + spec + ", model=" + model + ", gtin=" + gtin + ", shopCategory=" + shopCategory + ", rch=" + rch + '}';
+            return "SpecAndModel{" + "spec=" + spec + ", modelId=" + modelId + ", gtin=" + gtin + ", shopCategory=" + shopCategory + ", rch=" + rch + '}';
         }
 
     }
@@ -104,50 +104,25 @@ public interface ProductProcessor {
 
     /**
      * Creates a new ProductModel and Persists it.
-     * Multistep Process:
-     * <ol>
-     * <li>Validate and throw exception if a model with the same name exists</li>
-     * <li>Selection of Family and Series
-     * <ul>
-     * <li>If Family is null and Series is null &rarr; find or create default Series and default Family</li>
-     * <li>If only Family is null &rarr; find or create default default Family for Series</li>
-     * <li>Else use supplied Family</li>
-     * </ul>
-     * </li>
-     * <li>Persist new Model with Family</li>
-     * </ol>
      *
-     * @param brand     must not be null
-     * @param group     must not be null
-     * @param series    if null, default is used
-     * @param family    if null, default is used
+     * @param familyId  must be an id of an existing family
      * @param modelName the name of the model
      *
      * @return the persisted and detached Model
+     * @throws UserInfoException if the family with familyId does not exist or the modelName is already present.
      */
-    ProductModel create(final TradeName brand, final ProductGroup group, ProductSeries series, ProductFamily family, final String modelName);
+    ProductModel createModel(long familyId, final String modelName) throws UserInfoException;
 
     /**
-     * Creates and Persists a ProducFamily.
-     * <ol>
-     * <li>Validate and throw exception if a family with the same name exists</li>
-     * <li>Selection of Series
-     * <ul>
-     * <li>If Series is null &rarr; find or create default Series</li>
-     * <li>Else use supplied Series</li>
-     * </ul>
-     * </li>
-     * <li>Persist new Family with Series</li>
-     * </ol>
+     * Creates and Persists a ProductFamily.
      *
-     * @param brand      the brand
-     * @param group      the group
-     * @param series     the series
+     * @param seriesId     id of the series
      * @param familyName the familyName
      *
      * @return the persisted and detached ProductFamily
+     * @throws UserInfoException if the series with seriesid does not exist or the familyName is already present.
      */
-    ProductFamily create(final TradeName brand, final ProductGroup group, ProductSeries series, final String familyName);
+    ProductFamily createFamily(long seriesId, final String familyName) throws UserInfoException;
 
     /**
      * Creates and persists a ProductSeries.
@@ -158,8 +133,8 @@ public interface ProductProcessor {
      * @return the persisted and detache entity
      * @throws UserInfoException if the supplied data is not correct.
      */
-    ProductSeries create(final TradeName brand, final ProductGroup group, final String seriesName) throws UserInfoException;
-
+    ProductSeries createSeries(final TradeName brand, final ProductGroup group, final String seriesName) throws UserInfoException;
+    
     /**
      * Creates a new ProductSpec and the relating Product and SopoProduct.
      * <p>

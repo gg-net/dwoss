@@ -27,11 +27,11 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author oliver.guenther
  */
 public class LenovoRulesTest {
-    
-        @Test
+
+    @Test
     public void testValidatePartNo() {
-            LenovoPartNoSupport support = new LenovoPartNoSupport();
-            assertThat(support.isValid("21D2002FGE")).isTrue();
+        LenovoPartNoSupport support = new LenovoPartNoSupport();
+        assertThat(support.isValid("21D2002FGE")).isTrue();
     }
-    
+
 }

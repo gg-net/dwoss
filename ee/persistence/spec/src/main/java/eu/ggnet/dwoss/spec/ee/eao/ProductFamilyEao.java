@@ -24,16 +24,32 @@ import jakarta.persistence.TypedQuery;
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.system.persistence.AbstractEao;
+import eu.ggnet.dwoss.spec.api.SpecApi;
+import eu.ggnet.dwoss.spec.ee.assist.Specs;
 import eu.ggnet.dwoss.spec.ee.entity.ProductFamily;
+
+import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.impl.JPAQuery;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+
+import static eu.ggnet.dwoss.spec.ee.entity.QProductFamily.productFamily;
 
 /**
  * Entity Access Object for the CPU.
  *
  * @author oliver.guenther
  */
+@Stateless
 public class ProductFamilyEao extends AbstractEao<ProductFamily> {
 
+    @Inject
+    @Specs
     private EntityManager em;
+
+    public ProductFamilyEao() {
+        super(ProductFamily.class);
+    }
 
     public ProductFamilyEao(EntityManager em) {
         super(ProductFamily.class);
@@ -79,5 +95,14 @@ public class ProductFamilyEao extends AbstractEao<ProductFamily> {
         List<ProductFamily> familys = query.getResultList();
         if ( familys.isEmpty() ) return null;
         return familys.get(0);
+    }
+
+    public List<SpecApi.NameId> findAsNameId(long seriesId) {
+        return new JPAQuery<SpecApi.NameId>(em)
+                .select(Projections.constructor(SpecApi.NameId.class, productFamily.id, productFamily.name))
+                .from(productFamily)
+                .where(productFamily.series.id.eq(seriesId))
+                .orderBy(productFamily.name.asc())
+                .fetch();
     }
 }

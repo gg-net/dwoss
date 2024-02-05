@@ -26,6 +26,7 @@ import java.util.List;
 import jakarta.enterprise.inject.Instance;
 import jakarta.enterprise.inject.se.SeContainer;
 import jakarta.enterprise.inject.se.SeContainerInitializer;
+
 import javax.swing.*;
 
 import eu.ggnet.dwoss.core.system.util.Utils;
@@ -43,6 +44,7 @@ import eu.ggnet.dwoss.receipt.ui.product.SimpleView.CreateOrEdit;
 import eu.ggnet.dwoss.receipt.ui.shipment.ShipmentEditView;
 import eu.ggnet.dwoss.receipt.ui.tryout.stub.ProductProcessorStub.EditProduct;
 import eu.ggnet.dwoss.receipt.ui.tryout.stub.*;
+import eu.ggnet.dwoss.spec.api.SpecApi;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.spi.ActiveStock;
@@ -84,6 +86,7 @@ public class ReceiptTryout {
         remote.add(UnitSupporter.class, pp.unitSupporter());
         remote.add(UniqueUnitAgent.class, pp.uniqueUnitAgent());
         remote.add(UniqueUnitApi.class, new UniqueUnitApiStub());
+        remote.add(SpecApi.class, pp.specApi());
         
         Dl.local().add(CachedMandators.class, pp.cachedMandators());
         Dl.local().add(RemoteLookup.class, new RemoteLookupStub());

@@ -16,11 +16,21 @@
  */
 package eu.ggnet.dwoss.spec.api;
 
+import java.io.Serializable;
+import java.util.List;
+
+import eu.ggnet.dwoss.core.common.values.ProductGroup;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+
 /**
  *
  * @author oliver.guenther
  */
 public interface SpecApi {
+
+    public record NameId(long id, String name) implements Serializable {
+
+    }
 
     /**
      * Returns true if the supplied product id has a spec.
@@ -31,4 +41,9 @@ public interface SpecApi {
      */
     boolean hasSpec(long productId);
 
+    List<NameId> findProductSeries(TradeName brand, ProductGroup group);
+
+    List<NameId> findProductFamilies(long seriesId);
+
+    List<NameId> findProductModels(long familyId);
 }

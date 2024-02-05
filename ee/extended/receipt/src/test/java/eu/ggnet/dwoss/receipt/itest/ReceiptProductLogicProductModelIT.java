@@ -12,6 +12,7 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
 import eu.ggnet.dwoss.receipt.itest.support.*;
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
@@ -39,55 +40,30 @@ public class ReceiptProductLogicProductModelIT extends ArquillianProjectArchive 
     }
 
     @Test
-    public void testCreateProductModell() {
-        ProductModel productModel = productProcessor.create(TradeName.HP, ProductGroup.DESKTOP, null, null, "ProductModel1");
-        assertThat(productModel).as("Created Instance must not be null").isNotNull();
-        assertThat(productModel.getId()).as("ProductModel.id should be set be GeneratedValue").isNotEqualTo(0);
-        assertThat(productModel.getFamily().getSeries().getName()).as("Default name should be set").isEqualTo(SpecConstants.DEFAULT_NAME);
-
-        assertEquals(SpecConstants.DEFAULT_NAME, productModel.getFamily().getSeries().getName());
-
-        ProductModel productModel2 = productProcessor.create(TradeName.HP, ProductGroup.DESKTOP, null, null, "ProductModel2");
-        assertThat(productModel2).as("Created Instance must not be null").isNotNull();
-        assertThat(productModel2.getId()).as("ProductModel.id should be set be GeneratedValue").isNotEqualTo(0);
-        assertThat(productModel2.getFamily().getSeries().getName()).as("Default name should be set").isEqualTo(SpecConstants.DEFAULT_NAME);
-        //Create a ProductSeries and persist it.
-
+    public void testCreateProductModell() throws UserInfoException {
         final String PRODUCT_SERIES_NAME = "Der Name2";
 
         ProductSeries series = specStore.makeSeries(TradeName.HP, ProductGroup.MISC, PRODUCT_SERIES_NAME);
         ProductFamily family = specStore.makeFamily("Family 2", series);
 
-        ProductModel productModel3 = productProcessor.create(TradeName.HP, ProductGroup.DESKTOP, series, family, "ProductModel3");
+        ProductModel productModel3 = productProcessor.createModel(family.getId(), "ProductModel3");
         assertThat(productModel3).as("Created Instance must not be null").isNotNull();
         assertThat(productModel3.getId()).as("ProductModel.id should be set be GeneratedValue").isNotEqualTo(0);
         assertThat(productModel3.getFamily().getSeries().getName()).as("Extra name should be set").isEqualTo(PRODUCT_SERIES_NAME);
     }
 
     @Test
-    public void testCreateProductModellExceptionSameName() {
-        assertThatExceptionOfType(RuntimeException.class)
-                .as("Creating two idendical ProductModells must fail")
-                .isThrownBy(() -> {
-                    productProcessor.create(TradeName.HP, ProductGroup.DESKTOP, null, null, "ModelException");
-                    productProcessor.create(TradeName.HP, ProductGroup.DESKTOP, null, null, "ModelException");
-                });
-    }
-
-    @Test
     public void testCreateProductModellExceptionSameNameDifferentSeries() {
-        assertThatExceptionOfType(RuntimeException.class)
-                .as("Creating two idendical ProductModells must fail")
-                .isThrownBy(() -> {
-
+                assertThatThrownBy(() -> {
                     //Create a ProductSeries and persist it.
                     ProductSeries series = specStore.makeSeries(TradeName.HP, ProductGroup.MISC, "Die Exception2");
                     ProductFamily family = specStore.makeFamily("Family Exception", series);
 
                     //Test if two Products where created with the same name but different ProductSeries that will be throw a exception
-                    productProcessor.create(TradeName.HP, ProductGroup.DESKTOP, series, family, "Model1");
-                    productProcessor.create(TradeName.HP, ProductGroup.DESKTOP, series, family, "Model1");
-                });
+                    productProcessor.createModel(family.getId(), "Model1");
+                    productProcessor.createModel(family.getId(), "Model1");
+                }).as("Creating two idendical ProductModells must fail")
+                        .isInstanceOf(UserInfoException.class);
     }
 
 }

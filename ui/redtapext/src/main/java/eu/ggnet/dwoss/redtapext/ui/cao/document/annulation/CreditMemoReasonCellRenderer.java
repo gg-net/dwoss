@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao.document.annulation;
 
-
-
 import java.awt.Component;
 
 import javax.swing.*;
@@ -37,7 +35,7 @@ public class CreditMemoReasonCellRenderer extends DefaultListCellRenderer {
             label.setText("Keine Auswahl/Sonstiger Grund");
             return label;
         }
-        if (value instanceof CreditMemoReason) {
+        if ( value instanceof CreditMemoReason ) {
             CreditMemoReason sc = (CreditMemoReason)value;
             label.setText(sc.description());
         } else {

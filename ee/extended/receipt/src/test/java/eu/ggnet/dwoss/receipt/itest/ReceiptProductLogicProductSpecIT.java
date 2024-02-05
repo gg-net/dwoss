@@ -16,6 +16,7 @@ import eu.ggnet.dwoss.receipt.ee.ProductProcessor.SpecAndModel;
 import eu.ggnet.dwoss.receipt.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.receipt.itest.support.DatabaseCleaner;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
+import eu.ggnet.dwoss.spec.ee.emo.ProductModelEmo;
 import eu.ggnet.dwoss.spec.ee.entity.*;
 import eu.ggnet.dwoss.spec.ee.entity.piece.*;
 import eu.ggnet.dwoss.uniqueunit.api.ShopCategory;
@@ -43,6 +44,9 @@ public class ReceiptProductLogicProductSpecIT extends ArquillianProjectArchive {
 
     @EJB
     private UniqueUnitApi uuApi;
+    
+    @Inject
+    private ProductModelEmo pmEmo;
 
     @Inject
     private DatabaseCleaner cleaner;
@@ -62,7 +66,7 @@ public class ReceiptProductLogicProductSpecIT extends ArquillianProjectArchive {
 
         //Persist Display
         Display display = new Display(Display.Size._10_1, Display.Resolution.VGA, Display.Type.MATT, Display.Ration.FOUR_TO_THREE);
-        ProductModel productModel = new ProductModel("M", new ProductFamily("F", new ProductSeries(ACER, NOTEBOOK, "S")));
+        ProductModel productModel = pmEmo.request(ACER, NOTEBOOK, "S", "F", "M");
 
         Notebook notebook = new Notebook();
         notebook.setDisplay(display);
@@ -77,7 +81,7 @@ public class ReceiptProductLogicProductSpecIT extends ArquillianProjectArchive {
         notebook.setPartNo("LX.ASDFG.GHJ");
         notebook.setModel(productModel);
 
-        ProductSpec testSpec = productProcessor.create(new SpecAndModel(notebook, productModel, 0, null, false));
+        ProductSpec testSpec = productProcessor.create(new SpecAndModel(notebook, productModel.getId(), 0, null, false));
 
         assertThat(testSpec).isNotNull();
 
@@ -100,7 +104,7 @@ public class ReceiptProductLogicProductSpecIT extends ArquillianProjectArchive {
         notebook2.setPartNo("LX.ASDFG.GH2");
         notebook2.setModel(productModel);
 
-        ProductSpec testSpec2 = productProcessor.create(new SpecAndModel(notebook2, productModel, GTIN, sc2, true));
+        ProductSpec testSpec2 = productProcessor.create(new SpecAndModel(notebook2, productModel.getId(), GTIN, sc2, true));
         assertNotNull(testSpec2);
         assertNotSame(testSpec2, testSpec);
 
@@ -121,7 +125,7 @@ public class ReceiptProductLogicProductSpecIT extends ArquillianProjectArchive {
 
         //Persist Display
         Display display = new Display(Display.Size._10_1, Display.Resolution.VGA, Display.Type.MATT, Display.Ration.FOUR_TO_THREE);
-        ProductModel productModel = new ProductModel("M", new ProductFamily("F", new ProductSeries(PACKARD_BELL, NOTEBOOK, "S")));
+        ProductModel productModel = pmEmo.request(ACER, NOTEBOOK, "S", "F", "M");
 
         Notebook notebook = new Notebook();
         notebook.setDisplay(display);
@@ -136,14 +140,17 @@ public class ReceiptProductLogicProductSpecIT extends ArquillianProjectArchive {
         notebook.setPartNo("LX.ASDFG.GHJ");
         notebook.setModel(productModel);
 
-        productProcessor.create(new SpecAndModel(notebook, productModel, 0, null, false));
-        productProcessor.create(new SpecAndModel(notebook, productModel, 0, null, false));
+        productProcessor.create(new SpecAndModel(notebook, productModel.getId(), 0, null, false));
+        productProcessor.create(new SpecAndModel(notebook, productModel.getId(), 0, null, false));
         fail("Error 040: No Exception Found at: CreateProductSpec");
     }
 
     @Test
     public void testUpdateProductSpecModelChange() throws UserInfoException {
-        ProductModel productModel = productProcessor.create(ACER, NOTEBOOK, null, null, "TestModel");
+        ProductSeries series = productProcessor.createSeries(ACER, NOTEBOOK, "TestSerie");
+        ProductFamily family = productProcessor.createFamily(series.getId(), "TestFamily");
+        
+        ProductModel productModel = productProcessor.createModel(family.getId(), "TestModel");
 
         Cpu cpu = productProcessor.create(new Cpu(Cpu.Series.AMD_V, "TestCPU", Cpu.Type.MOBILE, 2.0, 5));
         Gpu gpu = productProcessor.create(new Gpu(Gpu.Type.MOBILE, Gpu.Series.GEFORCE_100, "TestGPU"));
@@ -161,10 +168,9 @@ public class ReceiptProductLogicProductSpecIT extends ArquillianProjectArchive {
         notebook.setPartNo("LX.ASDFG.GHP");
         notebook.setModel(productModel);
 
-        ProductSpec spec = productProcessor.create(new SpecAndModel(notebook, productModel, 0, null, false));
-        ProductFamily family = spec.getModel().getFamily();
+        ProductSpec spec = productProcessor.create(new SpecAndModel(notebook, productModel.getId(), 0, null, false));
 
-        ProductModel productModel2 = productProcessor.create(ACER, NOTEBOOK, family.getSeries(), family, "TestModel2");
+        ProductModel productModel2 = productProcessor.createModel(family.getId(), "TestModel2");
 
                 Product product = uuAgent.findById(Product.class, spec.getProductId());
         assertThat(product)
@@ -186,15 +192,15 @@ public class ReceiptProductLogicProductSpecIT extends ArquillianProjectArchive {
         sc1 = uuApi.create(sc1);
         sc2 = uuApi.create(sc2);
 
-        productProcessor.update(new SpecAndModel(spec, productModel2, gtin, sc2, true));
+        productProcessor.update(new SpecAndModel(spec, productModel2.getId(), gtin, sc2, true));
 
-        List<ProductSeries> series = specAgent.findAllEager(ProductSeries.class);
-        assertNotNull(series);
-        assertEquals(1, series.size());
-        assertNotNull(series.get(0));
-        assertNotNull(series.get(0).getFamilys());
-        assertEquals(1, series.get(0).getFamilys().size());
-        assertNotNull(series.get(0).getFamilys().toArray()[0]);
+        List<ProductSeries> allSeries = specAgent.findAllEager(ProductSeries.class);
+        assertNotNull(allSeries);
+        assertEquals(1, allSeries.size());
+        assertNotNull(allSeries.get(0));
+        assertNotNull(allSeries.get(0).getFamilys());
+        assertEquals(1, allSeries.get(0).getFamilys().size());
+        assertNotNull(allSeries.get(0).getFamilys().toArray()[0]);
 
         List<ProductSpec> specs = specAgent.findAllEager(ProductSpec.class);
         assertNotNull(specs);

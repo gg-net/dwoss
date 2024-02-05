@@ -59,6 +59,15 @@ public class ProductProcessorOperation implements ProductProcessor {
     @Inject
     @UniqueUnits
     private EntityManager uuEm;
+    
+    @Inject
+    private ProductFamilyEao pfEao;
+    
+    @Inject
+    private ProductSeriesEao psEao;
+    
+    @Inject
+    private ProductModelEao pmEao;
 
     /**
      * Creates a new Cpu instance.
@@ -131,110 +140,45 @@ public class ProductProcessorOperation implements ProductProcessor {
 
     /**
      * Creates a new ProductModel and Persists it.
-     * Multistep Process:
-     * <ol>
-     * <li>Validate and throw exception if a model with the same name exists</li>
-     * <li>Selection of Family and Series
-     * <ul>
-     * <li>If Family is null and Series is null &rarr; find or create default Series and default Family</li>
-     * <li>If only Family is null &rarr; find or create default default Family for Series</li>
-     * <li>Else use supplied Family</li>
-     * </ul>
-     * </li>
-     * <li>Persist new Model with Family</li>
-     * </ol>
      *
-     * @param brand     must not be null
-     * @param group     must not be null
-     * @param series    if null, default is used
-     * @param family    if null, default is used
+     * @param familyId  must be an id of an existing family
      * @param modelName the name of the model
      *
      * @return the persisted and detached Model
+     * @throws UserInfoException if the series with seriesid or the family with familyId does not exist or the modelName is already present.
      */
     @Override
-    public ProductModel create(final TradeName brand, final ProductGroup group, ProductSeries series, ProductFamily family, final String modelName) {
+    public ProductModel createModel(long familyId, final String modelName) throws UserInfoException {
         EntityManager em = specEm;
-        // 1. check if there exits a model anytwhere with the same name. -> throw Exception
-        ProductModelEao modelEao = new ProductModelEao(em);
-        ProductModel model = modelEao.find(modelName);
-        if ( model != null ) throw new RuntimeException("There exits a model " + model + " but we want to create it");
-        // 2. Select Family and Series
-        if ( family != null && family.getId() != 0 ) {
-            ProductFamilyEao familyEao = new ProductFamilyEao(em);
-            family = familyEao.findById(family.getId());
-        } else {
-            if ( series != null && series.getId() != 0 ) {
-                ProductSeriesEao seriesEao = new ProductSeriesEao(em);
-                series = seriesEao.findById(series.getId());
-            } else {
-                ProductSeriesEao seriesEao = new ProductSeriesEao(em);
-                series = seriesEao.find(brand, group, SpecConstants.DEFAULT_NAME);
-                if ( series == null ) {
-                    series = new ProductSeries(brand, group, SpecConstants.DEFAULT_NAME);
-                    em.persist(series);
-                }
-            }
-            for (ProductFamily f : series.getFamilys()) {
-                if ( f.getName().equals(SpecConstants.DEFAULT_NAME) ) {
-                    family = f;
-                }
-            }
-            if ( family == null ) {
-                family = new ProductFamily(SpecConstants.DEFAULT_NAME);
-                family.setSeries(series);
-                em.persist(family);
-            }
-        }
-        // 3. Create Model
-        model = new ProductModel(modelName);
+
+        if ( pmEao.find(modelName) != null ) throw new UserInfoException("ProductModel " + modelName + " existiert schon");
+        ProductFamily family = pfEao.findById(familyId);
+        if (family == null) throw new UserInfoException("ProductFamily mit id=" + familyId + " existiert nicht");
+
+        ProductModel model = new ProductModel(modelName);
         model.setFamily(family);
         em.persist(model);
         return model;
     }
 
     /**
-     * Creates and Persists a ProducFamily.
-     * <ol>
-     * <li>Validate and throw exception if a family with the same name exists</li>
-     * <li>Selection of Series
-     * <ul>
-     * <li>If Series is null &rarr; find or create default Series</li>
-     * <li>Else use supplied Series</li>
-     * </ul>
-     * </li>
-     * <li>Persist new Family with Series</li>
-     * </ol>
+     * Creates and Persists a ProductFamily.
      *
-     * @param brand      the brand
-     * @param group      the group
-     * @param series     the series
+     * @param seriesId   the seriesId
      * @param familyName the familyName
      *
      * @return the persisted and detached ProductFamily
      */
     @Override
-    public ProductFamily create(final TradeName brand, final ProductGroup group, ProductSeries series, final String familyName) {
+    public ProductFamily createFamily(long seriesId, final String familyName) throws UserInfoException {
         EntityManager em = specEm;
         // 1. check if there exits a model anytwhere with the same name. -> throw Exception
         ProductFamilyEao familyEao = new ProductFamilyEao(em);
-        ProductFamily family = familyEao.find(familyName);
-        if ( family != null ) throw new RuntimeException("There exits a family " + family + " but we want to create it");
-        // 2. Create Family
-        family = new ProductFamily(familyName);
-        if ( series != null && series.getId() != 0 ) {
-            // 3. if series not null, get from db
-            ProductSeriesEao seriesEao = new ProductSeriesEao(em);
-            series = seriesEao.findById(series.getId());
-        } else {
-            // 4. get or create default series
-            ProductSeriesEao seriesEao = new ProductSeriesEao(em);
-            series = seriesEao.find(brand, group, SpecConstants.DEFAULT_NAME);
-            if ( series == null ) {
-                series = new ProductSeries(brand, group, SpecConstants.DEFAULT_NAME);
-                em.persist(series);
-            }
-        }
+        if ( familyEao.find(familyName) != null ) throw new UserInfoException("Die ProductFamily:" + familyName + " existiert schon");
+        ProductSeriesEao seriesEao = new ProductSeriesEao(em);
+        ProductSeries series = seriesEao.findById(seriesId);
+        if ( series == null ) throw new UserInfoException("ProductSeries mit id=" + seriesId + " existiert nicht");
+        ProductFamily family = new ProductFamily(familyName);
         family.setSeries(series);
         em.persist(family);
         return family;
@@ -244,19 +188,15 @@ public class ProductProcessorOperation implements ProductProcessor {
     public ProductSpec create(SpecAndModel sam) throws IllegalArgumentException {
         Objects.requireNonNull(sam, "Spec and Model must not be null");
         ProductSpec spec = sam.spec();
-        ProductModel model = sam.model();
 
         // Hint: Normally the column unique option should do that, but HSQLDB somehow lost it.
         if ( new ProductEao(uuEm).findByPartNo(spec.getPartNo()) != null )
             throw new IllegalArgumentException("PartNo=" + spec.getPartNo() + " exists allready, but create is called");
 
-        ProductModelEmo productModelEmo = new ProductModelEmo(specEm);
-        model = productModelEmo.request(
-                model.getFamily().getSeries().getBrand(),
-                model.getFamily().getSeries().getGroup(),
-                model.getFamily().getSeries().getName(),
-                model.getFamily().getName(),
-                model.getName());
+        ProductModel model = specEm.find(ProductModel.class, sam.modelId());
+        if ( model == null )
+            throw new IllegalStateException("No spec.ProductModel with Id=" + sam.modelId() + ", should be impossible");
+
         spec.setModel(model);
         if ( spec instanceof DisplayAble ) {
             DisplayAble da = (DisplayAble)spec;
@@ -288,12 +228,12 @@ public class ProductProcessorOperation implements ProductProcessor {
         product.setDescription(SpecFormater.toSingleLine(spec));
         product.setGtin(sam.gtin());
         product.setRch(sam.rch());
-        
-        if (sam.nullableShopCategory() != null) {
+
+        if ( sam.nullableShopCategory() != null ) {
             // If the ShopCategory is selected in the ui it exists in the database.
             product.setShopCategory(uuEm.find(ShopCategory.class, sam.nullableShopCategory().id()));
         }
-        
+
         if ( !uuEm.contains(product) ) {
             uuEm.persist(product);
             uuEm.flush(); // Ensuring Id generation
@@ -308,7 +248,6 @@ public class ProductProcessorOperation implements ProductProcessor {
     public ProductSpec update(SpecAndModel sam) throws IllegalArgumentException {
         Objects.requireNonNull(sam, "Spec and Model must not be null");
         ProductSpec spec = sam.spec();
-        ProductModel model = sam.model();
 
         // 1. Validation
         if ( spec.getProductId() == null ) throw new IllegalArgumentException("ProductSpec has no productId, violation ! " + spec);
@@ -316,7 +255,7 @@ public class ProductProcessorOperation implements ProductProcessor {
         Product product = productEao.findById(spec.getProductId());
         if ( product == null ) throw new IllegalArgumentException("ProductSpec.productId=" + spec.getProductId() + " does not have a Product");
         // Allways Update model
-        spec.setModel(new ProductModelEao(specEm).findById(model.getId()));
+        spec.setModel(new ProductModelEao(specEm).findById(sam.modelId()));
         // 2. + 3. Update Spec
         if ( spec instanceof DisplayAble && ((DisplayAble)spec).getDisplay().getId() == 0 ) {
             DisplayAble monitor = (DisplayAble)spec;
@@ -336,24 +275,24 @@ public class ProductProcessorOperation implements ProductProcessor {
         product.setGtin(sam.gtin());
         product.setRch(sam.rch());
 
-        if (sam.nullableShopCategory() != null) {
+        if ( sam.nullableShopCategory() != null ) {
             // If the ShopCategory is selected in the ui it exists in the database.
             product.setShopCategory(uuEm.find(ShopCategory.class, sam.nullableShopCategory().id()));
         } else {
             product.setShopCategory(null);
         }
-        
+
         L.debug("update({}) overwriting uniqueunti.Product.id={}", SpecFormater.toDetailedName(spec), product.getId());
         return spec;
     }
 
     @Override
-    public ProductSeries create(TradeName brand, ProductGroup group, String seriesName) throws UserInfoException {
+    public ProductSeries createSeries(TradeName brand, ProductGroup group, String seriesName) throws UserInfoException {
         EntityManager em = specEm;
         // 1. check if there exits a model anytwhere with the same name. -> throw Exception
         ProductSeriesEao seriesEoa = new ProductSeriesEao(em);
         ProductSeries series = seriesEoa.find(seriesName);
-        if ( series != null ) throw new UserInfoException("There exits a series " + series + " but we want to create it");
+        if ( series != null ) throw new UserInfoException("Serie " + series + " existiert schon");
         // 2. Create Family
         series = new ProductSeries(brand, group, seriesName);
         em.persist(series);
