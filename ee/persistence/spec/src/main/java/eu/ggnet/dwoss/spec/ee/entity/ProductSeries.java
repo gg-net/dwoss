@@ -43,7 +43,7 @@ import static jakarta.persistence.CascadeType.*;
 @NamedQuery(name = "ProductSeries.byBrandGroupName", query = "select s from ProductSeries s where s.brand = ?1 and s.group = ?2 and s.name = ?3")
 @SuppressWarnings("PersistenceUnitPresent")
 public class ProductSeries extends BaseEntity implements Serializable, INamed, EagerAble {
-
+    
     @XmlTransient
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)

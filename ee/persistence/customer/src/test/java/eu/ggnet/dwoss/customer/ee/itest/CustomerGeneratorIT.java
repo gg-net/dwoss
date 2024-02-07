@@ -31,7 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author pascal.perau
  */
 @RunWith(Arquillian.class)
-public class CustomerGeneratorOneIT extends ArquillianProjectArchive {
+public class CustomerGeneratorIT extends ArquillianProjectArchive {
 
     @Inject
     @Customers

@@ -27,9 +27,13 @@ import eu.ggnet.dwoss.redtape.ee.eao.PositionEao;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Condition;
 import eu.ggnet.dwoss.core.common.values.PaymentMethod;
 import eu.ggnet.dwoss.core.common.values.PositionType;
+import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
+
+import jakarta.ejb.EJB;
 
 /**
- *
+ * Persistence IT. Hier darf auch geschlampt werden. Hauptsache es wird was in der Datenbank gemacht.
+ * 
  * @author oliver.guenther
  */
 @RunWith(Arquillian.class)
@@ -41,6 +45,11 @@ public class PersistenceIT extends ArquillianProjectArchive {
 
     @Inject
     private UserTransaction utx;
+    
+    @EJB
+    private RedTapeAgent agent;
+    
+    private final static long CUSTOMER_ID = 12; 
 
     @Test
     public void example() throws Exception {
@@ -80,7 +89,7 @@ public class PersistenceIT extends ArquillianProjectArchive {
 
         Dossier dossier = new Dossier();
         dossier.setComment("Das ist nun ein Weitere Kommentar");
-        dossier.setCustomerId(12);
+        dossier.setCustomerId(CUSTOMER_ID);
         dossier.setReminder(new Reminder(new Date(), new Date(), "Junit"));
 
         Document document = new Document();
@@ -119,18 +128,20 @@ public class PersistenceIT extends ArquillianProjectArchive {
         utx.commit();
         utx.begin();
         em.joinTransaction();
-
-        CriteriaQuery<Dossier> q = em.getCriteriaBuilder().createQuery(Dossier.class);
-
-        List<Dossier> dossiers = em.createQuery(q.select(q.from(Dossier.class))).getResultList();
-
-        PositionEao positionEao = new PositionEao(em);
         Logger L = LoggerFactory.getLogger(PersistenceIT.class);
+        L.warn("------------------------------------------------");
+        L.warn("----- Getting one dossier with dossier.documents.size");
+        L.warn("------------------------------------------------");
 
-        for (Dossier ds : dossiers) {
-            L.info(ds.toMultiLine());
-        }
+        Dossier d = em.find(Dossier.class, dossier.getId());
+        d.getDocuments().size();
+        
+        L.warn("------------------------------------------------");
+        L.warn("----- End of: Getting one dossier with dossier.documents.size");
+        L.warn("------------------------------------------------");
         utx.commit();
+        
+        List<Dossier> dossiers = agent.findDossiersOpenByCustomerIdEager(CUSTOMER_ID);
     }
 
 }

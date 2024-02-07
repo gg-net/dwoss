@@ -357,7 +357,9 @@ public class Dossier extends BaseEntity implements Serializable, EagerAble {
 
     @Override
     public void fetchEager() {
-        documents.size();
+        for (Document document : documents) {
+            document.fetchEager();
+        }
     }
 
     /**

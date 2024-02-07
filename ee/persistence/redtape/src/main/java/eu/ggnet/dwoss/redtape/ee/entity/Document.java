@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.common.values.*;
 import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
+import eu.ggnet.dwoss.core.system.persistence.EagerAble;
 import eu.ggnet.dwoss.core.system.util.TwoDigits;
 import eu.ggnet.dwoss.redtape.ee.entity.util.DocumentEquals;
 import eu.ggnet.dwoss.redtape.ee.format.DocumentFormater;
@@ -38,6 +39,7 @@ import static eu.ggnet.dwoss.core.common.values.PositionType.COMMENT;
 import static eu.ggnet.dwoss.core.common.values.TaxType.GENERAL_SALES_TAX_DE_19_PERCENT;
 import static eu.ggnet.dwoss.redtape.ee.entity.util.DocumentEquals.Property.*;
 import static jakarta.persistence.CascadeType.*;
+import static jakarta.persistence.FetchType.LAZY;
 
 /**
  * Represents a Document, like the paper in a real dossier.
@@ -59,7 +61,7 @@ import static jakarta.persistence.CascadeType.*;
 @NamedQuery(name = "Document.byIdentifier", query = "SELECT d FROM Document d WHERE d.identifier like ?1 and d.type = ?2 and d.active = true")
 @NamedQuery(name = "Document.productIdAndType", query = "SELECT DISTINCT p.document FROM Position p WHERE p.uniqueUnitProductId = ?1 AND p.document.active = TRUE AND p.document.type = ?2 ORDER BY p.document.actual DESC")
 @SuppressWarnings("PersistenceUnitPresent")
-public class Document extends BaseEntity implements Serializable, Comparable<Document> {
+public class Document extends BaseEntity implements Serializable, Comparable<Document>, EagerAble {
 
     /**
      * A Condition that can be added to a Document. Conditions are meant only to be added.
@@ -258,7 +260,7 @@ public class Document extends BaseEntity implements Serializable, Comparable<Doc
     @Enumerated
     private DocumentType type;
 
-    @OneToMany(cascade = ALL, mappedBy = "document", fetch = FetchType.EAGER)
+    @OneToMany(cascade = ALL, mappedBy = "document", fetch = FetchType.LAZY)
     @OrderBy("id ASC")
     @MapKey(name = "id")
     @Valid
@@ -885,6 +887,11 @@ public class Document extends BaseEntity implements Serializable, Comparable<Doc
             if ( !p1p.equalsContent(p2p) ) return false;
         }
         return true;
+    }
+    
+    @Override
+    public void fetchEager() {
+        positions.size();
     }
 
     @Override

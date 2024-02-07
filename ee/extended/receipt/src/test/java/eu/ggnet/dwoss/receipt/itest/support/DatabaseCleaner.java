@@ -27,6 +27,14 @@ import eu.ggnet.dwoss.spec.ee.assist.Specs;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.core.system.util.Utils;
+import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerDeleteUtils;
+import eu.ggnet.dwoss.redtape.ee.assist.gen.RedTapeDeleteUtils;
+import eu.ggnet.dwoss.report.ee.assist.gen.ReportDeleteUtils;
+import eu.ggnet.dwoss.spec.ee.assist.gen.SpecDeleteUtils;
+import eu.ggnet.dwoss.stock.ee.assist.gen.StockDeleteUtils;
+import eu.ggnet.dwoss.uniqueunit.ee.assist.gen.UniqueUnitsDeleteUtils;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  *
@@ -60,7 +68,18 @@ public class DatabaseCleaner {
     private EntityManager uniqueunitEm;
 
     public void clear() throws Exception {
-        Utils.clearH2Db(redTapeEm, reportEm, customerEm, specEm, stockEm, uniqueunitEm);
+        RedTapeDeleteUtils.deleteAll(redTapeEm);
+        assertThat(RedTapeDeleteUtils.validateEmpty(redTapeEm)).isNull();
+        ReportDeleteUtils.deleteAll(reportEm);
+        assertThat(ReportDeleteUtils.validateEmpty(reportEm)).isNull();
+        CustomerDeleteUtils.deleteAll(customerEm);
+        assertThat(CustomerDeleteUtils.validateEmpty(customerEm)).isNull();
+        SpecDeleteUtils.deleteAll(specEm);
+        assertThat(SpecDeleteUtils.validateEmpty(specEm)).isNull();
+        StockDeleteUtils.deleteAll(stockEm);
+        assertThat(StockDeleteUtils.validateEmpty(stockEm)).isNull();
+        UniqueUnitsDeleteUtils.deleteAll(uniqueunitEm);
+        assertThat(UniqueUnitsDeleteUtils.validateEmpty(uniqueunitEm)).isNull();
     }
 
 }

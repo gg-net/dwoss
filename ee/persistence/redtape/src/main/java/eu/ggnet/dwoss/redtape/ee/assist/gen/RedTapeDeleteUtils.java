@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.redtape.ee.assist.gen;
 
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 

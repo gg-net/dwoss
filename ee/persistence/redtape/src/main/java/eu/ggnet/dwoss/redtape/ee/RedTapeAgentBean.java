@@ -18,6 +18,9 @@ package eu.ggnet.dwoss.redtape.ee;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
@@ -32,11 +35,13 @@ import eu.ggnet.dwoss.core.system.persistence.AbstractAgentBean;
 
 /**
  * The RedTapeAgent implementation.
- * <p/>
+ * 
  * @author oliver.guenther
  */
 @Stateless
 public class RedTapeAgentBean extends AbstractAgentBean implements RedTapeAgent {
+    
+    private final static Logger L = LoggerFactory.getLogger(RedTapeAgentBean.class);
 
     @Inject
     @RedTapes
@@ -75,7 +80,9 @@ public class RedTapeAgentBean extends AbstractAgentBean implements RedTapeAgent 
      */
     @Override
     public List<Dossier> findDossiersOpenByCustomerIdEager(long customerId) {
-        return optionalFetchEager(new DossierEao(em).findOpenByCustomerId(customerId));
+        List<Dossier> dossiers = optionalFetchEager(new DossierEao(em).findOpenByCustomerId(customerId));
+        L.info("found dossiers.size={} for customer.id={}", dossiers.size(), customerId);
+        return dossiers;
     }
 
     /**

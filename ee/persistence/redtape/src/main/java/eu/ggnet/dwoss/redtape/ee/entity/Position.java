@@ -58,7 +58,7 @@ import static jakarta.persistence.CascadeType.*;
 @NamedQuery(name = "Position.countByDocumentId", query = "SELECT COUNT(p) FROM Position p WHERE p.document.id = ?1")
 @NamedQuery(name = "Position.findByUniqueUnitId", query = "SELECT p FROM Position p WHERE p.uniqueUnitId = ?1")
 @SuppressWarnings("PersistenceUnitPresent")
-@Table(name = "DocumentPosition")
+@Table(name = "DocumentPosition",indexes = @Index(name = "PositionUniqueUnitId", columnList = "uniqueUnitId"))
 public class Position implements Serializable, Comparable<Position> {
 
     /**
