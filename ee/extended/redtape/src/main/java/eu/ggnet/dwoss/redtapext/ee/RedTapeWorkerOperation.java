@@ -389,16 +389,15 @@ public class RedTapeWorkerOperation implements RedTapeWorker {
             default:
                 throw new RuntimeException("No Workflow for Document.type=" + doc.getType());
         }
-        Document result = workflow.execute();
-        // TODO: Make a better fetch eager
-        result.getDossier().getDocuments().size();
+        Document result = workflow.execute();        
+        result.getDossier().fetchEager();
         // TODO: Fix btw. understand the Fix
         /*
         This is something, I (oliver.guenther) really doesn't get. If we remove the redTapeEm.flush() tests are failing with
         - Detached Entity passed to persist: eu.ggnet.dwoss.redtape.entity.Address
         - Verifying the Entitys with redtapeEm.contains allways returns true.
         That dosn't make any sense in my head. But the flush here seams to fix it.
-         */
+         */        
         redTapeEm.flush();
         redTapeEm.detach(result); // Detacht the result, just to be on the safe side. This should allways be a remote call.
         redTapeEm.clear();
