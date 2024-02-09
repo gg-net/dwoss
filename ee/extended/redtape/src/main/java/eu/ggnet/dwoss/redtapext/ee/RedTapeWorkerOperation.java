@@ -135,8 +135,8 @@ public class RedTapeWorkerOperation implements RedTapeWorker {
         L.info("Start create Dossier in RedTapeWorkerOperation with customer id {} is dispatch {} and the arrager {}", customerId, dispatch, arranger);
         Dossier createdDos = createDossierWorkflow.execute(customerId, dispatch, arranger);
         L.info(createdDos.toString());
+        createdDos.fetchEager();
         redTapeEm.detach(createdDos);
-
         return createdDos;
     }
 
@@ -265,7 +265,7 @@ public class RedTapeWorkerOperation implements RedTapeWorker {
             if ( !dossier.getActiveDocuments(DocumentType.INVOICE).isEmpty() ) continue;
             for (Document document : new HashSet<>(dossier.getActiveDocuments(DocumentType.ORDER))) {
                 if ( document.getConditions().contains(Document.Condition.CANCELED) ) continue;
-                // May be fetchEager
+                document.fetchEager();
                 redTapeEm.detach(document);
                 if ( addressChange.type == AddressType.INVOICE ) document.setInvoiceAddress(address);
                 if ( addressChange.type == AddressType.SHIPPING ) document.setShippingAddress(address);

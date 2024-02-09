@@ -67,6 +67,7 @@ public class SupportBean {
 
     public Document changeActual(Document doc, Date date) {
         doc = new DocumentEao(redTapeEm).findById(doc.getId());
+        doc.fetchEager();
         doc.setActual(date);
         return doc;
     }
