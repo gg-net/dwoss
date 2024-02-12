@@ -28,6 +28,8 @@ import javafx.scene.control.TextField;
 
 import eu.ggnet.saft.core.ui.*;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
 
 /**
@@ -36,6 +38,7 @@ import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
  * @author mirko.schulze
  */
 //TODO: naming : 
+@Dependent
 @Title("Eingabe Artikelnummer")
 public class ProductHistoryController implements FxController, ResultProducer<String>, Initializable {
 

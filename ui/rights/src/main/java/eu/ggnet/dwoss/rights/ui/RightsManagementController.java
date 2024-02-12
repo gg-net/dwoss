@@ -133,7 +133,7 @@ public class RightsManagementController implements Initializable, FxController {
 
     @FXML
     private Button addAllGroupsButton, addGroupButton, removeGroupButton, removeAllGroupsButton, addAllRightsButton, addRightButton, removeRightButton,
-            removeAllRightsButton, createUserButton, createGroupButton, deleteUserButton, deleteGroupButton, closeButton;
+            removeAllRightsButton, createUserButton, createGroupButton, deleteUserButton, deleteGroupButton, closeButton, changePasswordButton;
     //</editor-fold>
 
     private User getSelectedUserFromUserListView() {
@@ -411,6 +411,13 @@ public class RightsManagementController implements Initializable, FxController {
                 });
             }
         });
+        
+        changePasswordButton.disableProperty().bind(userListView.getSelectionModel().selectedIndexProperty().isEqualTo(-1));
+        
+        changePasswordButton.setOnAction(e -> {
+            saft.build(changePasswordButton).fx().eval(() -> selectedUser,ChangePasswordPane.class).cf().thenAccept(p -> System.out.println(p));
+        });
+
         //closeButton
         closeButton.setOnAction(e -> {
             saft.closeWindowOf(closeButton);
@@ -531,12 +538,12 @@ public class RightsManagementController implements Initializable, FxController {
             inactiveGroupsListView.setItems(FXCollections.observableArrayList(inactiveGroups));
         }
         if ( active ) {
-                activeGroupsListView.getSelectionModel().select(index);
-                selectedGroup = activeGroupsListView.getSelectionModel().getSelectedItem();
-            } else {
-                inactiveGroupsListView.getSelectionModel().select(index);
-                selectedGroup = inactiveGroupsListView.getSelectionModel().getSelectedItem();
-            }
+            activeGroupsListView.getSelectionModel().select(index);
+            selectedGroup = activeGroupsListView.getSelectionModel().getSelectedItem();
+        } else {
+            inactiveGroupsListView.getSelectionModel().select(index);
+            selectedGroup = inactiveGroupsListView.getSelectionModel().getSelectedItem();
+        }
     }
 
     /**
