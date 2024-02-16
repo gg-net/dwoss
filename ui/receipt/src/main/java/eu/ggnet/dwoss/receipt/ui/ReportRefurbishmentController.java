@@ -32,12 +32,15 @@ import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.saft.core.ui.*;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
 
 /**
  *
  * @author mirko.schulze
  */
+@Dependent
 public class ReportRefurbishmentController implements FxController, ResultProducer<ReportRefurbishmentController.Result>, Initializable {
 
     public static class Result {

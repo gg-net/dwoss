@@ -35,7 +35,7 @@ public class SmtpConfiguration implements Serializable {
     public final String charset;
 
     public final boolean useStartTls;
-    
+
     public final boolean useSsl;
 
     public String toHtml() {
@@ -49,19 +49,19 @@ public class SmtpConfiguration implements Serializable {
     }
 
     /**
-     * 
-     * @param hostname the hostname, must not be null
+     *
+     * @param hostname               the hostname, must not be null
      * @param smtpAuthenticationUser the user, may be null which implies no authentication
      * @param smtpAuthenticationPass the pass, may be null which implies no authentication
-     * @param charset the charset to use, must not be null
+     * @param charset                the charset to use, must not be null
      * @param useStartTls
-     * @param useSsl 
+     * @param useSsl
      */
-    public SmtpConfiguration(String hostname, String smtpAuthenticationUser, String smtpAuthenticationPass, String charset, boolean useStartTls,boolean useSsl) {
-        this.hostname = Objects.requireNonNull(hostname, "new SmtpConfiguration with hostname=null called, not allowed");;
+    public SmtpConfiguration(String hostname, String smtpAuthenticationUser, String smtpAuthenticationPass, String charset, boolean useStartTls, boolean useSsl) {
+        this.hostname = Objects.requireNonNull(hostname, "new SmtpConfiguration with hostname=null called, not allowed");
         this.smtpAuthenticationUser = smtpAuthenticationUser;
         this.smtpAuthenticationPass = smtpAuthenticationPass;
-        this.charset = Objects.requireNonNull(charset, "new SmtpConfiguration with charset=null called, not allowed");;
+        this.charset = Objects.requireNonNull(charset, "new SmtpConfiguration with charset=null called, not allowed");
         this.useStartTls = useStartTls;
         this.useSsl = useSsl;
     }
