@@ -404,6 +404,7 @@ public class ProductProcessorStub implements ProductProcessor {
             for (int j = 0; j < 10; j++) {
                 UniqueUnit uu = uug.makeUniqueUnit(CONTRACTORS.get(R.nextInt(CONTRACTORS.size())), p);
                 uu.setProduct(p);
+                uu.setReceiveAssignAttribute("" + R.nextInt(1000000));
                 uniqueUnits.add(uu);
                 if ( R.nextInt(10) <= 7 ) {
                     StockUnit su = new StockUnit(uu.getRefurbishId(), uu.getProduct().getName(), uu.getId());

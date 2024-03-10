@@ -34,9 +34,6 @@ public enum Warranty {
     NO_B2B_WARRANTY("Händlergeschäft, die Gewährleistung ist ausgeschlossen"),
     ONEADO_2022("oneado-Garantie gemäß der beiliegenden Bedingungen. Gewährleistung: 12 Monate gesetzliche Gewährleistung ab Lieferung der Ware");
 
-    /**
-     * A short (german) description.
-     */
     public final String description;
 
     private Warranty(String name) {
@@ -52,13 +49,18 @@ public enum Warranty {
      * A short (german) description.
      *
      * @return a short (german) description.
-     * @deprecated use field description.
+     * @deprecated use method description()
      */
     @Deprecated
     public String getName() {
         return description;
     }
 
+    /**
+     * A short (german) description.
+     *
+     * @return a short (german) description.
+     */
     public String description() {
         return description;
     }

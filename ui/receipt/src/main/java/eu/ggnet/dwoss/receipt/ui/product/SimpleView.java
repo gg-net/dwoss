@@ -17,8 +17,6 @@
 package eu.ggnet.dwoss.receipt.ui.product;
 
 import java.awt.Component;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.util.*;
 import java.util.concurrent.CompletionException;
 import java.util.function.Consumer;
@@ -30,7 +28,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.TextInputDialog;
 
 import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.dwoss.core.common.values.CreditMemoReason;
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.widget.Dl;

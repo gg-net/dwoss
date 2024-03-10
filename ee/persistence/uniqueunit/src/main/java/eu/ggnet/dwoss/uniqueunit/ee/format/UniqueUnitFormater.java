@@ -110,10 +110,11 @@ public abstract class UniqueUnitFormater {
                 + " - " + p.getGroup().getNote() + " - " + p.getTradeName().getName() + " " + p.getName() + "</b><br />";
         re += "<table style=\"width:100%\">"
                 + "<tr>"
-                + "<th>Seriennummer</th><th>Artikelnummer</th><th>GTIN/EAN</th><th>Lieferantenartikelnummer</th><th>Lieferant</th>"
+                + "<th>Seriennummer</th><th>Artikelnummer</th><th>GTIN/EAN</th><th>Lieferantenartikelnummer</th><th>Lieferant</th><th>ReceiveAssignAttribute</th>"
                 + "</tr><tr>"
                 + "<td>" + unit.getSerial() + "</td><td>" + p.getPartNo() + "</td><td>" + Utils.toGtin13(p.getGtin()) + "</td>"
-                + "<td>" + Optional.ofNullable(p.getAdditionalPartNo(unit.getContractor())).orElse("Keine Daten") + "</td><td>" + unit.getContractor().getName() + "</td>"
+                + "<td>" + Optional.ofNullable(p.getAdditionalPartNo(unit.getContractor())).orElse("Keine Daten") + "</td>"
+                + "<td>" + unit.getContractor().getDescription() + "</td>"+ "<td>" + unit.getReceiveAssignAttribute() + "</td>"
                 + "</tr></table>";
 
         re += "<p>" + p.getDescription() + "</p><p>";

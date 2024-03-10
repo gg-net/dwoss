@@ -16,8 +16,7 @@
  */
 package eu.ggnet.dwoss.receipt.ui.unit;
 
-import java.awt.EventQueue;
-import java.awt.KeyboardFocusManager;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -41,8 +40,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.core.common.values.ReceiptOperation;
-import eu.ggnet.dwoss.core.common.values.Warranty;
+import eu.ggnet.dwoss.core.common.values.*;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.core.widget.Dl;
@@ -87,6 +85,29 @@ import static javafx.scene.control.ButtonType.YES;
 @Title("Aufnahme")
 @StoreLocation
 public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In>, ResultProducer<UnitView.Out> {
+
+    public static class WarrantyShortRenderer extends DefaultListCellRenderer {
+
+        @Override
+        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            JLabel label = (JLabel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            if ( value == null ) {
+                label.setText("");
+                return label;
+            }
+            if ( value instanceof Warranty w ) {
+                if (w.description().length() > 35) {
+                    label.setText(w.description().substring(0, 35) + " ...");
+                    label.setToolTipText(w.description());
+                } else {
+                    label.setText(w.description());
+                }
+            } else {
+                label.setText(value.toString());
+            }
+            return label;
+        }
+    }
 
     /**
      * Input Consumer class.
@@ -322,7 +343,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         warrantyTillChooser.addPropertyChangeListener(warrantyProperty);
         warrantyTillChooser.getDateEditor().getUiComponent().addPropertyChangeListener(warrantyProperty);
 
-        editRefurbishedIdButton.setEnabled(false);
+        refurbishedIdEditButton.setEnabled(false);
         equipmentTable.setModel(equipmentModel);
         equipmentModel.setTable(equipmentTable);
         commentTable.setModel(commentModel);
@@ -332,7 +353,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
 
         conditionController = new ComboBoxController<>(unitStateBox, UniqueUnit.Condition.values());
         warrantyController = new ComboBoxController<>(warrantyTypeChooser, Warranty.valuesSorted());
-        warrantyTypeChooser.setRenderer(new NamedEnumCellRenderer());
+        warrantyTypeChooser.setRenderer(new WarrantyShortRenderer());
         unitStateBox.setRenderer(new NamedEnumCellRenderer());
         unitStateBox.setModel(new DefaultComboBoxModel(UniqueUnit.Condition.values()));
 
@@ -364,8 +385,8 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
 
         if ( Objects.requireNonNull(in, "in must not be null") instanceof In.Create ) {
             var create = (In.Create)in;
-            unitShipField.setText(create.shipment().getShipmentId());
-            unitOwnerField.setText(create.shipment().getContractor().toString());
+            shipmentIdField.setText(create.shipment().getShipmentId());
+            contractorField.setText(create.shipment().getContractor().toString());
             model.setContractor(create.shipment().getContractor());
             model.setMode(create.shipment().getDefaultManufacturer());
             //      contractorBox.setSelectedItem(create.shipment().getDefaultManufacturer());
@@ -417,6 +438,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
             unit = new UniqueUnit();
         }
         model.getMetaUnit().loadTo(unit);
+        unit.setReceiveAssignAttribute(raaTextField.getText());
         unit.setCondition(conditionController.getSelected());
         unit.setWarranty(warrantyController.getSelected());
         unit.setEquipments(equipmentModel.getMarked());
@@ -448,6 +470,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         model.getMetaUnit().loadFrom(unit);
         model.setProduct(unit.getProduct());
         updateMetaUnit();
+        raaTextField.setText(unit.getReceiveAssignAttribute());
         equipmentModel.setMarked(unit.getEquipments());
         commentModel.setMarked(unit.getComments());
         internalCommentModel.setMarked(unit.getInternalComments());
@@ -455,10 +478,10 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         warrantyController.setSelected(unit.getWarranty());
         commentArea.setText(unit.getComment());
         internalCommentArea.setText(unit.getInternalComment());
-        unitOwnerField.setText(unit.getContractor().toString());
+        contractorField.setText(unit.getContractor().toString());
         model.setContractor(unit.getContractor());
 
-        if ( StringUtils.isNotBlank(unit.getShipmentLabel()) ) unitShipField.setText(unit.getShipmentLabel());
+        if ( StringUtils.isNotBlank(unit.getShipmentLabel()) ) shipmentIdField.setText(unit.getShipmentLabel());
         if ( unit.getWarranty().equals(Warranty.WARRANTY_TILL_DATE) ) warrantyTillChooser.setDate(unit.getWarrentyValid());
     }
 
@@ -746,129 +769,61 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         manufacturerButtonGroup = new javax.swing.ButtonGroup();
-        unitWritePanel = new javax.swing.JPanel();
-        internalCommentAreaScrollPane = new javax.swing.JScrollPane();
-        internalCommentArea = new javax.swing.JTextArea();
-        commentAreaScrollPane = new javax.swing.JScrollPane();
-        commentArea = new javax.swing.JTextArea();
-        unitItemLabel = new javax.swing.JLabel();
-        unitStatusLabel = new javax.swing.JLabel();
-        unitStateBox = new javax.swing.JComboBox();
-        editProductButton = new javax.swing.JButton();
-        partNoField = new javax.swing.JTextField();
-        refurbishedIdField = new javax.swing.JTextField();
-        unitSnLabel = new javax.swing.JLabel();
-        unitNumberLabel = new javax.swing.JLabel();
-        serialField = new javax.swing.JTextField();
-        editRefurbishedIdButton = new javax.swing.JButton();
-        mfgLabel = new javax.swing.JLabel();
-        mfgDateChooser = new com.toedter.calendar.JDateChooser();
-        jLabel3 = new javax.swing.JLabel();
-        warrantyTillChooser = new com.toedter.calendar.JDateChooser();
-        jLabel4 = new javax.swing.JLabel();
-        warrantyTypeChooser = new javax.swing.JComboBox();
+        unitPanel = new javax.swing.JPanel();
         manufacturerPanel = new javax.swing.JPanel();
         contractorBox = new javax.swing.JComboBox();
-        jScrollPane3 = new javax.swing.JScrollPane();
+        refurbishedIdLabel = new javax.swing.JLabel();
+        refurbishedIdField = new javax.swing.JTextField();
+        refurbishedIdEditButton = new javax.swing.JButton();
+        serialLabel = new javax.swing.JLabel();
+        serialField = new javax.swing.JTextField();
+        partNoLabel = new javax.swing.JLabel();
+        partNoField = new javax.swing.JTextField();
+        partNoEditButton = new javax.swing.JButton();
+        raaLabel = new javax.swing.JLabel();
+        raaTextField = new javax.swing.JTextField();
+        mfgLabel = new javax.swing.JLabel();
+        mfgDateChooser = new com.toedter.calendar.JDateChooser();
+        unitStatusLabel = new javax.swing.JLabel();
+        unitStateBox = new javax.swing.JComboBox();
+        warrantyTypeLabel = new javax.swing.JLabel();
+        warrantyTypeChooser = new javax.swing.JComboBox();
+        warrantyTillLabe = new javax.swing.JLabel();
+        warrantyTillChooser = new com.toedter.calendar.JDateChooser();
+        equipmentScrollPane = new javax.swing.JScrollPane();
         equipmentTable = new javax.swing.JTable();
-        jScrollPane4 = new javax.swing.JScrollPane();
+        commentScrollPane = new javax.swing.JScrollPane();
         commentTable = new javax.swing.JTable();
-        jScrollPane5 = new javax.swing.JScrollPane();
+        internalCommentScrollPane = new javax.swing.JScrollPane();
         internalCommentTable = new javax.swing.JTable();
-        unitShipLabel = new javax.swing.JLabel();
-        unitShipField = new javax.swing.JTextField();
-        unitOwnerLabel = new javax.swing.JLabel();
-        unitOwnerField = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
+        commentAreaScrollPane = new javax.swing.JScrollPane();
+        commentArea = new javax.swing.JTextArea();
+        internalCommentAreaScrollPane = new javax.swing.JScrollPane();
+        internalCommentArea = new javax.swing.JTextArea();
+        shipmentIdLabel = new javax.swing.JLabel();
+        shipmentIdField = new javax.swing.JTextField();
+        contractorLabel = new javax.swing.JLabel();
+        contractorField = new javax.swing.JTextField();
+        detailLabel = new javax.swing.JLabel();
+        detailScrollPane = new javax.swing.JScrollPane();
         detailArea = new javax.swing.JEditorPane();
+        cancelButton = new javax.swing.JButton();
         messagesButton = new javax.swing.JButton();
         operationButtonPanel = new javax.swing.JPanel();
-        cancelButton = new javax.swing.JButton();
 
-        setMinimumSize(new java.awt.Dimension(1080, 700));
+        setMinimumSize(new java.awt.Dimension(400, 200));
+        setPreferredSize(new java.awt.Dimension(800, 600));
+        setLayout(new java.awt.BorderLayout());
 
-        unitWritePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED, new java.awt.Color(204, 204, 255), new java.awt.Color(51, 51, 51))));
-        unitWritePanel.setMinimumSize(new java.awt.Dimension(500, 400));
-        unitWritePanel.setPreferredSize(new java.awt.Dimension(597, 519));
+        unitPanel.setMinimumSize(new java.awt.Dimension(400, 200));
+        unitPanel.setPreferredSize(new java.awt.Dimension(800, 600));
+        unitPanel.setLayout(new java.awt.GridBagLayout());
 
-        internalCommentArea.setColumns(20);
-        internalCommentArea.setLineWrap(true);
-        internalCommentArea.setRows(5);
-        internalCommentArea.setWrapStyleWord(true);
-        internalCommentAreaScrollPane.setViewportView(internalCommentArea);
-
-        commentArea.setColumns(20);
-        commentArea.setLineWrap(true);
-        commentArea.setRows(5);
-        commentArea.setWrapStyleWord(true);
-        commentAreaScrollPane.setViewportView(commentArea);
-
-        unitItemLabel.setText("ArtikelNr:");
-
-        unitStatusLabel.setText("Zustand:");
-
-        unitStateBox.setNextFocusableComponent(warrantyTillChooser);
-
-        editProductButton.setText("Edit");
-        editProductButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editProductButtonActionPerformed(evt);
-            }
-        });
-
-        partNoField.setName("partNo"); // NOI18N
-        partNoField.setNextFocusableComponent(unitStateBox);
-        partNoField.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                partNoFieldFocusLost(evt);
-            }
-        });
-
-        refurbishedIdField.setName("refurbishId"); // NOI18N
-        refurbishedIdField.setNextFocusableComponent(serialField);
-        refurbishedIdField.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                refurbishedIdFieldFocusLost(evt);
-            }
-        });
-
-        unitSnLabel.setText("SerienNr:");
-
-        unitNumberLabel.setText("SopoNr:");
-
-        serialField.setName("serial"); // NOI18N
-        serialField.setNextFocusableComponent(partNoField);
-        serialField.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                serialFieldFocusLost(evt);
-            }
-        });
-
-        editRefurbishedIdButton.setText("Edit");
-        editRefurbishedIdButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editRefurbishedIdButtonActionPerformed(evt);
-            }
-        });
-
-        mfgLabel.setText("MFG Date:");
-
-        jLabel3.setText("Garantie bis:");
-
-        warrantyTillChooser.setEnabled(false);
-
-        jLabel4.setText("Garantietyp:");
-
-        warrantyTypeChooser.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                warrantyTypeChooserActionPerformed(evt);
-            }
-        });
-
-        manufacturerPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Hersteller Support"));
+        manufacturerPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Hersteller Support")); // NOI18N
+        manufacturerPanel.setPreferredSize(new java.awt.Dimension(150, 45));
 
         contractorBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         contractorBox.addActionListener(new java.awt.event.ActionListener() {
@@ -881,12 +836,202 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         manufacturerPanel.setLayout(manufacturerPanelLayout);
         manufacturerPanelLayout.setHorizontalGroup(
             manufacturerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(contractorBox, 0, 322, Short.MAX_VALUE)
+            .addComponent(contractorBox, 0, 296, Short.MAX_VALUE)
         );
         manufacturerPanelLayout.setVerticalGroup(
             manufacturerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(contractorBox, javax.swing.GroupLayout.Alignment.TRAILING)
         );
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.3;
+        unitPanel.add(manufacturerPanel, gridBagConstraints);
+
+        refurbishedIdLabel.setText("SopoNr:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        unitPanel.add(refurbishedIdLabel, gridBagConstraints);
+
+        refurbishedIdField.setName("refurbishId"); // NOI18N
+        refurbishedIdField.setNextFocusableComponent(serialField);
+        refurbishedIdField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                refurbishedIdFieldFocusLost(evt);
+            }
+        });
+        refurbishedIdField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refurbishedIdFieldActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 0, 2);
+        unitPanel.add(refurbishedIdField, gridBagConstraints);
+
+        refurbishedIdEditButton.setText("Edit");
+        refurbishedIdEditButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refurbishedIdEditButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.insets = new java.awt.Insets(2, 0, 0, 2);
+        unitPanel.add(refurbishedIdEditButton, gridBagConstraints);
+
+        serialLabel.setText("SerienNr:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        unitPanel.add(serialLabel, gridBagConstraints);
+
+        serialField.setName("serial"); // NOI18N
+        serialField.setNextFocusableComponent(partNoField);
+        serialField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                serialFieldFocusLost(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 0, 2);
+        unitPanel.add(serialField, gridBagConstraints);
+
+        partNoLabel.setText("ArtikelNr:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        unitPanel.add(partNoLabel, gridBagConstraints);
+
+        partNoField.setName("partNo"); // NOI18N
+        partNoField.setNextFocusableComponent(raaTextField);
+        partNoField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                partNoFieldFocusLost(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.1;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 0, 2);
+        unitPanel.add(partNoField, gridBagConstraints);
+
+        partNoEditButton.setText("Edit");
+        partNoEditButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                partNoEditButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.insets = new java.awt.Insets(2, 0, 0, 2);
+        unitPanel.add(partNoEditButton, gridBagConstraints);
+
+        raaLabel.setText("RAA:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        unitPanel.add(raaLabel, gridBagConstraints);
+
+        raaTextField.setName("raa"); // NOI18N
+        raaTextField.setNextFocusableComponent(unitStateBox);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 0, 2);
+        unitPanel.add(raaTextField, gridBagConstraints);
+
+        mfgLabel.setText("MFG Date:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        unitPanel.add(mfgLabel, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 0, 2);
+        unitPanel.add(mfgDateChooser, gridBagConstraints);
+
+        unitStatusLabel.setText("Zustand:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        unitPanel.add(unitStatusLabel, gridBagConstraints);
+
+        unitStateBox.setNextFocusableComponent(warrantyTillChooser);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 0, 2);
+        unitPanel.add(unitStateBox, gridBagConstraints);
+
+        warrantyTypeLabel.setText("Garantietyp:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        unitPanel.add(warrantyTypeLabel, gridBagConstraints);
+
+        warrantyTypeChooser.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Kurz", "Länger", "Ganz laaaaaaaaaaaaaaaaaaaaaaaaaag" }));
+        warrantyTypeChooser.setMaximumSize(new java.awt.Dimension(100, 22));
+        warrantyTypeChooser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                warrantyTypeChooserActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 0, 2);
+        unitPanel.add(warrantyTypeChooser, gridBagConstraints);
+
+        warrantyTillLabe.setText("Garantie bis:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        unitPanel.add(warrantyTillLabe, gridBagConstraints);
+
+        warrantyTillChooser.setEnabled(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 0, 2);
+        unitPanel.add(warrantyTillChooser, gridBagConstraints);
+
+        equipmentScrollPane.setPreferredSize(new java.awt.Dimension(220, 220));
 
         equipmentTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -899,8 +1044,19 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        equipmentTable.setMaximumSize(new java.awt.Dimension(300, 64));
-        jScrollPane3.setViewportView(equipmentTable);
+        equipmentScrollPane.setViewportView(equipmentTable);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 10;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 0.3;
+        gridBagConstraints.insets = new java.awt.Insets(2, 0, 0, 2);
+        unitPanel.add(equipmentScrollPane, gridBagConstraints);
+
+        commentScrollPane.setPreferredSize(new java.awt.Dimension(200, 200));
 
         commentTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -913,8 +1069,18 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        commentTable.setMaximumSize(new java.awt.Dimension(300, 64));
-        jScrollPane4.setViewportView(commentTable);
+        commentScrollPane.setViewportView(commentTable);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weighty = 0.3;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 0, 2);
+        unitPanel.add(commentScrollPane, gridBagConstraints);
+
+        internalCommentScrollPane.setPreferredSize(new java.awt.Dimension(200, 200));
 
         internalCommentTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -927,181 +1093,103 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        internalCommentTable.setMaximumSize(new java.awt.Dimension(300, 64));
-        jScrollPane5.setViewportView(internalCommentTable);
+        internalCommentTable.setPreferredSize(new java.awt.Dimension(100, 80));
+        internalCommentScrollPane.setViewportView(internalCommentTable);
 
-        unitShipLabel.setText("Shipment ID:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 10;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weighty = 0.3;
+        gridBagConstraints.insets = new java.awt.Insets(2, 0, 0, 2);
+        unitPanel.add(internalCommentScrollPane, gridBagConstraints);
 
-        unitShipField.setEditable(false);
-        unitShipField.setFocusable(false);
+        commentArea.setColumns(20);
+        commentArea.setLineWrap(true);
+        commentArea.setRows(5);
+        commentArea.setWrapStyleWord(true);
+        commentAreaScrollPane.setViewportView(commentArea);
 
-        unitOwnerLabel.setText("Besitzer:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 11;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weighty = 0.1;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 0, 2);
+        unitPanel.add(commentAreaScrollPane, gridBagConstraints);
 
-        unitOwnerField.setEditable(false);
-        unitOwnerField.setFocusable(false);
+        internalCommentArea.setColumns(20);
+        internalCommentArea.setLineWrap(true);
+        internalCommentArea.setRows(5);
+        internalCommentArea.setWrapStyleWord(true);
+        internalCommentAreaScrollPane.setViewportView(internalCommentArea);
 
-        jLabel1.setText("Details:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 11;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(2, 0, 0, 2);
+        unitPanel.add(internalCommentAreaScrollPane, gridBagConstraints);
 
-        jScrollPane2.setFocusable(false);
+        shipmentIdLabel.setText("Shipment Id:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 2);
+        unitPanel.add(shipmentIdLabel, gridBagConstraints);
+
+        shipmentIdField.setEditable(false);
+        shipmentIdField.setFocusable(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.8;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 2);
+        unitPanel.add(shipmentIdField, gridBagConstraints);
+
+        contractorLabel.setText("Besitzer:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
+        unitPanel.add(contractorLabel, gridBagConstraints);
+
+        contractorField.setEditable(false);
+        contractorField.setFocusable(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 2);
+        unitPanel.add(contractorField, gridBagConstraints);
+
+        detailLabel.setText("Details:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
+        unitPanel.add(detailLabel, gridBagConstraints);
+
+        detailScrollPane.setFocusable(false);
 
         detailArea.setContentType("text/html"); // NOI18N
         detailArea.setFocusable(false);
-        jScrollPane2.setViewportView(detailArea);
+        detailScrollPane.setViewportView(detailArea);
 
-        messagesButton.setText("Meldungen");
-        messagesButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                messagesButtonActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout unitWritePanelLayout = new javax.swing.GroupLayout(unitWritePanel);
-        unitWritePanel.setLayout(unitWritePanelLayout);
-        unitWritePanelLayout.setHorizontalGroup(
-            unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(unitWritePanelLayout.createSequentialGroup()
-                .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(unitWritePanelLayout.createSequentialGroup()
-                            .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(unitWritePanelLayout.createSequentialGroup()
-                                    .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(unitStatusLabel)
-                                        .addComponent(jLabel4))
-                                    .addGap(15, 15, 15))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, unitWritePanelLayout.createSequentialGroup()
-                                    .addComponent(jLabel3)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                            .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(warrantyTillChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(unitStateBox, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(warrantyTypeChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGroup(unitWritePanelLayout.createSequentialGroup()
-                            .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(unitSnLabel)
-                                .addComponent(unitNumberLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGap(12, 12, 12)
-                            .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(unitWritePanelLayout.createSequentialGroup()
-                                    .addComponent(refurbishedIdField, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(editRefurbishedIdButton, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(serialField)))
-                        .addGroup(unitWritePanelLayout.createSequentialGroup()
-                            .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(unitWritePanelLayout.createSequentialGroup()
-                                    .addComponent(unitItemLabel)
-                                    .addGap(25, 25, 25))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, unitWritePanelLayout.createSequentialGroup()
-                                    .addComponent(mfgLabel)
-                                    .addGap(18, 18, 18)))
-                            .addGap(7, 7, 7)
-                            .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(mfgDateChooser, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
-                                .addGroup(unitWritePanelLayout.createSequentialGroup()
-                                    .addComponent(partNoField)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(editProductButton, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(1, 1, 1))))
-                        .addComponent(manufacturerPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(commentAreaScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(5, 5, 5)
-                .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(internalCommentAreaScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(unitWritePanelLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane2)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, unitWritePanelLayout.createSequentialGroup()
-                                .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(unitShipLabel)
-                                    .addComponent(unitOwnerLabel)
-                                    .addComponent(jLabel1))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(unitOwnerField, javax.swing.GroupLayout.DEFAULT_SIZE, 444, Short.MAX_VALUE)
-                                    .addComponent(unitShipField))
-                                .addContainerGap())))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, unitWritePanelLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(messagesButton)
-                        .addContainerGap())))
-        );
-        unitWritePanelLayout.setVerticalGroup(
-            unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(unitWritePanelLayout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(unitShipField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(unitShipLabel))
-                .addGap(14, 14, 14)
-                .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(unitOwnerField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(unitOwnerLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel1)
-                .addGap(1, 1, 1)
-                .addComponent(jScrollPane2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(messagesButton, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(9, 9, 9))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, unitWritePanelLayout.createSequentialGroup()
-                .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(unitWritePanelLayout.createSequentialGroup()
-                        .addComponent(manufacturerPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(refurbishedIdField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(editRefurbishedIdButton)
-                            .addComponent(unitNumberLabel))
-                        .addGap(2, 2, 2)
-                        .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(serialField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(unitSnLabel))
-                        .addGap(4, 4, 4)
-                        .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(partNoField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(editProductButton)
-                            .addComponent(unitItemLabel))
-                        .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(unitWritePanelLayout.createSequentialGroup()
-                                .addGap(4, 4, 4)
-                                .addComponent(mfgDateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(unitWritePanelLayout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(mfgLabel)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(unitStateBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(unitStatusLabel))
-                        .addGap(4, 4, 4)
-                        .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(warrantyTypeChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(unitWritePanelLayout.createSequentialGroup()
-                                .addGap(2, 2, 2)
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(4, 4, 4)
-                        .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(warrantyTillChooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE))
-                    .addGroup(unitWritePanelLayout.createSequentialGroup()
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(unitWritePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(commentAreaScrollPane)
-                    .addComponent(internalCommentAreaScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)))
-        );
-
-        operationButtonPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        operationButtonPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridheight = 9;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 2);
+        unitPanel.add(detailScrollPane, gridBagConstraints);
 
         cancelButton.setText("Abbrechen");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -1109,34 +1197,37 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
                 cancelButtonActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 12;
+        gridBagConstraints.insets = new java.awt.Insets(0, 2, 0, 0);
+        unitPanel.add(cancelButton, gridBagConstraints);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(cancelButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(operationButtonPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 1233, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(unitWritePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 1305, Short.MAX_VALUE)
-                        .addContainerGap())))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(unitWritePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 633, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(operationButtonPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(cancelButton)
-                        .addContainerGap())))
-        );
+        messagesButton.setText("Meldungen");
+        messagesButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                messagesButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 6;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHEAST;
+        gridBagConstraints.insets = new java.awt.Insets(2, 0, 2, 2);
+        unitPanel.add(messagesButton, gridBagConstraints);
+
+        operationButtonPanel.setMinimumSize(new java.awt.Dimension(14, 3));
+        operationButtonPanel.setPreferredSize(new java.awt.Dimension(14, 30));
+        operationButtonPanel.setLayout(new java.awt.FlowLayout(2));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 12;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 2, 2);
+        unitPanel.add(operationButtonPanel, gridBagConstraints);
+
+        add(unitPanel, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
@@ -1169,9 +1260,9 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         }
     }//GEN-LAST:event_warrantyTypeChooserActionPerformed
 
-    private void editRefurbishedIdButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editRefurbishedIdButtonActionPerformed
+    private void refurbishedIdEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refurbishedIdEditButtonActionPerformed
         editRefurbishedId(refurbishedIdField.getText());
-    }//GEN-LAST:event_editRefurbishedIdButtonActionPerformed
+    }//GEN-LAST:event_refurbishedIdEditButtonActionPerformed
 
     private void serialFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_serialFieldFocusLost
         final String serial = serialField.getText();
@@ -1180,6 +1271,10 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         model.getMetaUnit().getSerial().setValue(serial);
         validateSerial();
     }//GEN-LAST:event_serialFieldFocusLost
+
+    private void refurbishedIdFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refurbishedIdFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_refurbishedIdFieldActionPerformed
 
     private void refurbishedIdFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_refurbishedIdFieldFocusLost
         String refurbishedId = refurbishedIdField.getText();
@@ -1195,53 +1290,55 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         validatePartNoAndLoadDetails();
     }//GEN-LAST:event_partNoFieldFocusLost
 
-    private void editProductButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editProductButtonActionPerformed
+    private void partNoEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_partNoEditButtonActionPerformed
         productUiBuilder.createOrEditPart(() -> new SimpleView.CreateOrEdit(model.getMode(), partNoField.getText()), of(this))
                 .thenAccept(p -> validatePartNoAndLoadDetails())
                 .thenAccept(p -> validateRefurbishedId())
                 .handle(UiCore.global().handler(this));
-    }//GEN-LAST:event_editProductButtonActionPerformed
+    }//GEN-LAST:event_partNoEditButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JTextArea commentArea;
     private javax.swing.JScrollPane commentAreaScrollPane;
+    private javax.swing.JScrollPane commentScrollPane;
     private javax.swing.JTable commentTable;
     private javax.swing.JComboBox contractorBox;
+    private javax.swing.JTextField contractorField;
+    private javax.swing.JLabel contractorLabel;
     private javax.swing.JEditorPane detailArea;
-    private javax.swing.JButton editProductButton;
-    private javax.swing.JButton editRefurbishedIdButton;
+    private javax.swing.JLabel detailLabel;
+    private javax.swing.JScrollPane detailScrollPane;
+    private javax.swing.JScrollPane equipmentScrollPane;
     private javax.swing.JTable equipmentTable;
     private javax.swing.JTextArea internalCommentArea;
     private javax.swing.JScrollPane internalCommentAreaScrollPane;
+    private javax.swing.JScrollPane internalCommentScrollPane;
     private javax.swing.JTable internalCommentTable;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.ButtonGroup manufacturerButtonGroup;
     private javax.swing.JPanel manufacturerPanel;
     private javax.swing.JButton messagesButton;
     private com.toedter.calendar.JDateChooser mfgDateChooser;
     private javax.swing.JLabel mfgLabel;
     private javax.swing.JPanel operationButtonPanel;
+    private javax.swing.JButton partNoEditButton;
     private javax.swing.JTextField partNoField;
+    private javax.swing.JLabel partNoLabel;
+    private javax.swing.JLabel raaLabel;
+    private javax.swing.JTextField raaTextField;
+    private javax.swing.JButton refurbishedIdEditButton;
     private javax.swing.JTextField refurbishedIdField;
+    private javax.swing.JLabel refurbishedIdLabel;
     private javax.swing.JTextField serialField;
-    private javax.swing.JLabel unitItemLabel;
-    private javax.swing.JLabel unitNumberLabel;
-    private javax.swing.JTextField unitOwnerField;
-    private javax.swing.JLabel unitOwnerLabel;
-    private javax.swing.JTextField unitShipField;
-    private javax.swing.JLabel unitShipLabel;
-    private javax.swing.JLabel unitSnLabel;
+    private javax.swing.JLabel serialLabel;
+    private javax.swing.JTextField shipmentIdField;
+    private javax.swing.JLabel shipmentIdLabel;
+    private javax.swing.JPanel unitPanel;
     private javax.swing.JComboBox unitStateBox;
     private javax.swing.JLabel unitStatusLabel;
-    private javax.swing.JPanel unitWritePanel;
-    private com.toedter.calendar.JDateChooser warrantyTillChooser;
-    private javax.swing.JComboBox warrantyTypeChooser;
+    com.toedter.calendar.JDateChooser warrantyTillChooser;
+    private javax.swing.JLabel warrantyTillLabe;
+    javax.swing.JComboBox warrantyTypeChooser;
+    private javax.swing.JLabel warrantyTypeLabel;
     // End of variables declaration//GEN-END:variables
 }

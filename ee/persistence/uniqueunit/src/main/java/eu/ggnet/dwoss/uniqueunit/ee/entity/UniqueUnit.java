@@ -495,6 +495,12 @@ public class UniqueUnit implements Serializable, EagerAble {
 
     private String shipmentLabel;
 
+    /**
+     * Id on the delivery notice to identify one item (raa number). 
+     */
+    @NotNull
+    private String receiveAssignAttribute = "";
+    
     @Temporal(TemporalType.TIMESTAMP)
     @Column(columnDefinition = "DATETIME")
     private Date inputDate;
@@ -532,6 +538,20 @@ public class UniqueUnit implements Serializable, EagerAble {
         return optLock;
     }
 
+    public String getReceiveAssignAttribute() {
+        return receiveAssignAttribute;
+    }
+
+    /**
+     * Sets the value, converts null to empty strings.
+     * 
+     * @param receiveAssignAttribute
+     */
+    public void setReceiveAssignAttribute(String receiveAssignAttribute) {
+        if (receiveAssignAttribute == null) this.receiveAssignAttribute = "";
+        else this.receiveAssignAttribute = receiveAssignAttribute;
+    }
+    
     public Date getInputDate() {
         return inputDate;
     }
@@ -809,7 +829,7 @@ public class UniqueUnit implements Serializable, EagerAble {
         }
         return "UniqueUnit{" + "id=" + id + ", identifiers=" + identifiers + ", product=" + productString
                 + ", prices=" + getPrices() + ", equipments=" + equipments + ", flags=" + flags + ", comments=" + comments + ", internalComments=" + internalComments
-                + ", condition=" + condition
+                + ", condition=" + condition + ", receiveAssignAttribute=" + receiveAssignAttribute
                 + ", contractor=" + contractor + ", mfgDate=" + formatedMfgDate + ", shipmentId=" + shipmentId + ", shipmentLabel=" + shipmentLabel
                 + ", salesChannel=" + getPrices() + ", inputDate=" + formatedInputDate + ", warranty=" + warranty + ", comment=" + comment
                 + ", internalComment=" + internalComment + '}';

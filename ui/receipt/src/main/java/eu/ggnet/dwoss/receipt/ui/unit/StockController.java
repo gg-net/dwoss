@@ -34,12 +34,15 @@ import javafx.scene.control.ComboBox;
 import eu.ggnet.dwoss.stock.api.PicoStock;
 import eu.ggnet.saft.core.ui.*;
 
+import jakarta.enterprise.context.Dependent;
+
 import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
 
 /**
  *
  * @author mirko.schulze
  */
+@Dependent
 public class StockController implements FxController, Consumer<StockController.In>, ResultProducer<PicoStock>, Initializable {
 
     public static class In {
