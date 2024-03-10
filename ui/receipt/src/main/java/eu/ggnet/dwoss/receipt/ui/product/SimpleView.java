@@ -565,7 +565,7 @@ public class SimpleView extends javax.swing.JPanel implements Consumer<SimpleVie
         add(brandBox, gridBagConstraints);
 
         editButton.setText("Ändern");
-        editButton.setPreferredSize(new java.awt.Dimension(75, 23));
+        editButton.setPreferredSize(new java.awt.Dimension(90, 22));
         editButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editButtonActionPerformed(evt);
@@ -579,7 +579,6 @@ public class SimpleView extends javax.swing.JPanel implements Consumer<SimpleVie
         add(editButton, gridBagConstraints);
 
         addFamilyButton.setText("hinzufügen");
-        addFamilyButton.setPreferredSize(new java.awt.Dimension(75, 23));
         addFamilyButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addFamilyButtonActionPerformed(evt);
@@ -589,11 +588,10 @@ public class SimpleView extends javax.swing.JPanel implements Consumer<SimpleVie
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 5;
         gridBagConstraints.ipadx = 14;
-        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        gridBagConstraints.insets = new java.awt.Insets(0, 2, 0, 2);
         add(addFamilyButton, gridBagConstraints);
 
         addModelButton.setText("hinzufügen");
-        addModelButton.setPreferredSize(new java.awt.Dimension(75, 23));
         addModelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addModelButtonActionPerformed(evt);
@@ -603,7 +601,7 @@ public class SimpleView extends javax.swing.JPanel implements Consumer<SimpleVie
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 6;
         gridBagConstraints.ipadx = 14;
-        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+        gridBagConstraints.insets = new java.awt.Insets(0, 2, 0, 2);
         add(addModelButton, gridBagConstraints);
 
         partNoField.setEditable(false);
@@ -641,6 +639,7 @@ public class SimpleView extends javax.swing.JPanel implements Consumer<SimpleVie
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 4;
         gridBagConstraints.ipadx = 14;
+        gridBagConstraints.insets = new java.awt.Insets(0, 2, 0, 2);
         add(addSeriesButton, gridBagConstraints);
 
         okButton.setText("Ok");
@@ -653,9 +652,13 @@ public class SimpleView extends javax.swing.JPanel implements Consumer<SimpleVie
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 7;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 2, 2, 2);
         add(okButton, gridBagConstraints);
 
         cancelButton.setText("Abbrechen");
+        cancelButton.setMaximumSize(new java.awt.Dimension(90, 22));
+        cancelButton.setMinimumSize(new java.awt.Dimension(90, 22));
+        cancelButton.setPreferredSize(new java.awt.Dimension(90, 22));
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
@@ -664,6 +667,8 @@ public class SimpleView extends javax.swing.JPanel implements Consumer<SimpleVie
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 7;
+        gridBagConstraints.ipadx = 14;
+        gridBagConstraints.insets = new java.awt.Insets(0, 2, 2, 2);
         add(cancelButton, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -698,6 +703,8 @@ public class SimpleView extends javax.swing.JPanel implements Consumer<SimpleVie
                     TextInputDialog d = new TextInputDialog();
                     d.setTitle("Model");
                     d.setHeaderText("Neues Model hinzufügen");
+                    d.setContentText("Model:");
+                    getSelectedModel().ifPresent(n -> d.getEditor().setText(n.name()));
                     return d;
                 }).cf()
                 .thenAccept(n -> {
@@ -719,6 +726,9 @@ public class SimpleView extends javax.swing.JPanel implements Consumer<SimpleVie
                     TextInputDialog d = new TextInputDialog();
                     d.setTitle("Family");
                     d.setHeaderText("Neue Family hinzufügen");
+                    d.setContentText("Family:");
+                    getSelectedFamily().ifPresent(n -> d.getEditor().setText(n.name()));
+
                     return d;
                 }).cf()
                 .thenAccept(n -> {
@@ -760,10 +770,11 @@ public class SimpleView extends javax.swing.JPanel implements Consumer<SimpleVie
                     TextInputDialog d = new TextInputDialog();
                     d.setTitle("Serie");
                     d.setHeaderText("Neue Serie hinzufügen");
+                    d.setContentText("Serie:");
+                    getSelectedSeries().ifPresent(n -> d.getEditor().setText(n.name()));
                     return d;
                 }).cf()
                 .thenAccept(n -> {
-                    System.out.println("Seriesn: " + n);
                     if ( n.isBlank() ) throw new CompletionException(new UserInfoException("Serienname ist leer"));
                     ProductSeries createdSeries = UiUtil.exceptionRun(() -> remote.lookup(ProductProcessor.class)
                             .createSeries(getSelectedBrand(), getSelectedGroup(), n));

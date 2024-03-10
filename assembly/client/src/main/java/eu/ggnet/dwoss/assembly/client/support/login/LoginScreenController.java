@@ -35,6 +35,8 @@ import eu.ggnet.saft.core.ui.FxController;
 import eu.ggnet.dwoss.core.widget.auth.AuthenticationException;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
 
+import jakarta.enterprise.context.Dependent;
+
 /**
  * A loginscreen for user/pass authentication, quicklogin authentication and lazy setting of the authentication system.
  * This loginscreen displays two fields: user and pass. The focus is set on the user field.
@@ -56,6 +58,7 @@ import eu.ggnet.dwoss.core.widget.auth.Guardian;
  *
  * @author oliver.guenther
  */
+@Dependent
 public class LoginScreenController implements ClosedListener, Consumer<LoginScreenConfiguration>, FxController {
 
     private static class AuthenticationData {
