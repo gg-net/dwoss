@@ -34,7 +34,6 @@ import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.receipt.ee.*;
 import eu.ggnet.dwoss.spec.api.SpecApi;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
-import eu.ggnet.dwoss.spec.ee.assist.SpecConstants;
 import eu.ggnet.dwoss.spec.ee.entity.Desktop.Hdd;
 import eu.ggnet.dwoss.spec.ee.entity.Desktop.Odd;
 import eu.ggnet.dwoss.spec.ee.entity.Desktop.Os;
@@ -404,7 +403,7 @@ public class ProductProcessorStub implements ProductProcessor {
             for (int j = 0; j < 10; j++) {
                 UniqueUnit uu = uug.makeUniqueUnit(CONTRACTORS.get(R.nextInt(CONTRACTORS.size())), p);
                 uu.setProduct(p);
-                uu.setReceiveAssignAttribute("" + R.nextInt(1000000));
+                uu.setReceiveAssignAttribute(R.nextInt(1000000));
                 uniqueUnits.add(uu);
                 if ( R.nextInt(10) <= 7 ) {
                     StockUnit su = new StockUnit(uu.getRefurbishId(), uu.getProduct().getName(), uu.getId());

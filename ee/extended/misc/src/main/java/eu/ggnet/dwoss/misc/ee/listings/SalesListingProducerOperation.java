@@ -169,7 +169,8 @@ public class SalesListingProducerOperation implements SalesListingProducer, Sale
                 source,
                 uu.getProduct().getImageId(),
                 Optional.ofNullable(uu.getProduct().getShopCategory()).map(ShopCategory::getName).orElse(null),
-                Optional.ofNullable(uu.getProduct().getShopCategory()).map(ShopCategory::getShopId).orElse(null)
+                Optional.ofNullable(uu.getProduct().getShopCategory()).map(ShopCategory::getShopId).orElse(null),
+                uu.getProduct().getGtin()
             };
             if ( uu.getSalesChannel() == SalesChannel.CUSTOMER && uu.hasPrice(PriceType.CUSTOMER) ) customers.add(row);
             else if ( uu.getSalesChannel() == SalesChannel.RETAILER && (uu.hasPrice(PriceType.CUSTOMER) || uu.hasPrice(PriceType.RETAILER)) )
@@ -203,6 +204,7 @@ public class SalesListingProducerOperation implements SalesListingProducer, Sale
         consumerTable.add(new STableColumn("ImageId", 5));
         consumerTable.add(new STableColumn("ShopCategory", 12));
         consumerTable.add(new STableColumn("ShopCategoryId", 5));
+        consumerTable.add(new STableColumn("GTIN/EAN", 15));
         consumerTable.setModel(new STableModelList(customers));
 
         STable retailerTable = new STable(consumerTable);

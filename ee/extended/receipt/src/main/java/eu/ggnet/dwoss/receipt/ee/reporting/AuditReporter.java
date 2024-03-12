@@ -24,7 +24,7 @@ import eu.ggnet.dwoss.core.common.FileJacket;
 
 /**
  * Remote Interface for the Audit Reporter.
- * <p/>
+ * 
  * @author oliver.guenther
  */
 @Remote
@@ -32,7 +32,7 @@ public interface AuditReporter {
 
     /**
      * Returns an audit report of units which are input between the dates.
-     * <p/>
+     * 
      * @param start the starting date
      * @param end   the ending date
      * @return an audit report of units which are input between the dates.
@@ -41,7 +41,7 @@ public interface AuditReporter {
 
     /**
      * Returns an audit report of units which are on a roll in transaction, but not yet rolled in.
-     * <p/>
+     * 
      * @return an audit report of units which are on a roll in transaction, but not yet rolled in.
      */
     FileJacket onRollIn();

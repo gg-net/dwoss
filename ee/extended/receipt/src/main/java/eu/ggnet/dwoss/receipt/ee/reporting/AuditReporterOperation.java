@@ -126,7 +126,9 @@ public class AuditReporterOperation implements AuditReporter {
                 uu.getCondition().getNote(),
                 uu.getShipmentLabel(),
                 uu.getProduct().getAdditionalPartNo(TradeName.OTTO) != null ? uu.getProduct().getAdditionalPartNo(TradeName.OTTO) : "",
-                uu.getProduct().getDescription()
+                uu.getProduct().getDescription(),
+                uu.getReceiveAssignAttribute()
+                    
             });
         }
 
@@ -135,7 +137,8 @@ public class AuditReporterOperation implements AuditReporter {
         table.setHeadlineFormat(new CFormat(BOLD_ITALIC, BLACK, WHITE, CENTER, new CBorder(BLACK)));
         table.add(new STableColumn("SopoNr", 7)).add(new STableColumn("Warengruppe", 13)).add(new STableColumn("ArtikelNr", 15)).add(new STableColumn("Seriennummer", 27));
         table.add(new STableColumn("Name", 30)).add(new STableColumn("Lieferant", 12)).add(new STableColumn("Zubehör", 50)).add(new STableColumn("Bemerkung", 50));
-        table.add(new STableColumn("Interne Bemerkung", 30)).add(new STableColumn("Zustand", 12)).add(new STableColumn("Shipment", 12)).add(new STableColumn("OttoArtNr", 15)).add(new STableColumn("Beschreibung", 50));
+        table.add(new STableColumn("Interne Bemerkung", 30)).add(new STableColumn("Zustand", 12)).add(new STableColumn("Shipment", 12))
+                .add(new STableColumn("OttoArtNr", 15)).add(new STableColumn("Beschreibung", 50)).add(new STableColumn("RAA", 15));
         table.setModel(new STableModelList(rows));
         sheet.addBelow(table);
         CCalcDocument document = new TempCalcDocument();

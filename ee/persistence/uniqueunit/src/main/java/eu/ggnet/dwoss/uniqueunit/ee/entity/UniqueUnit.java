@@ -498,8 +498,7 @@ public class UniqueUnit implements Serializable, EagerAble {
     /**
      * Id on the delivery notice to identify one item (raa number). 
      */
-    @NotNull
-    private String receiveAssignAttribute = "";
+    private long receiveAssignAttribute = 0;
     
     @Temporal(TemporalType.TIMESTAMP)
     @Column(columnDefinition = "DATETIME")
@@ -538,7 +537,7 @@ public class UniqueUnit implements Serializable, EagerAble {
         return optLock;
     }
 
-    public String getReceiveAssignAttribute() {
+    public long getReceiveAssignAttribute() {
         return receiveAssignAttribute;
     }
 
@@ -547,9 +546,8 @@ public class UniqueUnit implements Serializable, EagerAble {
      * 
      * @param receiveAssignAttribute
      */
-    public void setReceiveAssignAttribute(String receiveAssignAttribute) {
-        if (receiveAssignAttribute == null) this.receiveAssignAttribute = "";
-        else this.receiveAssignAttribute = receiveAssignAttribute;
+    public void setReceiveAssignAttribute(long receiveAssignAttribute) {
+        this.receiveAssignAttribute = receiveAssignAttribute;
     }
     
     public Date getInputDate() {

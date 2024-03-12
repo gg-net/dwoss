@@ -26,7 +26,7 @@ import eu.ggnet.dwoss.core.common.UserInfoException;
 
 /**
  * Remote Connection to all SalesListing Operations.
- * <p/>
+ * 
  * @author oliver.guenther
  */
 @Remote
@@ -34,7 +34,7 @@ public interface SalesListingProducer {
 
     /**
      * Returns the next Image Id.
-     * <p/>
+     * 
      * @return the next Image Id.
      */
     public int nextImageId();

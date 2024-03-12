@@ -96,7 +96,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
                 return label;
             }
             if ( value instanceof Warranty w ) {
-                if (w.description().length() > 35) {
+                if ( w.description().length() > 35 ) {
                     label.setText(w.description().substring(0, 35) + " ...");
                     label.setToolTipText(w.description());
                 } else {
@@ -438,7 +438,15 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
             unit = new UniqueUnit();
         }
         model.getMetaUnit().loadTo(unit);
-        unit.setReceiveAssignAttribute(raaTextField.getText());
+        try {
+            if ( raaTextField.getText() == null || raaTextField.getText().isBlank() ) {
+                unit.setReceiveAssignAttribute(0);
+            } else {
+                unit.setReceiveAssignAttribute(Long.parseLong(raaTextField.getText().trim()));
+            }
+        } catch (NumberFormatException e) {
+            L.warn("RAA is not a Number: " + raaTextField.getText());
+        }
         unit.setCondition(conditionController.getSelected());
         unit.setWarranty(warrantyController.getSelected());
         unit.setEquipments(equipmentModel.getMarked());
@@ -470,7 +478,8 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         model.getMetaUnit().loadFrom(unit);
         model.setProduct(unit.getProduct());
         updateMetaUnit();
-        raaTextField.setText(unit.getReceiveAssignAttribute());
+        if (unit.getReceiveAssignAttribute() > 0 ) raaTextField.setText(unit.getReceiveAssignAttribute() + "");
+        else raaTextField.setText("");
         equipmentModel.setMarked(unit.getEquipments());
         commentModel.setMarked(unit.getComments());
         internalCommentModel.setMarked(unit.getInternalComments());
