@@ -789,7 +789,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         unitStateBox = new javax.swing.JComboBox();
         warrantyTypeLabel = new javax.swing.JLabel();
         warrantyTypeChooser = new javax.swing.JComboBox();
-        warrantyTillLabe = new javax.swing.JLabel();
+        warrantyTillLabel = new javax.swing.JLabel();
         warrantyTillChooser = new com.toedter.calendar.JDateChooser();
         equipmentScrollPane = new javax.swing.JScrollPane();
         equipmentTable = new javax.swing.JTable();
@@ -821,6 +821,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         unitPanel.setLayout(new java.awt.GridBagLayout());
 
         manufacturerPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Hersteller Support"));
+        manufacturerPanel.setMinimumSize(new java.awt.Dimension(150, 45));
         manufacturerPanel.setPreferredSize(new java.awt.Dimension(150, 45));
 
         contractorBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -834,7 +835,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         manufacturerPanel.setLayout(manufacturerPanelLayout);
         manufacturerPanelLayout.setHorizontalGroup(
             manufacturerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(contractorBox, 0, 283, Short.MAX_VALUE)
+            .addComponent(contractorBox, 0, 290, Short.MAX_VALUE)
         );
         manufacturerPanelLayout.setVerticalGroup(
             manufacturerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1013,12 +1014,12 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 0, 2);
         unitPanel.add(warrantyTypeChooser, gridBagConstraints);
 
-        warrantyTillLabe.setText("Garantie bis:");
+        warrantyTillLabel.setText("Garantie bis:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 8;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        unitPanel.add(warrantyTillLabe, gridBagConstraints);
+        unitPanel.add(warrantyTillLabel, gridBagConstraints);
 
         warrantyTillChooser.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1029,19 +1030,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 0, 2);
         unitPanel.add(warrantyTillChooser, gridBagConstraints);
 
-        equipmentScrollPane.setPreferredSize(new java.awt.Dimension(220, 220));
-
-        equipmentTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
+        equipmentTable.setPreferredSize(new java.awt.Dimension(100, 80));
         equipmentScrollPane.setViewportView(equipmentTable);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1054,43 +1043,30 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         gridBagConstraints.insets = new java.awt.Insets(2, 0, 0, 2);
         unitPanel.add(equipmentScrollPane, gridBagConstraints);
 
-        commentScrollPane.setPreferredSize(new java.awt.Dimension(200, 200));
-
         commentTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
         ));
+        commentTable.setPreferredSize(new java.awt.Dimension(100, 80));
         commentScrollPane.setViewportView(commentTable);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 9;
         gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.gridheight = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weighty = 0.3;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 0, 2);
         unitPanel.add(commentScrollPane, gridBagConstraints);
 
-        internalCommentScrollPane.setPreferredSize(new java.awt.Dimension(200, 200));
+        internalCommentScrollPane.setMinimumSize(new java.awt.Dimension(150, 150));
+        internalCommentScrollPane.setPreferredSize(new java.awt.Dimension(150, 200));
 
-        internalCommentTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
         internalCommentTable.setPreferredSize(new java.awt.Dimension(100, 80));
         internalCommentScrollPane.setViewportView(internalCommentTable);
 
@@ -1102,10 +1078,13 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         gridBagConstraints.insets = new java.awt.Insets(2, 0, 0, 2);
         unitPanel.add(internalCommentScrollPane, gridBagConstraints);
 
+        commentAreaScrollPane.setPreferredSize(new java.awt.Dimension(100, 80));
+
         commentArea.setColumns(20);
         commentArea.setLineWrap(true);
         commentArea.setRows(5);
         commentArea.setWrapStyleWord(true);
+        commentArea.setPreferredSize(new java.awt.Dimension(100, 80));
         commentAreaScrollPane.setViewportView(commentArea);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1117,10 +1096,14 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 0, 2);
         unitPanel.add(commentAreaScrollPane, gridBagConstraints);
 
+        internalCommentAreaScrollPane.setMinimumSize(new java.awt.Dimension(16, 100));
+        internalCommentAreaScrollPane.setPreferredSize(new java.awt.Dimension(100, 100));
+
         internalCommentArea.setColumns(20);
         internalCommentArea.setLineWrap(true);
         internalCommentArea.setRows(5);
         internalCommentArea.setWrapStyleWord(true);
+        internalCommentArea.setPreferredSize(new java.awt.Dimension(100, 80));
         internalCommentAreaScrollPane.setViewportView(internalCommentArea);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1215,7 +1198,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         unitPanel.add(messagesButton, gridBagConstraints);
 
         operationButtonPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
-        operationButtonPanel.setMinimumSize(new java.awt.Dimension(14, 3));
+        operationButtonPanel.setMinimumSize(new java.awt.Dimension(14, 30));
         operationButtonPanel.setPreferredSize(new java.awt.Dimension(14, 30));
         operationButtonPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1336,7 +1319,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
     private javax.swing.JComboBox unitStateBox;
     private javax.swing.JLabel unitStatusLabel;
     com.toedter.calendar.JDateChooser warrantyTillChooser;
-    private javax.swing.JLabel warrantyTillLabe;
+    private javax.swing.JLabel warrantyTillLabel;
     javax.swing.JComboBox warrantyTypeChooser;
     private javax.swing.JLabel warrantyTypeLabel;
     // End of variables declaration//GEN-END:variables
