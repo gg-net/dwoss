@@ -357,23 +357,12 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         unitStateBox.setRenderer(new NamedEnumCellRenderer());
         unitStateBox.setModel(new DefaultComboBoxModel(UniqueUnit.Condition.values()));
 
-        refurbishedIdField.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS,
-                new HashSet<>(Arrays.asList(KeyStroke.getKeyStroke("pressed ENTER"), KeyStroke.getKeyStroke("pressed TAB"))));
-        serialField.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS,
-                new HashSet<>(Arrays.asList(KeyStroke.getKeyStroke("pressed ENTER"), KeyStroke.getKeyStroke("pressed TAB"))));
-
-        SwingTraversalUtil.forwardTab(partNoField, unitStateBox, internalCommentArea, commentArea);
-        SwingTraversalUtil.backwardTab(refurbishedIdField, serialField, partNoField, unitStateBox);
-
-        SwingTraversalUtil.spaceSelection(equipmentTable);
-        SwingTraversalUtil.spaceSelection(internalCommentTable);
-        SwingTraversalUtil.spaceSelection(commentTable);
-
         contractorBox.setRenderer(new NamedEnumCellRenderer());
         contractorBox.setModel(new DefaultComboBoxModel(TradeName.getManufacturers().toArray()));
         showingProperty.addListener((ObservableValue<? extends Boolean> ov, Boolean o, Boolean n) -> {
             if ( n ) EventQueue.invokeLater(() -> refurbishedIdField.requestFocusInWindow());
         });
+        refurbishedIdField.requestFocus();        
     }
 
     @Override
@@ -400,7 +389,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
                 setPartNo(edit.partNo()); // TODO: Verify, if this case still exists.
             } else {
                 model.setMode(edit.uniqueUnit().getProduct().getTradeName().getManufacturer());
-            }
+            }            
         } else {
             throw new IllegalArgumentException("in is neither of type create nor edit. Should never happen");
         }
@@ -478,7 +467,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         model.getMetaUnit().loadFrom(unit);
         model.setProduct(unit.getProduct());
         updateMetaUnit();
-        if (unit.getReceiveAssignAttribute() > 0 ) raaTextField.setText(unit.getReceiveAssignAttribute() + "");
+        if ( unit.getReceiveAssignAttribute() > 0 ) raaTextField.setText(unit.getReceiveAssignAttribute() + "");
         else raaTextField.setText("");
         equipmentModel.setMarked(unit.getEquipments());
         commentModel.setMarked(unit.getComments());
@@ -776,7 +765,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
      * Editor.
      */
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
@@ -845,7 +834,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         manufacturerPanel.setLayout(manufacturerPanelLayout);
         manufacturerPanelLayout.setHorizontalGroup(
             manufacturerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(contractorBox, 0, 296, Short.MAX_VALUE)
+            .addComponent(contractorBox, 0, 283, Short.MAX_VALUE)
         );
         manufacturerPanelLayout.setVerticalGroup(
             manufacturerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -868,7 +857,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         unitPanel.add(refurbishedIdLabel, gridBagConstraints);
 
         refurbishedIdField.setName("refurbishId"); // NOI18N
-        refurbishedIdField.setNextFocusableComponent(serialField);
+        refurbishedIdField.setNextFocusableComponent(raaTextField);
         refurbishedIdField.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 refurbishedIdFieldFocusLost(evt);
@@ -902,7 +891,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         serialLabel.setText("SerienNr:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         unitPanel.add(serialLabel, gridBagConstraints);
 
@@ -915,7 +904,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 0, 2);
@@ -924,12 +913,12 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         partNoLabel.setText("ArtikelNr:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         unitPanel.add(partNoLabel, gridBagConstraints);
 
         partNoField.setName("partNo"); // NOI18N
-        partNoField.setNextFocusableComponent(raaTextField);
+        partNoField.setNextFocusableComponent(mfgDateChooser);
         partNoField.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 partNoFieldFocusLost(evt);
@@ -937,7 +926,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 0.1;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 0, 2);
@@ -951,22 +940,22 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.insets = new java.awt.Insets(2, 0, 0, 2);
         unitPanel.add(partNoEditButton, gridBagConstraints);
 
         raaLabel.setText("RAA:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         unitPanel.add(raaLabel, gridBagConstraints);
 
         raaTextField.setName("raa"); // NOI18N
-        raaTextField.setNextFocusableComponent(unitStateBox);
+        raaTextField.setNextFocusableComponent(serialField);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 0, 2);
@@ -993,7 +982,6 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         unitPanel.add(unitStatusLabel, gridBagConstraints);
 
-        unitStateBox.setNextFocusableComponent(warrantyTillChooser);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 6;
@@ -1009,8 +997,9 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         unitPanel.add(warrantyTypeLabel, gridBagConstraints);
 
-        warrantyTypeChooser.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Kurz", "Länger", "Ganz laaaaaaaaaaaaaaaaaaaaaaaaaag" }));
-        warrantyTypeChooser.setMaximumSize(new java.awt.Dimension(100, 22));
+        warrantyTypeChooser.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Kurz", "Länger", "Ganz laaaaaaaaaaaaaa" }));
+        warrantyTypeChooser.setMinimumSize(new java.awt.Dimension(100, 22));
+        warrantyTypeChooser.setPreferredSize(new java.awt.Dimension(100, 22));
         warrantyTypeChooser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 warrantyTypeChooserActionPerformed(evt);
@@ -1226,8 +1215,8 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         unitPanel.add(messagesButton, gridBagConstraints);
 
         operationButtonPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
-        operationButtonPanel.setMinimumSize(new java.awt.Dimension(100, 35));
-        operationButtonPanel.setPreferredSize(new java.awt.Dimension(100, 35));
+        operationButtonPanel.setMinimumSize(new java.awt.Dimension(14, 3));
+        operationButtonPanel.setPreferredSize(new java.awt.Dimension(14, 30));
         operationButtonPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -1238,17 +1227,17 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         unitPanel.add(operationButtonPanel, gridBagConstraints);
 
         add(unitPanel, java.awt.BorderLayout.CENTER);
-    }// </editor-fold>                        
+    }// </editor-fold>//GEN-END:initComponents
 
-    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         showingProperty.set(false);
-    }                                            
+    }//GEN-LAST:event_cancelButtonActionPerformed
 
-    private void messagesButtonActionPerformed(java.awt.event.ActionEvent evt) {                                               
+    private void messagesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_messagesButtonActionPerformed
         saft.build(this).alert(lastMessage);
-    }                                              
+    }//GEN-LAST:event_messagesButtonActionPerformed
 
-    private void contractorBoxActionPerformed(java.awt.event.ActionEvent evt) {                                              
+    private void contractorBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contractorBoxActionPerformed
         TradeName contractor = (TradeName)contractorBox.getSelectedItem();
         model.setMode(contractor);
         if ( contractor.isNoMfgDate() ) {
@@ -1256,9 +1245,9 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         }
         updateChains();
         validateAll();
-    }                                             
+    }//GEN-LAST:event_contractorBoxActionPerformed
 
-    private void warrantyTypeChooserActionPerformed(java.awt.event.ActionEvent evt) {                                                    
+    private void warrantyTypeChooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_warrantyTypeChooserActionPerformed
         if ( warrantyTypeChooser.getSelectedItem() != null && warrantyTypeChooser.getSelectedItem().equals(Warranty.WARRANTY_TILL_DATE) ) {
             warrantyTillChooser.setEnabled(true);
             model.getMetaUnit().setWarrentyTillSetted(true);
@@ -1268,46 +1257,46 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
             model.getMetaUnit().setWarrentyTillSetted(false);
             updateActions();
         }
-    }                                                   
+    }//GEN-LAST:event_warrantyTypeChooserActionPerformed
 
-    private void refurbishedIdEditButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                        
+    private void refurbishedIdEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refurbishedIdEditButtonActionPerformed
         editRefurbishedId(refurbishedIdField.getText());
-    }                                                       
+    }//GEN-LAST:event_refurbishedIdEditButtonActionPerformed
 
-    private void serialFieldFocusLost(java.awt.event.FocusEvent evt) {                                      
+    private void serialFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_serialFieldFocusLost
         final String serial = serialField.getText();
         // Shortcut. Rethink if ok. Better pick from model
         if ( unit != null && serial.equals(unit.getIdentifier(SERIAL)) ) return;
         model.getMetaUnit().getSerial().setValue(serial);
         validateSerial();
-    }                                     
+    }//GEN-LAST:event_serialFieldFocusLost
 
-    private void refurbishedIdFieldActionPerformed(java.awt.event.ActionEvent evt) {                                                   
+    private void refurbishedIdFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refurbishedIdFieldActionPerformed
         // TODO add your handling code here:
-    }                                                  
+    }//GEN-LAST:event_refurbishedIdFieldActionPerformed
 
-    private void refurbishedIdFieldFocusLost(java.awt.event.FocusEvent evt) {                                             
+    private void refurbishedIdFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_refurbishedIdFieldFocusLost
         String refurbishedId = refurbishedIdField.getText();
         // Shortcut. Rethink if ok. Better pick from model
         if ( unit != null && refurbishedId.equals(unit.getIdentifier(REFURBISHED_ID)) ) return;
         model.getMetaUnit().getRefurbishId().setValue(refurbishedId);
         validateRefurbishedId();
-    }                                            
+    }//GEN-LAST:event_refurbishedIdFieldFocusLost
 
-    private void partNoFieldFocusLost(java.awt.event.FocusEvent evt) {                                      
+    private void partNoFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_partNoFieldFocusLost
         final String partNo = partNoField.getText();
         model.getMetaUnit().getPartNo().setValue(partNo);
         validatePartNoAndLoadDetails();
-    }                                     
+    }//GEN-LAST:event_partNoFieldFocusLost
 
-    private void partNoEditButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                 
+    private void partNoEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_partNoEditButtonActionPerformed
         productUiBuilder.createOrEditPart(() -> new SimpleView.CreateOrEdit(model.getMode(), partNoField.getText()), of(this))
                 .thenAccept(p -> validatePartNoAndLoadDetails())
                 .thenAccept(p -> validateRefurbishedId())
                 .handle(UiCore.global().handler(this));
-    }                                                
+    }//GEN-LAST:event_partNoEditButtonActionPerformed
 
-    // Variables declaration - do not modify                     
+    // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JTextArea commentArea;
     private javax.swing.JScrollPane commentAreaScrollPane;
@@ -1350,5 +1339,5 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
     private javax.swing.JLabel warrantyTillLabe;
     javax.swing.JComboBox warrantyTypeChooser;
     private javax.swing.JLabel warrantyTypeLabel;
-    // End of variables declaration                   
+    // End of variables declaration//GEN-END:variables
 }
