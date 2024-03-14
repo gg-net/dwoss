@@ -362,6 +362,13 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         showingProperty.addListener((ObservableValue<? extends Boolean> ov, Boolean o, Boolean n) -> {
             if ( n ) EventQueue.invokeLater(() -> refurbishedIdField.requestFocusInWindow());
         });
+              
+        // Enter bei diesen drei Feldern als wechsler, damit ein direktes arbeiten mit dem Scanner geht.
+        Set<? extends AWTKeyStroke> keystrokes = Set.of(KeyStroke.getKeyStroke("pressed ENTER"), KeyStroke.getKeyStroke("pressed TAB"));        
+        refurbishedIdField.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS,keystrokes);
+        raaTextField.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, keystrokes);
+        serialField.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS,keystrokes);
+        
         refurbishedIdField.requestFocus();        
     }
 
