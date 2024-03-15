@@ -1037,7 +1037,6 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 0, 2);
         unitPanel.add(warrantyTillChooser, gridBagConstraints);
 
-        equipmentTable.setPreferredSize(new java.awt.Dimension(100, 80));
         equipmentScrollPane.setViewportView(equipmentTable);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1058,7 +1057,6 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
 
             }
         ));
-        commentTable.setPreferredSize(new java.awt.Dimension(100, 80));
         commentScrollPane.setViewportView(commentTable);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1073,8 +1071,6 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
 
         internalCommentScrollPane.setMinimumSize(new java.awt.Dimension(150, 150));
         internalCommentScrollPane.setPreferredSize(new java.awt.Dimension(150, 200));
-
-        internalCommentTable.setPreferredSize(new java.awt.Dimension(100, 80));
         internalCommentScrollPane.setViewportView(internalCommentTable);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1091,7 +1087,6 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         commentArea.setLineWrap(true);
         commentArea.setRows(5);
         commentArea.setWrapStyleWord(true);
-        commentArea.setPreferredSize(new java.awt.Dimension(100, 80));
         commentAreaScrollPane.setViewportView(commentArea);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1110,7 +1105,6 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         internalCommentArea.setLineWrap(true);
         internalCommentArea.setRows(5);
         internalCommentArea.setWrapStyleWord(true);
-        internalCommentArea.setPreferredSize(new java.awt.Dimension(100, 80));
         internalCommentAreaScrollPane.setViewportView(internalCommentArea);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
