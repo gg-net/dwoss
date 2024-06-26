@@ -130,7 +130,6 @@ public abstract class ProductSpec extends BaseEntity implements Serializable, Ea
                 return new Desktop();
             case DESKTOP_BUNDLE:
                 throw new RuntimeException(group + " not supported. Think about");
-//                return new DesktopBundle();
             case ALL_IN_ONE:
                 return new AllInOne();
             case TABLET_SMARTPHONE:
@@ -143,6 +142,8 @@ public abstract class ProductSpec extends BaseEntity implements Serializable, Ea
             case MISC:
             case PROJECTOR:
             case PHONE:
+            case IPAD:
+            case IPHONE:
                 return new BasicSpec();
             case COMMENTARY:
             default:

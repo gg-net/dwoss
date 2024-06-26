@@ -43,7 +43,9 @@ public enum ProductGroup implements INoteModel {
     TV("TV"),
     SERVER("Server"),
     TABLET_SMARTPHONE("Tablet/SmartPhone"),
-    PHONE("SimplePhone");
+    PHONE("SimplePhone"),
+    IPHONE("iPhone"),
+    IPAD("iPad");
 
     /**
      * A short (german) description.
