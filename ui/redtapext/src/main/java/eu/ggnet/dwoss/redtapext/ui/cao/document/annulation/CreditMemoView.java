@@ -17,9 +17,14 @@
 package eu.ggnet.dwoss.redtapext.ui.cao.document.annulation;
 
 import java.awt.Component;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.text.NumberFormat;
 import java.util.*;
 
 import javax.swing.*;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 
 import eu.ggnet.dwoss.core.common.values.CreditMemoReason;
 import eu.ggnet.dwoss.core.common.values.PositionType;
@@ -37,13 +42,15 @@ import static eu.ggnet.dwoss.core.common.values.PositionType.COMMENT;
  *
  * @author pascal.perau
  */
-public class CreditMemoView extends javax.swing.JPanel implements IPreClose {
+public class CreditMemoView extends javax.swing.JPanel implements IPreClose, TableModelListener {
 
     private final List<AfterInvoicePosition> creditPositions;
 
-    List<Position> positions;
+    private List<Position> positions;
 
-    Stock selectedStock;
+    private Stock selectedStock;
+
+    private final CreditMemoTableModel tableModel;
 
     /** Creates new form CreditMemoView
      * <p>
@@ -67,16 +74,20 @@ public class CreditMemoView extends javax.swing.JPanel implements IPreClose {
         this.creditPositions = creditPositions;
 
         //set up position panel
-        CreditMemoTableModel model = new CreditMemoTableModel(creditPositions);
-        tablePanel.setTableModel(model);
-        sumPanel.setModel(model);
-        model.addTableModelListener(sumPanel);
-        
+        tableModel = new CreditMemoTableModel(creditPositions);
+        afterInvoiceTable.setModel(tableModel);
+        tableModel.addTableModelListener(this);
+
         reasonComboBox.setRenderer(new CreditMemoReasonCellRenderer());
-        
+
         var list = new ArrayList<>(EnumSet.allOf(CreditMemoReason.class));
-        list.add(null);               
+        list.add(null);
         reasonComboBox.setModel(new DefaultComboBoxModel<>(list.toArray(CreditMemoReason[]::new)));
+        reasonComboBox.addItemListener((ItemEvent e) -> {
+            if (e.getStateChange() == ItemEvent.SELECTED && e.getItem().equals(CreditMemoReason.RETRACTION)) {
+                reasonTextArea.setText("Widerruf des Kaufvertrages gemäß Fernabsatzgesetz");
+            }
+        });
         reasonComboBox.setSelectedItem(null);
     }
 
@@ -87,7 +98,7 @@ public class CreditMemoView extends javax.swing.JPanel implements IPreClose {
     public CreditMemoReason getReason() {
         return reasonComboBox.getItemAt(reasonComboBox.getSelectedIndex());
     }
-    
+
     private List<Position> extractPositions() {
         List<Position> positionList = new ArrayList<>();
         for (AfterInvoicePosition creditMemoPosition : creditPositions) {
@@ -125,7 +136,7 @@ public class CreditMemoView extends javax.swing.JPanel implements IPreClose {
                 JOptionPane.showMessageDialog(this, "keine Positionen zur Gutschrift gewählt");
                 return false;
             }
-            if ( tablePanel.getComment() == null || tablePanel.getComment().trim().isEmpty() ) {
+            if ( reasonTextArea.getText() == null || reasonTextArea.getText().trim().isEmpty() ) {
                 JOptionPane.showMessageDialog(this, "Bitte Storno/Gutschriftsgrund angeben");
                 return false;
             }
@@ -133,7 +144,7 @@ public class CreditMemoView extends javax.swing.JPanel implements IPreClose {
                     .amount(1)
                     .type(COMMENT)
                     .name("Grund/Beschreibung")
-                    .description(tablePanel.getComment() + "\n\n" + balancingBox.getSelectedItem().toString())
+                    .description(reasonTextArea.getText() + "\n\n" + balancingBox.getSelectedItem().toString())
                     .build());
             if ( selectedStock == null ) {
                 JOptionPane.showMessageDialog(this, "bitte Standort für die Gutschrift auswählen");
@@ -141,6 +152,21 @@ public class CreditMemoView extends javax.swing.JPanel implements IPreClose {
             }
         }
         return true;
+    }
+
+    @Override
+    public void tableChanged(TableModelEvent e) {
+        double nettoSum = 0;
+        double bruttoSum = 0;
+        for (AfterInvoicePosition cmp : tableModel.getDataModel()) {
+            if ( cmp.isParticipant() ) {
+                nettoSum += cmp.getPosition().getPrice();
+                bruttoSum += (cmp.getPosition().getPrice() * (cmp.getPosition().getTax() + 1));
+            }
+        }
+        NumberFormat nf = NumberFormat.getCurrencyInstance();
+        nettoValue.setText(nf.format(nettoSum));
+        bruttoValue.setText(nf.format(bruttoSum));
     }
 
     /** This method is called from within the constructor to
@@ -151,17 +177,87 @@ public class CreditMemoView extends javax.swing.JPanel implements IPreClose {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
-        tablePanel = new eu.ggnet.dwoss.redtapext.ui.cao.document.AfterInvoiceTablePanel();
-        sumPanel = new eu.ggnet.dwoss.redtapext.ui.cao.document.AfterInvoicePositionPriceSumPanel();
-        afterInvoiceInfoPanel = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
-        stockSelectionBox = new javax.swing.JComboBox();
-        balancingBox = new javax.swing.JComboBox();
+        afterInvoiceScrollPane = new javax.swing.JScrollPane();
+        afterInvoiceTable = new javax.swing.JTable();
+        reasonScrollPane = new javax.swing.JScrollPane();
+        reasonTextArea = new javax.swing.JTextArea();
         reasonLabel = new javax.swing.JLabel();
         reasonComboBox = new javax.swing.JComboBox<>();
+        stockLabel = new javax.swing.JLabel();
+        stockSelectionBox = new javax.swing.JComboBox();
+        balancingBox = new javax.swing.JComboBox();
+        nettoLabel = new javax.swing.JLabel();
+        nettoValue = new javax.swing.JLabel();
+        bruttoLabel = new javax.swing.JLabel();
+        bruttoValue = new javax.swing.JLabel();
 
-        jLabel3.setText("Standort:");
+        setMinimumSize(new java.awt.Dimension(800, 500));
+        setPreferredSize(new java.awt.Dimension(800, 500));
+        setLayout(new java.awt.GridBagLayout());
+
+        afterInvoiceTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        afterInvoiceScrollPane.setViewportView(afterInvoiceTable);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        add(afterInvoiceScrollPane, gridBagConstraints);
+
+        reasonScrollPane.setBorder(javax.swing.BorderFactory.createTitledBorder("Grund / Beschreibung"));
+
+        reasonTextArea.setColumns(20);
+        reasonTextArea.setRows(5);
+        reasonScrollPane.setViewportView(reasonTextArea);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 0.5;
+        add(reasonScrollPane, gridBagConstraints);
+
+        reasonLabel.setText("Grund:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
+        add(reasonLabel, gridBagConstraints);
+
+        reasonComboBox.setMinimumSize(new java.awt.Dimension(100, 22));
+        reasonComboBox.setPreferredSize(new java.awt.Dimension(100, 22));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
+        add(reasonComboBox, gridBagConstraints);
+
+        stockLabel.setText("Standort:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
+        add(stockLabel, gridBagConstraints);
 
         stockSelectionBox.setMinimumSize(new java.awt.Dimension(250, 25));
         stockSelectionBox.setPreferredSize(new java.awt.Dimension(250, 25));
@@ -170,64 +266,52 @@ public class CreditMemoView extends javax.swing.JPanel implements IPreClose {
                 stockSelectionBoxActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        add(stockSelectionBox, gridBagConstraints);
 
         balancingBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Rechnungsbetrag bar ausgezahlt", "Rechnungsbetrag wird überwiesen", "Rechnungsbetrag wird verrechnet" }));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 0);
+        add(balancingBox, gridBagConstraints);
 
-        javax.swing.GroupLayout afterInvoiceInfoPanelLayout = new javax.swing.GroupLayout(afterInvoiceInfoPanel);
-        afterInvoiceInfoPanel.setLayout(afterInvoiceInfoPanelLayout);
-        afterInvoiceInfoPanelLayout.setHorizontalGroup(
-            afterInvoiceInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(afterInvoiceInfoPanelLayout.createSequentialGroup()
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(stockSelectionBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(balancingBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        afterInvoiceInfoPanelLayout.setVerticalGroup(
-            afterInvoiceInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(afterInvoiceInfoPanelLayout.createSequentialGroup()
-                .addGroup(afterInvoiceInfoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(stockSelectionBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(balancingBox, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
+        nettoLabel.setText("Nettosumme: ");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
+        add(nettoLabel, gridBagConstraints);
 
-        reasonLabel.setText("Grund:");
+        nettoValue.setText("0,- €");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        add(nettoValue, gridBagConstraints);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 688, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(reasonLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(reasonComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(afterInvoiceInfoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(sumPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(tablePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(reasonLabel)
-                            .addComponent(reasonComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(afterInvoiceInfoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(sumPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
+        bruttoLabel.setText("Bruttosumme: ");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 5);
+        add(bruttoLabel, gridBagConstraints);
+
+        bruttoValue.setText("0,- €");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        add(bruttoValue, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void stockSelectionBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stockSelectionBoxActionPerformed
@@ -235,14 +319,19 @@ public class CreditMemoView extends javax.swing.JPanel implements IPreClose {
     }//GEN-LAST:event_stockSelectionBoxActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel afterInvoiceInfoPanel;
+    private javax.swing.JScrollPane afterInvoiceScrollPane;
+    private javax.swing.JTable afterInvoiceTable;
     private javax.swing.JComboBox balancingBox;
-    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel bruttoLabel;
+    private javax.swing.JLabel bruttoValue;
+    private javax.swing.JLabel nettoLabel;
+    private javax.swing.JLabel nettoValue;
     private javax.swing.JComboBox<CreditMemoReason> reasonComboBox;
     private javax.swing.JLabel reasonLabel;
+    private javax.swing.JScrollPane reasonScrollPane;
+    private javax.swing.JTextArea reasonTextArea;
+    private javax.swing.JLabel stockLabel;
     private javax.swing.JComboBox stockSelectionBox;
-    private eu.ggnet.dwoss.redtapext.ui.cao.document.AfterInvoicePositionPriceSumPanel sumPanel;
-    private eu.ggnet.dwoss.redtapext.ui.cao.document.AfterInvoiceTablePanel tablePanel;
     // End of variables declaration//GEN-END:variables
 
 }

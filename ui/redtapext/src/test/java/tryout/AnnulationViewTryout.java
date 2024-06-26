@@ -18,12 +18,16 @@ package tryout;
 
 import java.util.*;
 
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.PaymentMethod;
+
 import jakarta.persistence.LockModeType;
 
 import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.dl.RemoteLookup;
 import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
-import eu.ggnet.dwoss.redtape.ee.entity.Position;
+import eu.ggnet.dwoss.redtape.ee.entity.*;
+import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.AfterInvoicePosition;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.annulation.CreditMemoView;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
@@ -137,11 +141,22 @@ public class AnnulationViewTryout {
             //</editor-fold>
         });
 
+        Dossier dos = new Dossier(PaymentMethod.ADVANCE_PAYMENT, false, 1);
+        Document doc = new Document(DocumentType.INVOICE, Directive.NONE, new DocumentHistory("max.mustermann", "Kein Kommentar"));
+
         Position p1 = Position.builder().amount(1).name("P1").price(12.).tax(1.19).build();
         Position p2 = Position.builder().amount(1).name("P2").price(20.).tax(1.19).build();
         Position p3 = Position.builder().amount(1).name("P3").price(13.24).tax(1.19).build();
         Position p4 = Position.builder().amount(1).name("P4").price(400.).tax(1.19).build();
         Position p5 = Position.builder().amount(1).name("P5").price(1234.).tax(1.19).build();
+
+        doc.append(p1);
+        doc.append(p2);
+        doc.append(p3);
+        doc.append(p4);
+        doc.append(p5);
+        
+        dos.add(doc);
 
         List<AfterInvoicePosition> positions = new ArrayList<>();
         positions.add(new AfterInvoicePosition(p1));
