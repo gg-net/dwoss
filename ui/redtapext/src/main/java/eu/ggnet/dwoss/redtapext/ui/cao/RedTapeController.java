@@ -442,24 +442,44 @@ public class RedTapeController implements IDossierSelectionHandler {
 
         if ( model.getSelectedDocument() != null && !getViewOnlyCustomerIds().contains(model.getPurchaseCustomer().id()) ) {
             Document selDocument = model.getSelectedDocument();
-            DossierUpdateAction action = new DossierUpdateAction(parent(), this, model.getPurchaseCustomer().id(), model.getSelectedDocument());
-            view.actionBar.add(new JButton(action));
+            DossierUpdateAction modifyDocumentAction = new DossierUpdateAction(parent(), this, model.getPurchaseCustomer().id(), model.getSelectedDocument());
+            view.actionBar.add(new JButton(modifyDocumentAction));
 
             //Deactivate Button if a Update isn't possible or allowed.
             if ( !isSelectedDocumentEditable() ) {
-                action.setEnabled(false);
+                modifyDocumentAction.setEnabled(false);
             }
 
             if ( selDocument.getType().equals(DocumentType.CREDIT_MEMO) ) {
-                Dl.local().lookup(Guardian.class).add(action, CREATE_ANNULATION_INVOICE);
-                accessDependentActions.add(action);
+                Dl.local().lookup(Guardian.class).add(modifyDocumentAction, CREATE_ANNULATION_INVOICE);
+                accessDependentActions.add(modifyDocumentAction);
             }
-            view.setDocumentPopupActions(action, new AbstractAction("Details") {
+            Action detailsAction = new AbstractAction("Details") {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     openDocumentViewer(model.getSelectedDocument());
                 }
-            });
+            };
+
+            Action changeSettlementAction = new AbstractAction("Bezahlung ändern") {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    saft.build(view).fx().eval(SettlementPane.class).cf()
+                            .thenAccept(ps -> {
+                                Document d = model.getSelectedDocument();
+                                d.clearPaymentSettlements();
+                                d.add(ps);
+                                d = remote.lookup(RedTapeWorker.class).update(d, null, Dl.local().lookup(Guardian.class).getUsername());
+                                reloadSelectionOnStateChange(d.getDossier());
+                            }).handle(saft.handler(view));
+                }
+            };
+
+            if (model.getSelectedDocument().isClosed()) {
+                changeSettlementAction.setEnabled(false);
+            }
+            
+            view.setDocumentPopupActions(modifyDocumentAction, changeSettlementAction, detailsAction);
 
             view.actionBar.add(new JButton(new DocumentJasperViewAction(selDocument, DocumentViewType.DEFAULT, this, model.getPurchaseCustomer().id())));
             if ( selDocument.getType() == DocumentType.ORDER )

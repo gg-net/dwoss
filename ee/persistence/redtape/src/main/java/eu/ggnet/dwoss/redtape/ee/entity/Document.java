@@ -747,6 +747,10 @@ public class Document extends BaseEntity implements Serializable, Comparable<Doc
     public void remove(PaymentSettlement settlement) {
         this.settlements.remove(settlement);
     }
+    
+    public void clearPaymentSettlements() {
+        this.settlements.clear();
+    }
 
     /**
      * Returns the price of all positions multiplied by amount, clean (rounded to two digits).

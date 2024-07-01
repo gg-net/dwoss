@@ -24,7 +24,8 @@ public class RedTapeWorkerStub implements RedTapeWorker {
 
     @Override
     public Document update(Document doc, Integer destination, String arranger) throws RuntimeException {
-        throw new RuntimeException("Not Yet implemented");
+        System.out.println("update() " + doc);
+        return doc;
     }
 
     @Override

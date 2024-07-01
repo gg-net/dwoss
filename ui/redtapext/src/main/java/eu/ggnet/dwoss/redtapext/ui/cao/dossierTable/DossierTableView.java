@@ -50,9 +50,9 @@ import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.redtape.ee.format.DossierFormater;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
+import eu.ggnet.dwoss.redtapext.ui.cao.stateaction.SettlementPane;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.saft.core.Saft;
-import eu.ggnet.saft.core.UiUtil;
+import eu.ggnet.saft.core.*;
 
 import jakarta.enterprise.context.Dependent;
 

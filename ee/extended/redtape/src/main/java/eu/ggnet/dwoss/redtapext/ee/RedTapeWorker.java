@@ -198,11 +198,11 @@ public interface RedTapeWorker {
     /**
      * Changes the warranty of every eligible position on the dossier.
      *
-     * @param disserId the disserId for the dossier on wich a warranty change is triggered
+     * @param dossierId the dossierId for the dossier on wich a warranty change is triggered
      * @param warranty the warranty to wich the dossier position are changed
      * @param username
      * @return the updated dossier
      * @throws eu.ggnet.dwoss.core.common.UserInfoException
      */
-    Dossier updateWarranty(long disserId, Warranty warranty, String username) throws UserInfoException;
+    Dossier updateWarranty(long dossierId, Warranty warranty, String username) throws UserInfoException;
 }
