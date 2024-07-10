@@ -16,7 +16,9 @@
  */
 package eu.ggnet.dwoss.stock.ee.eao;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
@@ -25,6 +27,7 @@ import jakarta.persistence.EntityManager;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
 import eu.ggnet.dwoss.core.system.persistence.AbstractEao;
+import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.stock.ee.assist.*;
 
 import com.querydsl.jpa.impl.JPAQuery;
@@ -66,6 +69,20 @@ public class ShipmentEao extends AbstractEao<Shipment> {
                  .from(shipment)
                  .groupBy(shipment.status)
                  .fetch();
+    }
+    
+    /**
+     * Returns all shipments since
+     * 
+     * @param since date since, must not be null
+     * @return all shipments since.
+     * @throws NullPointerException if date is null
+     */
+    public List<Shipment> findSince(LocalDate since) throws NullPointerException{        
+         return new JPAQuery<Shipment>(em)
+                 .from(shipment)
+                 .where(shipment.date.after(Utils.toDate(Objects.requireNonNull(since,"since must not be null").minusDays(1))))
+                 .fetch();        
     }
     
 }

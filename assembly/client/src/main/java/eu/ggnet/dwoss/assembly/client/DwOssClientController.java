@@ -214,7 +214,8 @@ public class DwOssClientController {
         gl.getItems().addAll(gl_imexport, gl_price, gl_allgemein, gl_close,
                 m.item(OpenSalesChannelManagerAction.class),
                 m.item(SageExportAction.class),
-                m.item(ExportAllCustomers.class)
+                m.item(ExportAllCustomers.class),
+                m.item(ShipmentChangeMenuItem.class)
         );
 
         // -- Lager/Logistik

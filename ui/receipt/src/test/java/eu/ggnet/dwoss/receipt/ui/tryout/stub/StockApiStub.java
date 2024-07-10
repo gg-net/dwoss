@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 GG-Net GmbH
+ * Copyright (C) 2024 GG-Net GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,60 +16,57 @@
  */
 package eu.ggnet.dwoss.receipt.ui.tryout.stub;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
-import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.dwoss.uniqueunit.api.ShopCategory;
-import eu.ggnet.dwoss.uniqueunit.api.UniqueUnitApi;
+import eu.ggnet.dwoss.stock.api.*;
 
 /**
  *
  * @author oliver.guenther
  */
-public class UniqueUnitApiStub implements UniqueUnitApi {
+public class StockApiStub implements StockApi {
 
     @Override
-    public List<ShopCategory> findAllShopCategories() {
-        return List.of(
-                new ShopCategory.Builder().id(1).name("Category 1").shopId(1).build(),
-                new ShopCategory.Builder().id(2).name("Category 2").shopId(2).build()
-        );
+    public List<SimpleShipment> findShipmentsSince(LocalDate since) {
+        return List.of(new StockApi.SimpleShipment(1, "Shipment 1"),new StockApi.SimpleShipment(2, "Shipment 2"));
     }
 
     @Override
-    public String findBySerialAsHtml(String serial, String username) {
+    public List<PicoStock> findAllStocks() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public String findAsHtml(long id, String username) {
+    public SimpleStockUnit findByUniqueUnitId(long uniqueUnitId) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public void addHistory(long uniqueUnitId, String history, String arranger) throws UserInfoException {
+    public SimpleStockUnit findByRefurbishId(String refurbishId) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public void addHistoryByRefurbishId(String refurbishId, String history, String arranger) throws UserInfoException {
+    public Map<String, SimpleStockUnit> findByRefurbishIds(List<String> refurbishIds) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public FileJacket toUnitsOfPartNoAsXls(String partNo) throws UserInfoException {
+    public List<Scraped> scrap(List<Long> stockUnitIds, String reason, String arranger) throws NullPointerException, UserInfoException {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public ShopCategory create(ShopCategory shopCategory) throws UserInfoException {
+    public List<Scraped> delete(List<Long> stockUnitIds, String reason, String arranger) throws NullPointerException, UserInfoException {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public void changeShipment(String refurbishId, long shipmentId, String shipmentLabel, String arranger) throws UserInfoException {
-        System.out.println("UniqueUnitApiStub.changeShipment(refurbishId=" + refurbishId + ", shipmentId=" + shipmentId + ", shipmentLabel=" + shipmentLabel + ", arranger=" + arranger + ")");
+    public void perpareTransferByUniqueUnitIds(List<Long> uniqueUnitIds, int destinationStockId, String arranger, String comment) throws UserInfoException {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
 }

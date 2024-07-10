@@ -273,4 +273,17 @@ public class UniqueUnitApiBean implements UniqueUnitApi {
         L.info("Created {}", sc);
         return sc.toApi();
     }
+
+    @Override
+    public void changeShipment(String refurbishId, long shipmentId, String shipmentLabel, String arranger) throws UserInfoException {
+        if (refurbishId == null || refurbishId.isBlank()) throw new UserInfoException("SopoNr ist leer");
+        if (shipmentLabel == null || shipmentLabel.isBlank()) throw new UserInfoException("ShipmentLabel ist leer");
+        if (arranger == null || arranger.isBlank() ) throw new UserInfoException("Arranger ist leer");
+        if (shipmentId <= 0) throw new UserInfoException("ShipmentId ist 0 oder negativ");
+        var uu  = uuEao.findByIdentifier(Identifier.REFURBISHED_ID, refurbishId);
+        if (uu == null) throw new UserInfoException("Kein Gerät mit SopoNr " + refurbishId + " gefunden");
+        uu.addHistory("Shipment von " + uu.getShipmentLabel() + "(" + uu.getShipmentId() + ") auf " + shipmentLabel + "(" + shipmentId + ") durch " + arranger + " geändert");
+        uu.setShipmentId(shipmentId);
+        uu.setShipmentLabel(shipmentLabel);
+    }
 }

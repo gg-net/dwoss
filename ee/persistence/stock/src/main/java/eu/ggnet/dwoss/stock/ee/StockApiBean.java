@@ -16,6 +16,7 @@
  */
 package eu.ggnet.dwoss.stock.ee;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,8 +33,7 @@ import eu.ggnet.dwoss.core.system.progress.SubMonitor;
 import eu.ggnet.dwoss.stock.api.*;
 import eu.ggnet.dwoss.stock.api.event.DeleteEvent;
 import eu.ggnet.dwoss.stock.api.event.ScrapEvent;
-import eu.ggnet.dwoss.stock.ee.eao.StockEao;
-import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
+import eu.ggnet.dwoss.stock.ee.eao.*;
 import eu.ggnet.dwoss.stock.ee.emo.StockTransactionEmo;
 import eu.ggnet.dwoss.stock.ee.entity.*;
 
@@ -47,6 +47,9 @@ import static eu.ggnet.dwoss.stock.ee.StockApiLocalBean.toSimple;
 @Stateless
 public class StockApiBean implements StockApi {
 
+    @Inject
+    private ShipmentEao shipmentEao;
+    
     @Inject
     private StockTransactionProcessorOperation stp;
 
@@ -181,66 +184,8 @@ public class StockApiBean implements StockApi {
         return result;
     }
 
-//        /**
-//     * Delete the Unit.
-//     * Finds the StockUnit, destroys it via a Destroy Transaction.
-//     * Updates the UniqueUnit and SopoUnit in the internal comments, that it is destroyed.
-//     * Hint: For simplicity this method assumes, that verifyScarpOrDeleteAble was called, so no extra validation is done.
-//     * <p/>
-//     * @param uniqueUnit the unit to scrap
-//     * @param arranger   the arranger
-//     * @param reason     the reason
-//     */
-//    @Override
-//    public void delete(UniqueUnit uniqueUnit, String reason, String arranger) {
-//        long cid = deleteCustomers.get(uniqueUnit.getContractor()).orElseThrow(() -> {
-//            return new IllegalArgumentException("No DeleteCustomer for " + uniqueUnit);
-//        });
-//        scrapDelete(cid, "Löschen", uniqueUnit, reason, arranger);
-//    }
-//
-//    /**
-//     * Scraps the Unit.
-//     * Finds the StockUnit, destroys it via a Destroy Transaction.
-//     * Updates the UniqueUnit and SopoUnit in the internal comments, that it is destroyed.
-//     * Hint: For simplicity this method assumes, that verifyScarpOrDeleteAble was called, so no extra validation is done.
-//     * <p/>
-//     * @param uniqueUnit the unit to scrap
-//     * @param arranger   the arranger
-//     * @param reason     the reason
-//     */
-//    @Override
-//    public void scrap(final UniqueUnit uniqueUnit, final String reason, final String arranger) {
-//        long cid = scrapCustomers.get(uniqueUnit.getContractor()).orElseThrow(() -> {
-//            return new IllegalArgumentException("No ScrapCustomer for " + uniqueUnit);
-//        });
-//        scrapDelete(cid, "Verschrottung", uniqueUnit, reason, arranger);
-//    }
-//
-//    private void scrapDelete(final long targetCustomerId, final String operation, final UniqueUnit uniqueUnit, final String reason, final String arranger) {
-//        UniqueUnit uu = new UniqueUnitEao(uuEm).findById(uniqueUnit.getId());
-//        StockTransactionEmo stockTransactionEmo = new StockTransactionEmo(stockEm);
-//        StockUnit stockUnit = new StockUnitEao(stockEm).findByUniqueUnitId(uu.getId());
-//        Document doc = new DossierEmo(redTapeEm)
-//                .requestActiveDocumentBlock((int)targetCustomerId, "Blockaddresse KundenId " + targetCustomerId, "Erzeugung durch " + operation, arranger);
-//        Dossier dos = doc.getDossier();
-//        doc.append(Position.builder().type(PositionType.UNIT).amount(1)
-//                .bookingAccount(postLedger.get(PositionType.UNIT, doc.getTaxType()).orElse(null))
-//                .description(UniqueUnitFormater.toDetailedDiscriptionLine(uu))
-//                .name(UniqueUnitFormater.toPositionName(uu))
-//                .uniqueUnitId(uu.getId())
-//                .uniqueUnitProductId(uu.getProduct().getId()).build());
-//        doc.append(Position.builder().type(PositionType.COMMENT).amount(1)
-//                .name(operation).description(reason + " by " + arranger).build());
-//        LogicTransaction lt = new LogicTransactionEmo(stockEm).request(dos.getId());
-//        lt.add(stockUnit); // Implicit removes it from an existing LogicTransaction
-//        StockTransaction st = stockTransactionEmo.requestDestroyPrepared(stockUnit.getStock().getId(), arranger, reason);
-//        st.addUnit(stockUnit);
-//        stockTransactionEmo.completeDestroy(arranger, Arrays.asList(st));
-//        uu.addHistory(operation + " of Unit via " + st);
-//        uu.setInternalComment(uu.getInternalComment() + ", " + operation + " of Unit.");
-//        uu.setSalesChannel(UNKNOWN);
-//        L.info("Executed Operation {} for uniqueUnit(id={},refurbishId={}), added to LogicTransaction({}) and Dossier({})",
-//                operation, uniqueUnit.getId(), uniqueUnit.getRefurbishId(), lt.getId(), dos.getIdentifier());
-//    }
+    @Override
+    public List<SimpleShipment> findShipmentsSince(LocalDate since) {
+        return shipmentEao.findSince(since).stream().map(Shipment::toSimple).collect(Collectors.toList());
+    }
 }

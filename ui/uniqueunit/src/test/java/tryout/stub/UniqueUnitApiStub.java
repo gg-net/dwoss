@@ -77,4 +77,9 @@ public class UniqueUnitApiStub implements UniqueUnitApi {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
+    @Override
+    public void changeShipment(String refurbishId, long shipmentId, String shipmentLabel, String arranger) throws UserInfoException {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
 }

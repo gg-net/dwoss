@@ -16,6 +16,7 @@
  */
 package tryout.support;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -126,6 +127,11 @@ public class StockApiStub implements StockApi {
         return "Transaction(" + st.getId() + "," + st.getType() + ")"
                 + (st.getSource() == null ? "" : " von " + st.getSource().getName())
                 + (st.getDestination() == null ? "" : " nach " + st.getDestination().getName());
+    }
+
+    @Override
+    public List<SimpleShipment> findShipmentsSince(LocalDate since) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 }

@@ -17,8 +17,8 @@
 package eu.ggnet.dwoss.stock.api;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.util.*;
 
 import jakarta.ejb.Remote;
 
@@ -71,6 +71,21 @@ public interface StockApi {
         String comment();
     }
 
+    public static record SimpleShipment(long id, String description) implements Serializable {
+        public SimpleShipment {
+            Objects.requireNonNull(description, "description must not be null");
+        }
+    }
+
+    /**
+     * Returns all Shipments since the supplied date.
+     * 
+     * @param since the date to since
+     * @return all shipments since.
+     */
+    List<SimpleShipment> findShipmentsSince(LocalDate since);
+    
+    
     /**
      * Returns all available stocks.
      *

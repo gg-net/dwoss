@@ -18,6 +18,7 @@ package tryout;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.*;
 
 import eu.ggnet.dwoss.assembly.client.DwOssMain;
@@ -35,6 +36,7 @@ import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;
 import eu.ggnet.dwoss.stock.api.*;
 import eu.ggnet.dwoss.stock.api.StockApi.Scraped;
+import eu.ggnet.dwoss.stock.api.StockApi.SimpleShipment;
 
 import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.*;
 
@@ -109,6 +111,11 @@ public class ClientTryout {
             @Override
             public Map<String, SimpleStockUnit> findByRefurbishIds(List<String> refurbishIds) {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public List<SimpleShipment> findShipmentsSince(LocalDate since) {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
             }
 
         });

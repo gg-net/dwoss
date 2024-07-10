@@ -26,6 +26,7 @@ import jakarta.validation.constraints.NotNull;
 
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
+import eu.ggnet.dwoss.stock.api.StockApi;
 
 @Entity
 @SuppressWarnings("PersistenceUnitPresent")
@@ -135,6 +136,10 @@ public class Shipment extends BaseEntity implements Serializable {
         this.amountOfUnits = amountOfUnits;
     }
     //</editor-fold>
+    
+    public StockApi.SimpleShipment toSimple() {
+        return new StockApi.SimpleShipment(id, shipmentId);
+    }
     
     /**
      * Sideeffect, updates Date.

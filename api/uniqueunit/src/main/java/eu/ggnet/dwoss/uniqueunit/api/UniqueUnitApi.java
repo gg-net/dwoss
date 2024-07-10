@@ -79,4 +79,16 @@ public interface UniqueUnitApi {
      * @throws eu.ggnet.dwoss.core.common.UserInfoException If partNo ist null, empty or no product can be found.
      */
     FileJacket toUnitsOfPartNoAsXls(String partNo) throws UserInfoException;
+    
+    /**
+     * Changes the Shipment on a supplied refurbishId
+     * 
+     * @param refurbishId refurbishId must not be blank
+     * @param shipmentId shipmentId must not be zero or negative
+     * @param shipmentLabel shipmentLabel must not be blank
+     * @param arranger the arranger must not be blank
+     * @throws UserInfoException if refurbishId is null, shipmentlabel is null, shipmentId is zero or negativ, refurbishId does not exist.
+     */
+    void changeShipment(String refurbishId, long shipmentId, String shipmentLabel, String arranger) throws UserInfoException;    
+    
 }
