@@ -50,7 +50,8 @@ import eu.ggnet.dwoss.core.common.UserInfoException;
 
 import static eu.ggnet.dwoss.core.common.values.DocumentType.ANNULATION_INVOICE;
 import static eu.ggnet.dwoss.core.common.values.DocumentType.CREDIT_MEMO;
-import static eu.ggnet.dwoss.core.common.values.PositionType.UNIT;
+import static eu.ggnet.dwoss.core.common.values.PositionType.UNIT_ANNEX;
+import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.*;
 import static java.time.ZoneId.systemDefault;
 
 /**
@@ -60,6 +61,9 @@ import static java.time.ZoneId.systemDefault;
 @Stateless
 public class ResolveRepaymentBean implements ResolveRepayment {
 
+    // Contractors, which have a different Sales model.
+    private final static List<TradeName> NO_LINE_CONTARTORS = List.of(OTTO,AMAZON,HP, LENOVO);
+    
     private static final Logger L = LoggerFactory.getLogger(ResolveRepaymentBean.class);
 
     @Inject
@@ -99,28 +103,31 @@ public class ResolveRepaymentBean implements ResolveRepayment {
     @Override
     public ResolveResult resolveUnit(String identifier, TradeName contractor, String arranger, String comment) throws UserInfoException {
         //search with refurbishid and serial number.
-        List<SimpleReportLine> reportLines = reportLineEao.findReportLinesByIdentifiers(identifier.trim());
+        if ( identifier == null ) throw new UserInfoException("Identifier ist leer");
+        if ( identifier.isBlank() ) throw new UserInfoException("Identifier ist leer");
 
+        // Prüfung, ob es Reportlines für einen Stornoreport gibt. War bei einem Lieferanten der Fall.
+        List<SimpleReportLine> reportLines = reportLineEao.findReportLinesByIdentifiers(identifier.trim());
         List<ReportLine> repaymentLines = getRepaymentLines(contractor);
         ReportLine line = null;
-
         List<Long> repaymentIds = repaymentLines.stream().map((l) -> l.getId()).collect(Collectors.toList());
-
         for (SimpleReportLine reportLine : reportLines) {
             if ( repaymentIds.contains(reportLine.getId()) ) {
                 line = reportLineEao.findById(reportLine.getId());
             }
         }
+        // Otto darf gar keine line haben.
+        if (line != null && NO_LINE_CONTARTORS.contains(contractor)) 
+            throw new UserInfoException(contractor + " darf keine offen Reportlines haben, erst Report erstellen. " + line);
+        
+        // Todo (OG): Der Fall existiert doch gar nicht ?
+        if ( line != null && !line.getReports().isEmpty() ) throw new UserInfoException("ReportLine ist schon in einem Report.\nReports:" + line.getReports());
+        ReportLine reference = Optional.ofNullable(line).map(l -> l.getReference(SingleReferenceType.WARRANTY)).orElse(null);
+        StockUnit stockUnit = stockUnitEao.findByRefurbishId(identifier.trim());
 
-        if ( line == null ) throw new UserInfoException("Es konnte keine ReportLine mit diesem Identifier gefunden werden");
-        if ( !line.getReports().isEmpty() ) throw new UserInfoException("ReportLine ist schon in einem Report.\nReports:" + line.getReports());
+        if ( line == null && stockUnit == null )
+            throw new UserInfoException("Für SopoNr: " + identifier + " gibt es keine Informationen für eine Gutschrift.");
 
-        ReportLine reference = line.getReference(SingleReferenceType.WARRANTY);
-
-        // Rolling out the unit if still in Stock.
-        StockUnit stockUnit = line.getPositionType() == UNIT // Saftynet, e.g. unit annex shoud not clear units.
-                ? stockUnitEao.findByRefurbishId(line.getRefurbishId())
-                : null;
         if ( stockUnit != null && stockUnit.isInTransaction() )
             throw new UserInfoException("Unit is in einer StockTransaction. ID:" + stockUnit.getTransaction().getId());
 
@@ -128,6 +135,9 @@ public class ResolveRepaymentBean implements ResolveRepayment {
         if ( stockUnit == null ) {
             msgs.stockMessage = "Es existiert keine Stock Unit (mehr) zu dem Gerät";
             msgs.redTapeMessage = "Keine StockUnit, Kein Vorgang";
+        } else if ( line != null && line.getPositionType() == UNIT_ANNEX ) {
+            msgs.stockMessage = "Nur eine Teilgutschrift. Gerät wird im System belassen";
+            msgs.redTapeMessage = "Nur eine Teilgutschrift. Gerät wird im System belassen";
         } else {
             LogicTransaction lt = stockUnit.getLogicTransaction();
             long dossierId = lt.getDossierId();
@@ -165,15 +175,19 @@ public class ResolveRepaymentBean implements ResolveRepayment {
         Date startOfYear = Date.from(LocalDate.of(LocalDate.now().getYear(), 1, 1).atStartOfDay(systemDefault()).toInstant());
         Date endOfYear = Date.from(LocalDate.of(LocalDate.now().getYear(), 12, 31).atStartOfDay(systemDefault()).toInstant());
 
-        Report report = reportEmo.request(toReportName(contractor), contractor, startOfYear, endOfYear);
-        line.setComment(comment);
-        report.add(line);
-        msgs.reportMessage = "Repayment Unit " + line.getRefurbishId() + " line " + line.getId() + " resolved in " + report.getName();
-        if ( reference != null ) {
-            L.info("Warrenty Reference exist. Putted also into the report. ReportLine ID of Warrenty:{}", reference.getId());
-            reference.setComment(comment);
-            report.add(reference);
-            msgs.reportMessage += ", including warranty " + reference.getId();
+        if ( line == null ) {
+            msgs.reportMessage = "Repayment Unit " + identifier + " hatte keine Reportinformationen. Nichts zu tun.";
+        } else {
+            Report report = reportEmo.request(toReportName(contractor), contractor, startOfYear, endOfYear);
+            line.setComment(comment);
+            report.add(line);
+            msgs.reportMessage = "Repayment Unit " + line.getRefurbishId() + " line " + line.getId() + " resolved in " + report.getName();
+            if ( reference != null ) {
+                L.info("Warrenty Reference exist. Putted also into the report. ReportLine ID of Warrenty:{}", reference.getId());
+                reference.setComment(comment);
+                report.add(reference);
+                msgs.reportMessage += ", including warranty " + reference.getId();
+            }
         }
         return msgs;
     }
@@ -185,7 +199,7 @@ public class ResolveRepaymentBean implements ResolveRepayment {
      * @return
      */
     public static String toReportName(TradeName contractor) {
-        return contractor.getName() + " Gutschriften " + LocalDate.now().getYear();
+        return contractor.getDescription() + " Gutschriften " + LocalDate.now().getYear();
     }
 
     private void convertToComment(Position position, String arranger, String comment) {
