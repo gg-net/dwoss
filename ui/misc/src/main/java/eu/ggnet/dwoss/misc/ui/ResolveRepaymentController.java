@@ -44,12 +44,15 @@ import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.*;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
 
+import jakarta.enterprise.context.Dependent;
+
 import static javafx.scene.control.SelectionMode.MULTIPLE;
 
 /**
  *
  * @author bastian.venz
  */
+@Dependent
 @Title("Resolve Repayment")
 public class ResolveRepaymentController implements Initializable, FxController, Consumer<TradeName> {
 
