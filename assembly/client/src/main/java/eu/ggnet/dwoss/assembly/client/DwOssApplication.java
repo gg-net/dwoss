@@ -26,6 +26,7 @@ import java.util.concurrent.CompletableFuture;
 import jakarta.enterprise.inject.Instance;
 import jakarta.enterprise.inject.se.SeContainer;
 import jakarta.enterprise.inject.se.SeContainerInitializer;
+
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
@@ -55,6 +56,7 @@ import eu.ggnet.dwoss.assembly.client.support.monitor.MonitorManager;
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
 import eu.ggnet.dwoss.core.widget.dl.RemoteLookup;
 import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeView;
@@ -113,7 +115,7 @@ public class DwOssApplication extends Application {
      * }</li>
      * </ul>
      * </li>
-     * <li>Activating the authentification in the login screen by calling {@link LoginScreenController#setAndActivateGuardian(eu.ggnet.saft.experimental.auth.Guardian)
+     * <li>Activating the authentification in the login screen by calling {@link LoginScreenController#setAndActivateGuardianAndRemote(eu.ggnet.saft.experimental.auth.Guardian)
      * with the remote guardian</li>
      * <li>Start the polling of server progress {@link MonitorManager#startPolling() }</li>
      * <li>Initialize the session timeout and global keys for manual logout and relocation of windows. Ctrl+Shift+L for manual logout and Ctrl+Shift+R for
@@ -150,7 +152,7 @@ public class DwOssApplication extends Application {
                     .thenRun(() -> initRemoteConnection(cp))
                     .thenApply(v -> initMainPane())
                     .thenAcceptAsync(mainView -> startSaftInitMainFrameAndWrapMainPane(mainFrame, mainView, cp), java.awt.EventQueue::invokeLater)
-                    .thenRunAsync(() -> firstLoginScreen.setAndActivateGuardian(Dl.local().lookup(Guardian.class)))
+                    .thenRunAsync(() -> firstLoginScreen.setAndActivateGuardianAndRemote(Dl.local().lookup(Guardian.class), instance.select(RemoteDl.class).get()))
                     .thenRun(() -> initOnceViews())
                     .thenRun(() -> instance.select(MonitorManager.class).get().startPolling())
                     .thenRun(() -> initSessionTimeoutAndManualLogoutKeys())
@@ -208,7 +210,7 @@ public class DwOssApplication extends Application {
      * <li>On a cancel close, the hole application will be shutdown.</li>
      * </ul>
      * After the creation of the controller, no connection to any authentication system has happend.
-     * A call to {@link LoginScreenController#setAndActivateGuardian(eu.ggnet.saft.experimental.auth.Guardian) } is needed later.
+     * A call to {@link LoginScreenController#setAndActivateGuardianAndRemote(eu.ggnet.saft.experimental.auth.Guardian) } is needed later.
      *
      * @param owner     the owner of the dialog, normaly the main pane.
      * @param mainFrame a swing frame to be displayed.
@@ -304,10 +306,9 @@ public class DwOssApplication extends Application {
      *
      * @return the created pane.
      */
-    private Pane initMainPane() {        
+    private Pane initMainPane() {
         instance.select(DwOssClientController.class).get();
-        
-        
+
         FXMLLoader mainLoader = new FXMLLoader(DwOssClientController.class.getResource("DwOssClientView.fxml"), null, null, p -> instance.select(p).get(), StandardCharsets.UTF_8);
         try {
             mainLoader.load();

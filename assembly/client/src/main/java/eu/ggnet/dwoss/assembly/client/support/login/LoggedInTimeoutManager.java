@@ -227,6 +227,7 @@ public class LoggedInTimeoutManager {
                 })
                 .onCancel(() -> UiCore.global().shutdown())
                 .guardian(Dl.local().lookup(Guardian.class))
+                .remote(Dl.remote())
                 .build(), LoginScreenController.class);
     }
 

@@ -24,6 +24,7 @@ import javafx.scene.layout.Pane;
 import org.inferred.freebuilder.FreeBuilder;
 
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
 
 /**
  * Configuration for the LoginScreen.
@@ -58,4 +59,11 @@ public interface LoginScreenConfiguration {
      * @return Guardian for authentication.
      */
     Optional<Guardian> guardian();
+    
+    /**
+     * Optional Remotelookup, used for api verification.
+     * 
+     * @return the remotelookup of empty.
+     */
+    Optional<RemoteDl> remote();
 }

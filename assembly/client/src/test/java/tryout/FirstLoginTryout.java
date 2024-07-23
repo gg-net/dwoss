@@ -28,8 +28,12 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import eu.ggnet.dwoss.assembly.client.support.login.LoginScreenConfiguration;
 import eu.ggnet.dwoss.assembly.client.support.login.LoginScreenController;
+import eu.ggnet.dwoss.core.system.GlobalConfig;
+import eu.ggnet.dwoss.core.system.version.Version;
 import eu.ggnet.dwoss.core.widget.AbstractGuardian;
+import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.auth.AuthenticationException;
 
 /**
@@ -48,6 +52,9 @@ public class FirstLoginTryout {
 
         @Override
         public void start(Stage primaryStage) throws Exception {
+
+            Dl.remote().add(Version.class, (Version)() -> GlobalConfig.API_VERSION+1);
+
             info = new Label("Info here");
             StackPane mainPane = new StackPane(info);
             mainPane.setPrefSize(800, 600);
@@ -55,14 +62,21 @@ public class FirstLoginTryout {
             primaryStage.setScene(new Scene(mainPane));
             primaryStage.show();
 
-            FXMLLoader loader = new FXMLLoader(LoginScreenController.class.getResource("FirstLoginView.fxml"));
+            FXMLLoader loader = new FXMLLoader(LoginScreenController.class.getResource("LoginScreenView.fxml"));
             Parent root = loader.load();
             LoginScreenController controller = loader.getController();
-//            controller.setLoginListener(() -> {
-//                loginStage.close();
-//                info.setText("Login successfull");
-//            });
-//            controller.setCanceledListener(() -> Platform.exit());
+            controller.accept(
+                    new LoginScreenConfiguration.Builder()
+                            .onSuccess(p -> {
+                                System.out.println("success");
+                                System.exit(0);
+                            })
+                            .onCancel(() -> {
+                                System.out.println("cancel");
+                                System.exit(0);
+                            })
+                            .build()
+            );
 
             loginStage = new Stage();
             loginStage.initModality(Modality.APPLICATION_MODAL);
@@ -73,14 +87,14 @@ public class FirstLoginTryout {
 
             // Simulate slowness
             ses.schedule(() -> {
-                controller.setAndActivateGuardian(new AbstractGuardian() {
+                controller.setAndActivateGuardianAndRemote(new AbstractGuardian() {
                     @Override
                     public void login(String user, char[] pass) throws AuthenticationException {
                         if ( "max".equalsIgnoreCase(user) && "pass".equals(String.valueOf(pass)) ) return; // success
                         System.out.println("User:" + user + "|Pass:" + Arrays.toString(pass));
                         throw new AuthenticationException("User or Pass wrong");
                     }
-                });
+                }, Dl.remote());
             }, 4, TimeUnit.SECONDS);
 
         }

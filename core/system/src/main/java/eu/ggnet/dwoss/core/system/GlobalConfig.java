@@ -60,4 +60,9 @@ public final class GlobalConfig {
      */
     public static final String LOCAL_ISO_COUNTRY = "DE";
 
+    /**
+     * Apiversion. Esures, that the client and the Server are compatible.
+     */
+    public static final int API_VERSION = 1; 
+   
 }

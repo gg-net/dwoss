@@ -29,11 +29,15 @@ import javafx.scene.shape.Circle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.core.system.GlobalConfig;
+import eu.ggnet.dwoss.core.system.version.Version;
 import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.saft.core.ui.ClosedListener;
 import eu.ggnet.saft.core.ui.FxController;
 import eu.ggnet.dwoss.core.widget.auth.AuthenticationException;
 import eu.ggnet.dwoss.core.widget.auth.Guardian;
+import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
+import eu.ggnet.dwoss.core.widget.dl.RemoteLookup;
 
 import jakarta.enterprise.context.Dependent;
 
@@ -46,7 +50,7 @@ import jakarta.enterprise.context.Dependent;
  * A failed quicklogin will not be visible.
  * </p>
  * <p>
- * The lazy setting of the authentication system is done via {@link #setAndActivateGuardian(eu.ggnet.saft.experimental.auth.Guardian) }.
+ * The lazy setting of the authentication system is done via {@link #setAndActivateGuardianAndRemote(eu.ggnet.saft.experimental.auth.Guardian) }.
  * The first authentication is happening, if user and pass is supplied and the guardian is set. Both things can happen in paralell.
  * </p>
  * <p>
@@ -59,7 +63,7 @@ import jakarta.enterprise.context.Dependent;
  * @author oliver.guenther
  */
 @Dependent
-public class LoginScreenController implements ClosedListener, Consumer<LoginScreenConfiguration>, FxController {
+public class LoginScreenController implements ClosedListener, FxController, Consumer<LoginScreenConfiguration> {
 
     private static class AuthenticationData {
 
@@ -111,11 +115,15 @@ public class LoginScreenController implements ClosedListener, Consumer<LoginScre
 
     private Optional<AuthenticationData> authenticationData = Optional.empty();
 
+    private Optional<RemoteDl> remote = Optional.empty();
+
     private Consumer<Pane> onSuccess;
 
     private Runnable onCancel;
 
     private boolean quickLogin = false;
+
+    private boolean apiValid = false;
 
     private String quickLoginValue = "";
 
@@ -171,15 +179,25 @@ public class LoginScreenController implements ClosedListener, Consumer<LoginScre
      * Setting the Guardian and if authetication data is available, starts the authentication.
      *
      * @param guardian the guardian
+     * @param remote   the remote lookup
      */
-    public void setAndActivateGuardian(Guardian guardian) {
+    public void setAndActivateGuardianAndRemote(Guardian guardian, RemoteDl remote) {
         this.guardian = Optional.ofNullable(guardian);
-        if ( this.guardian.isPresent() ) {
-            Platform.runLater(() -> {
-                statusLabel.setText("Serververbindung hergestellt");
-                connectionCircle.setFill(javafx.scene.paint.Color.GREEN);
-            });
-            lazyAuthenticate();
+        this.remote = Optional.ofNullable(remote);
+        if ( this.guardian.isPresent() && this.remote.isPresent() ) {
+            if ( GlobalConfig.API_VERSION != remote.lookup(Version.class).api() ) {
+                Platform.runLater(() -> {
+                    statusLabel.setText("ApiVersion stimmt nicht überein. Server:" + remote.lookup(Version.class).api() + ", Client:" + GlobalConfig.API_VERSION);
+                    connectionCircle.setFill(javafx.scene.paint.Color.MEDIUMVIOLETRED);
+                });                
+            } else {
+                apiValid = true;
+                Platform.runLater(() -> {
+                    statusLabel.setText("Serververbindung hergestellt");
+                    connectionCircle.setFill(javafx.scene.paint.Color.GREEN);
+                });
+                lazyAuthenticate();
+            }
         }
     }
 
@@ -189,6 +207,7 @@ public class LoginScreenController implements ClosedListener, Consumer<LoginScre
     private synchronized void lazyAuthenticate() {
         if ( !guardian.isPresent() ) return;
         if ( !authenticationData.isPresent() ) return;
+        if ( !apiValid ) return;
         try {
             guardian.get().login(authenticationData.get().userName, authenticationData.get().passWord);
             authenticationSuccessful = true;
@@ -233,7 +252,7 @@ public class LoginScreenController implements ClosedListener, Consumer<LoginScre
     public void accept(LoginScreenConfiguration c) {
         onSuccess = c.onSuccess();
         onCancel = c.onCancel();
-        c.guardian().ifPresent(g -> setAndActivateGuardian(g));
+        setAndActivateGuardianAndRemote(c.guardian().orElse(null), c.remote().orElse(null));
     }
 
 }
