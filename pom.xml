@@ -523,13 +523,13 @@
                 <version>5.0.0</version>
                 <classifier>jakarta</classifier>
             </dependency>
-            <dependency> <!-- Must be same as server for ejb connection. TODO: muss noch auf 30 umgestellt werden. -->
+            <dependency> <!-- Must be same as server for ejb connection. -->
                 <groupId>org.wildfly</groupId>
                 <artifactId>wildfly-ejb-client-bom</artifactId>
-                <version>30.0.0.Final</version>
+                <version>30.0.1.Final</version>
                 <type>pom</type>
             </dependency>
-            <dependency> <!-- For Indexer connection - keep in sync with wildfly, w18 = 5.10.7.Final, w29 = 6.2.final (groupid changed also) -->
+            <dependency> <!-- For Indexer connection - keep in sync with wildfly, w30 = 6.2.final (groupid changed also) -->
                 <groupId>org.hibernate.search</groupId>
                 <artifactId>hibernate-search-mapper-orm-orm6</artifactId>
                 <version>6.2.0.Final</version>

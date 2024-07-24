@@ -29,8 +29,8 @@ import com.beust.jcommander.Parameters;
 @Parameters(separators = "=")
 public class ConnectionParameter {
 
-    @Parameter(names = "--protocol", description = "Protocol to connect to the Wildfly server, either remote+https or remote+http")
-    private String protocol = "remote+https";
+    @Parameter(names = "--protocol", description = "Protocol to connect to the Wildfly server: http, https, remote+https or remote+http")
+    private String protocol = "https";
 
     @Parameter(names = "--host", description = "Hostname of the Wildfly server", required = true)
     private String host;
