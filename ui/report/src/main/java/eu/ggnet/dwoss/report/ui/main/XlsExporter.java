@@ -80,6 +80,7 @@ public class XlsExporter {
         template.add(new STableColumn("DocumenType", 15));
         template.add(new STableColumn("Workflow", 15));
         template.add(new STableColumn("Bemerkung", 30));
+        template.add(new STableColumn("Vorgang", 30));
 
         ReportParameter parameter = report.getParameter();
 
@@ -159,7 +160,8 @@ public class XlsExporter {
                 line.getPositionType().getName(),
                 line.getDocumentType().getName(),
                 line.getWorkflowStatus(),
-                line.getComment()
+                line.getComment(),
+                line.getDossierIdentifier()
             };
             newLinesData.add(data);
         }
