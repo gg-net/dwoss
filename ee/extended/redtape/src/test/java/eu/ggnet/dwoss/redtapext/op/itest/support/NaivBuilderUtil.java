@@ -59,6 +59,22 @@ public class NaivBuilderUtil {
         return comment("TestKommentar", "Ein Test Kommentar");
     }
 
+    public static Position longComment() {
+        return comment("TestKommentar", "You can run maven in offline mode mvn -o install. Of course any artifacts not available in your local "
+                + "repository will fail. Maven is not predicated on distributed repositories, but they certainly make things more seamless. "
+                + "Its for this reason that many shops use internal mirrors that are incrementally synced with the central repos.In addition, "
+                + "the mvn dependency:go-offline can be used to ensure you have all of your dependencies installed locally before you begin "
+                + "to work offline.You can run maven in offline mode mvn -o install. Of course any artifacts not available in your local "
+                + "repository will fail. Maven is not predicated on distributed repositories, but they certainly make things more seamless. "
+                + "Its for this reason that many shops use internal mirrors that are incrementally synced with the central repos.In addition, "
+                + "the mvn dependency:go-offline can be used to ensure you have all of your dependencies installed locally before you begin "
+                + "to work offline.You can run maven in offline mode mvn -o install. Of course any artifacts not available in your local "
+                + "repository will fail. Maven is not predicated on distributed repositories, but they certainly make things more seamless. "
+                + "Its for this reason that many shops use internal mirrors that are incrementally synced with the central repos.In addition, "
+                + "the mvn dependency:go-offline can be used to ensure you have all of your dependencies installed locally before you begin "
+                + "to work offline.");
+    }
+    
     public static Position comment(String title, String description) {
         return Position.builder()
                 .type(PositionType.COMMENT).tax(taxType.tax()).name(title).description(description).build();

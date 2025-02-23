@@ -174,8 +174,8 @@ public class MandatorMetaDataController implements Initializable, FxController, 
         paymentConditionComboBox.getItems().setAll(PaymentCondition.values());
         paymentMethodComboBox.getItems().setAll(PaymentMethod.values());
 
-        shippingConditionComboBox.setCellFactory((ListView<ShippingCondition> p) -> new FunctionListCell<>(i -> i.description));
-        shippingConditionComboBox.setButtonCell(new FunctionListCell<>(i -> i.description));
+        shippingConditionComboBox.setCellFactory((ListView<ShippingCondition> p) -> new FunctionListCell<>(i -> i.description()));
+        shippingConditionComboBox.setButtonCell(new FunctionListCell<>(i -> i.description()));
 
         paymentConditionComboBox.setCellFactory((ListView<PaymentCondition> p) -> new FunctionListCell<>(i -> i.description));
         paymentConditionComboBox.setButtonCell(new FunctionListCell<>(i -> i.description));
@@ -184,7 +184,7 @@ public class MandatorMetaDataController implements Initializable, FxController, 
         paymentMethodComboBox.setButtonCell(new FunctionListCell<>(i -> i.description));
 
         defaultCsd = Dl.local().lookup(CachedMandators.class).loadSalesdata();
-        defaultshippingConditionTextField.setText(defaultCsd.shippingCondition().description);
+        defaultshippingConditionTextField.setText(defaultCsd.shippingCondition().description());
         defaultpaymentConditionTextField.setText(defaultCsd.paymentCondition().description);
         defaultpaymentMethodTextField.setText(defaultCsd.paymentMethod().description);
         defaultSalesChannelsListView.getItems().forEach(i -> {

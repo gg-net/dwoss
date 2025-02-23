@@ -179,9 +179,6 @@ public class ReportController implements Initializable, FxController, Consumer<R
     @FXML
     Button exportButton;
 
-    @FXML
-    Button fullExportButton;
-
     @Bind(TITLE)
     private StringProperty titleProperty = new SimpleStringProperty("Report Ansicht");
 
@@ -192,10 +189,6 @@ public class ReportController implements Initializable, FxController, Consumer<R
     private final BooleanProperty viewmode = new SimpleBooleanProperty(true);
 
     public ReportController() {
-    }
-
-    public Button getFullExportButton() {
-        return fullExportButton;
     }
 
     @Override

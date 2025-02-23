@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.17.0.final using JasperReports Library version 6.17.0-6d93193241dd8cc42629e188b94f9e0bc5722efd  -->
+<!-- Created with Jaspersoft Studio version 6.21.3.final using JasperReports Library version 6.21.3-4a3078d20785ebe464f18037d738d12fc98c13cf  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Document" pageWidth="595" pageHeight="842" columnWidth="507" leftMargin="60" rightMargin="28" topMargin="40" bottomMargin="28" uuid="bd31a193-c9b0-4028-acf3-be07d14d37f5">
 	<property name="ireport.zoom" value="1.7715610000000606"/>
 	<property name="ireport.x" value="291"/>
@@ -108,8 +108,7 @@
 		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.getOrDefault("SUM_BRUTTO",Double.valueOf(999.9))]]></variableExpression>
 	</variable>
 	<variable name="SUM_TAX" class="java.lang.Double">
-		<variableExpression><![CDATA[
-$P{REPORT_PARAMETERS_MAP}.getOrDefault("SUM_TAX",Double.valueOf(-0.49999))]]></variableExpression>
+		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.getOrDefault("SUM_TAX",Double.valueOf(-0.49999))]]></variableExpression>
 	</variable>
 	<variable name="IDENTIFIER_TYPE" class="java.lang.String">
 		<variableExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.getOrDefault("IDENTIFIER_TYPE","IDENTIFIER_TYPE leer")]]></variableExpression>
@@ -228,7 +227,7 @@ $P{REPORT_PARAMETERS_MAP}.getOrDefault("SUM_TAX",Double.valueOf(-0.49999))]]></v
 	<title>
 		<band height="316" splitType="Stretch">
 			<textField evaluationTime="Report" pattern="yyyy-MM-dd">
-				<reportElement x="426" y="157" width="80" height="11" uuid="925772e9-ae12-4fa8-8e98-38def241a4c0"/>
+				<reportElement x="410" y="157" width="96" height="11" uuid="925772e9-ae12-4fa8-8e98-38def241a4c0"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="false" isItalic="false"/>
 				</textElement>
@@ -257,35 +256,35 @@ $P{REPORT_PARAMETERS_MAP}.getOrDefault("SUM_TAX",Double.valueOf(-0.49999))]]></v
 				<textFieldExpression><![CDATA[$V{IDENTIFIER_TYPE}]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="426" y="124" width="80" height="11" uuid="50560533-f1ec-4561-9d87-7993f665080a"/>
+				<reportElement x="410" y="124" width="96" height="11" uuid="50560533-f1ec-4561-9d87-7993f665080a"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="true" isItalic="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{IDENTIFIER_ID}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="356" y="135" width="70" height="11" uuid="c377f292-b0f1-4091-b473-f5d795690408"/>
+				<reportElement x="356" y="135" width="54" height="11" uuid="c377f292-b0f1-4091-b473-f5d795690408"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="8" isUnderline="false"/>
 				</textElement>
-				<text><![CDATA[Kundennummer:]]></text>
+				<text><![CDATA[Kundennr.:]]></text>
 			</staticText>
 			<textField evaluationTime="Report">
-				<reportElement x="426" y="135" width="80" height="11" uuid="8f1e9692-2dca-4072-8493-8ec15f1dcb29"/>
+				<reportElement x="410" y="135" width="96" height="11" uuid="8f1e9692-2dca-4072-8493-8ec15f1dcb29"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{CUSTOMER_ID}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="356" y="146" width="70" height="11" uuid="d3cf0d0e-8b1b-4265-9b8d-c67b9e0242bf"/>
+				<reportElement x="356" y="146" width="54" height="11" uuid="d3cf0d0e-8b1b-4265-9b8d-c67b9e0242bf"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Leistung am:]]></text>
 			</staticText>
 			<textField evaluationTime="Report" pattern="yyyy-MM-dd">
-				<reportElement x="426" y="146" width="80" height="11" uuid="04b865e1-01e8-43b0-a541-cee36b5a2bd5"/>
+				<reportElement x="410" y="146" width="96" height="11" uuid="04b865e1-01e8-43b0-a541-cee36b5a2bd5"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
@@ -299,7 +298,7 @@ $P{REPORT_PARAMETERS_MAP}.getOrDefault("SUM_TAX",Double.valueOf(-0.49999))]]></v
 				<text><![CDATA[* bitte bei Zahlungen und Korrespondenz angeben]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="356" y="124" width="70" height="11" uuid="852bb102-1531-4e2c-bec7-ce1d783ad3f3"/>
+				<reportElement x="356" y="124" width="54" height="11" uuid="852bb102-1531-4e2c-bec7-ce1d783ad3f3"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="8" isBold="false"/>
 				</textElement>
@@ -313,7 +312,7 @@ $P{REPORT_PARAMETERS_MAP}.getOrDefault("SUM_TAX",Double.valueOf(-0.49999))]]></v
 				<text><![CDATA[Vorgangsdaten]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="356" y="157" width="70" height="11" uuid="d3cf0d0e-8b1b-4265-9b8d-c67b9e0242bf"/>
+				<reportElement x="356" y="157" width="54" height="11" uuid="d3cf0d0e-8b1b-4265-9b8d-c67b9e0242bf"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
@@ -327,14 +326,14 @@ $P{REPORT_PARAMETERS_MAP}.getOrDefault("SUM_TAX",Double.valueOf(-0.49999))]]></v
 				<textFieldExpression><![CDATA[$V{SHIPPING_ADDRESS_HEAD}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="356" y="168" width="70" height="11" uuid="aadf0d04-d1f0-4b13-b769-7112db94bd54"/>
+				<reportElement x="356" y="168" width="54" height="11" uuid="aadf0d04-d1f0-4b13-b769-7112db94bd54"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="8" isBold="false" isItalic="false" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Referenz*]]></text>
 			</staticText>
 			<textField evaluationTime="Report">
-				<reportElement x="426" y="168" width="80" height="11" uuid="896cf0f6-e4d5-43e4-9748-297274f88c0b"/>
+				<reportElement x="410" y="168" width="96" height="11" uuid="896cf0f6-e4d5-43e4-9748-297274f88c0b"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>

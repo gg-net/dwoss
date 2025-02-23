@@ -65,6 +65,7 @@ public class DocumentRendererTryout {
         NaivBuilderUtil.overwriteTax(doc.getTaxType());
 
         doc.append(NaivBuilderUtil.comment());
+        doc.append(NaivBuilderUtil.longComment());
         doc.append(NaivBuilderUtil.service());
         doc.append(NaivBuilderUtil.shippingcost());
 
@@ -72,7 +73,7 @@ public class DocumentRendererTryout {
         System.out.println("Netto " + doc.getPrice());
         System.out.println("Brutto: " + doc.toAfterTaxPrice());
         System.out.println("SumTax: " + (doc.toAfterTaxPrice() - doc.getPrice()));
-        return documentSupporter.render(doc, DocumentViewType.DEFAULT);
+        return documentSupporter.render(doc, DocumentViewType.SHIPPING);
     }
 
     private static void show() throws Exception {

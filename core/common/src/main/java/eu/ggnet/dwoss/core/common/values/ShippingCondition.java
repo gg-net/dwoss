@@ -23,22 +23,27 @@ package eu.ggnet.dwoss.core.common.values;
  */
 public enum ShippingCondition {
 
-    SIX_MIN_TEN("6€/Gerät min. 10€", 10, 6), FIVE("5€/Gerät", 5, 5), SIX("6€/Gerät", 6, 6), FIVE_EIGHTY("5,80€/Gerät", 5.8, 5.8);
+    SIX_MIN_TEN("6€/Gerät min. 10€", 10, 6), 
+    FIVE("5€/Gerät", 5, 5),
+    SIX("6€/Gerät", 6, 6), 
+    FIVE_EIGHTY("5,80€/Gerät", 5.8, 5.8),
+    SIX_SIXTYFOUR("6,64€/Gerät", 6.64, 6.64), 
+    THREE_TWENTYEIGHT("3,28€/Gerät", 3.28, 3.28);
 
     /**
      * A short (german) description.
      */
-    public final String description;
+    private final String description;
 
     /**
      * Price of a single unit shipping
      */
-    public final double priceOfOne;
+    private final double priceOfOne;
 
     /**
      * Multiplicator for shippings of multiple unit
      */
-    public final double multiplicator;
+    private final double multiplicator;
 
     private ShippingCondition(String name, double priceOfOne, double multiplicator) {
         this.description = name;
@@ -50,7 +55,7 @@ public enum ShippingCondition {
      * A short (german) description.
      *
      * @return a short (german) description.
-     * @deprecated use field description.
+     * @deprecated use {@link ShippingCondition#description() }.
      */
     @Deprecated
     public String getName() {
@@ -58,10 +63,19 @@ public enum ShippingCondition {
     }
 
     /**
+     * A short (german) description.
+     *
+     * @return a short (german) description.
+     */
+    public String description() {
+        return description;
+    }
+
+    /**
      * Returns the price for one unit.
      *
      * @return the price for one unit.
-     * @deprecated use field priceOfOne
+     * @deprecated use {@link ShippingCondition#priceOfOne() }.
      */
     @Deprecated
     public double getPriceOfOne() {
@@ -69,14 +83,33 @@ public enum ShippingCondition {
     }
 
     /**
+     * Returns the price for one unit.
+     *
+     * @return the price for one unit.
+     */
+    public double priceOfOne() {
+        return priceOfOne;
+    }
+
+    /**
      * Returns the price for multiple units.
      *
      * @return the price for multiple units.
-     * @deprecated use field multiplicator
+     * @deprecated use {@link ShippingCondition#multiplicator() }
      */
     @Deprecated
     public double getMultiplicator() {
         return multiplicator;
     }
 
+    /**
+     * Returns the price for multiple units.
+     *
+     * @return the price for multiple units.
+     */
+    public double multiplicator() {
+        return multiplicator;
+    }
+    
+    
 }
