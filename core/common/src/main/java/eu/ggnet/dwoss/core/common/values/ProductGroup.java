@@ -45,7 +45,10 @@ public enum ProductGroup implements INoteModel {
     TABLET_SMARTPHONE("Tablet/SmartPhone"),
     PHONE("SimplePhone"),
     IPHONE("iPhone"),
-    IPAD("iPad");
+    IPAD("iPad"),
+    NOTEBOOK_2025("Notebook 2025"),
+    DESKTOP_2025("Desktop 2025"),
+    MONITOR_2025("Monitor 2025");
 
     /**
      * A short (german) description.
