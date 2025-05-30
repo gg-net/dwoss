@@ -144,6 +144,9 @@ public abstract class ProductSpec extends BaseEntity implements Serializable, Ea
             case PHONE:
             case IPAD:
             case IPHONE:
+            case NOTEBOOK_2025:
+            case DESKTOP_2025:
+            case MONITOR_2025:
                 return new BasicSpec();
             case COMMENTARY:
             default:
