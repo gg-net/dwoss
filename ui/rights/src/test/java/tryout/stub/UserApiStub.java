@@ -148,7 +148,7 @@ public class UserApiStub implements UserApi {
         user.setPassword(hashPassword);
         user.setSalt(salt);
         User u = user.toApiUser();
-        L.debug("updatePassword(): set password to {}", user.getPassword());
+        L.info("updatePassword(): set password to {}", user.getPassword());
         return u;
     }
 

@@ -28,12 +28,9 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
-import eu.ggnet.dwoss.spec.ee.assist.SpecConstants;
-import eu.ggnet.dwoss.spec.ee.assist.SpecPu;
 import eu.ggnet.dwoss.spec.ee.assist.Specs;
 import eu.ggnet.dwoss.spec.ee.eao.*;
 import eu.ggnet.dwoss.spec.ee.emo.DisplayEmo;
-import eu.ggnet.dwoss.spec.ee.emo.ProductModelEmo;
 import eu.ggnet.dwoss.spec.ee.entity.*;
 import eu.ggnet.dwoss.spec.ee.entity.piece.*;
 import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
@@ -62,9 +59,6 @@ public class ProductProcessorOperation implements ProductProcessor {
     
     @Inject
     private ProductFamilyEao pfEao;
-    
-    @Inject
-    private ProductSeriesEao psEao;
     
     @Inject
     private ProductModelEao pmEao;
@@ -198,16 +192,14 @@ public class ProductProcessorOperation implements ProductProcessor {
             throw new IllegalStateException("No spec.ProductModel with Id=" + sam.modelId() + ", should be impossible");
 
         spec.setModel(model);
-        if ( spec instanceof DisplayAble ) {
-            DisplayAble da = (DisplayAble)spec;
+        if ( spec instanceof DisplayAble da ) {
             da.setDisplay(new DisplayEmo(specEm).weakRequest(
                     da.getDisplay().getSize(),
                     da.getDisplay().getResolution(),
                     da.getDisplay().getType(),
                     da.getDisplay().getRation()));
         }
-        if ( spec instanceof Desktop ) {
-            Desktop desktop = (Desktop)spec;
+        if ( spec instanceof Desktop desktop ) {
             if ( desktop.getCpu() == null || desktop.getGpu() == null ) throw new IllegalArgumentException("Cpu or Gpu of a Desktop are null. " + desktop);
             Cpu cpu = new CpuEao(specEm).findById(desktop.getCpu().getId());
             Gpu gpu = new GpuEao(specEm).findById(desktop.getGpu().getId());

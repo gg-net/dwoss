@@ -415,7 +415,9 @@ public class RightsManagementController implements Initializable, FxController {
         changePasswordButton.disableProperty().bind(userListView.getSelectionModel().selectedIndexProperty().isEqualTo(-1));
         
         changePasswordButton.setOnAction(e -> {
-            saft.build(changePasswordButton).fx().eval(() -> selectedUser,ChangePasswordPane.class).cf().thenAccept(p -> System.out.println(p));
+            saft.build(changePasswordButton).fx()
+                    .eval(() -> selectedUser,ChangePasswordPane.class).cf()
+                    .thenAccept(p -> userApi.updatePassword(p.id(), p.password()));
         });
 
         //closeButton

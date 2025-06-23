@@ -198,15 +198,21 @@ public class ContactUpdateController implements Initializable, FxController, Con
         genderBox.setConverter(new StringConverter<Sex>() {
             @Override
             public Sex fromString(String string) {
-                throw new UnsupportedOperationException("Invalid operation for Convert a String into a Sex.");
+                for (Sex sex : Sex.values()) {
+                    if ( sex.getSign().equals(string) ) return sex;
+                }
+                return null;
             }
 
             @Override
-            public String toString(Sex myClassinstance) {
-                return myClassinstance.getSign();
+            public String toString(Sex sex) {
+                if ( sex == null ) return "?";
+                return sex.getSign();
             }
         });
         genderBox.getItems().addAll(Contact.Sex.values());
+        genderBox.getItems().add(null);
+        genderBox.getSelectionModel().select(null);
 
         //Address HORIZONTAL CellFactory
         addressListView.setCellFactory((ListView<Address> p) -> {

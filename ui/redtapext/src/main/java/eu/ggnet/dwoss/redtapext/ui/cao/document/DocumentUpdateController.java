@@ -78,19 +78,16 @@ public class DocumentUpdateController {
      */
     public void addPosition(long dossierId, PositionType type, String refurbishId, boolean forceAdd) throws UserInfoException {
         switch (type) {
-            case UNIT:
+            case UNIT -> {
                 List<Position> result = Dl.remote().lookup(UnitOverseer.class)
                         .createUnitPosition(refurbishId, document.getId()).request(new SwingInteraction(view));
                 for (Position p : result) {
                     if ( p.getType() == UNIT ) Dl.remote().lookup(UnitOverseer.class).lockStockUnit(dossierId, p.getRefurbishedId());
                 }
                 document.appendAll(result);
-                break;
-            case SERVICE:
-                createServicePosition();
-                break;
-            case PRODUCT_BATCH:
-                Ui.build(view).title("Artikel hinzufügen").swing()
+            }
+            case SERVICE -> createServicePosition();
+            case PRODUCT_BATCH -> Ui.build(view).title("Artikel hinzufügen").swing()
                         .eval(() -> Dl.remote().lookup(RedTapeAgent.class).findAll(SalesProduct.class), () -> OkCancelWrap.consumerVetoResult(new SalesProductChooserCask())).cf()
                         .thenAccept(pb -> {
                             Position p = Position.builder()
@@ -106,13 +103,8 @@ public class DocumentUpdateController {
                             document.append(editPosition(p));
                             view.refreshAll();
                         });
-                break;
-            case COMMENT:
-                document.append(createCommentPosition());
-                break;
-            case SHIPPING_COST:
-                ShippingCostHelper.modifyOrAddShippingCost(document, Dl.remote().lookup(CustomerService.class).asCustomerMetaData(view.getCustomerId()).shippingCondition());
-                break;
+            case COMMENT -> document.append(createCommentPosition());
+            case SHIPPING_COST -> ShippingCostHelper.modifyOrAddShippingCost(document, Dl.remote().lookup(CustomerService.class).asCustomerMetaData(view.getCustomerId()).shippingCondition());
         }
     }
 

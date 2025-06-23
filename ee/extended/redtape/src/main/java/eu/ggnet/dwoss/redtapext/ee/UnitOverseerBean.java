@@ -137,7 +137,7 @@ public class UnitOverseerBean implements UnitOverseer {
                 .uniqueUnitId(uu.getId())
                 .uniqueUnitProductId(uu.getProduct().getId())
                 .name(UniqueUnitFormater.toPositionName(uu))
-                .description(UniqueUnitFormater.toDetailedDiscriptionLine(uu))
+                .description(UniqueUnitFormater.toDetailedDiscriptionLine(uu) + "\n")  // (OG) PDF Hack.
                 .build();
 
         if ( redTapeHook.isUnsatisfied() ) return new Result(Arrays.asList(p)); //return Result

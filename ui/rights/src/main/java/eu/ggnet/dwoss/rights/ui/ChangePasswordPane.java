@@ -23,6 +23,9 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import eu.ggnet.dwoss.rights.api.User;
 import eu.ggnet.saft.core.ui.*;
 
@@ -36,25 +39,55 @@ import static eu.ggnet.saft.core.ui.Bind.Type.SHOWING;
  */
 @Title("Password ändern")
 @Dependent
-public class ChangePasswordPane extends GridPane implements Consumer<User>, ResultProducer<String> {    
+public class ChangePasswordPane extends GridPane implements Consumer<User>, ResultProducer<ChangePasswordPane.PasswordChange> {
     
+    public static class PasswordChange {
+        
+        private final long id;
+        
+        private final char[] password;
+
+        public PasswordChange(long id, char[] password) {
+            this.id = id;
+            this.password = password;
+        }
+
+        public long id() {
+            return id;
+        }
+
+        public char[] password() {
+            return password;
+        }
+
+        @Override
+        public String toString() {
+            return "PasswordChange{" + "id=" + id + ", password=" + password + '}';
+        }
+        
+    }
+
     @Bind(SHOWING)
     private BooleanProperty showing = new SimpleBooleanProperty();
+    
+    private final static Logger L = LoggerFactory.getLogger(ChangePasswordPane.class);
 
     private boolean succsess = false;
 
-    private final PasswordField pf0 = new PasswordField();
+    private final PasswordField passwordField = new PasswordField();
 
     private final Label userName = new Label();
-    
+
+    private User user;
+
     public ChangePasswordPane() {
-        
-        add(new Label("Benutzer:"),0,0);
-        add(userName,1,0);
-        
+
+        add(new Label("Benutzer:"), 0, 0);
+        add(userName, 1, 0);
+
         add(new Label("Password:"), 0, 1);
 
-        add(pf0, 1, 1);
+        add(passwordField, 1, 1);
         add(new Label("Wiederholen"), 0, 2);
         PasswordField pf1 = new PasswordField();
         add(pf1, 1, 2);
@@ -66,7 +99,7 @@ public class ChangePasswordPane extends GridPane implements Consumer<User>, Resu
         Button cancel = new Button("Abbrechen");
         cancel.setOnAction(e -> showing.set(false));
 
-        ok.disableProperty().bind(pf0.textProperty().isEmpty().or(pf0.textProperty().isNotEqualTo(pf1.textProperty())));
+        ok.disableProperty().bind(passwordField.textProperty().isEmpty().or(passwordField.textProperty().isNotEqualTo(pf1.textProperty())));
 
         FlowPane buttons = new FlowPane(ok, cancel);
         add(buttons, 0, 3, 2, 1);
@@ -75,13 +108,26 @@ public class ChangePasswordPane extends GridPane implements Consumer<User>, Resu
 
     @Override
     public void accept(User user) {
-         userName.setText(user.getUsername());
+        this.user = user;
+        userName.setText(user.getUsername());
     }
 
     @Override
-    public String getResult() {
+    public ChangePasswordPane.PasswordChange getResult() {
         if ( !succsess ) return null;
-        return pf0.getText();
+        if ( user == null) {
+            L.warn("User is null, was never set");
+            return null;
+        }
+        if (user.getId().isEmpty() || user.getId().get() == 0) {
+            L.warn("User.id is unset or 0, persistence not possible");
+            return null;
+        }
+        if (passwordField.getText().isBlank()) {
+            L.warn("Password is blank");
+            return null;            
+        }
+        return new PasswordChange(user.getId().get(), passwordField.getText().toCharArray());
     }
 
 }
