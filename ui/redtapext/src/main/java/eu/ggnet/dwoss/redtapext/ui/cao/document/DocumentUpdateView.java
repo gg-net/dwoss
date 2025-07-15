@@ -110,7 +110,6 @@ public class DocumentUpdateView extends javax.swing.JPanel implements VetoableOn
         moveUpButton.setIcon(new ImageIcon(loadUp()));
         moveDownButton.setIcon(new ImageIcon(loadDown()));
         removePositionButton.setIcon(new ImageIcon(loadMinus()));
-        convertToWarrantyPositionButton.setIcon(new ImageIcon(loadAddCoin()));
 
         initFxComponents();
         this.document = document;
@@ -118,8 +117,6 @@ public class DocumentUpdateView extends javax.swing.JPanel implements VetoableOn
         this.accessCos = Dl.local().lookup(Guardian.class);
         accessCos.add(taxChangeButton, CHANGE_TAX);
         refreshAddressArea();
-
-        if ( !Dl.remote().contains(WarrantyHook.class) ) convertToWarrantyPositionButton.setVisible(false);
 
         if ( document.isClosed() || EnumSet.of(DocumentType.COMPLAINT, DocumentType.CREDIT_MEMO, DocumentType.ANNULATION_INVOICE).contains(document.getType()) ) {
             disableComponents(addProductBatchButton, addUnitButton, unitInputField, addServiceButton, shippingCostButton);
@@ -288,7 +285,6 @@ public class DocumentUpdateView extends javax.swing.JPanel implements VetoableOn
         taxChangeButton = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JSeparator();
         positionPanelFx = new javax.swing.JPanel();
-        convertToWarrantyPositionButton = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(800, 600));
         setLayout(new java.awt.GridBagLayout());
@@ -555,21 +551,6 @@ public class DocumentUpdateView extends javax.swing.JPanel implements VetoableOn
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 3.0;
         add(positionPanelFx, gridBagConstraints);
-
-        convertToWarrantyPositionButton.setToolTipText("Garantie manuell erweitern");
-        convertToWarrantyPositionButton.setMaximumSize(new java.awt.Dimension(40, 40));
-        convertToWarrantyPositionButton.setMinimumSize(new java.awt.Dimension(40, 40));
-        convertToWarrantyPositionButton.setPreferredSize(new java.awt.Dimension(40, 40));
-        convertToWarrantyPositionButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                convertToWarrantyPositionButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 10;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        add(convertToWarrantyPositionButton, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void changePositionOrderAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changePositionOrderAction
@@ -665,24 +646,6 @@ public class DocumentUpdateView extends javax.swing.JPanel implements VetoableOn
         controller.resetAddressesToCustomerData();
     }//GEN-LAST:event_resetAddressesButtonActionPerformed
 
-    private void convertToWarrantyPositionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_convertToWarrantyPositionButtonActionPerformed
-        if ( !positionsFxList.getSelectionModel().isEmpty() ) {
-            Platform.runLater(() -> {
-                try {
-                    //constructor made sure the service is present
-                    document.appendAll(
-                            Dl.remote().lookup(WarrantyHook.class)
-                                    .addWarrantyForUnitPosition(positionsFxList.getSelectionModel().getSelectedItem(), document.getId())
-                                    .request(new SwingInteraction(this)));
-                    positions.clear();
-                    positions.addAll(document.getPositions().values());
-                } catch (UserInfoException ex) {
-                    Ui.handle(ex);
-                }
-            });
-        }
-    }//GEN-LAST:event_convertToWarrantyPositionButtonActionPerformed
-
     private void taxChangeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_taxChangeButtonActionPerformed
         Ui.exec(() -> {
             Ui.build(this).fx().eval(() -> new TaxChangePane()).opt().ifPresent(taxType -> {
@@ -704,7 +667,6 @@ public class DocumentUpdateView extends javax.swing.JPanel implements VetoableOn
     private javax.swing.JButton addServiceButton;
     private javax.swing.JButton addUnitButton;
     private javax.swing.JTextPane addressesArea;
-    private javax.swing.JButton convertToWarrantyPositionButton;
     private javax.swing.JButton editInvoiceAddressButton;
     private javax.swing.JButton editShippingAddress;
     private javax.swing.JLabel jLabel1;
