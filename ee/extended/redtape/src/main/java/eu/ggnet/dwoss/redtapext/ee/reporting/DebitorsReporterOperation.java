@@ -92,7 +92,7 @@ public class DebitorsReporterOperation implements DebitorsReporter {
             UiCustomer c = customerService.asUiCustomer(document.getDossier().getCustomerId());
             List<Integer> uuIds = document.getPositions().values().stream()
                     .filter(p -> p.getUniqueUnitId() > 0)
-                    .map(p -> p.getId())
+                    .map(p -> p.getUniqueUnitId())
                     .collect(Collectors.toList());
             List<UniqueUnit> units = uniqueUnitEao.findByIds(uuIds);
 
