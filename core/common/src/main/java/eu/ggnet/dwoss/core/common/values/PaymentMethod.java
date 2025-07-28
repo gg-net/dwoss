@@ -64,7 +64,7 @@ public enum PaymentMethod {
      * A short (german) description.
      *
      * @return a short (german) description.
-     * @deprecated use field description.
+     * @deprecated use description().
      */
     @Deprecated
     public String getNote() {
@@ -72,13 +72,31 @@ public enum PaymentMethod {
     }
 
     /**
+     * A short (german) description.
+     *
+     * @return a short (german) description.
+     */
+    public String description() {
+        return description;
+    }
+
+    /**
      * Text in the order document.
      *
      * @return text in the order document
-     * @deprecated use field orderText.
+     * @deprecated use orderText().
      */
     @Deprecated
     public String getOrderText() {
+        return orderText;
+    }
+
+    /**
+     * Text in the order document.
+     *
+     * @return text in the order document
+     */
+    public String orderText() {
         return orderText;
     }
 

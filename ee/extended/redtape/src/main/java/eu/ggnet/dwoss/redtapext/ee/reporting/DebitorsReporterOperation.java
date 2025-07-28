@@ -28,22 +28,23 @@ import eu.ggnet.lucidcalc.LucidCalc;
 
 import java.io.File;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
 
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
 import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
 import eu.ggnet.dwoss.core.system.progress.SubMonitor;
-import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.eao.DocumentEao;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 
 import eu.ggnet.dwoss.core.common.values.DocumentType;
 
 import eu.ggnet.dwoss.core.common.FileJacket;
+import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.BOLD_ITALIC;
 import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.*;
@@ -62,14 +63,16 @@ import static java.awt.Color.*;
 public class DebitorsReporterOperation implements DebitorsReporter {
 
     @Inject
-    @RedTapes
-    private EntityManager redTapeEm;
-
-    @Inject
     private MonitorFactory monitorFactory;
 
     @Inject
     private CustomerServiceBean customerService;
+
+    @Inject
+    private DocumentEao documentEao;
+
+    @Inject
+    private UniqueUnitEao uniqueUnitEao;
 
     /**
      * Creates the Report
@@ -81,13 +84,18 @@ public class DebitorsReporterOperation implements DebitorsReporter {
     public FileJacket toXls(Date start, Date end) {
         SubMonitor m = monitorFactory.newSubMonitor("DebitorenReport", 25);
         m.message("loading Dossiers");
-        DocumentEao documentEao = new DocumentEao(redTapeEm);
         List<Document> documents = new ArrayList<>();
         documents.addAll(documentEao.findDocumentsBetweenDates(start, end, DocumentType.INVOICE));
         m.worked(10, "preparing Data");
         List<Object[]> rows = new ArrayList<>();
         for (Document document : documents) {
             UiCustomer c = customerService.asUiCustomer(document.getDossier().getCustomerId());
+            List<Integer> uuIds = document.getPositions().values().stream()
+                    .filter(p -> p.getUniqueUnitId() > 0)
+                    .map(p -> p.getId())
+                    .collect(Collectors.toList());
+            List<UniqueUnit> units = uniqueUnitEao.findByIds(uuIds);
+
             rows.add(new Object[]{
                 c.id(),
                 document.getDossier().getIdentifier(),
@@ -99,7 +107,9 @@ public class DebitorsReporterOperation implements DebitorsReporter {
                 document.getIdentifier(),
                 document.getPrice(),
                 document.toAfterTaxPrice(),
-                document.getDossier().getPaymentMethod().getNote()
+                document.getDossier().getPaymentMethod().description(),
+                units.stream().map(UniqueUnit::getRefurbishId).collect(Collectors.joining(", ")),
+                units.stream().map(UniqueUnit::getSerial).collect(Collectors.joining(", "))
             });
         }
         m.worked(10, "building Report");
@@ -111,6 +121,8 @@ public class DebitorsReporterOperation implements DebitorsReporter {
         table.add(new STableColumn("Bemerkung", 10)).add(new STableColumn("Datum", 10, new CFormat(RIGHT, SHORT_DATE)));
         table.add(new STableColumn("RE_Nr", 10, new CFormat(RIGHT))).add(new STableColumn("Netto", 15, new CFormat(RIGHT, CURRENCY_EURO))).add(new STableColumn("Brutto", 10, new CFormat(RIGHT, CURRENCY_EURO)));
         table.add(new STableColumn("ZahlungsModalität", 10, new CFormat(RIGHT)));
+        table.add(new STableColumn("Sopos", 30, new CFormat(RIGHT)));
+        table.add(new STableColumn("Serienummern", 30, new CFormat(RIGHT)));
         table.setModel(new STableModelList(rows));
 
         CCalcDocument cdoc = new TempCalcDocument("Debitoren_");
