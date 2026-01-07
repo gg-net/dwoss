@@ -18,6 +18,7 @@ package eu.ggnet.dwoss.core.common.values.tradename;
 
 import java.util.*;
 
+import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.MOTOROLA;
 import static java.util.stream.Collectors.toSet;
 
 /**
@@ -168,7 +169,8 @@ public enum TradeName {
         public PartNoSupport getPartNoSupport() {
             return new LenovoPartNoSupport();
         }
-    }, SONOS("Sonos") {
+    }, 
+    SONOS("Sonos") {
         @Override
         public TradeName getManufacturer() {
             return SONOS;
@@ -177,6 +179,19 @@ public enum TradeName {
         @Override
         public Set<TradeName> getBrands() {
             return EnumSet.of(SONOS);
+        }
+        
+    }, 
+    MOTOROLA("Motorola") {
+        
+        @Override
+        public TradeName getManufacturer() {
+            return MOTOROLA;
+        }
+
+        @Override
+        public Set<TradeName> getBrands() {
+            return EnumSet.of(MOTOROLA);
         }
     };
 
