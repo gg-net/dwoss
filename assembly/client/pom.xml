@@ -188,11 +188,6 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-mail-ui</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-ui-mandator</artifactId>
             <version>${project.version}</version>
         </dependency>

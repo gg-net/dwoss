@@ -37,7 +37,7 @@ import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.core.widget.auth.UserChangeListener;
 import eu.ggnet.dwoss.core.widget.event.UserChange;
 import eu.ggnet.dwoss.customer.ui.cap.*;
-import eu.ggnet.dwoss.mail.ui.cap.SendResellerListToSubscribedCustomersMenuItem;
+import eu.ggnet.dwoss.redtapext.ui.cap.SendResellerListToSubscribedCustomersMenuItem;
 import eu.ggnet.dwoss.misc.ui.cap.MovmentMenuItemsProducer.MovementLists;
 import eu.ggnet.dwoss.misc.ui.cap.SalesListingCreateMenuItemProducer.SalesListingCreateMenus;
 import eu.ggnet.dwoss.misc.ui.cap.*;

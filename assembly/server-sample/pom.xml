@@ -16,9 +16,7 @@
         <mandator.name>Example GmbH</mandator.name> <!-- Don't remember, why we need this -->
         <!-- Without that, the run dialog doesnt show the wildfly servers in nb11 -->
         <org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_j2eeVersion>10-web</org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_j2eeVersion>
-        <netbeans.hint.jdkPlatform>@@DEFAULT@@</netbeans.hint.jdkPlatform>
     </properties>
-
 
     <build>
         <finalName>${project.artifactId}</finalName>

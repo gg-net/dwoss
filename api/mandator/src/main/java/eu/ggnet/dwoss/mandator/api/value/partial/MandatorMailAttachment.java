@@ -35,6 +35,8 @@ public interface MandatorMailAttachment extends Serializable {
 
     String attachmentName();
 
+    String mimeType();
+    
     String attachmentDescription();
 
     UrlLocation attachmentData();

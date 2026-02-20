@@ -28,7 +28,7 @@ import eu.ggnet.dwoss.core.system.GlobalConfig;
 import eu.ggnet.dwoss.core.system.autolog.LoggerProducer;
 import eu.ggnet.dwoss.core.widget.cdi.WidgetProducers;
 import eu.ggnet.dwoss.customer.ui.CustomerTaskService;
-import eu.ggnet.dwoss.mail.ui.cap.SendResellerListToSubscribedCustomersMenuItem;
+import eu.ggnet.dwoss.redtapext.ui.cap.SendResellerListToSubscribedCustomersMenuItem;
 import eu.ggnet.dwoss.misc.ui.AboutController;
 import eu.ggnet.dwoss.price.ui.PriceBlockerViewCask;
 import eu.ggnet.dwoss.receipt.ui.ProductUiBuilder;

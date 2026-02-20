@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.mail.ui.cap;
+package eu.ggnet.dwoss.redtapext.ui.cap;
 
 import java.util.concurrent.CancellationException;
 
@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.widget.Dl;
 import eu.ggnet.dwoss.core.widget.Progressor;
-import eu.ggnet.dwoss.mail.ee.MailSalesListingService;
+import eu.ggnet.dwoss.redtapext.ee.MailSalesListingService;
 import eu.ggnet.saft.core.Ui;
 
 import jakarta.enterprise.context.Dependent;

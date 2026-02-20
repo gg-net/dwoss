@@ -14,8 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.mail.ee;
+package eu.ggnet.dwoss.redtapext.ee;
 
+import java.lang.System.Logger.Level;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,11 +32,9 @@ import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
 import eu.ggnet.dwoss.core.system.progress.SubMonitor;
 import eu.ggnet.dwoss.customer.api.ResellerListCustomer;
 import eu.ggnet.dwoss.customer.api.ResellerListService;
-import eu.ggnet.dwoss.mail.demand.ResellerListSendSubscriptionConfiguration;
-import eu.ggnet.dwoss.mail.demand.SmtpConfiguration;
-import eu.ggnet.dwoss.core.common.apache.EmailException;
-import eu.ggnet.dwoss.core.common.apache.MultiPartEmail;
+import eu.ggnet.dwoss.core.common.values.ResellerListSendSubscriptionConfiguration;
 import eu.ggnet.dwoss.misc.api.SalesListingService;
+import eu.ggnet.dwoss.redtapext.ee.mail.*;
 
 /**
  *
@@ -50,7 +49,7 @@ public class MailSalesListingServiceBean implements MailSalesListingService {
     private MonitorFactory monitorFactory;
 
     @Inject
-    private SmtpConfiguration smtpConfiguration;
+    private GraphEmailService mailService;
 
     @Inject
     private ResellerListSendSubscriptionConfiguration sendConfiguration;
@@ -66,7 +65,6 @@ public class MailSalesListingServiceBean implements MailSalesListingService {
         SubMonitor m = monitorFactory.newSubMonitor("Transfer");
         m.message("sending Mail");
         m.start();
-        L.debug("generateResellerXlsAndSendToSubscribedCustomers() preparing mail with {}", smtpConfiguration);
 
         List<ResellerListCustomer> customers = rls.allResellerListCustomers();
         L.debug("generateResellerXlsAndSendToSubscribedCustomers() preparing mail with {}", customers);
@@ -74,37 +72,26 @@ public class MailSalesListingServiceBean implements MailSalesListingService {
         List<FileJacket> lists = sls.generateXlses(SalesChannel.RETAILER);
         L.debug("generateResellerXlsAndSendToSubscribedCustomers() preparing mail with {}", lists);
 
-        try {
-            MultiPartEmail email = new MultiPartEmail();
-            email.setHostName(smtpConfiguration.hostname);
-            email.setFrom(sendConfiguration.fromAddress, sendConfiguration.fromName);
-            if ( smtpConfiguration.smtpAuthenticationUser != null && smtpConfiguration.smtpAuthenticationPass != null ) {
-                email.setAuthentication(smtpConfiguration.smtpAuthenticationUser, smtpConfiguration.smtpAuthenticationPass);
-            }
-            email.setStartTLSEnabled(smtpConfiguration.useStartTls);
-            email.setSSLCheckServerIdentity(false);
-            email.setSSLOnConnect(smtpConfiguration.useSsl);
-            email.setCharset(smtpConfiguration.charset);
+        EmailMessage.Builder emailBuilder = EmailMessage.builder();
+        emailBuilder.from(sendConfiguration.fromAddress);
 
-            email.addTo(sendConfiguration.toAddress);
-            email.setSubject(sendConfiguration.subject);
-            email.setMsg(sendConfiguration.message);
+        emailBuilder.to(sendConfiguration.toAddress);
+        emailBuilder.subject(sendConfiguration.subject);
+        emailBuilder.body(sendConfiguration.message);
 
-            for (ResellerListCustomer customer : customers) {
-                email.addBcc(customer.email());
-            }
+        emailBuilder.bcc(customers.stream().map(ResellerListCustomer::email).toList());
 
-            for (FileJacket fj : lists) {
-                email.attach(
-                        new jakarta.mail.util.ByteArrayDataSource(fj.getContent(), "application/xls"),
-                        fj.getHead() + fj.getSuffix(), fj.getHead() + " für Händler");
-            }
-
-            email.send();
-            m.finish();
-        } catch (EmailException e) {
-            throw new RuntimeException(e);
+        for (FileJacket fj : lists) {
+            emailBuilder.attachment(fj.getHead() + fj.getSuffix(), "application/xls", fj.getContent());
         }
+
+        try {
+            mailService.sendEmail(emailBuilder.build());
+        } catch (EmailException ex) {
+            L.error("Mailsendig failed",ex);
+        }
+
+        m.finish();
         L.info("generateResellerXlsAndSendToSubscribedCustomers() reseller lists {} send to {} customers",
                 lists.stream().map(FileJacket::getHead).collect(Collectors.toList()), customers.size());
     }

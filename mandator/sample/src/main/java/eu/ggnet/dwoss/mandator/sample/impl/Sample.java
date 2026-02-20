@@ -52,12 +52,10 @@ public class Sample {
                 .street("Test Street 7")
                 .zip("99999")
                 .city("Testcity")
-                .email("test@example.de")
+                .email("sopo@gg-net.de")
                 .emailName("Example GmbH Shop")
                 .logo(new UrlLocation(loadLogo()))
                 .build();
-
-        SmtpConfiguration smtpConfiguration = new SmtpConfiguration("example.de", "user", "password", "UTF-8", true, false);
 
         DocumentIntermix documentIntermix = new DocumentIntermix(null);
         documentIntermix.add(FreeDocumentTemplateParameter.TERMS1, "AA bbbbbb ccc ddddddddddd eeeeeeeeeeeeeeeeeeee fff gggggg hhhh.<br />"
@@ -98,7 +96,6 @@ public class Sample {
                 DocumentIdentifierGeneratorConfiguration.create("GS.S-{PREFIX}/{COUNTER}", PrefixType.YYYY, new DecimalFormat("00000"), 30000));
 
         MANDATOR = new Mandator.Builder()
-                .smtpConfiguration(smtpConfiguration)
                 .mailTemplateLocation(new UrlLocation(loadMailDocument()))
                 .company(company)
                 .dossierPrefix("DW")
@@ -119,7 +116,11 @@ public class Sample {
 
     @Produces
     private final Mandator MANDATOR;
-
+    
+    @Produces
+    private final MicrosoftGraphApiAuthentication MS_AUTHENTICATION = new MicrosoftGraphApiAuthentication(
+            "tenentid", "clientid", "clientSecret");
+    
     @Produces
     private final DefaultCustomerSalesdata DEFAULT_CUSTOMER_SALES_DATA;
 

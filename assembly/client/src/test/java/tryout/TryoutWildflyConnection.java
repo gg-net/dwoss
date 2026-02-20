@@ -36,7 +36,7 @@ public class TryoutWildflyConnection {
     public static Logger L = LoggerFactory.getLogger(TryoutWildflyConnection.class);
 
     public static void main(String[] args) throws Exception {
-        tryEjbJndi("remote+https", "retrax.cybertron.global", 443, "dw-ggnet", "dwapp", "dwuserapp");
+        tryEjbJndi("remote+http", "localhost", 443, "dw-ggnet", "dwapp", "dwuserapp");
     }
 
     public static void tryEjbJndi(String protocol, String host, int port, String app, String username, String password) throws Exception {

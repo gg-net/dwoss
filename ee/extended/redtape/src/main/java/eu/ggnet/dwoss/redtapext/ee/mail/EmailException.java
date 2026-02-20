@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 GG-Net GmbH
+ * Copyright (C) 2026 GG-Net GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +14,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package eu.ggnet.dwoss.redtapext.ee.mail;
+
 /**
- * Extracted Code from apache-commons-email, as it is no longer developed.
+ *
+ * @author OliverGüntherCSHambu
  */
-package eu.ggnet.dwoss.core.common.apache;
+public class EmailException extends Exception{
+
+    public EmailException() {
+    }
+
+    public EmailException(String message) {
+        super(message);
+    }
+
+    public EmailException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public EmailException(Throwable cause) {
+        super(cause);
+    }
+    
+}

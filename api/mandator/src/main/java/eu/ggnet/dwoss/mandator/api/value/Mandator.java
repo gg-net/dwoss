@@ -22,8 +22,6 @@ import java.util.*;
 
 import org.inferred.freebuilder.FreeBuilder;
 
-import eu.ggnet.dwoss.core.common.apache.EmailException;
-import eu.ggnet.dwoss.core.common.apache.MultiPartEmail;
 import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.mandator.api.value.partial.*;
 
@@ -39,8 +37,6 @@ public abstract class Mandator implements Serializable {
     };
 
     public abstract String defaultMailSignature();
-
-    public abstract SmtpConfiguration smtpConfiguration();
 
     public abstract UrlLocation mailTemplateLocation();
 
@@ -62,28 +58,6 @@ public abstract class Mandator implements Serializable {
 
     public abstract String bugMail();
 
-    /**
-     * Prepares a eMail to be send direct over the mandator smtp configuration.
-     * The email is missing: to, subject, message and optional attachments.
-     *
-     * @return the email
-     * @throws EmailException if something is wrong in the subsystem.
-     */
-    public MultiPartEmail prepareDirectMail() throws EmailException {
-        MultiPartEmail email = new MultiPartEmail();
-        email.setHostName(smtpConfiguration().hostname);
-        email.addBcc(company().email());
-        email.setFrom(company().email(), company().emailName());
-        if ( smtpConfiguration().smtpAuthenticationUser != null && smtpConfiguration().smtpAuthenticationPass != null ) {
-            email.setAuthentication(smtpConfiguration().smtpAuthenticationUser, smtpConfiguration().smtpAuthenticationPass);
-        }
-        email.setStartTLSEnabled(smtpConfiguration().useStartTls);
-        email.setSSLCheckServerIdentity(false);
-        email.setSSLOnConnect(smtpConfiguration().useSsl);
-        email.setCharset(smtpConfiguration().charset);
-        return email;
-    }
-
     public String toHtml() {
         StringBuilder sb = new StringBuilder("<table>");
         sb.append("<tr>");
@@ -91,7 +65,7 @@ public abstract class Mandator implements Serializable {
         sb.append(company().toHtml());
         sb.append("</td>");
         sb.append("<td><p><b>Smtp Configuration</b></p>");
-        sb.append(smtpConfiguration().toHtml());
+        sb.append("Removed");
         sb.append("</td>");
         sb.append("</tr>");
 

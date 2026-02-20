@@ -23,7 +23,6 @@ import java.util.*;
 import jakarta.ejb.Stateless;
 import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
-import jakarta.mail.util.ByteArrayDataSource;
 import jakarta.persistence.EntityManager;
 
 import net.sf.jasperreports.engine.*;
@@ -36,8 +35,6 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.dwoss.core.common.apache.EmailException;
-import eu.ggnet.dwoss.core.common.apache.MultiPartEmail;
 import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.customer.api.UiCustomer;
@@ -54,6 +51,7 @@ import eu.ggnet.dwoss.redtape.ee.eao.DossierEao;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Flag;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtape.ee.format.DocumentFormater;
+import eu.ggnet.dwoss.redtapext.ee.mail.*;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
@@ -148,6 +146,9 @@ public class DocumentSupporterOperation implements DocumentSupporter {
 
     @Inject
     private CustomerServiceBean customerService;
+    
+    @Inject
+    private GraphEmailService mailService;
 
     /**
      * Creates a JasperPrint for the Document.
@@ -185,13 +186,13 @@ public class DocumentSupporterOperation implements DocumentSupporter {
 
         try (InputStream is = mandator.mailTemplateLocation().toURL().openStream(); InputStreamReader templateReader = new InputStreamReader(is)) {
             String text = new MailDocumentParameter(customer.toTitleNameLine(), doctype).eval(IOUtils.toString(templateReader));
-            MultiPartEmail email = mandator.prepareDirectMail();
 
-            email.setCharset("UTF-8");
+            EmailMessage.Builder email = EmailMessage.builder();
+            email.from(mandator.company().email());
 
-            email.addTo(customerMailAddress);
-            email.setSubject(doctype + " | " + document.getDossier().getIdentifier());
-            email.setMsg(text + mandator.defaultMailSignature());
+            email.to(customerMailAddress);
+            email.subject(doctype + " | " + document.getDossier().getIdentifier());
+            email.body(text + mandator.defaultMailSignature());
 
             // Building the Identifier, See also eu.ggnet.dwoss.redtapext.ui.cao.jasper.DocumentJasperFxView.saveToFile
             String identifier = document.getIdentifier() != null ? document.getIdentifier() : document.getDossier().getIdentifier();
@@ -213,10 +214,7 @@ public class DocumentSupporterOperation implements DocumentSupporter {
                     .replace("Ü", "Ue")
                     .replace("ß", "ss");
 
-            email.attach(
-                    new ByteArrayDataSource(JasperExportManager.exportReportToPdf(jasper(document, jtype)), "application/pdf"),
-                    identifier + ".pdf", document.getType().description() + " zu Ihrem Vorgang."
-            );
+            email.attachment(identifier + ".pdf", "application/pdf", JasperExportManager.exportReportToPdf(jasper(document, jtype)));
 
             //get needed mail attachments
             Map<DocumentType, Set<MandatorMailAttachment>> mailAttachmentByDocumentType = mandator.mailAttachmentByDocumentType();
@@ -227,15 +225,22 @@ public class DocumentSupporterOperation implements DocumentSupporter {
 
             //add attachments
             for (MandatorMailAttachment mma : attachmentByType) {
-                email.attach(mma.attachmentData().toURL(), mma.attachmentName(), mma.attachmentDescription());
+                try (InputStream in = mma.attachmentData().toURL().openStream(); ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
+                    byte[] dataChunk = new byte[4096]; // 4KB buffer
+                    int bytesRead;
+                    while ((bytesRead = in.read(dataChunk)) != -1) {
+                        buffer.write(dataChunk, 0, bytesRead);
+                    }
+                    email.attachment(mma.attachmentName(), mma.mimeType(), buffer.toByteArray());
+                }
             }
 
-            email.send();
+            mailService.sendEmail(email.build());
         } catch (EmailException ex) {
-            L.error("Error on Mail sending", ex);
             throw new UserInfoException("Das senden der Mail war nicht erfolgreich!\n" + ex.getMessage());
         } catch (IOException | JRException e) {
-            throw new RuntimeException(e);
+            L.error("Error on Mail creation",e);
+            throw new UserInfoException("Das erstellen der Mail löste eine Fehler aus!\n" + e.getMessage());
         }
     }
 

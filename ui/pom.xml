@@ -44,7 +44,6 @@
         <module>price</module>
         <module>receipt</module>
         <module>redtapext</module>
-        <module>mail</module>
         <module>mandator</module>
     </modules>
 

@@ -90,7 +90,6 @@
         <module>discovery</module>
         <module>mandator</module>
         <module>search</module>
-        <module>mail</module>
         <!-- sub reactors -->
         <module>persistence</module>
         <module>extended</module>
