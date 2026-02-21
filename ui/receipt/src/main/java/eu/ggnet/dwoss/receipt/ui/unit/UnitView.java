@@ -44,6 +44,7 @@ import eu.ggnet.dwoss.core.common.values.*;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.core.widget.Dl;
+import eu.ggnet.dwoss.core.widget.auth.Guardian;
 import eu.ggnet.dwoss.core.widget.dl.RemoteDl;
 import eu.ggnet.dwoss.core.widget.swing.ComboBoxController;
 import eu.ggnet.dwoss.core.widget.swing.NamedEnumCellRenderer;
@@ -59,8 +60,7 @@ import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.*;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Equipment;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.StaticComment;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.StaticInternalComment;
@@ -357,19 +357,21 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         unitStateBox.setRenderer(new NamedEnumCellRenderer());
         unitStateBox.setModel(new DefaultComboBoxModel(UniqueUnit.Condition.values()));
 
+        purchasePriceField.setValue(0.0);
+
         contractorBox.setRenderer(new NamedEnumCellRenderer());
         contractorBox.setModel(new DefaultComboBoxModel(TradeName.getManufacturers().toArray()));
         showingProperty.addListener((ObservableValue<? extends Boolean> ov, Boolean o, Boolean n) -> {
             if ( n ) EventQueue.invokeLater(() -> refurbishedIdField.requestFocusInWindow());
         });
-              
+
         // Enter bei diesen drei Feldern als wechsler, damit ein direktes arbeiten mit dem Scanner geht.
-        Set<? extends AWTKeyStroke> keystrokes = Set.of(KeyStroke.getKeyStroke("pressed ENTER"), KeyStroke.getKeyStroke("pressed TAB"));        
-        refurbishedIdField.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS,keystrokes);
+        Set<? extends AWTKeyStroke> keystrokes = Set.of(KeyStroke.getKeyStroke("pressed ENTER"), KeyStroke.getKeyStroke("pressed TAB"));
+        refurbishedIdField.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, keystrokes);
         raaTextField.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, keystrokes);
-        serialField.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS,keystrokes);
-        
-        refurbishedIdField.requestFocus();        
+        serialField.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, keystrokes);
+
+        refurbishedIdField.requestFocus();
     }
 
     @Override
@@ -396,7 +398,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
                 setPartNo(edit.partNo()); // TODO: Verify, if this case still exists.
             } else {
                 model.setMode(edit.uniqueUnit().getProduct().getTradeName().getManufacturer());
-            }            
+            }
         } else {
             throw new IllegalArgumentException("in is neither of type create nor edit. Should never happen");
         }
@@ -450,6 +452,17 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         unit.setInternalComments(internalCommentModel.getMarked());
         unit.setContractor(model.getContractor());
 
+        double purchasePrice = 0;
+        if ( purchasePriceField.getValue() instanceof Long ) {
+            purchasePrice = ((Long)purchasePriceField.getValue()).doubleValue();
+        } else if ( purchasePriceField.getValue() instanceof Double ) {
+            purchasePrice = (Double)purchasePriceField.getValue();
+        }
+
+        if ( purchasePrice > 0.01 ) {
+            unit.setPrice(PriceType.PURCHASE, purchasePrice, "Preis hinterlegt in Aufnahme durch " + Dl.local().lookup(Guardian.class).getUsername());
+        }
+
         if ( !StringUtils.isBlank(commentArea.getText()) ) {
             unit.setComment(commentArea.getText().replaceAll(System.lineSeparator(), " ").replaceAll("\\t", " "));
         } else {
@@ -485,6 +498,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         internalCommentArea.setText(unit.getInternalComment());
         contractorField.setText(unit.getContractor().toString());
         model.setContractor(unit.getContractor());
+        purchasePriceField.setValue(unit.getPrice(PriceType.PURCHASE));
 
         if ( StringUtils.isNotBlank(unit.getShipmentLabel()) ) shipmentIdField.setText(unit.getShipmentLabel());
         if ( unit.getWarranty().equals(Warranty.WARRANTY_TILL_DATE) ) warrantyTillChooser.setDate(unit.getWarrentyValid());
@@ -798,6 +812,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         warrantyTypeChooser = new javax.swing.JComboBox();
         warrantyTillLabel = new javax.swing.JLabel();
         warrantyTillChooser = new com.toedter.calendar.JDateChooser();
+        purchasePriceLabel = new javax.swing.JLabel();
         equipmentScrollPane = new javax.swing.JScrollPane();
         equipmentTable = new javax.swing.JTable();
         commentScrollPane = new javax.swing.JScrollPane();
@@ -818,6 +833,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         cancelButton = new javax.swing.JButton();
         messagesButton = new javax.swing.JButton();
         operationButtonPanel = new javax.swing.JPanel();
+        purchasePriceField = new javax.swing.JFormattedTextField();
 
         setMinimumSize(new java.awt.Dimension(400, 200));
         setPreferredSize(new java.awt.Dimension(800, 600));
@@ -842,7 +858,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         manufacturerPanel.setLayout(manufacturerPanelLayout);
         manufacturerPanelLayout.setHorizontalGroup(
             manufacturerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(contractorBox, 0, 290, Short.MAX_VALUE)
+            .addComponent(contractorBox, 0, 307, Short.MAX_VALUE)
         );
         manufacturerPanelLayout.setVerticalGroup(
             manufacturerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1037,6 +1053,14 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 0, 2);
         unitPanel.add(warrantyTillChooser, gridBagConstraints);
 
+        purchasePriceLabel.setText("Einkaufspreis: ");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 9;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        unitPanel.add(purchasePriceLabel, gridBagConstraints);
+        purchasePriceLabel.getAccessibleContext().setAccessibleName("Einkaufspreis:");
+
         equipmentScrollPane.setViewportView(equipmentTable);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1045,7 +1069,6 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         gridBagConstraints.gridheight = 10;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.weighty = 0.3;
         gridBagConstraints.insets = new java.awt.Insets(2, 0, 0, 2);
         unitPanel.add(equipmentScrollPane, gridBagConstraints);
 
@@ -1061,7 +1084,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 9;
+        gridBagConstraints.gridy = 10;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.gridheight = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -1091,7 +1114,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 11;
+        gridBagConstraints.gridy = 12;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weighty = 0.1;
@@ -1109,7 +1132,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 11;
+        gridBagConstraints.gridy = 12;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(2, 0, 0, 2);
         unitPanel.add(internalCommentAreaScrollPane, gridBagConstraints);
@@ -1168,7 +1191,7 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         gridBagConstraints.gridx = 5;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.gridheight = 9;
+        gridBagConstraints.gridheight = 10;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 2);
         unitPanel.add(detailScrollPane, gridBagConstraints);
@@ -1203,12 +1226,21 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
         operationButtonPanel.setPreferredSize(new java.awt.Dimension(14, 30));
         operationButtonPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 12;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 13;
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         unitPanel.add(operationButtonPanel, gridBagConstraints);
+
+        purchasePriceField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 9;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 0, 2);
+        unitPanel.add(purchasePriceField, gridBagConstraints);
 
         add(unitPanel, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
@@ -1307,6 +1339,8 @@ public class UnitView extends javax.swing.JPanel implements Consumer<UnitView.In
     private javax.swing.JButton partNoEditButton;
     private javax.swing.JTextField partNoField;
     private javax.swing.JLabel partNoLabel;
+    private javax.swing.JFormattedTextField purchasePriceField;
+    private javax.swing.JLabel purchasePriceLabel;
     private javax.swing.JLabel raaLabel;
     private javax.swing.JTextField raaTextField;
     private javax.swing.JButton refurbishedIdEditButton;

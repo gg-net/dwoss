@@ -696,7 +696,7 @@ public class RedTapeCloserAutomaticOperation {
                     } else {
                         l.setContractorPartNo(p.getAdditionalPartNo(uu.getContractor()));
                         l.setContractorReferencePrice(p.getPrice(CONTRACTOR_REFERENCE));
-                    }
+                    } 
                     l.setManufacturerCostPrice(p.getPrice(MANUFACTURER_COST));
                     l.setContractor(uu.getContractor());
                     l.setContractorReferencePrice(p.getPrice(CONTRACTOR_REFERENCE));
@@ -707,6 +707,11 @@ public class RedTapeCloserAutomaticOperation {
                     l.setUniqueUnitId(uu.getId());
                     l.setSalesChannel(uu.getSalesChannel());
 
+                    if (uu.getPrices().containsKey(PriceType.PURCHASE)) {
+                        // Ist der Fall, wenn bei der Aufnahme bereits ein Preis gesetzt wurde.
+                        l.setPurchasePrice(uu.getPrice(PriceType.PURCHASE));
+                    }
+                    
                     l.setPartNo(p.getPartNo());
                     l.setProductBrand(p.getTradeName());
                     l.setProductName(p.getName());

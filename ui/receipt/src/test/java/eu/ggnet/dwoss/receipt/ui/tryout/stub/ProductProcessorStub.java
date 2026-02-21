@@ -406,6 +406,7 @@ public class ProductProcessorStub implements ProductProcessor {
                 uu.setReceiveAssignAttribute(R.nextInt(1000000));
                 uu.setInternalComment("Das ist ein interner Kommentar");
                 uu.setComment("Das ist ein Kommentar");
+                uu.setPrice(PriceType.PURCHASE, R.nextInt(1000)/100.0, "Generierter Preis");
                 uniqueUnits.add(uu);
                 if ( R.nextInt(10) <= 7 ) {
                     StockUnit su = new StockUnit(uu.getRefurbishId(), uu.getProduct().getName(), uu.getId());
