@@ -119,16 +119,17 @@ public class ExporterOperation implements Exporter {
         table.add(new STableColumn("Gruppe", 14).setAction(SUtil.getBeanProperty(PROP_COMMODITY_GROUP)));
         table.add(new STableColumn("Artikelnummer", 15).setAction(SUtil.getBeanProperty(PROP_MANUFACTURER_PART_NO)));
         table.add(new STableColumn("Name", 30).setAction(SUtil.getBeanProperty(PROP_PRODUCT_NAME)));
+        table.add(new STableColumn("rEk", 11, euro).setAction(SUtil.getBeanProperty(PROP_PURCHASE_PRICE)));
         table.add(new STableColumn("Hek", 11, euro).setAction(SUtil.getBeanProperty(PROP_RETAILER_PRICE)));
-        table.add(new STableColumn("%Cost", 10, percent).setAction(new SFormulaAction(SR(4), "/", SR(17))));
-        table.add(new STableColumn("%Reference", 10, percent).setAction(new SFormulaAction(SR(4), "/", SR(18))));
+        table.add(new STableColumn("%Cost", 10, percent).setAction(new SFormulaAction(SR(5), "/", SR(18))));
+        table.add(new STableColumn("%Reference", 10, percent).setAction(new SFormulaAction(SR(5), "/", SR(19))));
         table.add(new STableColumn("EvP netto", 11, euro).setAction(new SActionAdapter<PriceEngineResult>() {
             @Override
             public Object getValue(int relativeColumnIndex, int relativeRowIndex, int absoluteColumnIndex, int absoluteRowIndex, PriceEngineResult lineModel) {
                 if ( lineModel.getUnitPriceFixed() == SET ) {
                     return lineModel.getCustomerPrice();
                 } else {
-                    CCellReference x = new CCellReferenceAdapter(absoluteRowIndex, 4);
+                    CCellReference x = new CCellReferenceAdapter(absoluteRowIndex, 5);
                     double p = 1 + lineModel.getRetailerToCustomerPricePercentage();
                     double t = 1 + lineModel.getTax();
                     return new SFormula("RUNDEN", "((", "RUNDEN", "(", x, "*", p, "*", t, ",", 0, ")", ")/", t, ",", 2, ")");
@@ -138,7 +139,7 @@ public class ExporterOperation implements Exporter {
         table.add(new STableColumn("EvP brutto", 11, euro).setAction(new SActionAdapter<PriceEngineResult>() {
             @Override
             public Object getValue(int relativeColumnIndex, int relativeRowIndex, int absoluteColumnIndex, int absoluteRowIndex, PriceEngineResult lineModel) {
-                return new SFormula(new CCellReferenceAdapter(absoluteRowIndex, 7), "*", 1 + lineModel.getTax());
+                return new SFormula(new CCellReferenceAdapter(absoluteRowIndex, 8), "*", 1 + lineModel.getTax());
             }
         }));
         table.add(new STableColumn("UnitFix", 4, new CFormat(CENTER)).setAction(new SActionAdapter<PriceEngineResult>() {

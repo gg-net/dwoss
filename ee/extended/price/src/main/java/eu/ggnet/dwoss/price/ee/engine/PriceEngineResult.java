@@ -60,6 +60,8 @@ public class PriceEngineResult implements Comparable<PriceEngineResult>, Seriali
 
     public final static String PROP_CONTRACTOR_REFERENCE_PRICE = "contractorReferencePrice";
 
+    public final static String PROP_PURCHASE_PRICE = "purchasePrice";
+    
     public final static String PROP_REFERENCE_PRICE = "referencePrice";
 
     public final static String PROP_RETAILER_PRICE = "retailerPrice";
@@ -118,6 +120,8 @@ public class PriceEngineResult implements Comparable<PriceEngineResult>, Seriali
 
     private String internalComment;
 
+    private double purchasePrice;
+    
     private double costPrice;
 
     private double contractorReferencePrice;
@@ -173,19 +177,21 @@ public class PriceEngineResult implements Comparable<PriceEngineResult>, Seriali
 
     /**
      * Special Construtor for Imports.
-     * <p/>
+     * 
      * @param refurbishedId      the refurbishId
      * @param manufacturerPartNo the manufacturerParNo
+     * @param purchasePrice      the purchasePrice
      * @param retailerPrice      the retailerPrice
      * @param customerPrice      the customerPrice
      * @param unitFixPrice       is the unitPriceFixed
      * @param partFixPrice       is the productPriceFixed
      * @param warrantyId         the WarrantyId
      */
-    public PriceEngineResult(String refurbishedId, String manufacturerPartNo, Double retailerPrice, Double customerPrice, Integer unitFixPrice, Integer partFixPrice, Integer warrantyId) {
+    public PriceEngineResult(String refurbishedId, String manufacturerPartNo, Double purchasePrice, Double retailerPrice, Double customerPrice, Integer unitFixPrice, Integer partFixPrice, Integer warrantyId) {
         this();
         this.refurbishedId = refurbishedId;
         this.manufacturerPartNo = manufacturerPartNo;
+        this.purchasePrice = purchasePrice;
         this.retailerPrice = retailerPrice;
         this.customerPrice = customerPrice;
         this.warrantyId = warrantyId;
@@ -212,11 +218,12 @@ public class PriceEngineResult implements Comparable<PriceEngineResult>, Seriali
             if ( firstPriced == null || firstPriced.after(priceHistory.getDate()) ) firstPriced = priceHistory.getDate();
         }
         this.dateFirstPriced = firstPriced;
-        this.salesChannel = uu.getSalesChannel().getName();
+        this.salesChannel = uu.getSalesChannel().description();
 
         this.commodityGroup = p.getGroup().getNote();
         this.costPrice = p.getPrice(PriceType.MANUFACTURER_COST);
         this.eol = p.getEol();
+        this.purchasePrice = uu.getPrice(PriceType.PURCHASE);
         this.contractorReferencePrice = p.getPrice(PriceType.CONTRACTOR_REFERENCE);
         this.productDescription = p.getDescription();
         this.productName = ProductFormater.toName(p);
@@ -295,6 +302,10 @@ public class PriceEngineResult implements Comparable<PriceEngineResult>, Seriali
         return roundTo2Decimals(referencePrice);
     }
     
+    public double getPurchasePrice() {
+        return roundTo2Decimals(purchasePrice);
+    }
+
     public double getRetailerPrice() {
         return roundTo2Decimals(retailerPrice);
     }
@@ -313,6 +324,10 @@ public class PriceEngineResult implements Comparable<PriceEngineResult>, Seriali
     
     public void setReferencePrice(double referencePrice) {
         this.referencePrice = referencePrice;
+    }
+
+    public void setPurchasePrice(double purchasePrice) {
+        this.purchasePrice = purchasePrice;
     }
     
     public void setRetailerPrice(double retailerPrice) {

@@ -77,11 +77,12 @@ public class ImporterOperation implements Importer {
         LucidCalcReader reader = new JExcelLucidCalcReader();
         reader.addColumn(0, String.class); // RefurbishedId
         reader.addColumn(2, String.class); // PartNo
-        reader.addColumn(4, Double.class); // RetailerPrice
-        reader.addColumn(7, Double.class); // CustomerPrice
-        reader.addColumn(9, Integer.class); // UnitFixPrice
-        reader.addColumn(10, Integer.class); // PartFixPrice
-        reader.addColumn(11, Integer.class); // WarrantyId
+        reader.addColumn(4, Double.class); // PurchasePrice
+        reader.addColumn(5, Double.class); // RetailerPrice
+        reader.addColumn(8, Double.class); // CustomerPrice
+        reader.addColumn(10, Integer.class); // UnitFixPrice
+        reader.addColumn(11, Integer.class); // PartFixPrice
+        reader.addColumn(12, Integer.class); // WarrantyId
         List<PriceEngineResult> imports = reader.read(f, new PriceEngineResult());
         m.worked(2);
         if ( reader.isError() ) {

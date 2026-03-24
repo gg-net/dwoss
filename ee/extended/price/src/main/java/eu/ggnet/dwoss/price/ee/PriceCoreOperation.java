@@ -129,7 +129,7 @@ public class PriceCoreOperation {
         m.worked(5);
 
         for (PriceEngineResult per : pers) {
-            String msg = "Storing Unit " + per.getRefurbishedId() + " HP:" + per.getRetailerPrice()
+            String msg = "Storing Unit " + per.getRefurbishedId() + " rEP:" + per.getPurchasePrice() + " HP:" + per.getRetailerPrice()
                     + " EP:" + per.getCustomerPrice() + " UnitFix:" + per.getUnitPriceFixed() + " ProductFix:" + per.getManufacturerPartPriceFixed();
             L.info(msg);
             m.worked(1, msg);
@@ -168,6 +168,7 @@ public class PriceCoreOperation {
          * Whould need to import this information allso. (Need to change the report itself and the export) */
         if ( per.getManufacturerPartPriceFixed() == SET ) type = "productfixed";
 
+        uniqueUnit.setPrice(eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.PURCHASE, per.getPurchasePrice(), arranger + " - " + type + ", " + comment);
         uniqueUnit.setPrice(eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.CUSTOMER, per.getCustomerPrice(), arranger + " - " + type + ", " + comment);
         uniqueUnit.setPrice(eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.RETAILER, per.getRetailerPrice(), arranger + " - " + type + ", " + comment);
         uniqueUnit.setWarranty(Warranty.values()[per.getWarrantyId()]);

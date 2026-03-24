@@ -29,11 +29,11 @@ public class ImportPriceManagementLogicTest {
         importer.fromXls(jacket, "testuser");
 
         List<PriceEngineResult> expected = new ArrayList<>();
-        expected.add(new PriceEngineResult("1", "A", 1.0, 1.0, 0, 1, 0));
-        expected.add(new PriceEngineResult("2", "A", 2.0, 2.0, 1, 0, 0));
-        expected.add(new PriceEngineResult("3", "B", 3.0, 3.0, 0, -1, 0));
-        expected.add(new PriceEngineResult("4", "B", 4.0, 4.0, 1, 0, 0));
-        expected.add(new PriceEngineResult("5", "C", 5.0, 5.0, 0, 0, 1));
+        expected.add(new PriceEngineResult("1", "A", 5.0, 1.0, 1.0, 0, 1, 0));
+        expected.add(new PriceEngineResult("2", "A", 4.0, 2.0, 2.0, 1, 0, 0));
+        expected.add(new PriceEngineResult("3", "B", 3.0, 3.0, 3.0, 0, -1, 0));
+        expected.add(new PriceEngineResult("4", "B", 2.0, 4.0, 4.0, 1, 0, 0));
+        expected.add(new PriceEngineResult("5", "C", 1.0, 5.0, 5.0, 0, 0, 1));
 
         verify(core).store(eq(expected), eq("ImportPriceManagementOperation.fromXls()"), anyString(), any(IMonitor.class));
     }
