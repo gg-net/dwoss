@@ -59,6 +59,7 @@ import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.lucidcalc.*;
 import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcWriter;
 
+import static eu.ggnet.dwoss.core.common.values.DocumentType.INVOICE;
 import static eu.ggnet.dwoss.redtapext.ee.DocumentSupporterOperation.TemplateParameter.*;
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.BOLD_ITALIC;
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.ITALIC;
@@ -193,6 +194,11 @@ public class DocumentSupporterOperation implements DocumentSupporter {
             email.to(customerMailAddress);
             email.subject(doctype + " | " + document.getDossier().getIdentifier());
             email.body(text + mandator.defaultMailSignature());
+            
+            if (document.getType() == INVOICE) {
+                // Invoices send in copy to the company.
+                email.bcc(List.of(mandator.company().email()));
+            }
 
             // Building the Identifier, See also eu.ggnet.dwoss.redtapext.ui.cao.jasper.DocumentJasperFxView.saveToFile
             String identifier = document.getIdentifier() != null ? document.getIdentifier() : document.getDossier().getIdentifier();
