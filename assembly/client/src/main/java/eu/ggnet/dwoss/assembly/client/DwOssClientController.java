@@ -275,6 +275,7 @@ public class DwOssClientController {
 
     protected List<Node> populateToolbar() {
         return Arrays.asList(instance.select(RedTapeToolbarButton.class).get(),
+                instance.select(PriceBlockerButton.class).get(),
                 instance.select(RightsToolbarManager.class).get().createNode(),
                 instance.select(ActiveStockSelectorToolbarPane.class).get(),
                 instance.select(LoggedInTimeoutManager.class).get().createToolbarElementOnce(),
